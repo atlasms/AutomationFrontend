@@ -12,7 +12,15 @@ export class ProjectConfig extends SeedConfig {
 
   constructor() {
     super();
-    // this.APP_TITLE = 'Put name of your app here';
+    this.APP_TITLE = 'Farid App';
+
+    this.SYSTEM_CONFIG_DEV.paths['angular2-jwt'] =
+      `${this.APP_BASE}node_modules/angular2-jwt/angular2-jwt`;
+
+    this.SYSTEM_BUILDER_CONFIG.packages['angular2-jwt'] = {
+      main: 'angular2-jwt.js',
+      defaultExtension: 'js'
+    }
 
     /* Enable typeless compiler runs (faster) between typed compiler runs. */
     // this.TYPED_COMPILE_INTERVAL = 5;
