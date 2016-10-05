@@ -17,6 +17,7 @@ gulp.task('build.dev', (done: any) =>
 //              'tslint',
 //              'css-lint',
               'build.assets.dev',
+              'build.fonts',    // Added task;
               'build.html_css',
               'build.js.dev',
               'build.index.dev',
@@ -47,6 +48,7 @@ gulp.task('build.prod', (done: any) =>
               'css-lint',
               'build.assets.prod',
               'build.html_css',
+              'build.fonts',    // Added task;
               'copy.prod',
               'build.js.prod',
               'build.bundles',
@@ -79,6 +81,7 @@ gulp.task('build.test', (done: any) =>
               'tslint',
               'build.assets.dev',
               'build.html_css',
+              'build.fonts',    // Added task;
               'build.js.dev',
               'build.js.test',
               'build.index.dev',
