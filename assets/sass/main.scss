@@ -1,0 +1,50 @@
+// Core variables and mixins 
+@import "bootstrap"; 
+@import "fontawesome/font-awesome";
+// @import "global/plugins/select2/sass/select2-bootstrap.min";
+
+@import "global/components.scss";
+@import "global/plugins";
+// @import "global/plugins-md";
+
+@import "apps/inbox";
+
+@import "pages/about";
+@import "pages/blog";
+@import "pages/coming-soon";
+@import "pages/contact";
+@import "pages/error";
+@import "pages/faq";
+@import "pages/image-crop";
+@import "pages/invoice-2";
+@import "pages/invoice";
+@import "pages/lock-2";
+@import "pages/lock";
+@import "pages/login-2";
+@import "pages/login-3";
+@import "pages/login-4";
+@import "pages/login-5";
+@import "pages/login";
+@import "pages/portfolio";
+@import "pages/pricing";
+@import "pages/profile-2";
+@import "pages/profile";
+@import "pages/search";
+@import "pages/tasks";
+
+@import "layouts/layout/layout";
+@import "layouts/layout/themes/default";
+@import "layouts/layout/themes/blue";
+@import "layouts/layout/themes/darkblue";
+@import "layouts/layout/themes/grey";
+@import "layouts/layout/themes/light";
+@import "layouts/layout/themes/light2";
+
+@import "layouts/layout3/layout";
+@import "layouts/layout3/themes/blue-steel";
+
+@import "fontawesome/font-awesome";
+
+@import "custom/custom";
+@import "custom/font";
+@import "custom/login";

@@ -1,0 +1,2 @@
+gulp finalize:watch
+PAUSE
