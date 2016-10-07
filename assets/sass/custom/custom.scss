@@ -1,4 +1,6 @@
-h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; }
+// html, body { direction: ltr; text-align: left; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
+.help-block, p, button, label, table, tr, td, textarea  { direction: ltr; text-align: left; }
 .page-content { padding-top: 30px; }
 .breadcrumbs {
     background: #f9f9f9; margin-left: -30px; margin-right: -30px; padding-left: 30px; padding-right: 30px; height: 40px; 
@@ -7,5 +9,6 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; }
 .navbar { min-height: 0 !important; } 
 .top-tools {
     float: left; height: 100%; line-height: 40px;
-}
-.havij { display: none; }
+} 
+.page-header.navbar .top-menu .navbar-nav > li.quick-sidebar-toggler > i:before { content: "\f08b" }
+.page-container { padding: 0; }

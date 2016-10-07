@@ -4,7 +4,10 @@ define([
     , "underscore"
     , "backbone"
     , "login.view"
-], function ($, _, Backbone, Login) {
+    , 'template'
+    , 'config'
+//    , "app.master"
+], function ($, _, Backbone, Login, Template, Config) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Define some URL routes
@@ -13,34 +16,26 @@ define([
             // Default
             '*actions': 'index'
         }
-        , index: function() {
-            console.log('You are in index!');
-        }
-        , Login: function() {
+        , Login: function () {
             var loginView = new Login();
             loginView.render();
         }
     });
 
     var initialize = function () {
-        var app_router = new AppRouter;
-        app_router.on("route:index", function() {
-            console.log('You are in index!');
-        });
-        app_router.on("route:login", function() {
-            alert();
-            var loginView = new LoginView();
-            loginView.render();
+        var appRouter = new AppRouter;
+        appRouter.on("route:index", function () {
+            $("body").addClass("page-container-bg-solid page-sidebar-closed-hide-logo page-header-fixed page-footer-fixed");
+            var template = Template.template.load('', 'app');
+            template.done(function (data) {
+                var html = $(data).wrap('<p/>').parent().html();
+                var handlebarsTemplate = Template.handlebars.compile(html);
+                var output = handlebarsTemplate();
+                $(Config.positions.wrapper).html(output);
+            });
         });
 
-//        app_router.on('route:index', function (actions) {
-//            console.log(actions);
-//            // Call render on the module we loaded in via the dependency array
-//            var index = new Index();
-//            index.render();
-//        });
-
-        Backbone.history.start();
+        Backbone.history.start({ pushState: true });
     };
 
     return {

@@ -24,6 +24,7 @@ require.config({
         , config: ["../../config"]
 
                 // Views
+//        , "app.master": ["../../app/a"]
         , "login.view": ["../../app/user/login.view"]
 
                 // Helpers

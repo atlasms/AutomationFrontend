@@ -4,6 +4,22 @@ define([
     'backbone',
     'config'
 ], function ($, _, Backbone, Config) {
+    !(function () {
+        "use strict";
+        $.fn.serializeObject = function () {
+            var arr = this.serializeArray();
+
+            return _.reduce(arr, function (memo, f) {
+                var objField = _.reduceRight(f.name.replace(/\[/g, ".").replace(/\]/g, "").split("."), function (memo, p) {
+                    var n = (/^[0-9]+$/.test(p)) ? [] : {};
+                    n[p] = memo;
+                    return n;
+                }, f.value);
+                $.extend(true, memo, objField);
+                return memo;
+            }, {});
+        };
+    })($);
     var Global = {
         trimChar: function (string, charToRemove) {
             while (string.charAt(0) === charToRemove)
