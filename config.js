@@ -3,6 +3,10 @@ define({
 //    "codename": window.location.host.replace(/\./g, ''),
     "env": "dev",
     "settings": {},
+    "positions": {
+        "wrapper": "body"
+        , "main": "#main"
+    },
     "api": {
         url: 'localhost/misc/fakeapi'
     },

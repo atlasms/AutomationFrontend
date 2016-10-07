@@ -1,0 +1,72 @@
+<div class=" login">
+	<div class="user-login">
+		<div class="row bs-reset">
+			<div class="col-md-6 login-container bs-reset mt-login-5-bsfix">
+				<img class="login-logo login-6" src="../assets/img/login-invert.png" />
+				<div class="login-content">
+					<h1>Metronic Admin Login</h1>
+					<p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
+					<form name="form" method="post">
+						  <div class="alert alert-info display-hide">
+							<button class="close" data-close="alert"></button>
+							<span>Username: test<br />Password: test</span>
+						</div>
+						<div class="clearfix"></div>
+						<div class="alert alert-danger fade">
+							<button class="close" data-close="alert"></button>
+							<strong>{{error}}</strong>
+						</div>
+						<div class="clearfix"></div>
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<input type="text" class="form-control form-control-solid placeholder-no-fix form-group" name="username"  required />
+									<div class="help-block">Username is required</div>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="form-group">
+									<input type="password" class="form-control form-control form-control-solid placeholder-no-fix form-group" name="password" required />
+									<div class="help-block">Password is required</div>
+								</div>
+							</div>
+						</div>
+						<div class="row ">
+							<div class="col-sm-4">
+								<div class="hide">
+									<label class="rememberme mt-checkbox mt-checkbox-outline">
+										<input type="checkbox" name="remember" value="1" /> Remember me
+										<span></span>
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-8 text-right">
+								<div class="forgot-password hide">
+									<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
+								</div>
+								<button class="btn blue">Login</button>
+								<img class="hide" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+							</div>
+						</div>
+					</form>
+					<!-- BEGIN FORGOT PASSWORD FORM -->
+					<form class="forget-form hide" action="javascript:;" method="post">
+						<h3>Forgot Password ?</h3>
+						<p> Enter your e-mail address below to reset your password. </p>
+						<div class="form-group">
+							<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" />
+						</div>
+						<div class="form-actions">
+							<button type="button" id="back-btn" class="btn blue btn-outline">Back</button>
+							<button type="submit" class="btn blue uppercase pull-right">Submit</button>
+						</div>
+					</form>
+					<!-- END FORGOT PASSWORD FORM -->
+				</div>
+			</div>
+			<div class="col-md-6 bs-reset mt-login-5-bsfix">
+				<div class="login-bg"> </div>
+			</div>
+		</div>
+	</div>
+</div>

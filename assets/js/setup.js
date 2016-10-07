@@ -19,16 +19,29 @@ require.config({
         , app: ["app/app"]
         , user: ["../../app/user/user.model"]
         , router: ["app/router"]
-        
+
                 // Config
         , config: ["../../config"]
+
+                // Views
+        , "login.view": ["../../app/user/login.view"]
+
+                // Helpers
+        , "localstorage": ["helpers/localstorage"]
+        , "template": ["helpers/template"]
+        , "global": ["helpers/global"]
     }
 });
 require([
-    'config', 'app', 'user'
-], function (Config, App, User) {
+    'config', 'app', 'router', 'user'
+], function (Config, App, Router, User) {
+    /*
+     * Defining global constants
+     */
     window.CONFIG = Config;
     window.DEBUG = (Config.env === "dev") ? true : false;
+    window.STORAGE = localStorage;
+    window.SESSION = sessionStorage;
 
     var backboneSync = Backbone.sync;
     Backbone.sync = function (method, model, options) {
@@ -48,13 +61,14 @@ require([
          */
         backboneSync(method, model, options);
     }
+    Router.initialize();
     var user = new User();
     if (user.authorize())
         // The "app" dependency is passed in as "App"
         // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
         App.initialize();
     else {
-//        Login.redirect();
+        user.redirect();
     }
     return {};
 });

@@ -3,8 +3,8 @@ define([
     "jquery"
     , "underscore"
     , "backbone"
-    , ""
-], function ($, _, Backbone) {
+    , "login.view"
+], function ($, _, Backbone, Login) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Define some URL routes
@@ -16,10 +16,22 @@ define([
         , index: function() {
             console.log('You are in index!');
         }
+        , Login: function() {
+            var loginView = new Login();
+            loginView.render();
+        }
     });
 
     var initialize = function () {
         var app_router = new AppRouter;
+        app_router.on("route:index", function() {
+            console.log('You are in index!');
+        });
+        app_router.on("route:login", function() {
+            alert();
+            var loginView = new LoginView();
+            loginView.render();
+        });
 
 //        app_router.on('route:index', function (actions) {
 //            console.log(actions);
@@ -33,20 +45,5 @@ define([
 
     return {
         initialize: initialize
-        , n: 1
     };
 });
-//
-//define([
-//    'jquery'
-//    , 'underscore'
-//    , 'backbone'
-//], function ($, _, Backbone) {
-//    var Index = Backbone.View.extend({
-//        el: $("body")
-//        , render: function () {
-//            this.$el.append("Index route has been called..");
-//        }
-//    });
-//    return Index;
-//});
