@@ -1,9 +1,11 @@
-{
-    "settings": {
-        "environment": "dev",
-        "debug": true
+define({
+    "title": "Automation",
+//    "codename": window.location.host.replace(/\./g, ''),
+    "env": "dev",
+    "settings": {},
+    "api": {
+        url: 'localhost/misc/fakeapi'
     },
-    "services": {},
     "dependencies": [
         {
             "name": "jQuery",
@@ -62,4 +64,4 @@
             "map": false
         }
     ]
-}
+});
