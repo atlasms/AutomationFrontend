@@ -3,23 +3,35 @@ define([
     'underscore',
     'backbone',
     'template',
-    'config'
+    'config',
+    'user'
 //    'text!templates/todos.html'
-], function ($, _, Backbone, Template, Config) {
+], function ($, _, Backbone, Template, Config, User) {
 
     var LoginView = Backbone.View.extend({
         data: {}
+        , events: {
+            'submit': 'login'
+            , 'keyup': 'processKey'
+        }
+        , el: $(Config.positions.wrapper)
+        , model: 'UserModel'
         , render: function () {
             var template = Template.template.load('user', 'login');
-            template.done(function (a) {
-                var html = $(a).html();
+            template.done(function (data) {
+                var html = $(data).wrap('<p/>').parent().html();
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(this.data);
                 $(Config.positions.wrapper).html(output);
             });
             return this;
         }
-
+        , login: function (options) {
+            var user = new User();
+            var form = this.$el.find("form:first").serializeObject();
+            user.login(form);
+            return false;
+        }
     });
 
     return LoginView;

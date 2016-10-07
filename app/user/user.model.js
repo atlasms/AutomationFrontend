@@ -28,9 +28,31 @@ define([
         }
         , redirect: function () {
             // Redirecting User to login page
-            !Backbone.History.started && Backbone.history.start();
-            new Backbone.Router().navigate('login', {trigger: true}); 
+            !Backbone.History.started && Backbone.history.start({pushState: true});
+            new Backbone.Router().navigate('login', {trigger: true});
         }
+        , login: function (form) {
+            var key = this.storageKey;
+            $.ajax({
+                url: CONFIG.api.url + CONFIG.api.login
+                , data: JSON.stringify(form)
+                , type: 'post'
+                , dataType: "json"
+                , success: function (d) {
+                    var userData = {
+                        username: form.username
+                        , token: d.token
+                    }
+                    STORAGE.setItem(key, JSON.stringify(userData));
+                    STORAGE.setItem(key + '_token', d.token);
+                    // Redirect to home
+                    !Backbone.History.started && Backbone.history.start({pushState: true});
+                    new Backbone.Router().navigate('', {trigger: true});
+                }
+            });
+        }
+
+
     });
     return UserModel;
 });

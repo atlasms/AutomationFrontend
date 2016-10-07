@@ -8,7 +8,8 @@ define({
         , "main": "#main"
     },
     "api": {
-        url: 'localhost/misc/fakeapi'
+        url: '//localhost/misc/fakeapi/'
+        , login: ''
     },
     "dependencies": [
         {
