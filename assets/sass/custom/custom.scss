@@ -12,3 +12,8 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 } 
 .page-header.navbar .top-menu .navbar-nav > li.quick-sidebar-toggler > i:before { content: "\f08b" }
 .page-container { padding: 0; }
+.page-header.navbar .menu-toggler { background-image: url('../img/sidebar-toggle-light.png') }
+
+@media (min-width: 992px) {
+    .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; }
+}
