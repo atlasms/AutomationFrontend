@@ -1,10 +1,10 @@
 define([
     "jquery"
-            , "underscore"
-            , "backbone"
-            , "router"
-            , "config"
-            , "localstorage"
+    , "underscore"
+    , "backbone"
+    , "router"
+    , "config"
+    , "localstorage"
 ], function ($, _, Backbone, Router, Config, Storage) {
     var UserModel = Backbone.Model.extend({
         defaults: {
@@ -13,13 +13,14 @@ define([
         , storage: {}
         , initialize: function (options) {
             this.storageKey = Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
-//            this.storage = new Storage(this.storageKey);
+            //            this.storage = new Storage(this.storageKey);
             console.log('Login Model Init');
         }
         , authorize: function () {
             var items = STORAGE.getItem(this.storageKey);
             if (items) {
                 var content = JSON.parse(items);
+                console.log(content);
                 if (content.username && content.token) {
                     return true;
                 }
@@ -28,8 +29,8 @@ define([
         }
         , redirect: function () {
             // Redirecting User to login page
-            !Backbone.History.started && Backbone.history.start({pushState: true});
-            new Backbone.Router().navigate('login', {trigger: true});
+            !Backbone.History.started && Backbone.history.start({ pushState: true });
+            new Backbone.Router().navigate('login', { trigger: true });
         }
         , login: function (form) {
             var key = this.storageKey;
@@ -39,6 +40,9 @@ define([
                 , type: 'post'
                 , dataType: "json"
                 , success: function (d) {
+                    if (d.status && d.status !== 200)
+                        return false;
+//                    var data = d.body;
                     var userData = {
                         username: form.username
                         , token: d.token
@@ -46,8 +50,8 @@ define([
                     STORAGE.setItem(key, JSON.stringify(userData));
                     STORAGE.setItem(key + '_token', d.token);
                     // Redirect to home
-                    !Backbone.History.started && Backbone.history.start({pushState: true});
-                    new Backbone.Router().navigate('', {trigger: true});
+                    !Backbone.History.started && Backbone.history.start({ pushState: true });
+                    new Backbone.Router().navigate('', { trigger: true });
                 }
             });
         }
