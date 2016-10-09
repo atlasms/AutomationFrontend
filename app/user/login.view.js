@@ -12,7 +12,6 @@ define([
         data: {}
         , events: {
             'submit': 'login'
-            , 'keyup': 'processKey'
         }
         , el: $(Config.positions.wrapper)
         , model: 'UserModel'
