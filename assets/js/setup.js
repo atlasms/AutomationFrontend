@@ -6,6 +6,9 @@ require.config({
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
+        },
+        moment: {
+            exports: 'moment'
         }
     },
     paths: {
@@ -14,18 +17,28 @@ require.config({
         , underscore: ["vendor/underscore-min"]
         , backbone: ["vendor/backbone-min"]
         , handlebars: ["vendor/handlebars-v4.0.5"]
+        , moment: ["vendor/moment.min"]
+        , "moment-with-locales": ["vendor/moment-with-locales.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
-        , user: ["../../app/user/user.model"]
         , router: ["app/router"]
 
                 // Config
+        , defines: ["app/defines"]
         , config: ["../../config"]
+
+                // Models
+        , user: ["../../app/user/user.model"]
+        , "broadcast.model": ["../../app/broadcast/broadcast.model"]
+        , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
+        , "app.view": ["../../app/app.view"]
         , "login.view": ["../../app/user/login.view"]
+        , "broadcast.view": ["../../app/broadcast/broadcast.view"]
+        , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
 
                 // Helpers
         , "localstorage": ["helpers/localstorage"]
@@ -34,16 +47,10 @@ require.config({
     }
 });
 require([
-    'config', 'app', 'router', 'user'
-], function (Config, App, Router, User) {
-    /*
-     * Defining global constants
-     */
-    window.CONFIG = Config;
-    window.DEBUG = (Config.env === "dev") ? true : false;
-    window.STORAGE = localStorage;
-    window.SESSION = sessionStorage;
-
+    'config', 'defines', 'app', 'router', 'user'
+], function (Config, Defines, App, Router, User) {
+    Defines.initialize();
+//    Defines.initialize();
     var backboneSync = Backbone.sync;
     Backbone.sync = function (method, model, options) {
         /*
