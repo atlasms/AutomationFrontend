@@ -17,3 +17,10 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 @media (min-width: 992px) {
     .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; }
 }
+.page-content { padding-top: 0 !important; }
+.page-sidebar { text-align: left; }
+// #main { margin-top: -10px; }
+.table figure {
+    width: 200px;
+    img { display: block; width: 100%; height: auto; }
+}
