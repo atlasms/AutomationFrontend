@@ -3,6 +3,10 @@ define({
 //    "codename": window.location.host.replace(/\./g, ''),
     "env": "dev",
     "settings": {},
+    "routes": [
+        {path: 'broadcast', action: 'BroadcastView', file: 'app/broadcast/broadcast.view.js'}
+        , {path: 'broadcast/schedule', action: 'ScheduleView', file: 'app/broadcast/schedule/schedule.view.js'}
+    ],
     "positions": {
         "wrapper": "body"
         , "main": "#main"
@@ -61,8 +65,24 @@ define({
             "map": true
         },
         {
-            "name": "handlebars",
+            "name": "Handlebars",
             "version": "4.0.5",
+            "folder": "vendor",
+            "type": "min",
+            "bundled": false,
+            "map": false
+        },
+        {
+            "name": "MomentJS",
+            "version": "2.15.1",
+            "folder": "vendor",
+            "type": "min",
+            "bundled": false,
+            "map": false
+        },
+        {
+            "name": "MomentJS with Locales",
+            "version": "2.15.1",
             "folder": "vendor",
             "type": "min",
             "bundled": false,
