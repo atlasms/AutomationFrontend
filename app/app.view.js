@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config'
-], function ($, _, Backbone, Template, Config) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'layout', 'bootstrap/dropdown'
+], function ($, _, Backbone, Template, Config, Cookies, Layout, Dropdown) {
     var AppView = Backbone.View.extend({
         el: $(Config.positions.main)
         , render: function () {
