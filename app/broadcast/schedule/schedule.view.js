@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-locales', 'broadcast.schedule.model'
-], function ($, _, Backbone, Template, Config, moment, ScheduleModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-locales', 'broadcast.schedule.model', 'mask'
+], function ($, _, Backbone, Template, Config, moment, ScheduleModel, Mask) {
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.main)
         , model: 'ScheduleModel'
@@ -7,11 +7,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
             'submit': 'submit'
             , 'keyup input.time': 'processTime'
         }
-//        , timeRegex: /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/g
         , processTime: function (options) {
             var $element = $(options.target);
-//            console.log(this.timeRegex.test($element.val()))
-            if (!moment($element.val(), $element.attr("data-pattern"), true).isValid())
+            if (!moment($element.val(), 'HH:mm:SS', true).isValid())
                 $element.parent().addClass("has-error");
             else
                 $element.parent().removeClass("has-error");
@@ -23,11 +21,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
                 var html = $(data).wrap('<p/>').parent().html();
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(this.data);
-                $container.html(output);
+                $container.html(output).promise().done(function () {
+                    var $timePickers = $(".time");
+                    $.each($timePickers, function () {
+                        $(this).mask('H0:M0:S0', {
+                            translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                            , placeholder: '00:00:00'
+                        });
+                    });
+                });
             });
-//            requirejs(['mask'], function(mask) {
-//                console.log(typeof mask); 
-//            });
         }
         , prepareContent: function () {
             var model = new ScheduleModel();
