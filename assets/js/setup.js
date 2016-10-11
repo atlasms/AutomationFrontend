@@ -1,24 +1,39 @@
 require.config({
     shim: {
-        underscore: {
-            exports: '_'
-        },
-        backbone: {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        moment: {
-            exports: 'moment'
-        }
+        enforceDefine: true,
+        underscore: {exports: '_'},
+        backbone: {deps: ['underscore', 'jquery', 'handlebars'], exports: 'Backbone'},
+        moment: {deps: ['jquery'], exports: 'moment'},
+        cookie: {deps: ['jquery'], exports: 'Cookies'},
+        mask: {deps: ['jquery'], exports: 'mask'},
+        
+//        'bootstrap': {deps: ['jquery'], exports: 'Bootstrap'},
+        'bootstrap/affix':      { deps: ['jquery'], exports: '$.fn.affix' }, 
+        'bootstrap/alert':      { deps: ['jquery'], exports: '$.fn.alert' },
+        'bootstrap/button':     { deps: ['jquery'], exports: '$.fn.button' },
+//        'bootstrap/carousel':   { deps: ['jquery'], exports: '$.fn.carousel' },
+//        'bootstrap/collapse':   { deps: ['jquery'], exports: '$.fn.collapse' },
+        'bootstrap/dropdown':   { deps: ['jquery'], exports: '$.fn.dropdown' },
+        'bootstrap/modal':      { deps: ['jquery'], exports: '$.fn.modal' },
+//        'bootstrap/popover':    { deps: ['jquery'], exports: '$.fn.popover' },
+//        'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy' },
+        'bootstrap/tab':        { deps: ['jquery'], exports: '$.fn.tab'        },
+        'bootstrap/tooltip':    { deps: ['jquery'], exports: '$.fn.tooltip' },
+        'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' },
+        
+        "bootstrapSwitch": { deps: ['jquery'], exports: 'jQuery.fn.BootstrapSwitch' }
     },
+    urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
-        // Libs Dependencies
+        // Library Dependencies
         jquery: ["vendor/jquery-3.1.1.min"]
         , underscore: ["vendor/underscore-min"]
         , backbone: ["vendor/backbone-min"]
         , handlebars: ["vendor/handlebars-v4.0.5"]
         , moment: ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
+        , "bootstrap": ["vendor/bootstrap"]
+        , "bootstrapSwitch": ["vendor/bootstrap-switch.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
@@ -41,9 +56,12 @@ require.config({
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
 
                 // Helpers
+        , "layout": ["app/layout"]
+        , "cookie": ["helpers/cookie"]
         , "localstorage": ["helpers/localstorage"]
         , "template": ["helpers/template"]
         , "global": ["helpers/global"]
+        , "mask": ["vendor/jquery.mask.min"]
     }
 });
 require([
