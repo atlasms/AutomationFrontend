@@ -1,11 +1,4 @@
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'handlebars',
-    'config',
-    'global',
-//    'text!templates/todos.html'
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
 ], function ($, _, Backbone, Handlebars, Config, Global) {
 
     var template = {
@@ -106,8 +99,9 @@ define([
             });
         }
         , load: function (path, file) {
+            var bust = (CONFIG.env === "dev") ? '?bust=' + (new Date()).getTime() : '';
             return $.ajax({
-                url: '/app/' + path + '/' + file + '.template.html'
+                url: '/app/' + path + '/' + file + '.template.html' + bust
             });
         }
     }
