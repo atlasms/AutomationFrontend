@@ -8,6 +8,7 @@ define(["config", "jquery", "underscore", "backbone", "router", "template"], fun
         })();
         setRoutes(Config);
         registerHandlebarsHelpers();
+        $("title").text(Config.title);
     };
     var registerHandlebarsHelpers = function() {
         Template.template.handlebarHelpers();

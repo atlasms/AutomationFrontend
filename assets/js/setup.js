@@ -65,8 +65,8 @@ require.config({
     }
 });
 require([
-    'config', 'defines', 'app', 'router', 'user'
-], function (Config, Defines, App, Router, User) {
+    'jquery', 'config', 'defines', 'app', 'router', 'user'
+], function ($, Config, Defines, App, Router, User) {
     Defines.initialize();
 //    Defines.initialize();
     var backboneSync = Backbone.sync;

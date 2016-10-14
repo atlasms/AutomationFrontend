@@ -1,5 +1,5 @@
 define({
-    "title": "Automation",
+    "title": "اتوماسیون تولید و پخش",
 //    "codename": window.location.host.replace(/\./g, ''),
     "env": "dev",
     "settings": {},
