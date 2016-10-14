@@ -5,7 +5,7 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th></th>
+						<th class="col-xs-1"></th>
 						<th>فیکس</th>
 						<th class="col-xs-1">شروع</th>
 						<th class="col-xs-1">مدت</th>
@@ -18,19 +18,25 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>1</td>
-						<td>
+						<td class="text-center">1</td>
+						<td class="text-center">
 							<figure>
 								<img src="/assets/img/placeholder.png" alt="" />
 							</figure>
 						</td>
-						<td>
+						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
 								<input checked type="checkbox" id="checkbox1">
 								<label for="checkbox1"></label>
 							</div>
 						</td>
-						<td>
+						<td class="text-center">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="time form-control" step="1" id="form_control_1" required>
+								<span class="help-block">Active</span>
+							</div>
+						</td>
+						<td class="text-center">
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="time form-control" step="1" id="form_control_1" required>
 								<span class="help-block">Active</span>
@@ -38,12 +44,6 @@
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="time" class="time form-control" step="1" id="form_control_1" required>
-								<span class="help-block">Active</span>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="form-control" id="form_control_1">
 								<label for="form_control_1">Input with help</label>
 								<span class="help-block">Some help goes here...</span>
@@ -63,14 +63,14 @@
 								<span class="help-block">Some help goes here...</span>
 							</div>
 						</td>
-						<td>
+						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
 								<input checked type="checkbox" id="checkbox1">
 								<label for="checkbox1"></label>
 							</div>
 						</td>
-						<td>
-							<div class="checkbox checkbox-success checkbox-circle">
+						<td class="text-center">
+							<div class="checkbox checkbox-primary checkbox-circle">
 								<input checked type="checkbox" id="checkbox1">
 								<label for="checkbox1"></label>
 							</div>
