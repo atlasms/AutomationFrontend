@@ -1,11 +1,4 @@
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'template',
-    'config',
-    'user'
-//    'text!templates/todos.html'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
 ], function ($, _, Backbone, Template, Config, User) {
 
     var LoginView = Backbone.View.extend({

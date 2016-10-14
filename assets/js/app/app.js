@@ -1,9 +1,4 @@
-define([
-    "jquery"
-    , "underscore"
-    , "backbone"
-    , "router"
-    , "template"
+define(["jquery", "underscore", "backbone", "router", "template"
 ], function ($, _, Backbone, Router, Template) {
     var initialize = function () {
 
