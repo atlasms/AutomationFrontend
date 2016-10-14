@@ -16,6 +16,7 @@ define([
         , el: $(Config.positions.wrapper)
         , model: 'UserModel'
         , render: function () {
+            STORAGE.clear();
             var template = Template.template.load('user', 'login');
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
