@@ -25,6 +25,10 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 .page-sidebar { text-align: left; }
 // #main { margin-top: -10px; }
 .table figure {
-    width: 200px;
+    width: 120px; 
     img { display: block; width: 100%; height: auto; }
 }
+.table .form-group.form-md-line-input { margin-bottom: 0; } 
+input.time { text-align: center; }
+.login-content h1 { margin-bottom: 60px; } 
+.toast { direction: ltr; text-align: left }
