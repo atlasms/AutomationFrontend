@@ -6,22 +6,21 @@ require.config({
         moment: {deps: ['jquery'], exports: 'moment'},
         cookie: {deps: ['jquery'], exports: 'Cookies'},
         mask: {deps: ['jquery'], exports: 'mask'},
-        
+        toastr: {deps: ['jquery'], exports: 'toastr'},
 //        'bootstrap': {deps: ['jquery'], exports: 'Bootstrap'},
-        'bootstrap/affix':      { deps: ['jquery'], exports: '$.fn.affix' }, 
-        'bootstrap/alert':      { deps: ['jquery'], exports: '$.fn.alert' },
-        'bootstrap/button':     { deps: ['jquery'], exports: '$.fn.button' },
+        'bootstrap/affix': {deps: ['jquery'], exports: '$.fn.affix'},
+        'bootstrap/alert': {deps: ['jquery'], exports: '$.fn.alert'},
+        'bootstrap/button': {deps: ['jquery'], exports: '$.fn.button'},
 //        'bootstrap/carousel':   { deps: ['jquery'], exports: '$.fn.carousel' },
 //        'bootstrap/collapse':   { deps: ['jquery'], exports: '$.fn.collapse' },
-        'bootstrap/dropdown':   { deps: ['jquery'], exports: '$.fn.dropdown' },
-        'bootstrap/modal':      { deps: ['jquery'], exports: '$.fn.modal' },
+        'bootstrap/dropdown': {deps: ['jquery'], exports: '$.fn.dropdown'},
+        'bootstrap/modal': {deps: ['jquery'], exports: '$.fn.modal'},
 //        'bootstrap/popover':    { deps: ['jquery'], exports: '$.fn.popover' },
 //        'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy' },
-        'bootstrap/tab':        { deps: ['jquery'], exports: '$.fn.tab'        },
-        'bootstrap/tooltip':    { deps: ['jquery'], exports: '$.fn.tooltip' },
-        'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' },
-        
-        "bootstrapSwitch": { deps: ['jquery'], exports: 'jQuery.fn.BootstrapSwitch' }
+        'bootstrap/tab': {deps: ['jquery'], exports: '$.fn.tab'},
+        'bootstrap/tooltip': {deps: ['jquery'], exports: '$.fn.tooltip'},
+        'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'},
+        "bootstrapSwitch": {deps: ['jquery'], exports: 'jQuery.fn.BootstrapSwitch'}
     },
     urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
@@ -34,6 +33,7 @@ require.config({
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
         , "bootstrap": ["vendor/bootstrap"]
         , "bootstrapSwitch": ["vendor/bootstrap-switch.min"]
+        , "toastr": ["vendor/toastr.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
@@ -80,7 +80,6 @@ require([
         options = _.extend(options, {
             url: config.api.url + (_.isFunction(model.url) ? model.url() : model.url)
         });
-
         /*
          *  Call the stored original Backbone.sync
          * method with the new url property
@@ -93,8 +92,8 @@ require([
         // The "app" dependency is passed in as "App"
         // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
         App.initialize();
-    else {
-        user.redirect();
-    }
+//    else {
+//        user.redirect();
+//    }
     return {};
 });
