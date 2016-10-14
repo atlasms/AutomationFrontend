@@ -54,6 +54,7 @@ require.config({
         , "login.view": ["../../app/user/login.view"]
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
+        , "toolbar": ["helpers/toolbar"]
 
                 // Helpers
         , "layout": ["app/layout"]
