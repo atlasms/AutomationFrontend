@@ -10,10 +10,11 @@ define({
     "positions": {
         "wrapper": "body"
         , "main": "#main"
+        , "toolbar": "#toolbar"
     },
     "api": {
-        url: '//localhost/misc/fakeapi/'
-        , login: ''
+        url: 'http://93.190.24.246:81/'
+        , login: 'token'
     },
     "dependencies": [
         {
