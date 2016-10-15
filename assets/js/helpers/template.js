@@ -106,8 +106,11 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
                 $el.find('[value=' + value + ']').attr({'selected': 'selected'});
                 return $el.html();
             });
-            Handlebars.registerHelper('date', function (offset, options) {
+            Handlebars.registerHelper('createDate', function (offset, options) {
                 return Global.createDate(offset);
+            });
+            Handlebars.registerHelper('time', function (timestamp, options) {
+                return Global.createTime(timestamp);
             });
             Handlebars.registerHelper('convert2Jalali', function (value, options) {
                 return Global.convertDateTime(value);
