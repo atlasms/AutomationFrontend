@@ -3,7 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/irib/automation/frontend/assets/js/app.js</file>
+            <file>file:/C:/xampp/htroot/app/broadcast/schedule/schedule.template.html</file>
+            <file>file:/C:/xampp/htroot/assets/js/app/defines.js</file>
+            <file>file:/C:/xampp/htroot/app/broadcast/schedule/schedule.view.js</file>
+            <file>file:/C:/xampp/htroot/app/user/login.template.html</file>
+            <file>file:/C:/xampp/htroot/assets/js/app/layout.js</file>
+            <file>file:/C:/xampp/htroot/assets/js/helpers/template.js</file>
+            <file>file:/C:/xampp/htroot/index.html</file>
+            <file>file:/C:/xampp/htroot/app/broadcast/schedule/schedule.model.js</file>
+            <file>file:/C:/xampp/htroot/app/app.template.html</file>
+            <file>file:/C:/xampp/htroot/config.js</file>
         </group>
     </open-files>
 </project-private>
