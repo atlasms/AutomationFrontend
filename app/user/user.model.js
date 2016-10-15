@@ -32,7 +32,7 @@ define(["jquery", "underscore", "backbone", "config", 'toastr'
         , login: function (form) {
             var key = this.storageKey;
             $.ajax({
-                url: CONFIG.api.url + CONFIG.api.login
+                url: CONFIG.api.login
                 , data: form
                 , type: 'post'
                 , dataType: "json"
