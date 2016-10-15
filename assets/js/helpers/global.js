@@ -78,9 +78,9 @@ define([
                 sign = (timestamp != Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
                 var time = new Date(0, 0, 0, 0, 0, timestamp, 0);
-                var hours = zeroFill(time.getHours(), 2);
-                var minutes = zeroFill(time.getMinutes(), 2);
-                var seconds = zeroFill(time.getSeconds(), 2);
+                var hours = Global.zeroFill(time.getHours(), 2);
+                var minutes = Global.zeroFill(time.getMinutes(), 2);
+                var seconds = Global.zeroFill(time.getSeconds(), 2);
                 output = hours + ":" + minutes + ":" + seconds;
                 output = (showSign) ? output + sign : output;
             }
