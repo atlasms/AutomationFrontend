@@ -7,6 +7,8 @@ require.config({
         cookie: {deps: ['jquery'], exports: 'Cookies'},
         mask: {deps: ['jquery'], exports: 'mask'},
         toastr: {deps: ['jquery'], exports: 'toastr'},
+        pdate: {deps: ['jquery'], exports: 'pdate'},
+        pdatepicker: {deps: ['jquery', 'pdate'], exports: 'pdatepicker'},
 //        'bootstrap': {deps: ['jquery'], exports: 'Bootstrap'},
         'bootstrap/affix': {deps: ['jquery'], exports: '$.fn.affix'},
         'bootstrap/alert': {deps: ['jquery'], exports: '$.fn.alert'},
@@ -20,7 +22,6 @@ require.config({
         'bootstrap/tab': {deps: ['jquery'], exports: '$.fn.tab'},
         'bootstrap/tooltip': {deps: ['jquery'], exports: '$.fn.tooltip'},
         'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'},
-        "bootstrapSwitch": {deps: ['jquery'], exports: 'jQuery.fn.BootstrapSwitch'}
     },
     urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
@@ -32,8 +33,9 @@ require.config({
         , moment: ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
         , "bootstrap": ["vendor/bootstrap"]
-        , "bootstrapSwitch": ["vendor/bootstrap-switch.min"]
         , "toastr": ["vendor/toastr.min"]
+        , pdate: ["vendor/persian-date"]
+        , pdatepicker: ["vendor/persian-datepicker-0.4.5.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
