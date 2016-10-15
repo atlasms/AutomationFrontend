@@ -1,4 +1,5 @@
 require.config({
+waitSeconds:300,
     shim: {
         enforceDefine: true,
         underscore: {exports: '_'},
