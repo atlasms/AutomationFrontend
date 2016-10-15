@@ -47,6 +47,9 @@ require.config({
         , user: ["../../app/user/user.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
+                
+        // Collections
+        , "broadcast.schedule.collection": ["../../app/broadcast/schedule/schedule.collection"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -79,14 +82,14 @@ require([
          * the jQuery ajax options, which includes the `url` property
          */
         options = _.extend(options, {
-            url: config.api.url + (_.isFunction(model.url) ? model.url() : model.url)
+            url: Config.api.url + (_.isFunction(model.url) ? model.url() : model.url)
         });
         /*
          *  Call the stored original Backbone.sync
          * method with the new url property
          */
         backboneSync(method, model, options);
-    }
+    };
     Router.initialize();
     var user = new User();
     if (user.authorize())
