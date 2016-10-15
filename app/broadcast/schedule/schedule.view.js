@@ -22,26 +22,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
             var template = Template.template.load('broadcast/schedule', 'schedule');
             var $container = this.$el;
             var model = new ScheduleModel();
+            var self = this;
             model.fetch({
                 success: function (items) {
-                    var items = items.toJSON()
-                    console.log(JSON.stringify(items)); 
+                    var items = items.toJSON();
+                    delete items.query;
                     template.done(function (data) {
-                        var html = $(data).wrap('<p/>').parent().html();
-                        var handlebarsTemplate = Template.handlebars.compile(html);
+                        var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            var $timePickers = $(".time");
-                            $.each($timePickers, function () {
-                                $(this).mask('H0:M0:S0', {
-                                    placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                                });
-                            });
+                            self.renderToolbar();
+                            self.afterRender();
                         });
                     });
                 }
             });
-            this.renderToolbar();
+        }
+        , afterRender: function () {
+            var $timePickers = $(".time");
+            $.each($timePickers, function () {
+                $(this).mask('H0:M0:S0', {
+                    placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                });
+            });
         }
         , renderToolbar: function () {
             var elements = this.toolbar;
