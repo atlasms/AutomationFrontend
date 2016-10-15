@@ -1,9 +1,18 @@
 define(["jquery", "underscore", "backbone", "config"
 ], function ($, _, Backbone, Config) {
     var ScheduleModel = Backbone.Model.extend({
-        initialize: function (options) {
-//            !Backbone.History.started && Backbone.history.start({pushState: true});
-//            new Backbone.Router().navigate('broadcast/schedule', {trigger: true});
+        defaults: {
+            query: ""
+        }
+        , initialize: function (options) {
+            this.query = (options && options.query) ? options.query : '';
+        }
+        , url: function () {
+            return Config.api.schedule + this.query;
+        }
+        , parse: function (data) {
+            data = _.map(data, _.identity);
+            return data;
         }
     });
     return ScheduleModel;

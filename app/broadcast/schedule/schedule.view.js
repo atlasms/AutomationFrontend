@@ -1,8 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-locales', 'broadcast.schedule.model', 'mask'
-], function ($, _, Backbone, Template, Config, moment, ScheduleModel, Mask) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toolbar'
+], function ($, _, Backbone, Template, Config, moment, ScheduleModel, Mask, Toolbar) {
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.main)
         , model: 'ScheduleModel'
+        , toolbar: [
+            {'button': {cssClass: 'btn btn-success', text: 'جدید', type: 'button'}}
+            , {'button': {cssClass: 'btn btn-info', text: 'salam salam', type: 'button'}}
+        ]
         , events: {
             'submit': 'submit'
             , 'keyup input.time': 'processTime'
@@ -17,19 +21,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
         , render: function (content) {
             var template = Template.template.load('broadcast/schedule', 'schedule');
             var $container = this.$el;
-            template.done(function (data) {
-                var html = $(data).wrap('<p/>').parent().html();
-                var handlebarsTemplate = Template.handlebars.compile(html);
-                var output = handlebarsTemplate(this.data);
-                $container.html(output).promise().done(function () {
-                    var $timePickers = $(".time");
-                    $.each($timePickers, function () {
-                        $(this).mask('H0:M0:S0', {
-                            translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                            , placeholder: '00:00:00'
+            var model = new ScheduleModel();
+            model.fetch({
+                success: function (items) {
+                    var items = items.toJSON()
+                    console.log(JSON.stringify(items)); 
+                    template.done(function (data) {
+                        var html = $(data).wrap('<p/>').parent().html();
+                        var handlebarsTemplate = Template.handlebars.compile(html);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            var $timePickers = $(".time");
+                            $.each($timePickers, function () {
+                                $(this).mask('H0:M0:S0', {
+                                    placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                });
+                            });
                         });
                     });
-                });
+                }
+            });
+            this.renderToolbar();
+        }
+        , renderToolbar: function () {
+            var elements = this.toolbar;
+            var toolbar = new Toolbar();
+            $.each(elements, function () {
+                var method = Object.getOwnPropertyNames(this);
+                toolbar[method](this[method]);
+                toolbar.render();
             });
         }
         , prepareContent: function () {
