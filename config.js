@@ -13,8 +13,9 @@ define({
         , "toolbar": "#toolbar"
     },
     "api": {
-        url: 'http://93.190.24.246:81/'
-        , login: 'token'
+        url: 'http://93.190.24.246:81/api/'
+        , login: 'http://93.190.24.246:81/token'
+        , schedule: 'conductor'
     },
     "dependencies": [
         {
