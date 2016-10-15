@@ -5,6 +5,18 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
         handlebarHelpers: function () {
             if (typeof Handlebars === "undefined")
                 return false;
+            Handlebars.registerHelper("math", function (lvalue, operator, rvalue, options) {
+                lvalue = parseFloat(lvalue);
+                rvalue = parseFloat(rvalue);
+
+                return {
+                    "+": lvalue + rvalue,
+                    "-": lvalue - rvalue,
+                    "*": lvalue * rvalue,
+                    "/": lvalue / rvalue,
+                    "%": lvalue % rvalue
+                }[operator];
+            });
             Handlebars.registerHelper('times', function (n, block) { // Loop a block starting at 0
                 var accum = '';
                 for (var i = 0; i < n; ++i)
@@ -13,6 +25,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
             });
             Handlebars.registerHelper('debug', function (value, options) {
                 console.log(value);
+            });
+            Handlebars.registerHelper('extractTime', function (value, options) {
+                return (value && value.indexOf("T") !== -1) ? value.split('T')[1] : value;
             });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';
@@ -102,9 +117,10 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
             var bust = (CONFIG.env === "dev") ? '?bust=' + (new Date()).getTime() : '';
             return $.ajax({
                 url: '/app/' + path + '/' + file + '.template.html' + bust
+                , contentType: 'text/x-handlebars-template'
             });
         }
-    }
+    };
     var handlebars = Handlebars;
     return {
         handlebars: handlebars
