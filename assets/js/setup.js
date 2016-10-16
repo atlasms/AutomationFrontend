@@ -1,5 +1,5 @@
 require.config({
-waitSeconds:300,
+    waitSeconds: 300,
     shim: {
         enforceDefine: true,
         underscore: {exports: '_'},
@@ -51,8 +51,8 @@ waitSeconds:300,
         , user: ["../../app/user/user.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
-                
-        // Collections
+
+                // Collections
         , "broadcast.schedule.collection": ["../../app/broadcast/schedule/schedule.collection"]
 
                 // Views
