@@ -4,7 +4,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
+            , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
         ]
@@ -13,6 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             'submit': 'submit'
             , 'keyup input.time': 'processTime'
             , 'click [data-task=load]': 'load'
+            , 'click [data-task=file]': 'loadFile'
         }
 //        , initialize: function () {
 //            _.bindAll(this, "render", "eventCatcher");
@@ -20,6 +23,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //        , eventCatcher: function (e) {
 //            alert();
 //        }
+        , loadFile: function (e) {
+             var params = {
+                startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
+                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                , format: $(e.currentTarget).attr("type")
+            };
+            var model = new ScheduleModel(params);
+            model.navigate((typeof params !== "undefined") ? $.param(params) : null);
+        }
         , processTime: function (options) {
             var $element = $(options.target);
             if (!moment($element.val(), 'HH:mm:SS', true).isValid())
@@ -27,12 +39,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             else
                 $element.parent().removeClass("has-error");
         }
-        , load: function () {
+        , load: function (e, extend) {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
-            this.render(params);
+            extend = (typeof extend === "object") ? extend : {};
+//            console.log();
+            this.render($.extend({}, params, extend));
         }
         , render: function (params) {
             var template = Template.template.load('broadcast/schedule', 'schedule');
