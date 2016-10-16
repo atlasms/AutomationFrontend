@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'config'
             var type = (typeof args.type !== "undefined") ? args.type : 'submit';
             var task = (typeof args.task !== "undefined") ? args.task : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
-            var output = '<div class="form-group"><button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + text + '</button></div>';
+            var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {
