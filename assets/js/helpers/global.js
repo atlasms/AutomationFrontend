@@ -104,7 +104,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             var date = datetime[0].split(splitter);
             var JDate = require('jdate');
             var gdate = JDate.to_gregorian(parseInt(date[0]), parseInt(date[1]), parseInt(date[2]));
-            return greg_date = gdate.getFullYear() + '-' + Global.zeroFill(gdate.getMonth() + 1) + '-' + Global.zeroFill(gdate.getDate()) + ' ' + datetime[1];
+            return greg_date = gdate.getFullYear() + '-' + Global.zeroFill(gdate.getMonth() + 1) + '-' + Global.zeroFill(gdate.getDate());
         }
         , gregorianToJalali: function (datetime, splitter) {
             splitter = (typeof splitter !== "undefined") ? splitter : '-';
@@ -112,7 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             var dt = datetime.split(' ');
             var d = dt[0].split(splitter).reverse();
             var jdate = new JDate(new Date(d[0], d[1], d[2]));
-            return jdate.date.join('-') + ' ' + dt[1];
+            return jdate.date.join('-');
         }
     };
     return Global;

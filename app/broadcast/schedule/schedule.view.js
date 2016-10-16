@@ -5,8 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , model: 'ScheduleModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD 23:59:59')}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD 00:00:00')}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
         ]
         , flags: {}
         , events: {
@@ -29,8 +29,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , load: function () {
             var params = {
-                startdate: Global.jalaliToGregorian($("[name=startdate]").val()).replace(' ', 'T')
-                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()).replace(' ', 'T')
+                startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
+                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
             this.render(params);
         }
@@ -76,11 +76,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $.each($datePickers, function () {
                 $(this).pDatepicker(CONFIG.settings.datepicker);
             });
-            ///// TEMP: TODO
-            setTimeout(function () {
-                $("[name=startdate]").val($("[name=startdate]").val().split(" ")[0] + ' 00:00:00');
-                $("[name=enddate]").val($("[name=startdate]").val().split(" ")[0] + ' 23:59:59');
-            }, 200);
             this.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {

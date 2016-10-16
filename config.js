@@ -3,7 +3,7 @@ define({
     "env": "dev",
     "settings": {
         "datepicker": {
-            "format": 'YYYY-MM-DD hh:mm:ss'
+            "format": 'YYYY-MM-DD'
             , "autoClose": true
             , "observer": true
             , "navigator": {
