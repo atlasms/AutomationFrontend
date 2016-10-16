@@ -21,7 +21,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
     var initialize = function () {
         var appRouter = new AppRouter;
         appRouter.on("route:app", function () {
-            $("body").addClass("page-container-bg-solid page-sidebar-closed-hide-logo page-header-fixed page-footer-fixed");
+            $("body").addClass("page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed");
             var template = Template.template.load('', 'app');
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
