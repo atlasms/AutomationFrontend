@@ -1,7 +1,20 @@
 define({
     "title": "اتوماسیون تولید و پخش",
     "env": "dev",
-    "settings": {},
+    "settings": {
+        "datepicker": {
+            "format": 'YYYY-MM-DD hh:mm:ss'
+            , "autoClose": true
+            , "observer": true
+            , "navigator": {
+                "enabled": true
+                , "text": {
+                    "btnNextText": ">"
+                    , "btnPrevText": "<"
+                }
+            }
+        }
+    },
     "routes": [
         {"path": "broadcast", "action": "BroadcastView", "file": "app/broadcast/broadcast.view.js"}
         , {"path": "broadcast/schedule", "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view.js"}
