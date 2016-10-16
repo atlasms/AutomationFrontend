@@ -110,8 +110,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             splitter = (typeof splitter !== "undefined") ? splitter : '-';
             var JDate = require('jdate');
             var dt = datetime.split(' ');
-            var d = dt[0].split(splitter).reverse();
-            var jdate = new JDate(new Date(d[0], d[1], d[2]));
+            var d = dt[0].split(splitter);
+            var jdate = new JDate(new Date(d[0], (d[1] - 1), d[2]));
             return jdate.date.join('-');
         }
     };
