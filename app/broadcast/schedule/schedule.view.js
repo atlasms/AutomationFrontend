@@ -12,19 +12,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         ]
         , flags: {}
         , events: {
-            'submit': 'submit'
+            'click [type=submit]': 'submit'
             , 'keyup input.time': 'processTime'
             , 'click [data-task=load]': 'load'
             , 'click [data-task=file]': 'loadFile'
         }
-//        , initialize: function () {
-//            _.bindAll(this, "render", "eventCatcher");
-//        }
-//        , eventCatcher: function (e) {
-//            alert();
-//        }
+        , submit: function () {
+            var data = this.prepareSave();
+            new ScheduleModel().save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+            });
+        }
         , loadFile: function (e) {
-             var params = {
+            var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
                 , format: $(e.currentTarget).attr("type")
@@ -74,6 +76,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
                 });
             });
+            $(document).on('change', '[type="checkbox"]', function () {
+                if ($(this).is(':checked'))
+                    $(this).attr('value', 1);
+                else
+                    $(this).attr('value', 0);
+            });
         }
         , renderToolbar: function () {
             if (this.flags.toolbarRendered)
@@ -105,6 +113,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , prepareContent: function () {
             // var model = new ScheduleModel();
             // model.initialize();
+        }
+        , prepareSave: function () {
+            var data = [];
+            var $rows = $("table:first tbody tr");
+            $rows.each(function () {
+                var row = {};
+                $(this).find("input, textarea, select").each(function () {
+                    var $input = $(this);
+                    row[$input.attr("name")] = /^\d+$/.test($input.val()) ? +$input.val() : $input.val();
+//                    row[$input.attr("name")] = $input.val();
+                    if (typeof $input.attr('data-before-save') !== "undefined") {
+                        switch ($input.attr('data-before-save')) {
+                            case 'prepend-date':
+                                row[$input.attr("name")] = Global.jalaliToGregorian($(this).parent().find("label").text()) + 'T' + $input.val();
+                                break;
+                            case 'timestamp':
+                                row[$input.attr("name")] = Global.processTime($input.val());
+                                break;
+                        }
+                    }
+                });
+                data.push(row);
+            });
+            return data;
         }
     });
     return ScheduleView;
