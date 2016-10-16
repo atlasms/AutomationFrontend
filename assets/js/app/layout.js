@@ -282,7 +282,9 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 handleInput($(this));
             });
             $('body').on('blur', '.form-md-floating-label .form-control', function (e) {
-                handleInput($(this));
+//                handleInput($(this));
+// Farid
+                $(this).removeClass("edited");
             });
 
             $('.form-md-floating-label .form-control').each(function () {
