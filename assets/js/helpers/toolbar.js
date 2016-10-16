@@ -7,6 +7,19 @@ define(['jquery', 'underscore', 'backbone', 'config'
 //            'submit': 'submit'
 //            , 'keyup input.time': 'processTime'
         }
+        , initialize: function () {
+            var $toolbar = this.$el;
+            var gap = $toolbar.offset().top;
+            var width = $toolbar.width();
+            $(window).on('scroll', function () {
+                if ($("body").hasClass("_md") || $("body").hasClass("_lg")) {
+                    if ($(this).scrollTop() > gap)
+                        !$("body").hasClass('fixed-toolbar') && $("body").addClass("fixed-toolbar").find("#toolbar").width(width);
+                    else
+                        $("body").hasClass('fixed-toolbar') && $("body").removeClass("fixed-toolbar").find("#toolbar").width('inherit');
+                }
+            });
+        }
         , render: function () {
             this.$el.html(this.toolbar);
         }
