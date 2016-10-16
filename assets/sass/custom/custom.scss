@@ -37,5 +37,6 @@ input.time { text-align: center; }
     .form-group { margin-right: 10px; }
     button ~ button { margin-left: 10px; }
 }
-input.datepicker { direction: rtl; text-align: right; min-width: 200px; }
+input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .page-footer { display: none } // Temp
+.fixed-label.form-group.form-md-line-input .form-control ~ label { color: #cdcdcd; font-size: 12px; }
