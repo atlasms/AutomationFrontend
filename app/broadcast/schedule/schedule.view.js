@@ -1,17 +1,25 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toolbar', 'pdatepicker'
-], function ($, _, Backbone, Template, Config, moment, ScheduleModel, Mask, Toolbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toolbar', 'pdatepicker'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, Toolbar, pDatepicker) {
     var ScheduleView = Backbone.View.extend({
-        el: $(Config.positions.main)
+        el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
         , toolbar: [
-              {'button': {cssClass: 'btn btn-success', text: 'جدید', type: 'button'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate'}}
+            {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD 23:59:59')}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD 00:00:00')}}
         ]
+        , flags: {}
         , events: {
             'submit': 'submit'
             , 'keyup input.time': 'processTime'
+            , 'click [data-task=load]': 'load'
         }
+//        , initialize: function () {
+//            _.bindAll(this, "render", "eventCatcher");
+//        }
+//        , eventCatcher: function (e) {
+//            alert();
+//        }
         , processTime: function (options) {
             var $element = $(options.target);
             if (!moment($element.val(), 'HH:mm:SS', true).isValid())
@@ -19,15 +27,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
             else
                 $element.parent().removeClass("has-error");
         }
-        , render: function (content) {
+        , load: function () {
+            var params = {
+                startdate: Global.jalaliToGregorian($("[name=startdate]").val()).replace(' ', 'T')
+                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()).replace(' ', 'T')
+            };
+            this.render(params);
+        }
+        , render: function (params) {
             var template = Template.template.load('broadcast/schedule', 'schedule');
-            var $container = this.$el;
-            var model = new ScheduleModel();
+            var $container = $(Config.positions.main);
+            var model = new ScheduleModel(params);
             var self = this;
             model.fetch({
-                success: function (items) {
-                    var items = items.toJSON();
-                    delete items.query;
+                data: (typeof params !== "undefined") ? $.param(params) : null
+                , success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
@@ -41,19 +56,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
         }
         , afterRender: function () {
             var $timePickers = $(".time");
-            var $datePickers = $(".datepicker");
             $.each($timePickers, function () {
                 $(this).mask('H0:M0:S0', {
                     placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
                 });
             });
-            $.each($datePickers, function() {
-                $(this).pDatepicker({
-                    format: 'YYYY-MM-DD HH:mm:ss'
-                });
-            });
         }
         , renderToolbar: function () {
+            if (this.flags.toolbarRendered)
+                return;
             var elements = this.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -61,10 +72,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'moment-with-l
                 toolbar[method](this[method]);
                 toolbar.render();
             });
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                $(this).pDatepicker(CONFIG.settings.datepicker);
+            });
+            ///// TEMP: TODO
+            setTimeout(function () {
+                $("[name=startdate]").val($("[name=startdate]").val().split(" ")[0] + ' 00:00:00');
+                $("[name=enddate]").val($("[name=startdate]").val().split(" ")[0] + ' 23:59:59');
+            }, 200);
+            this.flags.toolbarRendered = true;
+        }
+        , prepareItems: function (items, params) {
+            console.warn(items, params);
+            if (typeof items.query !== "undefined")
+                delete items.query;
+            if (typeof params !== "undefined") {
+                for (var prop in params) {
+                    delete items[prop];
+                }
+            }
+            return items;
+
         }
         , prepareContent: function () {
-            var model = new ScheduleModel();
-            model.initialize();
+            // var model = new ScheduleModel();
+            // model.initialize();
         }
     });
     return ScheduleView;

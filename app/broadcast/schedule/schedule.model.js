@@ -5,7 +5,7 @@ define(["jquery", "underscore", "backbone", "config"
             query: ""
         }
         , initialize: function (options) {
-            this.query = (options && options.query) ? options.query : '';
+            this.query = (options && options.query) ? '?' + options.query : '';
         }
         , url: function () {
             return Config.api.schedule + this.query;
