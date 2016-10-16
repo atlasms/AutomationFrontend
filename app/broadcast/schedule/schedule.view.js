@@ -4,10 +4,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
+            {'button': {cssClass: 'btn green-jungle pull-right hide fade', text: 'ذخیره', type: 'submit', task: 'save'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
+            , {'button': {cssClass: 'btn btn-success hide', text: 'نمایش', type: 'button', task: 'load'}}
+//            , {'input': {cssClass: 'form-control datepicker hide', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
         ]
         , flags: {}
@@ -28,7 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , loadFile: function (e) {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
-                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
                 , format: $(e.currentTarget).attr("type")
             };
             var model = new ScheduleModel(params);
@@ -44,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , load: function (e, extend) {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
-                , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
             };
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
@@ -70,6 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             self.renderToolbar();
         }
         , afterRender: function () {
+            $("#toolbar button[type=submit]").removeClass('hide').addClass('in');
             var $timePickers = $(".time");
             $.each($timePickers, function () {
                 $(this).mask('H0:M0:S0', {
@@ -84,6 +85,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , renderToolbar: function () {
+            var self = this;
             if (this.flags.toolbarRendered)
                 return;
             var elements = this.toolbar;
@@ -94,8 +96,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toolbar.render();
             });
             var $datePickers = $(".datepicker");
+            var datepickerConf = {
+                onSelect: function () {
+                    self.load();
+                    $datePickers.blur();
+                }
+            };
             $.each($datePickers, function () {
-                $(this).pDatepicker(CONFIG.settings.datepicker);
+                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
             this.flags.toolbarRendered = true;
         }
@@ -122,7 +130,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 $(this).find("input, textarea, select").each(function () {
                     var $input = $(this);
                     row[$input.attr("name")] = /^\d+$/.test($input.val()) ? +$input.val() : $input.val();
-//                    row[$input.attr("name")] = $input.val();
                     if (typeof $input.attr('data-before-save') !== "undefined") {
                         switch ($input.attr('data-before-save')) {
                             case 'prepend-date':
