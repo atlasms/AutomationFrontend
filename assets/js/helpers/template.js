@@ -29,6 +29,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
             Handlebars.registerHelper('extractTime', function (value, options) {
                 return (value && value.indexOf("T") !== -1) ? value.split('T')[1] : value;
             });
+            Handlebars.registerHelper('extractDate', function (value, options) {
+                return (value && value.indexOf("T") !== -1) ? Global.gregorianToJalali(value.split('T')[0]) : Global.gregorianToJalali(value);
+            });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';
                 for (var i = 1; i < (n + 1); ++i)
