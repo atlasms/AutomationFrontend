@@ -84,7 +84,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
-            console.warn(items, params);
             if (typeof items.query !== "undefined")
                 delete items.query;
             if (typeof params !== "undefined") {
