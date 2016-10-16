@@ -19,7 +19,9 @@
 				<tbody>
 					{{#each []}}
 					<tr>
-						<td class="text-center">{{math @index "+" 1}}</td>
+						<td class="text-center">
+							{{math @index "+" 1}}
+						</td>
 						<td class="text-center">
 							<figure>
 								<img src="/assets/img/placeholder.png" alt="" />
@@ -27,52 +29,55 @@
 						</td>
 						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input {{#if CondcutorIsFixed}}checked{{/if}} type="checkbox" id="checkbox1">
+								<input type="checkbox" name="CondcutorIsFixed" id="checkbox{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
 								<label for="checkbox1"></label>
 							</div>
 						</td>
 						<td class="text-center">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="time form-control" step="1" value="{{extractTime CondcutorStartTime}}" required>
+							<div class="form-group form-md-line-input fixed-label">
+								<input type="text" class="time form-control" data-before-save="prepend-date" step="1" id="CondcutorStartTime_{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
+								<label for="CondcutorStartTime_{{@index}}">{{extractDate CondcutorStartTime}}</label>
 								<span class="help-block">Active</span>
 							</div>
 						</td>
 						<td class="text-center">
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="time form-control" step="2" value="{{time ConductorDuration}}" required>
+								<input type="text" class="time form-control" data-before-save="timestamp" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
+								<label for="ConductorDuration_{{@index}}"></label>
 								<span class="help-block">Active</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control" id="form_control_{{@index}}" value="{{ConductorTitle}}">
-								{{#unless ConductorTitle}}<label for="form_control_{{@index}}">نام برنامه</label>{{/unless}}
+								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
+								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
+								<label for="form_control_{{@index}}">{{#unless ConductorTitle}}نام برنامه{{/unless}}</label>
 								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control" id="form_control_{{@index}}" value="{{ConductorEpisodeNumber}}">
-								{{#unless ConductorEpisodeNumber}}<label for="form_control_{{@index}}">شماره قسمت</label>{{/unless}}
+								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
+								<label for="form_control_{{@index}}">{{#unless ConductorEpisodeNumber}}شماره قسمت{{/unless}}</label>
 								<span class="help-block">شماره قسمت برنامه</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control" id="form_control_{{@index}}" value="{{ConductorNote}}">
-								{{#unless ConductorNote}}<label for="form_control_{{@index}}">توضیحات برنامه</label>{{/unless}}
+								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorNote" value="{{ConductorNote}}">
+								<label for="form_control_{{@index}}">{{#unless ConductorNote}}توضیحات برنامه{{/unless}}</label>
 								<span class="help-block">اطلاعات تکمیلی در خصوص برنامه در این قسمت وارد می‌شود</span>
 							</div>
 						</td>
 						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+								<input name="ConductorRepeat" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
 								<label for="checkbox_{{@index}}"></label>
 							</div>
 						</td>
 						<td class="text-center">
 							<div class="checkbox checkbox-primary checkbox-circle">
-								<input {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+								<input name="CondcutorFeatured" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
 								<label for="checkbox_{{@index}}"></label>
 							</div>
 						</td>
