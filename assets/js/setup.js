@@ -37,6 +37,7 @@ waitSeconds:300,
         , "toastr": ["vendor/toastr.min"]
         , pdate: ["vendor/persian-date"]
         , pdatepicker: ["vendor/persian-datepicker-0.4.5.min"]
+        , jdate: ["vendor/jdate.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
