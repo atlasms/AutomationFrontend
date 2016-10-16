@@ -44,9 +44,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
-            extend = (typeof extend === "object") ? extend : {};
-//            console.log();
-            this.render($.extend({}, params, extend));
+            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            this.render(params);
         }
         , render: function (params) {
             var template = Template.template.load('broadcast/schedule', 'schedule');
