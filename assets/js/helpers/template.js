@@ -119,6 +119,12 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
                 return Global.convertDateTime(value);
             });
         }
+        , handlebarPartials: function() {
+            Handlebars.registerPartial('scheduleRowTools', function() {
+                var output = '<div class="tools"><button class="btn" data-task="add"><i class="fa fa-plus"></i></button><button class="btn" data-task="delete"><i class="fa fa-minus"></i></button></div>';
+                return output;
+            });
+        }
         , load: function (path, file) {
             var bust = (CONFIG.env === "dev") ? '?bust=' + (new Date()).getTime() : '';
             return $.ajax({
