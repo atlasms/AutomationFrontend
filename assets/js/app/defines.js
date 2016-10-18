@@ -5,13 +5,17 @@ define(["config", "jquery", "underscore", "backbone", "router", "template"], fun
             window.DEBUG = (Config.env === "dev") ? true : false;
             window.STORAGE = localStorage;
             window.SESSION = sessionStorage;
+            window.$$ = function (element) {
+                return document.querySelectorAll(element);
+            }
         })();
         setRoutes(Config);
         registerHandlebarsHelpers();
         $("title").text(Config.title);
     };
-    var registerHandlebarsHelpers = function() {
+    var registerHandlebarsHelpers = function () {
         Template.template.handlebarHelpers();
+        Template.template.handlebarPartials();
     };
 
     var setRoutes = function (Config) {
@@ -24,6 +28,8 @@ define(["config", "jquery", "underscore", "backbone", "router", "template"], fun
 //            }
 //        });
     };
+
+
 
     return {
         initialize: initialize
