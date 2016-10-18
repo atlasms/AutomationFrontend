@@ -1,46 +1,78 @@
-// @import "bootstrap-switch";
+// Imports
 @import "../bootstrap/_variables";
 @import "../bootstrap/_mixins";
 @import "awesome-bootstrap-checkbox";
-// html, body { direction: ltr; text-align: left; }
+
+// Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, p, button, label, table, tr, td, textarea  { direction: ltr; text-align: left; }
-.page-content { padding-top: 30px; }
+
+// Header
 .breadcrumbs { 
     background: #f9f9f9; margin-left: -30px; margin-right: -30px; padding-left: 30px; padding-right: 30px; height: 40px; 
     h1 { font-family: 'Vazir', Tahoma; line-height: 40px; }
 }
-.navbar { min-height: 0 !important; }  
-.top-tools {
-    float: left; height: 100%; line-height: 40px;
-}
+.navbar { min-height: 0 !important; }
+.top-tools { float: left; height: 100%; line-height: 40px; }
 .page-header.navbar .top-menu .navbar-nav > li.quick-sidebar-toggler > i:before { content: "\f08b" }
-// .page-container { margin-top: 78px; } 
 .page-header.navbar .menu-toggler { background-image: url('../img/sidebar-toggle-light.png') }
 
-@media (min-width: 992px) {
-    .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; }
+// Componenets
+.table {
+    figure {
+        width: 120px;
+        img { display: block; width: 100%; height: auto; }
+    }
+    .form-group.form-md-line-input { margin-bottom: 0; }
 }
-.page-content { padding-top: 0 !important; }
-.page-sidebar { text-align: left; }
-// #main { margin-top: -10px; }
-.table figure {
-    width: 120px;
-    img { display: block; width: 100%; height: auto; }
-}
-.table .form-group.form-md-line-input { margin-bottom: 0; } 
-input.time { text-align: center; }
-.login-content h1 { margin-bottom: 60px; } 
-.toast { direction: ltr; text-align: left }
-.box.portlet { direction: ltr; text-align: left; }
+input[type="checkbox"] { outline: 0 none !important; }
+input.focus-helper { width: 0px; height: 0px; border: 0 none; box-shadow: 0 none; background: transparent; }
+input.time { text-align: center; direction: rtl; } 
+input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .form-inline {
     .form-group { margin-right: 10px; }
     button ~ button { margin-left: 10px; }
 }
-input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
-.page-footer { display: none } // Temp
 .fixed-label.form-group.form-md-line-input .form-control ~ label { color: #cdcdcd; font-size: 12px; }
+.box.portlet { direction: ltr; text-align: left; }
+
+// Plugins
+.toast { direction: ltr; text-align: left }
+
+// Mainbody
+.page-content { padding-top: 30px; }
+.page-content { padding-top: 0 !important; }
+
+// Sidebar
+.page-sidebar { text-align: left; }
+
+@media (min-width: 992px) { .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; } }
+
+// Footer
+.page-footer { display: none } // Temp
+
+// Fixed Toolbar
 body.fixed-toolbar {
     #toolbar { position: fixed; top: 0; z-index: 800; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
     #main { margin-top: 25px; }
 }
+
+// Pages
+/// Login
+.login-content h1 { margin-bottom: 60px; } 
+
+/// Schedules
+#schedule-page {
+    tbody tr {
+        border-left: 5px solid #ddd;
+        td:first-child { position: relative; }
+        .tools { position: absolute; top: 0; left: 0; width: 40px; background: tomato; opacity: 0; visibility: hidden; transition: 0.2s all; height: 100%; } 
+        &.active {
+            border-left-color: #cbcbcb;
+            .tools { left: -48px; opacity: 1; visibility: visible; }
+        }
+        &.error {
+            border-left-color: red;
+        }
+    }
+} 
