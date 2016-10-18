@@ -1,12 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toolbar', 'pdatepicker'
-], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, Toolbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toolbar', 'pdatepicker', 'scheduleHelper'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, Toolbar, pDatepicker, ScheduleHelper) {
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right hide fade', text: 'ذخیره', type: 'submit', task: 'save'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
-            , {'button': {cssClass: 'btn btn-success hide', text: 'نمایش', type: 'button', task: 'load'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
 //            , {'input': {cssClass: 'form-control datepicker hide', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
         ]
@@ -18,6 +18,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=file]': 'loadFile'
         }
         , submit: function () {
+            var helper = new ScheduleHelper.validate();
+            if (!helper.beforeSave())
+                return;
             var data = this.prepareSave();
             new ScheduleModel().save(null, {
                 data: JSON.stringify(data)
@@ -35,13 +38,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             model.navigate((typeof params !== "undefined") ? $.param(params) : null);
         }
         , processTime: function (options) {
-            var $element = $(options.target);
-            if (!moment($element.val(), 'HH:mm:SS', true).isValid())
-                $element.parent().addClass("has-error");
-            else
-                $element.parent().removeClass("has-error");
+            var validate = new ScheduleHelper.validate();
+            validate.time($(options.target));
         }
         , load: function (e, extend) {
+            console.info('Loading items');
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
@@ -70,19 +71,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             self.renderToolbar();
         }
         , afterRender: function () {
+            ScheduleHelper.mask("time");
             $("#toolbar button[type=submit]").removeClass('hide').addClass('in');
-            var $timePickers = $(".time");
-            $.each($timePickers, function () {
-                $(this).mask('H0:M0:S0', {
-                    placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                });
-            });
-            $(document).on('change', '[type="checkbox"]', function () {
-                if ($(this).is(':checked'))
-                    $(this).attr('value', 1);
-                else
-                    $(this).attr('value', 0);
-            });
+            if (typeof this.flags.helperLoaded === "undefined") {
+                ScheduleHelper.init();
+                this.flags.helperLoaded = true;
+            } else
+                ScheduleHelper.init(true);
         }
         , renderToolbar: function () {
             var self = this;
@@ -129,15 +124,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var row = {};
                 $(this).find("input, textarea, select").each(function () {
                     var $input = $(this);
-                    row[$input.attr("name")] = /^\d+$/.test($input.val()) ? +$input.val() : $input.val();
-                    if (typeof $input.attr('data-before-save') !== "undefined") {
-                        switch ($input.attr('data-before-save')) {
-                            case 'prepend-date':
-                                row[$input.attr("name")] = Global.jalaliToGregorian($(this).parent().find("label").text()) + 'T' + $input.val();
-                                break;
-                            case 'timestamp':
-                                row[$input.attr("name")] = Global.processTime($input.val());
-                                break;
+                    if (typeof $input.attr("name") !== "undefined") {
+                        row[$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
+//                        row[$input.attr("name")] = ($input.attr("data-validation") === 'digit')
+                        if (typeof $input.attr('data-before-save') !== "undefined") {
+                            switch ($input.attr('data-before-save')) {
+                                case 'prepend-date':
+                                    row[$input.attr("name")] = Global.jalaliToGregorian($(this).parent().find("label").text()) + 'T' + $input.val();
+                                    break;
+                                case 'timestamp':
+                                    row[$input.attr("name")] = Global.processTime($input.val());
+                                    break;
+                            }
                         }
                     }
                 });
