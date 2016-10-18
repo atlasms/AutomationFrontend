@@ -62,7 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 var seconds = times[2];
                 seconds = parseInt(seconds, 10) + (parseInt(minutes, 10) * 60) + (parseInt(hours, 10) * 3600);
             } else {
-                var seconds = null;
+                var seconds = 0;
             }
             return seconds;
         }
@@ -71,7 +71,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             var sign;
             showSign = (typeof showSign !== 'undefined') ? true : false;
             if (typeof timestamp !== 'undefined') {
-                sign = (timestamp != Math.abs(timestamp)) ? '-' : '+';
+                sign = (timestamp !== Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
                 var time = new Date(0, 0, 0, 0, 0, timestamp, 0);
                 var hours = Global.zeroFill(time.getHours(), 2);
