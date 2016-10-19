@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 ScheduleHelper.tableHelper();
                 ScheduleHelper.suggestion();
             }
+            ScheduleHelper.setStates();
         }
         , tableHelper: function () {
             $(document).on('click', 'tbody tr', function () {
@@ -104,7 +105,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             clone.find('input[type="text"]').val('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
             clone.insertAfter(row);
-
             ScheduleHelper.rebuildTable();
             row.next().find("input:first").trigger('click');
             ScheduleHelper.mask("time");
@@ -124,9 +124,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $this.next().find("[data-type=start]").val(Global.createTime(start));
                 }
             });
+            ScheduleHelper.setStates();
         }
         , suggestion: function () {
-            // Instantiate the Bloodhound suggestion engine
+// Instantiate the Bloodhound suggestion engine
             var items = new Bloodhound({
                 datumTokenizer: function (datum) {
                     return Bloodhound.tokenizers.whitespace(datum.value);
@@ -145,13 +146,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
                 }
             });
-
 // Instantiate the Typeahead UI
             $('input[data-type="title"]').typeahead(null, {
                 display: 'value',
                 source: items
             });
-
 //            $('input[data-type="title"]').typeahead({
 //                source: function(query) {
 //                    return $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function(data) {
@@ -188,6 +187,41 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 }
                 return true;
             };
+        }
+        , setStates: function () {
+//                (typeof schedulePeriodicals !== "undefined") && window.clearInterval("schedulePeriodicals");
+//                window.schedulePeriodicals = window.setInterval(function () {
+            var getRowsCount = function () {
+                return function () {
+                    if ($("#schedule-page tbody tr").length)
+                        return $("#schedule-page tbody tr").length;
+                    return 0;
+                };
+            };
+            var getTotalTime = function () {
+                return function () {
+                    var $rows = $("#schedule-page tbody tr");
+                    if ($rows.length > 1)
+                        return Global.createTime((Global.processTime($rows.last().find("[data-type=start]").val()) +
+                                Global.processTime($rows.last().find("[data-type=duration]").val())) -
+                                Global.processTime($rows.first().find("[data-type=start]").val())
+                                );
+                    if ($rows.length === 1)
+                        return $rows[0].find("[data-type=duration]").val();
+                    return '00:00:00';
+                };
+            };
+            ScheduleHelper.handleStatusbar([
+                {"type": "count", "value": getRowsCount()}
+                , {"type": "duration", "value": getTotalTime()}
+            ]);
+        }
+        , handleStatusbar: function (items) {
+            if (typeof items !== "undefined") {
+                for (var i in items) {
+                    $(Config.positions.status).find('.total-' + items[i].type).find("span").text(items[i].value);
+                }
+            }
         }
     };
     return ScheduleHelper;
