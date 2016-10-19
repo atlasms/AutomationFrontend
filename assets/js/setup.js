@@ -42,6 +42,9 @@ require.config({
         , jdate: ["vendor/jdate.min"]
         , mousetrap: ["vendor/mousetrap"]
         , hotkeys: ["vendor/jquery.hotkeys"]
+        
+        , typeahead: ["vendor/typeahead.jquery.min"]
+        , bloodhound: ["vendor/bloodhound.min"]
 
                 // Application Dependencies
         , app: ["app/app"]
