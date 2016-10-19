@@ -23,6 +23,7 @@ define({
         "wrapper": "body"
         , "main": "#main"
         , "toolbar": "#toolbar"
+        , "status": "#status-items"
     },
     "api": {
         "url": "http://93.190.24.246:81/api/"
