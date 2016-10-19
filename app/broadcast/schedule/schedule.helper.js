@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr) {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
+], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
     var ScheduleHelper = {
         init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
@@ -51,18 +51,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 alert('Hi');
             });
             $(document).on('keydown', '*', 'down', function () {
-                var activeRow = $("#schedule-page tbody").find("tr.active");
-                if (activeRow.length && activeRow.next().is("tr")) {
-                    $("#schedule-page tbody tr").removeClass('active');
-                    activeRow.next().addClass('active');
-                }
+                ScheduleHelper.navigateVertical('down');
             });
             $(document).on('keydown', '*', 'up', function () {
-                var activeRow = $("#schedule-page tbody").find("tr.active");
-                if (activeRow.length && activeRow.prev().is("tr")) {
-                    $("#schedule-page tbody tr").removeClass('active');
-                    activeRow.prev().addClass('active');
-                }
+                ScheduleHelper.navigateVertical('up');
             });
             $(document).on('keydown', '*', 'insert', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
@@ -87,6 +79,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 });
                 e.preventDefault();
             });
+        }
+        , navigateVertical: function (direction) {
+            var activeRow = $("#schedule-page tbody").find("tr.active");
+            if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus")) {
+                if (direction === "up" && activeRow.prev().is("tr")) {
+                    $("#schedule-page tbody tr").removeClass('active');
+                    activeRow.prev().addClass('active');
+                }
+                if (direction === "down" && activeRow.next().is("tr")) {
+                    $("#schedule-page tbody tr").removeClass('active');
+                    activeRow.next().addClass('active');
+                }
+            }
         }
         , duplicateRow: function (row) {
             if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
@@ -121,17 +126,50 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , suggestion: function () {
-//            alert(typeof $.fn.typehead + typeof typehead + typeof $.typehead);
-//            $('input[data-type="title"]').typehead({
+            // Instantiate the Bloodhound suggestion engine
+            var items = new Bloodhound({
+                datumTokenizer: function (datum) {
+                    return Bloodhound.tokenizers.whitespace(datum.value);
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    wildcard: '%QUERY'
+                    , url: CONFIG.api.url + CONFIG.api.schedule + '?q=%QUERY'
+                    , transform: function (response) {
+                        // Map the remote source JSON array to a JavaScript object array
+                        return $.map(response, function (item) {
+                            return {
+                                value: item.ConductorTitle
+                            };
+                        });
+                    }
+                }
+            });
+
+// Instantiate the Typeahead UI
+            $('input[data-type="title"]').typeahead(null, {
+                display: 'value',
+                source: items
+            });
+
+//            $('input[data-type="title"]').typeahead({
+//                source: function(query) {
+//                    return $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function(data) {
+//                        console.log(data);
+//                    })
+//                }
+//            })
+//            $('input[data-type="title"]').typeahead({
 //                highlight: true
 //            }, {
 //                name: 'schedule-title-dataset'
 //                , source: function (query, process) {
-//                    return $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function (data) {
-//                        console.log(data);
+//                    $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function (data) {
+//                        console.log(process(data));
+//                        return process(data);
 //                    });
 //                }
-//                , remote: '/my_search_url/?q=%QUERY'
+////                , remote: '/my_search_url/?q=%QUERY'
 //            });
         }
         , validate: function () {
