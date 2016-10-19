@@ -49,7 +49,9 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 @media (min-width: 992px) { .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; } }
 
 // Footer
-.page-footer { display: none } // Temp
+.page-footer-fixed .page-footer {
+    background-color: #d7ddec;
+}
 
 // Fixed Toolbar
 body.fixed-toolbar {
