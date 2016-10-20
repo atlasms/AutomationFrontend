@@ -116,7 +116,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , prepareContent: function () {
             // var model = new ScheduleModel();
             // model.initialize();
+            var $this = this;
             $(document).on('change', 'tr input', function () {
+                if (typeof $this.flags.updatedContent !== "undefined" && $this.flags.updatedContent === true)
+                    return;
                 var myEvent = window.attachEvent || window.addEventListener;
                 var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
                 myEvent(chkevent, function (e) { // For >=IE7, Chrome, Firefox
@@ -124,6 +127,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     (e || window.event).returnValue = confirmationMessage;
                     return confirmationMessage;
                 });
+                $this.flags.updatedContent = true;
             });
         }
         , prepareSave: function () {
