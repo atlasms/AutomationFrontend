@@ -16,6 +16,14 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 .top-tools { float: left; height: 100%; line-height: 40px; }
 .page-header.navbar .top-menu .navbar-nav > li.quick-sidebar-toggler > i:before { content: "\f08b" }
 .page-header.navbar .menu-toggler { background-image: url('../img/sidebar-toggle-light.png') }
+.page-header.navbar .page-logo {
+    width: 315px;
+    .logo-default { margin-top: 5px; }
+}
+
+// Toolbar
+#sub-toolbar { border-top: 3px solid #8E44AD; }
+.dropdown-menu { font-family: 'Vazir', Tahoma; }
 
 // Componenets
 .table {
@@ -33,14 +41,20 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
     .form-group { margin-right: 10px; }
     button ~ button { margin-left: 10px; }
 }
+.form-horizontal {
+    .checkbox { margin-top: 6px; }
+}
 .fixed-label.form-group.form-md-line-input .form-control ~ label { color: #cdcdcd; font-size: 12px; }
 .box.portlet { direction: ltr; text-align: left; }
+.tt-cursor { background: #eee; }
+.tt-hint { color: #ccc !important } 
 
 // Plugins
 .toast { direction: ltr; text-align: left }
-
+.toast-title { margin-bottom: 7px; }
+ 
 // Mainbody
-.page-content { padding-top: 30px; }
+.page-content { padding-top: 30px; } 
 .page-content { padding-top: 0 !important; }
 
 // Sidebar
@@ -52,6 +66,9 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .page-footer-fixed .page-footer {
     background-color: #d7ddec;
 }
+.page-footer-inner { width: 100% }
+#status-items { float: left; }
+#server-time { float: right; color: #000 }
 
 // Fixed Toolbar
 body.fixed-toolbar {
