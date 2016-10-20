@@ -25,9 +25,9 @@ require.config({
         , 'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'}
 //        , 'mousetrap': {deps: ['jquery'], exports: 'Mousetrap'}
         , 'hotkeys': {deps: ['jquery'], exports: 'jQuery'}
-    },
-    urlArgs: "bust=" + (new Date()).getTime(),
-    paths: {
+    }
+    , urlArgs: "bust=" + (new Date()).getTime()
+    , paths: {
         // Library Dependencies
         jquery: ["vendor/jquery-3.1.1.min"]
         , underscore: ["vendor/underscore-min"]
