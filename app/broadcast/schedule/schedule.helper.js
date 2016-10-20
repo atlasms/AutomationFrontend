@@ -206,8 +206,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                                 Global.processTime($rows.last().find("[data-type=duration]").val())) -
                                 Global.processTime($rows.first().find("[data-type=start]").val())
                                 );
-                    if ($rows.length === 1)
-                        return $rows[0].find("[data-type=duration]").val();
+                    if ($rows.length === 1) {
+                        return $rows.find("[data-type=duration]").val();
+                    }
                     return '00:00:00';
                 };
             };
