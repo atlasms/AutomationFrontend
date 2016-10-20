@@ -71,7 +71,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             var sign;
             showSign = (typeof showSign !== 'undefined') ? true : false;
             if (typeof timestamp !== 'undefined') {
-                sign = (timestamp !== Math.abs(timestamp)) ? '-' : '+';
+                sign = (timestamp != Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
                 var time = new Date(0, 0, 0, 0, 0, timestamp, 0);
                 var hours = Global.zeroFill(time.getHours(), 2);
@@ -112,6 +112,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             var dt = datetime.split(' ');
             var d = dt[0].split(splitter);
             var jdate = new JDate(new Date(d[0], (d[1] - 1), d[2]));
+            for (var i in jdate.date)
+                jdate.date[i] = Global.zeroFill(jdate.date[i]);
             return jdate.date.join('-');
         }
     };
