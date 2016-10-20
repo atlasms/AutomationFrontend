@@ -1,4 +1,4 @@
-define(["config", "jquery", "underscore", "backbone", "router", "template"], function (Config, $, _, Backbone, Router, Template) {
+define(["config", "jquery", "underscore", "backbone", "router", "template", "global"], function (Config, $, _, Backbone, Router, Template, Global) {
     var initialize = function () {
         (function () {
             window.CONFIG = Config;
@@ -7,11 +7,27 @@ define(["config", "jquery", "underscore", "backbone", "router", "template"], fun
             window.SESSION = sessionStorage;
             window.$$ = function (element) {
                 return document.querySelectorAll(element);
-            }
+            };
         })();
         setRoutes(Config);
         registerHandlebarsHelpers();
         $("title").text(Config.title);
+        
+        $.ajax({
+            type: 'HEAD'
+            , url: window.location.href.toString()
+            , success: function(data, textStatus, request) {
+                var serverDate = request.getResponseHeader('Date');
+                console.log(serverDate);
+                var d = new Date(serverDate);
+                d.setSeconds(d.getSeconds() + 1);
+                window.setInterval(function() {
+                    d.setSeconds(d.getSeconds() + 1);
+                    var dateTime = Global.gregorianToJalali(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()) + ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
+                    $("#server-time span").text(dateTime);
+                }, 1000);
+            }
+        });
     };
     var registerHandlebarsHelpers = function () {
         Template.template.handlebarHelpers();
