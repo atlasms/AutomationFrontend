@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 ScheduleHelper.hotkeys();
                 ScheduleHelper.tableHelper();
                 ScheduleHelper.suggestion();
+                ScheduleHelper.handleEdits();
             }
             ScheduleHelper.setStates();
         }
@@ -93,7 +94,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 return;
             }
             var clone = row.clone();
-            clone.addClass('error');
+            clone.addClass('error new');
             clone.find('[id]').removeAttr('id');
             clone.find('input[type="text"]').val('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
@@ -196,6 +197,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $(Config.positions.status).find('.total-' + items[i].type).find("span").text(items[i].value);
                 }
             }
+        }
+        , handleEdits: function () {
+            $(document).on('input', "#schedule-page tbody", function (e) {
+                var $target = $(e.target).closest("tr");
+                if (!$target.hasClass("new"))
+                    $target.addClass('edited');
+            });
         }
     };
     return ScheduleHelper;

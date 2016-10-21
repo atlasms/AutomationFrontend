@@ -48,6 +48,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .box.portlet { direction: ltr; text-align: left; }
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important } 
+.form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
 
 // Plugins
 .toast { direction: ltr; text-align: left }
@@ -96,9 +97,9 @@ body.fixed-toolbar {
             border-left-color: #cbcbcb;
             .tools { left: -42px; opacity: 1; visibility: visible; }
         }
-        &.error {
-            border-left-color: red;
-        }
+        &.new { border-left-color: lightgreen; }
+        &.error { border-left-color: red !important; }
+        &.edited { border-left-color: #6C9EE0; }
     }
     thead tr {
         th:not([class]) { min-width: 50px; }
