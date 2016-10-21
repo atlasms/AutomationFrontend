@@ -22,6 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'change [name=force]': 'warnForceDuplicate'
         }
         , submit: function () {
+            var $this = this;
             var helper = new ScheduleHelper.validate();
             if (!helper.beforeSave())
                 return;
@@ -30,6 +31,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $this.reLoad();
+                }
             });
         }
         , duplicate: function (e) {
@@ -79,6 +84,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , processTime: function (options) {
             var validate = new ScheduleHelper.validate();
             validate.time($(options.target));
+        }
+        , reLoad: function () {
+            this.load();
         }
         , load: function (e, extend) {
             console.info('Loading items');
