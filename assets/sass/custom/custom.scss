@@ -94,4 +94,7 @@ body.fixed-toolbar {
             border-left-color: red;
         }
     }
+    thead tr {
+        th:not([class]) { min-width: 50px; }
+    }
 } 

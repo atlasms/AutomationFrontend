@@ -11,6 +11,7 @@
 						<th class="col-xs-1">مدت</th>
 						<th class="col-xs-3">برنامه</th>
 						<th>قسمت</th>
+						<th>نوع برنامه</th>
 						<th class="col-xs-3">توضیحات</th>
 						<th>تکرار</th>
 						<th>منتخب</th>
@@ -32,7 +33,7 @@
 						<td class="text-center hide">
 							<div class="checkbox checkbox-success checkbox-circle">
 								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
-								<label for="checkbox_1_{{@index}}"></label>
+									   <label for="checkbox_1_{{@index}}"></label>
 							</div>
 						</td>
 						<td class="text-center">
@@ -66,6 +67,18 @@
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
+								<select class="form-control" name="type">
+									<option value="foreigner-series">مجموعه خارجی</option>
+									<option value="persian-series">مجموعه ایرانی</option>
+									<option value="armstations">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
+									<option value="movies">سینمایی</option>
+									<option value="announces">آنونس، تیزر، میان&zwnj;برنامه</option>
+									<option value="commercials">آگهی بازرگانی</option>
+								</select>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorNote" value="{{ConductorNote}}">
 								<!--<label for="form_control_{{@index}}">{{#unless ConductorNote}}توضیحات برنامه{{/unless}}</label>-->
 								<span class="help-block">اطلاعات تکمیلی در خصوص برنامه در این قسمت وارد می‌شود</span>
@@ -74,13 +87,13 @@
 						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
 								<input name="ConductorRepeat" data-validation="digit" id="checkbox_2_{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-								<label for="checkbox_2_{{@index}}"></label>
+									   <label for="checkbox_2_{{@index}}"></label>
 							</div>
 						</td>
 						<td class="text-center">
 							<div class="checkbox checkbox-primary checkbox-circle">
 								<input name="CondcutorFeatured" data-validation="digit" id="checkbox_3_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-								<label for="checkbox_3_{{@index}}"></label>
+									   <label for="checkbox_3_{{@index}}"></label>
 							</div>
 						</td>
 					</tr>
