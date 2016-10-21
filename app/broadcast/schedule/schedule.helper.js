@@ -51,13 +51,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $(document).on('keydown', null, 'f2', function () {
                 alert('Hi');
             });
-            $(document).on('keydown', '*', 'down', function () {
-                ScheduleHelper.navigateVertical('down');
+            $(document).on('keydown', null, 'down', function (e) {
+                var activeRow = $("#schedule-page tbody").find("tr.active");
+                if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus"))
+                    if (activeRow.find("+ tr").length)
+                        activeRow.removeClass('active').next('tr').addClass('active');
             });
-            $(document).on('keydown', '*', 'up', function () {
-                ScheduleHelper.navigateVertical('up');
+            $(document).on('keydown', null, 'up', function () {
+                var activeRow = $("#schedule-page tbody").find("tr.active");
+                if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus"))
+                    if (activeRow.prev('tr').length)
+                        activeRow.removeClass('active').prev('tr').addClass('active');
             });
-            $(document).on('keydown', '*', 'insert', function (e) {
+            $(document).on('keydown', null, 'insert', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
                 ScheduleHelper.duplicateRow(activeRow);
                 e.preventDefault();
@@ -80,19 +86,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 });
                 e.preventDefault();
             });
-        }
-        , navigateVertical: function (direction) {
-            var activeRow = $("#schedule-page tbody").find("tr.active");
-            if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus")) {
-                if (direction === "up" && activeRow.prev().is("tr")) {
-                    $("#schedule-page tbody tr").removeClass('active');
-                    activeRow.prev().addClass('active');
-                }
-                if (direction === "down" && activeRow.next().is("tr")) {
-                    $("#schedule-page tbody tr").removeClass('active');
-                    activeRow.next().addClass('active');
-                }
-            }
         }
         , duplicateRow: function (row) {
             if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
@@ -146,30 +139,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
                 }
             });
-// Instantiate the Typeahead UI
             $('input[data-type="title"]').typeahead(null, {
                 display: 'value',
                 source: items
             });
-//            $('input[data-type="title"]').typeahead({
-//                source: function(query) {
-//                    return $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function(data) {
-//                        console.log(data);
-//                    })
-//                }
-//            })
-//            $('input[data-type="title"]').typeahead({
-//                highlight: true
-//            }, {
-//                name: 'schedule-title-dataset'
-//                , source: function (query, process) {
-//                    $.get(CONFIG.api.url + CONFIG.api.schedule, {q: query}, function (data) {
-//                        console.log(process(data));
-//                        return process(data);
-//                    });
-//                }
-////                , remote: '/my_search_url/?q=%QUERY'
-//            });
         }
         , validate: function () {
             this.time = function ($element) {
