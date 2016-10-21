@@ -53,7 +53,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $("#sub-toolbar").removeClass("in");
                 }
             });
@@ -113,6 +113,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             self.afterRender();
                         });
                     });
+                }
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if ($("#schedule-page tbody tr").length)
+                        $("#schedule-page tbody").empty();
                 }
             });
             self.renderToolbar();
