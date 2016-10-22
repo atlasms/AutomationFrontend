@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'pdatepicker', 'scheduleHelper', 'bootstrap/transition'
-], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, pDatepicker, ScheduleHelper) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'bootstrap/transition'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper) {
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
@@ -10,6 +10,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
 //            , {'input': {cssClass: 'form-control datepicker hidden', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
+        ]
+        , statusbar: [
+            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
+            , {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
         ]
         , flags: {}
         , events: {
@@ -121,6 +125,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
             self.renderToolbar();
+            self.renderStatusbar();
         }
         , afterRender: function () {
             ScheduleHelper.mask("time");
@@ -140,8 +145,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
-                toolbar.render();
             });
+            toolbar.render();
             var $datePickers = $(".datepicker");
             var datepickerConf = {
                 onSelect: function () {
@@ -153,6 +158,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
             this.flags.toolbarRendered = true;
+        }
+        , renderStatusbar: function() {
+//            var self = this;
+            if (this.flags.statusbarRendered)
+                return;
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
+            this.flags.statusbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

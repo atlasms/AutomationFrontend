@@ -69,6 +69,7 @@ require.config({
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "toolbar": ["helpers/toolbar"]
+        , "statusbar": ["helpers/statusbar"]
 
                 // Helpers
         , "layout": ["app/layout"]
