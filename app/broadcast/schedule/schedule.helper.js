@@ -50,27 +50,41 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
         }
         , hotkeys: function () {
+            $.hotkeys.options.filterInputAcceptingElements = false;
+            $.hotkeys.options.filterTextInputs = false;
             $(document).on('keydown', null, 'f2', function () {
                 alert('Hi');
             });
             $(document).on('keydown', null, 'down', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
-                if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus"))
-                    if (activeRow.find("+ tr").length)
+                if (activeRow.length && !activeRow.find('input[data-type="title"], select').is(":focus"))
+                    if (activeRow.find("+ tr").length) {
                         activeRow.removeClass('active').next('tr').addClass('active');
+                        if ($(e.target).is("input")) {
+                            var cellIndex = $(e.target).parents("td:first").index();
+                            activeRow.find("+ tr").find("td").eq(cellIndex).find("input")[0].focus();
+                        }
+                    }
             });
-            $(document).on('keydown', null, 'up', function () {
+            $(document).on('keydown', null, 'up', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
                 if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus"))
-                    if (activeRow.prev('tr').length)
+                    if (activeRow.prev('tr').length) {
                         activeRow.removeClass('active').prev('tr').addClass('active');
+                        if ($(e.target).is("input")) {
+                            var cellIndex = $(e.target).parents("td:first").index();
+                            activeRow.prev('tr').find("td").eq(cellIndex).find("input")[0].focus();
+                        }
+                    }
             });
             $(document).on('keydown', null, 'insert', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
                 ScheduleHelper.duplicateRow(activeRow);
                 e.preventDefault();
             });
-            $(document).on('keydown', '*:not(input)', 'space', function () {
+            $(document).on('keydown', null, 'space', function (e) {
+                if ($(e.target).is("input, textarea, select"))
+                    return;
                 var activeRow = $("#schedule-page tbody").find("tr.active");
                 if (activeRow.length) {
                     activeRow.find("input.time:first").focus();
