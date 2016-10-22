@@ -1,7 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
 ], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
     var ScheduleHelper = {
-        init: function (reinit) {
+        flags: {}
+        , init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
                 ScheduleHelper.tableHelper();
                 ScheduleHelper.suggestion();
@@ -199,10 +200,24 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
         }
         , handleEdits: function () {
+            var $this = this;
             $(document).on('input', "#schedule-page tbody", function (e) {
                 var $target = $(e.target).closest("tr");
                 if (!$target.hasClass("new"))
                     $target.addClass('edited');
+                
+                // Handle unloads
+                if (typeof $this.flags.updatedContent === "undefined" || $this.flags.updatedContent !== true) {
+                    var myEvent = window.attachEvent || window.addEventListener;
+                    var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
+                    myEvent(chkevent, function (e) { // For >=IE7, Chrome, Firefox
+                        var confirmationMessage = 'Are you sure to leave the page?';  // a space
+                        (e || window.event).returnValue = confirmationMessage;
+                        return confirmationMessage;
+                    });
+                }
+
+                $this.flags.updatedContent = true;
             });
         }
     };
