@@ -18,7 +18,7 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             , url: window.location.href.toString()
             , success: function(data, textStatus, request) {
                 var serverDate = request.getResponseHeader('Date');
-                console.log(serverDate);
+//                console.log(serverDate);
                 var d = new Date(serverDate);
                 d.setSeconds(d.getSeconds() + 1);
                 window.setInterval(function() {
