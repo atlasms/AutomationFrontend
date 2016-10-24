@@ -15,10 +15,13 @@ define({
             }
         }
     },
-    "routes": [
-        {"path": "broadcast", "action": "BroadcastView", "file": "app/broadcast/broadcast.view.js"}
-        , {"path": "broadcast/schedule", "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view.js"}
-    ],
+    "routes": {
+        "/": {"private": true, "access": null, "action": "AppView", "file": "app/app.view"}
+        , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
+        , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
+        , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
+        , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
+    },
     "positions": {
         "wrapper": "body"
         , "main": "#main"

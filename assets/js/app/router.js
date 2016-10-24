@@ -15,12 +15,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
         , app: function (actions) {
 
         }
-        , map: {
-            "/": {private: true, access: null}
-            , "broadcast": {private: true, access: null}
-            , "broadcast/schedule": {private: true, access: null}
-            , "broadcast/scheduleprint": {private: false, access: null, skipLayout: false}
-        }
+        , map: Config.routes
     });
 
     var initMasterLayout = function (actions) {
@@ -58,7 +53,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 return;
             }
             if (user.authorize(actions, map)) { // Page needs access, redirecting to login page
-                if (typeof map[actions].skipLayout !== "undefined" && map[actions].skipLayout === false) { // Page doesn't need master layout
+                if (typeof map[actions].skipLayout !== "undefined" && map[actions].skipLayout === true) { // Page doesn't need master layout
                     if (/print$/.test(actions))
                         $("head link").length && $("head link").remove();
                     initCleanLayout(actions);
