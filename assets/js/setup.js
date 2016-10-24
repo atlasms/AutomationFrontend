@@ -68,6 +68,7 @@ require.config({
         , "login.view": ["../../app/user/login.view"]
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
+        , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
@@ -103,9 +104,9 @@ require([
          */
         backboneSync(method, model, options);
     };
-    Router.initialize();
     var user = new User();
-    if (user.authorize())
+    Router.initialize(user);
+//    if (user.authorize())
         // The "app" dependency is passed in as "App"
         // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
         App.initialize();
