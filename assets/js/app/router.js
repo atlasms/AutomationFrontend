@@ -3,17 +3,12 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
 ], function ($, _, Backbone, Login, Template, Config, AppView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
-            // Define some URL routes
-            'login': 'Login',
-            // Other routes
-            '*actions': 'app'
+            'login': 'Login'
+            , '*actions': 'app' // Other routes
         }
         , Login: function () {
             var loginView = new Login();
             loginView.render();
-        }
-        , app: function (actions) {
-
         }
         , map: Config.routes
     });
