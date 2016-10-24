@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
 //            , {'input': {cssClass: 'form-control datepicker hidden', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD')}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD'), addon: true}}
         ]
         , statusbar: [
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
@@ -180,24 +180,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             }
             return items;
-
         }
         , prepareContent: function () {
-            // var model = new ScheduleModel();
-            // model.initialize();
-//            var $this = this;
-//            $(document).on('input', '#schedule-page tbody', function () {
-//                if (typeof $this.flags.updatedContent !== "undefined" && $this.flags.updatedContent === true)
-//                    return;
-//                var myEvent = window.attachEvent || window.addEventListener;
-//                var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
-//                myEvent(chkevent, function (e) { // For >=IE7, Chrome, Firefox
-//                    var confirmationMessage = 'Are you sure to leave the page?';  // a space
-//                    (e || window.event).returnValue = confirmationMessage;
-//                    return confirmationMessage;
-//                });
-//                $this.flags.updatedContent = true;
-//            });
         }
         , prepareSave: function () {
             var data = [];
