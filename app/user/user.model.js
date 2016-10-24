@@ -10,23 +10,28 @@ define(["jquery", "underscore", "backbone", "config", 'toastr'
             //            this.storage = new Storage(this.storageKey);
 //            console.log('Login Model Init');
         }
-        , authorize: function () {
-            var items = STORAGE.getItem(this.storageKey);
-            if (items) {
-                var content = JSON.parse(items);
-                if (content.username && content.token) {
-                    console.log('User found: ' + JSON.stringify(content));
-                    return true;
+        , authorize: function (actions, map) {
+            if (typeof map[actions] !== "undefined" && map[actions].private === false)
+                return true;
+            else {
+                var items = STORAGE.getItem(this.storageKey);
+                if (items) {
+                    var content = JSON.parse(items);
+                    if (content.username && content.token) {
+                        console.log('User found: ' + JSON.stringify(content));
+                        return true;
+                    }
                 }
             }
             this.redirect();
+            return false;
         }
         , redirect: function () {
             // Redirecting User to login page
             !Backbone.History.started && Backbone.history.start({pushState: true});
             new Backbone.Router().navigate('login', {trigger: true});
         }
-        , logout: function() {
+        , logout: function () {
             this.redirect();
         }
         , login: function (form) {
@@ -77,7 +82,6 @@ define(["jquery", "underscore", "backbone", "config", 'toastr'
                 }
             });
         }
-
 
     });
     return UserModel;
