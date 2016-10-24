@@ -116,6 +116,30 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 jdate.date[i] = Global.zeroFill(jdate.date[i]);
             return jdate.date.join('-');
         }
+        , getVar: function (name, url) {
+            if (!url) {
+                url = window.location.href;
+            }
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+            if (!results)
+                return null;
+            if (!results[2])
+                return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+        , today: function () {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10)
+                dd = '0' + dd;
+            if (mm < 10)
+                mm = '0' + mm;
+            return yyyy + '-' + mm + '-' + dd;
+        }
     };
     return Global;
 });
