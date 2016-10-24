@@ -1,0 +1,105 @@
+<div id="ingest-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<table class="table table-bordered table-striped table-condensed flip-content">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th class="col-xs-1"></th>
+						<th class="hide">فیکس</th>
+						<th class="col-xs-1">شروع</th>
+						<th class="col-xs-1">مدت</th>
+						<th class="col-xs-3">برنامه</th>
+						<th>قسمت</th>
+						<th>نوع برنامه</th>
+						<th class="col-xs-3">توضیحات</th>
+						<th>تکرار</th>
+						<th>منتخب</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					<tr data-id="{{ConductorId}}" data-start="" data-end="">
+						<td class="text-center">
+							<input type="text" class="focus-helper" />
+							<span class="idx">{{math @index "+" 1}}</span>
+							{{> scheduleRowTools}}
+						</td>
+						<td class="text-center">
+							<figure>
+								<img src="/assets/img/placeholder.png" alt="" />
+							</figure>
+						</td>
+						<td class="text-center hide">
+							<div class="checkbox checkbox-success checkbox-circle">
+								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
+									   <label for="checkbox_1_{{@index}}"></label>
+							</div>
+						</td>
+						<td class="text-center">
+							<div class="form-group form-md-line-input fixed-label">
+								<input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="CondcutorStartTime_{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
+								<label for="CondcutorStartTime_{{@index}}">{{extractDate CondcutorStartTime}}</label>
+								<span class="help-block">شروع برنامه</span>
+							</div>
+						</td>
+						<td class="text-center">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
+								<label for="ConductorDuration_{{@index}}"></label>
+								<span class="help-block">مدت برنامه</span>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
+								<input type="text" data-type="title" class="form-control" id="form_control_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
+								<!--<label for="form_control_{{@index}}">{{#unless ConductorTitle}}نام برنامه{{/unless}}</label>-->
+								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
+								<!--<label for="form_control_{{@index}}">{{#unless ConductorEpisodeNumber}}شماره قسمت{{/unless}}</label>-->
+								<span class="help-block">شماره قسمت برنامه</span>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<select class="form-control" name="ConductorType">
+									<option value="0">مجموعه خارجی</option>
+									<option value="1">مجموعه ایرانی</option>
+									<option value="2">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
+									<option value="3">سینمایی</option>
+									<option value="4">آنونس، تیزر، میان&zwnj;برنامه</option>
+									<option value="5">آگهی بازرگانی</option>
+								</select>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorNote" value="{{ConductorNote}}">
+								<!--<label for="form_control_{{@index}}">{{#unless ConductorNote}}توضیحات برنامه{{/unless}}</label>-->
+								<span class="help-block">اطلاعات تکمیلی در خصوص برنامه در این قسمت وارد می‌شود</span>
+							</div>
+						</td>
+						<td class="text-center">
+							<div class="checkbox checkbox-success checkbox-circle">
+								<input name="ConductorRepeat" data-validation="digit" id="checkbox_2_{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+									   <label for="checkbox_2_{{@index}}"></label>
+							</div>
+						</td>
+						<td class="text-center">
+							<div class="checkbox checkbox-primary checkbox-circle">
+								<input name="CondcutorFeatured" data-validation="digit" id="checkbox_3_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+									   <label for="checkbox_3_{{@index}}"></label>
+							</div>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
