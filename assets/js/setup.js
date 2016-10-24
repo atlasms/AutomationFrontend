@@ -58,6 +58,7 @@ require.config({
         , user: ["../../app/user/user.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
+        , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
 
                 // Collections
         , "broadcast.schedule.collection": ["../../app/broadcast/schedule/schedule.collection"]
@@ -69,6 +70,7 @@ require.config({
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
+        , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
@@ -80,6 +82,7 @@ require.config({
         , "global": ["helpers/global"]
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
+        , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
     }
 });
 require([
@@ -104,8 +107,7 @@ require([
          */
         backboneSync(method, model, options);
     };
-    var user = new User();
-    Router.initialize(user);
+    Router.initialize(new User());
 //    if (user.authorize())
         // The "app" dependency is passed in as "App"
         // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
