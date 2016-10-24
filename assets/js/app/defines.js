@@ -12,16 +12,16 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
         setRoutes(Config);
         registerHandlebarsHelpers();
         $("title").text(Config.title);
-        
+
         $.ajax({
             type: 'HEAD'
             , url: window.location.href.toString()
-            , success: function(data, textStatus, request) {
+            , success: function (data, textStatus, request) {
                 var serverDate = request.getResponseHeader('Date');
 //                console.log(serverDate);
                 var d = new Date(serverDate);
                 d.setSeconds(d.getSeconds() + 1);
-                window.setInterval(function() {
+                window.setInterval(function () {
                     d.setSeconds(d.getSeconds() + 1);
                     var dateTime = Global.gregorianToJalali(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()) + ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
                     $("#server-time span").text(dateTime);
