@@ -1,12 +1,10 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.ingest.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'bootstrap/transition'
-], function ($, _, Backbone, Template, Config, Global, moment, IngestModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.ingest.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper'
+], function ($, _, Backbone, Template, Config, Global, moment, IngestModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
     var IngestView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'IngestModel'
-        , toolbar: [
-        ]
-        , statusbar: [
-        ]
+        , toolbar: []
+        , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
@@ -41,27 +39,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $container = $(Config.positions.main);
             var model = new IngestModel(params);
             var self = this;
-            model.fetch({
-                data: (typeof params !== "undefined") ? $.param(params) : null
-                , success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-                            self.afterRender();
-                        });
-                    });
-                }
-                , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//            model.fetch({
+//                data: (typeof params !== "undefined") ? $.param(params) : null
+//                , success: function (items) {
+//                    items = self.prepareItems(items.toJSON(), params);
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function () {
+                    self.afterRender();
+                });
+            });
+//                }
+//                , error: function (e, data) {
+//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
 //                    if ($("#schedule-page tbody tr").length)
 //                        $("#schedule-page tbody").empty();
-                }
-            });
+//                }
+//            });
             self.renderToolbar();
         }
         , afterRender: function () {
+
+            var tree = new Tree($("#tree"), Config.api.tree);
+            tree.render();
+
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
