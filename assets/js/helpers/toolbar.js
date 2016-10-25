@@ -39,7 +39,10 @@ define(['jquery', 'underscore', 'backbone', 'config'
             var name = (typeof args.name !== "undefined") ? args.name : '';
             var value = (typeof args.value !== "undefined") ? args.value : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
-            var output = '<div class="form-group"><input type="' + type + '" class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" /></div>';
+            var addon = (typeof args.addon !== "undefined") ? args.addon : false;
+            var output = '<div class="form-group"><div class="input-group">';
+                output += addon ? '<span class="input-group-addon"></span>' : '';
+                output += '<input type="' + type + '" class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" /></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
     });
