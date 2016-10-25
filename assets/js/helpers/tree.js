@@ -1,13 +1,13 @@
-define(['jquery', 'underscore', 'backbone', 'jstree'], function ($, _, Backbone, jstree) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jstree'], function ($, _, Backbone, Config, jstree) {
     var Tree = function ($el, api) {
         this.$el = (typeof $el !== "undefined") ? $el : $("tree");
         this.api = api;
-//        console.log($.fn.jstree);
     };
 
     _.extend(Tree.prototype, {
         render: function () {
-            $(this.$el).jstree({
+            var $this = this;
+            $($this.$el).jstree({
                 "core": {
                     "themes": {
                         "responsive": false
@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'jstree'], function ($, _, Backbone,
                     "check_callback": true,
                     'data': {
                         'url': function (node) {
-                            return this.api;
+                            return $this.api;
                         },
                         'data': function (node) {
                             return {'parent': node.id};
