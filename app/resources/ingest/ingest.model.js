@@ -14,7 +14,7 @@ define(["jquery", "underscore", "backbone", "config"
             return data;
         }
         , navigate: function (data) {
-            var win = window.open(Config.api.url + Config.api.schedule + '?' + data, '_blank');
+            var win = window.open(Config.api.url + Config.api.ingest + '?' + data, '_blank');
             win && win.focus();
         }
         , save: function (key, val, options) {
