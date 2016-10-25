@@ -40,9 +40,10 @@ require.config({
         , pdate: ["vendor/persian-date"]
         , pdatepicker: ["vendor/persian-datepicker-0.4.5.min"]
         , jdate: ["vendor/jdate.min"]
-        , mousetrap: ["vendor/mousetrap"]
+        , mousetrap: ["vendor/mousetrap.min"]
         , hotkeys: ["vendor/jquery.hotkeys"]
-        
+        , "jstree": ["vendor/jstree"]
+
         , typeahead: ["vendor/typeahead.jquery.min"]
         , bloodhound: ["vendor/bloodhound.min"]
 
@@ -83,6 +84,7 @@ require.config({
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
+        , "tree.helper": ["helpers/tree"]
     }
 });
 require([
@@ -99,7 +101,7 @@ require([
          * the jQuery ajax options, which includes the `url` property
          */
         options = _.extend(options, {
-            url: Config.api.url + (_.isFunction(model.url) ? model.url() : model.url)
+            url: (((_.isFunction(model.url) ? model.url() : model.url)).indexOf('//') === -1 ? Config.api.url : '') + (_.isFunction(model.url) ? model.url() : model.url)
         });
         /*
          *  Call the stored original Backbone.sync
@@ -109,9 +111,9 @@ require([
     };
     Router.initialize(new User());
 //    if (user.authorize())
-        // The "app" dependency is passed in as "App"
-        // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
-        App.initialize();
+    // The "app" dependency is passed in as "App"
+    // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
+    App.initialize();
 //    else {
 //        user.redirect();
 //    }
