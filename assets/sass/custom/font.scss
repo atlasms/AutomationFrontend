@@ -1,4 +1,39 @@
 // Page Web-Fonts Declaration
-@font-face{font-family:'Vazir';font-style:normal;font-weight:normal;src:url(../font/vazir/v2-rc7/vazir-regular.eot);src:url(../font/vazir/v2-rc7/vazir-regular.eot?#iefix) format('embedded-opentype'),url(../font/vazir/v2-rc7/vazir-regular.woff) format('woff'),url(../font/vazir/v2-rc7/vazir-regular.ttf) format('truetype');}
-@font-face{font-family:'Vazir';font-style:normal;font-weight:bold;src:url(../font/vazir/v2-rc7/vazir-bold.eot);src:url(../font/vazir/v2-rc7/vazir-bold.eot?#iefix) format('embedded-opentype'),url(../font/vazir/v2-rc7/vazir-bold.woff) format('woff'),url(../font/vazir/v2-rc7/vazir-bold.ttf) format('truetype');}
 html, body { font-family: 'Vazir'; }
+/*
+@font-face{
+    font-family:'Vazir';font-style:normal;font-weight:normal;
+    src:url(../font/vazir/v2-rc7/vazir-regular.eot);
+    src:url(../font/vazir/v2-rc7/vazir-regular.eot?#iefix) format('embedded-opentype'),
+        url(../font/vazir/v2-rc7/vazir-regular.woff) format('woff'),
+        url(../font/vazir/v2-rc7/vazir-regular.ttf) format('truetype');
+}
+@font-face{
+    font-family:'Vazir';font-style:normal;font-weight:bold;
+    src:url(../font/vazir/v2-rc7/vazir-bold.eot);
+    src:url(../font/vazir/v2-rc7/vazir-bold.eot?#iefix) format('embedded-opentype'),
+        url(../font/vazir/v2-rc7/vazir-bold.woff) format('woff'),
+        url(../font/vazir/v2-rc7/vazir-bold.ttf) format('truetype');
+}
+*/
+@font-face{
+    font-family:'Vazir';font-style:normal;font-weight:normal;
+    src:url(../font/vazir/v4.4.0/Vazir-FD.eot);
+    src:url(../font/vazir/v4.4.0/Vazir-FD.eot?#iefix) format('embedded-opentype'),
+        url(../font/vazir/v4.4.0/Vazir-FD.woff) format('woff'),
+        url(../font/vazir/v4.4.0/Vazir-FD.ttf) format('truetype');
+}
+@font-face{
+    font-family:'Vazir';font-style:normal;font-weight:300;
+    src:url(../font/vazir/v4.4.0/Vazir-Light-FD.eot);
+    src:url(../font/vazir/v4.4.0/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
+        url(../font/vazir/v4.4.0/Vazir-Light-FD.woff) format('woff'),
+        url(../font/vazir/v4.4.0/Vazir-Light-FD.ttf) format('truetype');
+}
+@font-face{
+    font-family:'Vazir';font-style:normal;font-weight:bold;
+    src:url(../font/vazir/v4.4.0/Vazir-Bold-FD.eot);
+    src:url(../font/vazir/v4.4.0/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
+        url(../font/vazir/v4.4.0/Vazir-Bold-FD.woff) format('woff'),
+        url(../font/vazir/v4.4.0/Vazir-Bold-FD.ttf) format('truetype');
+}
