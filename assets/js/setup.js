@@ -42,7 +42,8 @@ require.config({
         , jdate: ["vendor/jdate.min"]
         , mousetrap: ["vendor/mousetrap.min"]
         , hotkeys: ["vendor/jquery.hotkeys"]
-        , "jstree": ["vendor/jstree"]
+        , "jstree": ["vendor/jstree.min"]
+        , "tus": ["vendor/tus"]
 
         , typeahead: ["vendor/typeahead.jquery.min"]
         , bloodhound: ["vendor/bloodhound.min"]
