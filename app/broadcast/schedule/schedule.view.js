@@ -135,6 +135,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 this.flags.helperLoaded = true;
             } else
                 ScheduleHelper.init(true);
+            
+            var dateParts = $("[name=startdate]").val().split('-');
+            for (var i = 0; i < dateParts.length; i++)
+                dateParts[i] = parseInt(dateParts[i]);
+            $("[name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
         }
         , renderToolbar: function () {
             var self = this;
