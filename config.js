@@ -32,7 +32,7 @@ define({
         "url": "http://93.190.24.246:81/api/"
         , "login": "http://93.190.24.246:81/token"
         , "schedule": "conductor"
-        , "tree": "http://localhost/misc/fakeapi/tree.php"
+        , "tree": "metacategories"
     },
     "dependencies": [
         {
