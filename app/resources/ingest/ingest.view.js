@@ -1,9 +1,11 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.ingest.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper'
-], function ($, _, Backbone, Template, Config, Global, moment, IngestModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.ingest.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'tus'
+], function ($, _, Backbone, Template, Config, Global, moment, IngestModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, tus) {
     var IngestView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'IngestModel'
-        , toolbar: []
+        , toolbar: [
+            {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
+        ]
         , statusbar: []
         , flags: {}
         , events: {
@@ -39,10 +41,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $container = $(Config.positions.main);
             var model = new IngestModel(params);
             var self = this;
-//            model.fetch({
-//                data: (typeof params !== "undefined") ? $.param(params) : null
-//                , success: function (items) {
-//                    items = self.prepareItems(items.toJSON(), params);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
@@ -50,19 +48,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     self.afterRender();
                 });
             });
-//                }
-//                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-//                    if ($("#schedule-page tbody tr").length)
-//                        $("#schedule-page tbody").empty();
-//                }
-//            });
             self.renderToolbar();
         }
         , afterRender: function () {
-
-            var tree = new Tree($("#tree"), Config.api.tree);
-            tree.render();
+            IngestHelper.mask("time");
+            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
 
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {

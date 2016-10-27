@@ -6,13 +6,65 @@
 					<div id="tree"></div>
 				</div>
 				<div class="col-xs-12 col-sm-6">
-					Items
+					<table class="table table-bordered table-striped table-condensed flip-content">
+						<thead>
+							<tr>
+								<th class="col-xs-1">#</th>
+								<th class="col-xs-7">نام برنامه</th>
+								<th class="col-xs-2">شماره قسمت</th>
+								<th class="col-xs-2">مدت</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+								<td>1</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="form-group text-center">
+						<button type="button" class="btn green-jungle">قسمت جدید</button>
+					</div>
 				</div>
 			</div>
+			<hr />
 			<div>
-				Uploader
-				<br />
-				Fields
+				<form role="form" class="form-inline">
+					<div class="row">
+						<div class="col-xs-12 col-md-8 col-md-push-2">
+							<div class="form-group">
+								<!-- <input type="file" class="form-control" name="file" /> -->
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="col-xs-12 col-md-7">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" data-type="title" class="form-control" id="media-title" name="MediaTitle" value="" />
+								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-3">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="MediaDuration" id="media-duration" value="" required />
+								<span class="help-block">مدت برنامه</span>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-2">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="form-control" id="media-episode" name="MediaEpisodeNumber" value="" />
+								<span class="help-block">شماره قسمت برنامه</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group form-md-line-input form-md-floating-label">
+						<textarea class="form-control" name="MediaDescription"></textarea>
+						<span class="help-block">توضیحات</span>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
