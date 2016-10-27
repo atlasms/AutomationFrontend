@@ -33,6 +33,7 @@ define({
         , "login": "http://93.190.24.246:81/token"
         , "schedule": "conductor"
         , "tree": "metacategories"
+        , "storagefiles": "storagefiles"
     },
     "dependencies": [
         {
