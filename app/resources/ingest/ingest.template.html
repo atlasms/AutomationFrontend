@@ -2,11 +2,11 @@
 	<div class="portlet-body">
 		<div class="mainbody">
 			<div class="row">
-				<div class="col-xs-12 col-sm-6">
+				<div class="col-xs-12 col-sm-5">
 					<div id="tree"></div>
 				</div>
-				<div class="col-xs-12 col-sm-6">
-					<table class="table table-bordered table-striped table-condensed flip-content">
+				<div class="col-xs-12 col-sm-7">
+<!--					<table class="table table-bordered table-striped table-condensed flip-content">
 						<thead>
 							<tr>
 								<th class="col-xs-1">#</th>
@@ -17,52 +17,84 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
 							</tr>
 						</tbody>
+					</table>-->
+					<!--					<div class="form-group text-center">
+											<button type="button" class="btn green-jungle">قسمت جدید</button>
+										</div>-->
+					<table id="storagefiles" class="table table-bordered table-striped table-condensed table-hover flip-content">
+						<thead class=" ">
+							<tr>
+								<th class="col-xs-2 text-center">مدت</th>
+								<th class="col-xs-2 text-center">حجم</th>
+								<th class="col-xs-2 text-center">ساعت و تاریخ</th>
+								<th class="col-xs-5 text-center">نام فایل</th>
+								<th class="col-xs-1 text-center">#</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each []}}
+							<tr data-filename="{{FileName}}">
+								<td class="duration text-center">
+									{{time Duration}}
+								</td>
+								<td>
+									<div class="ltr">
+										{{Size}}
+									</div>
+								</td>
+								<td>
+									<div class="text-right">
+										{{extractTime DateTime}} {{extractDate DateTime}}
+									</div>
+								</td>
+								<td>
+									<div class="ltr text-right">
+										<a class="preview-link" href="javascript:preview('{{Url}}/{{FileName}}');"><i class="fa fa-play-circle"></i> {{FileName}}</a>
+									</div>
+								</td>
+								<td class="text-center">
+									{{math @index "+" 1}}
+								</td>
+							</tr>
+							{{/each}}
+						</tbody>
 					</table>
-					<div class="form-group text-center">
-						<button type="button" class="btn green-jungle">قسمت جدید</button>
-					</div>
 				</div>
 			</div>
 			<hr />
 			<div>
-				<form role="form" class="form-inline">
+				<form role="form" class="">
+					<input type="hidden" name="FileName" value="" />
 					<div class="row">
-						<div class="col-xs-12 col-md-8 col-md-push-2">
-							<div class="form-group">
-								<!-- <input type="file" class="form-control" name="file" /> -->
-							</div>
-						</div>
-					</div>
-					<hr />
-					<div class="row">
-						<div class="col-xs-12 col-md-7">
+						<div class="col-xs-12 col-md-4">
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" data-type="title" class="form-control" id="media-title" name="MediaTitle" value="" />
+								<input type="text" data-type="title" class="form-control" id="media-title" name="MediaTitle" value="" placeholder="نام برنامه" />
 								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
 							</div>
 						</div>
-						<div class="col-xs-12 col-md-3">
+						<div class="col-xs-12 col-md-1">
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="MediaDuration" id="media-duration" value="" required />
 								<span class="help-block">مدت برنامه</span>
 							</div>
 						</div>
-						<div class="col-xs-12 col-md-2">
+						<div class="col-xs-12 col-md-1">
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control" id="media-episode" name="MediaEpisodeNumber" value="" />
+								<input type="text" class="form-control text-center" id="media-episode" name="MediaEpisodeNumber" value="" placeholder="قسمت" />
 								<span class="help-block">شماره قسمت برنامه</span>
 							</div>
 						</div>
-					</div>
-					<div class="form-group form-md-line-input form-md-floating-label">
-						<textarea class="form-control" name="MediaDescription"></textarea>
-						<span class="help-block">توضیحات</span>
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<textarea class="form-control" name="MediaDescription" placeholder="توضیحات"></textarea>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>

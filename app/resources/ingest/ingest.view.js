@@ -4,16 +4,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'IngestModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
+            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
+            , 'click #storagefiles': 'selectRow'
         }
         , submit: function () {
             var $this = this;
-            var helper = new ScheduleHelper.validate();
+            var helper = new IngestHelper.validate();
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
@@ -26,6 +27,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     $this.reLoad();
                 }
             });
+        }
+        , selectRow: function(e) {
+            var $el  = $(e.target);
+            var $row = $el.parents("tr:first");
+            $el.parents("tbody").find("tr").removeClass('active');
+            $row.addClass('active');
+            $('input[name="FileName"]').val($row.attr('data-filename'));
+            $('input[name="Duration"]').val($row.find('.duration').text());
         }
         , reLoad: function () {
             this.load();
@@ -41,19 +50,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $container = $(Config.positions.main);
             var model = new IngestModel(params);
             var self = this;
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    self.afterRender();
-                });
+            model.fetch({
+                data: (typeof params !== "undefined") ? $.param(params) : null
+                , success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            self.afterRender();
+                        });
+                    });
+                    self.renderToolbar();
+                }
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
             });
-            self.renderToolbar();
         }
         , afterRender: function () {
             IngestHelper.mask("time");
             $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
-
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
@@ -63,16 +80,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderToolbar: function () {
             var self = this;
-            if (this.flags.toolbarRendered)
+            if (self.flags.toolbarRendered)
                 return;
-            var elements = this.toolbar;
+            var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            this.flags.toolbarRendered = true;
+            self.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

@@ -21,6 +21,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     break;
             }
         }
+        , validate: function () {
+            this.beforeSave = function () {
+                // return false if found error in page or return true
+                return true;
+            };
+        }
     };
     return IngestHelper;
 });
