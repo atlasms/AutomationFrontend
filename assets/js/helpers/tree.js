@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree'], function ($, _,
                 for (i = 0, j = data.selected.length; i < j; i++) {
                     r.push(data.instance.get_node(data.selected[i]).id);
                 }
-                alert('Selected node id: ' + r.join(', '));
+                console.log('Selected node id: ' + r.join(', '));
             });
         }
     });
