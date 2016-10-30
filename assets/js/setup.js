@@ -23,7 +23,6 @@ require.config({
         , 'bootstrap/tab': {deps: ['jquery'], exports: '$.fn.tab'}
         , 'bootstrap/tooltip': {deps: ['jquery'], exports: '$.fn.tooltip'}
         , 'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'}
-//        , 'mousetrap': {deps: ['jquery'], exports: 'Mousetrap'}
         , 'hotkeys': {deps: ['jquery'], exports: 'jQuery'}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
@@ -68,6 +67,7 @@ require.config({
 //        , "app.master": ["../../app/a"]
         , "app.view": ["../../app/app.view"]
         , "login.view": ["../../app/user/login.view"]
+        , "dashboard.view": ["../../app/dashboard/dashboard.view"]
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]

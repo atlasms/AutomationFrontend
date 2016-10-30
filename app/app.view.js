@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'layout', 'bootstrap/dropdown'
-], function ($, _, Backbone, Template, Config, Cookies, Layout, Dropdown) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'layout'
+], function ($, _, Backbone, Template, Config, Cookies, Layout) {
     var AppView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , render: function () {
@@ -11,10 +11,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'lay
                 return;
             }
             if (typeof actions !== "undefined" && actions) {
-                var request = (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
+                var request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
                 requirejs([request], function (View) {
                     var view = new View();
-                    var content = view.prepareContent();
+                    var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
                     view.render(content);
                 });
             }

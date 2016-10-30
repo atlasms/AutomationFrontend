@@ -16,7 +16,7 @@ define({
         }
     },
     "routes": {
-        "/": {"private": true, "access": null, "action": "AppView", "file": "app/app.view"}
+        "/": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
         , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
         , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
         , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
