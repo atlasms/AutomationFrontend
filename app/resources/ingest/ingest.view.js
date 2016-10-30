@@ -32,9 +32,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , processData: false
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $this.reLoad();
+                    $($this.$modal).modal('hide');
                 }
             });
+            
+//            return false;
         }
         , openAddForm: function (e) {
             $(this.$modal).modal('toggle');
