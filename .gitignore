@@ -34,7 +34,18 @@ typings
 .idea
 .vscode
 *.iml
-nbproject
+/nbproject
+nbproject/*
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+!nbproject/project.properties
+!nbproject/project.xml
+
 prepros.cfg
 
 /tools/**/*.js
@@ -52,10 +63,3 @@ gulpfile.js.map
 .DS_Store
 src/client/app/shared/config/env.config.js
 src/client/app/shared/config/env.config.js.map
-
-nbproject/private/private.xml
-nbproject/private/private.xml
-nbproject/private/private.xml
-nbproject/private/private.xml
-nbproject/private/private.xml
-nbproject/private/private.xml
