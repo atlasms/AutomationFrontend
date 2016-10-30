@@ -28,8 +28,9 @@ define(['jquery', 'underscore', 'backbone', 'config'
             var text = (typeof args.text !== "undefined") ? args.text : 'Submit';
             var type = (typeof args.type !== "undefined") ? args.type : 'submit';
             var task = (typeof args.task !== "undefined") ? args.task : '';
+            var icon = (typeof args.icon!== "undefined") ? '<i class="' + args.icon + '"></i> ' : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
-            var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + text + '</button>';
+            var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + icon + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {
