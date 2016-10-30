@@ -2,8 +2,11 @@
 @import "../bootstrap/_variables";
 @import "../bootstrap/_mixins";
 @import "awesome-bootstrap-checkbox";
+@import "font";
+@import "login";
 @import "jstree";
-
+@import "modal-transitions";
+ 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, p, button, label, table, tr, td, textarea  { direction: ltr; text-align: left; }
@@ -26,6 +29,11 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 #sub-toolbar { border-top: 3px solid #8E44AD; }
 .dropdown-menu { font-family: 'Vazir', Tahoma; }
 .ltr { font-family: Tahoma, Arial; direction: rtl; }
+.index {
+    display: inline-block;
+    &:before { content: '['; }
+    &:after { content: ']'; }
+}
 
 // Componenets
 .table {
@@ -51,6 +59,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important } 
 .form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
+.modal-content { border-radius: 0; }
 
 // Plugins
 .toast { direction: ltr; text-align: left }
