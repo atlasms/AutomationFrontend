@@ -43,6 +43,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree'], function ($, _,
                     r.push(data.instance.get_node(data.selected[i]).id);
                 }
                 console.log('Selected node id: ' + r.join(', '));
+
+                var file_data = [];
+                var selectedNodes = data.instance.get_selected();
+                for (var i = 0; i < selectedNodes.length; i++) {
+                    var full_node = data.instance.get_node(selectedNodes[i]);
+                    file_data[i] = data.instance.get_path(full_node, "/");
+                }
+                $("[data-type=path]").length && $("[data-type=path]").val(file_data.toString());
+                $("[data-type=path-id]").length && $("[data-type=path-id]").val(r.pop().toString());
             });
         }
     });
