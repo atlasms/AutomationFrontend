@@ -5,10 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
         data: {}
         , events: {}
         , el: $(Config.positions.main)
-//        , model: 'UserModel'
         , render: function () {
-//            STORAGE.clear();
-var self = this;
+            var self = this;
             var template = Template.template.load('dashboard', 'dashboard');
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
