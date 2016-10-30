@@ -61,9 +61,8 @@ require.config({
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
-
-                // Collections
-        , "broadcast.schedule.collection": ["../../app/broadcast/schedule/schedule.collection"]
+        , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
+        , "resources.categories.model": ["../../app/resources/categories/categories.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -73,6 +72,8 @@ require.config({
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
+        , "resources.metadata.view": ["../../app/resources/metadata/metadata.view"]
+        , "resources.categories.view": ["../../app/resources/categories/categories.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
@@ -85,6 +86,8 @@ require.config({
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
+//        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
+//        , "metadataHelper": ["../../app/resources/ingest/categories.helper"]
         , "tree.helper": ["helpers/tree"]
     }
 });
