@@ -6,7 +6,7 @@
 					<div id="tree"></div>
 				</div>
 				<div class="col-xs-12 col-sm-7">
-<!--					<table class="table table-bordered table-striped table-condensed flip-content">
+					<table class="table table-bordered table-striped table-condensed flip-content">
 						<thead>
 							<tr>
 								<th class="col-xs-1">#</th>
@@ -23,81 +23,105 @@
 								<td></td>
 							</tr>
 						</tbody>
-					</table>-->
+					</table>
 					<!--					<div class="form-group text-center">
 											<button type="button" class="btn green-jungle">قسمت جدید</button>
 										</div>-->
-					<table id="storagefiles" class="table table-bordered table-striped table-condensed table-hover flip-content">
-						<thead class=" ">
-							<tr>
-								<th class="col-xs-2 text-center">مدت</th>
-								<th class="col-xs-2 text-center">حجم</th>
-								<th class="col-xs-2 text-center">ساعت و تاریخ</th>
-								<th class="col-xs-5 text-center">نام فایل</th>
-								<th class="col-xs-1 text-center">#</th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each []}}
-							<tr data-filename="{{FileName}}">
-								<td class="duration text-center">
-									{{time Duration}}
-								</td>
-								<td>
-									<div class="ltr">
-										{{Size}}
-									</div>
-								</td>
-								<td>
-									<div class="text-right">
-										{{extractTime DateTime}} {{extractDate DateTime}}
-									</div>
-								</td>
-								<td>
-									<div class="ltr text-right">
-										<a class="preview-link" href="javascript:preview('{{Url}}/{{FileName}}');"><i class="fa fa-play-circle"></i> {{FileName}}</a>
-									</div>
-								</td>
-								<td class="text-center">
-									{{math @index "+" 1}}
-								</td>
-							</tr>
-							{{/each}}
-						</tbody>
-					</table>
+
 				</div>
 			</div>
 			<hr />
 			<div>
-				<form role="form" class="">
-					<input type="hidden" name="FileName" value="" />
-					<div class="row">
-						<div class="col-xs-12 col-md-4">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" data-type="title" class="form-control" id="media-title" name="MediaTitle" value="" placeholder="نام برنامه" />
-								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-1">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="MediaDuration" id="media-duration" value="" required />
-								<span class="help-block">مدت برنامه</span>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-1">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control text-center" id="media-episode" name="MediaEpisodeNumber" value="" placeholder="قسمت" />
-								<span class="help-block">شماره قسمت برنامه</span>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-6">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<textarea class="form-control" name="MediaDescription" placeholder="توضیحات"></textarea>
-							</div>
-						</div>
-					</div>
-				</form>
+				<table id="storagefiles" class="table table-bordered table-striped table-condensed table-hover flip-content">
+					<thead class=" ">
+						<tr>
+							<th class="col-xs-2 text-center">مدت</th>
+							<th class="col-xs-2 text-center">حجم</th>
+							<th class="col-xs-2 text-center">ساعت و تاریخ</th>
+							<th class="col-xs-5 text-center">نام فایل</th>
+							<th class="col-xs-1 text-center">#</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each []}}
+						<tr data-filename="{{FileName}}">
+							<td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
+							<td>
+								<div class="ltr">
+									{{Size}}
+								</div>
+							</td>
+							<td>
+								<div class="text-right">
+									{{extractTime DateTime}} {{extractDate DateTime}}
+								</div>
+							</td>
+							<td>
+								<div class="ltr text-right">
+									<a class="preview-link" href="javascript:preview('{{Url}}/{{FileName}}');">
+										<i class="fa fa-play-circle"></i> <span data-prop="FileName">{{FileName}}</span>
+									</a>
+								</div>
+							</td>
+							<td class="text-center" data-type="index">
+								{{math @index "+" 1}}
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
+	<div class="modal fade zoom-out" id="metadata-form-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content"  role="form" class="">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">ورود اطلاعات برنامه</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" data-type="path-id" name="MetaCategoryId" value="0" />
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<input type="text" data-type="path" class="form-control" id="path" value="" disabled />
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="form-group">
+								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="Duration" id="media-duration" value="" required readonly />
+							</div>
+						</div>
+						<div class="col-xs-9">
+							<div class="form-group">
+								<input type="text" data-type="filename" class="form-control ltr" id="media-filename" name="FileName" value="" readonly required />
+							</div>
+						</div>
+						<div class="col-xs-10">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام برنامه" required />
+								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
+							</div>
+						</div>
+						<div class="col-xs-2">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<input type="text" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="قسمت" required />
+								<span class="help-block">شماره قسمت برنامه</span>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<textarea class="form-control" name="Description" placeholder="توضیحات"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<span class="help-inline hidden">پیش از ثبت اطلاعات می‌بایست فولدر را انتخاب نمایید</span>
+					<button type="submit" class="btn btn-success">ذخیره اطلاعات</button>
+				</div>
+			</form><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>

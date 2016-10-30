@@ -23,7 +23,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , validate: function () {
             this.beforeSave = function () {
-                // return false if found error in page or return true
+                var rquiredError = false;
+                $("input, select, textarea").each(function() {
+//                    console.log($(this).attr("required"))
+                    if ($(this).attr("required") && $(this).val() === "") {
+                        $(this).parents(".form-group:first").addClass('has-error');
+                        rquiredError = true;
+                    }
+                });
+                if ($("[data-type=path]").legnth && $("[data-type=path]").val() === "") {
+                    $("#metadata-form-modal").find(".help-inline").removeClass('hidden');
+                    return false;
+                } else
+                    $("#metadata-form-modal").find(".help-inline").addClass('hidden');
+                if (rquiredError)
+                    return false;
                 return true;
             };
         }

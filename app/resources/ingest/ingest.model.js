@@ -5,9 +5,13 @@ define(["jquery", "underscore", "backbone", "config"
         , initialize: function (options) {
             this.query = (options && options.query) ? '?' + options.query : '';
             this.path = (options && options.path) ? options.path : '';
+            this.overrideUrl = (options && options.overrideUrl) ? options.overrideUrl : '';
         }
         , url: function () {
-            return Config.api.storagefiles + this.path + this.query;
+            if (this.overrideUrl !== "")
+                return this.overrideUrl + this.path + this.query;
+            else
+                return Config.api.storagefiles + this.path + this.query;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);
