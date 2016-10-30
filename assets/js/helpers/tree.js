@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree'], function ($, _,
                     file_data[i] = data.instance.get_path(full_node, "/");
                 }
                 // Sending proccesses to callback methos
-                if (typeof $this.callback['handleTreeCalls'] !== "undefined") {
+                if ($this.callback && typeof $this.callback['handleTreeCalls'] !== "undefined") {
                     $this.callback['handleTreeCalls'](r, file_data);
                 }
             });
