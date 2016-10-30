@@ -61,6 +61,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .tt-hint { color: #ccc !important } 
 .form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
 .modal-content { border-radius: 0; }
+.clip-line { margin-bottom: 0; max-height: 16px; overflow: hidden; }
 
 // Plugins
 .toast { direction: ltr; text-align: left }
