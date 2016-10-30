@@ -21,6 +21,8 @@ define({
         , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
         , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
         , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
+        , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
+        , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
     },
     "positions": {
         "wrapper": "body"
@@ -34,6 +36,7 @@ define({
         , "schedule": "conductor"
         , "tree": "metacategories"
         , "storagefiles": "storagefiles"
+        , "metadata": "metadata"
     },
     "dependencies": [
         {
