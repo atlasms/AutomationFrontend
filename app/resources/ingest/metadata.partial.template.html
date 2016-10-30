@@ -1,0 +1,35 @@
+<table class="table table-bordered table-striped table-condensed flip-content">
+	<thead>
+		<tr>
+			<th class="col-xs-1">#</th>
+			<th class="col-xs-1"></th>
+			<th class="col-xs-7">نام برنامه</th>
+			<th class="col-xs-1">قسمت</th>
+			<th class="col-xs-2">مدت</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each []}}
+		<tr data-id="{{Id}}">
+			<td class="text-center" data-type="index">
+				{{math @index "+" 1}}
+			</td>
+			<td class="text-center">
+				<figure>
+					<img src="{{Thumbnail}}" alt="" />
+				</figure>
+			</td>
+			<td>
+				{{Title}}
+				<small class="help-block text-muted clip-line">{{Description}}</small>
+			</td>
+			<td class="text-center">
+				{{EpisodeNumber}}
+			</td>
+			<td class="text-center">
+				{{time Duration}}
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

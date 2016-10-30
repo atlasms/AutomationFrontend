@@ -3,6 +3,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
     var IngestView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , $modal: "#metadata-form-modal"
+        , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
 //            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
@@ -14,7 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             'click [type=submit]': 'submit'
             , 'click [data-task=add]': 'openAddForm'
             , 'click #storagefiles': 'selectRow'
-            , 'focus .has-error input': function(e) {
+            , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
         }
@@ -83,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , afterRender: function () {
             IngestHelper.mask("time");
-            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
@@ -135,6 +136,33 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
             return data;
+        }
+        , handleTreeCalls: function (routes, path) {
+            var self = this;
+            var pathId = routes.pop().toString();
+            var params = {overrideUrl: Config.api.metadata};
+            $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
+            $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
+
+            var template = Template.template.load('resources/ingest', 'metadata.partial');
+            var $container = $(self.$metadataPlace);
+            var model = new IngestModel(params);
+            model.fetch({
+                data: $.param({categoryId: pathId})
+                , success: function (data) {
+                    items = self.prepareItems(data.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            self.afterRender();
+                        });
+                    });
+                }
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
         }
     });
     return IngestView;
