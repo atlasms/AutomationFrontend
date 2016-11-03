@@ -68,12 +68,14 @@
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<select class="form-control" name="ConductorType">
+									{{#select ConductorType}}
 									<option value="0">مجموعه خارجی</option>
 									<option value="1">مجموعه ایرانی</option>
 									<option value="2">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
 									<option value="3">سینمایی</option>
 									<option value="4">آنونس، تیزر، میان&zwnj;برنامه</option>
 									<option value="5">آگهی بازرگانی</option>
+									{{/select}}
 								</select>
 							</div>
 						</td>
