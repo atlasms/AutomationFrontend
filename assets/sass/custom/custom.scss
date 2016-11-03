@@ -10,6 +10,7 @@
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, p, button, label, table, tr, td, textarea  { direction: ltr; text-align: left; }
+.label { font-family: 'Vazir', Tahoma; direction: ltr; }
 
 // Header
 .breadcrumbs { 
@@ -27,16 +28,24 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 
 // Toolbar
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }
+#toolbar .input-group-addon {
+    min-width: 84px;
+    &.has-icon {
+        min-width: 0; width: 40px;
+        > i { color: #888; }
+    }
+}
 #sub-toolbar { border-top: 3px solid #8E44AD; }
 .dropdown-menu { font-family: 'Vazir', Tahoma; }
 .ltr { font-family: Tahoma, Arial; direction: rtl; }
-.index {
+.btn .index {
     display: inline-block;
     &:before { content: '['; }
     &:after { content: ']'; }
+    &:empty { display: none; }
 }
 
-// Componenets
+// Componenets 
 .table {
     figure {
         width: 120px;
@@ -66,6 +75,15 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 // Plugins
 .toast { direction: ltr; text-align: left }
 .toast-title { margin-bottom: 7px; }
+#tree.jstree [deleted="true"] a {
+    color: red !important;
+    .jstree-icon { color: red !important; -webkit-filter: none; filter: none; }
+}
+.bootbox {
+    .bootbox-close-button { margin-top: 0 !important; }
+    .bootbox-body { direction: ltr; text-align: left; }
+    button[data-bb-handler="confirm"] { float: left; }
+}
  
 // Mainbody
 .page-content { padding-top: 30px; } 
@@ -91,6 +109,10 @@ body.fixed-toolbar {
 }
 
 // Pages
+.page-404-full-page .page-404 {
+    margin-top: 210px;
+    .number { top: -40px; }
+}
 /// Login
 .login-content h1 { margin-bottom: 60px; } 
 
@@ -118,3 +140,31 @@ body.fixed-toolbar {
         th:not([class]) { min-width: 50px; }
     }
 } 
+
+/// Reviews
+#review-table {
+    tbody tr {
+        cursor: pointer;
+        td[colspan="100%"] { padding: 0; }
+        .table {
+            margin-bottom: 0;
+            tr { cursor: default; }
+            .portlet { margin-bottom: 0; }
+        }
+    }
+    ._no-margin { margin: 0 !important; }
+}
+.chat-form {
+    margin-top: 0;
+    .form-horizontal { margin-bottom: 10px; } 
+}
+#chats .chats {
+    li {
+        position: relative;
+        &.out {
+            .label-type { float: right; }
+            .name { display: block; float: right; position: absolute; top: 50px; right: 0; font-size: 12px; }
+            .body { margin-top: 8px; }
+        }
+    }
+}
