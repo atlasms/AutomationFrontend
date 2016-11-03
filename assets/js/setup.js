@@ -5,6 +5,7 @@ require.config({
         , underscore: {exports: '_'}
         , backbone: {deps: ['underscore', 'jquery', 'handlebars'], exports: 'Backbone'}
         , moment: {deps: ['jquery'], exports: 'moment'}
+        , "moment-hijri": {deps: ['jquery', 'moment', 'moment-with-locales'], exports: 'moment'}
         , cookie: {deps: ['jquery'], exports: 'Cookies'}
         , mask: {deps: ['jquery'], exports: 'mask'}
         , toastr: {deps: ['jquery'], exports: 'toastr'}
@@ -24,6 +25,7 @@ require.config({
         , 'bootstrap/tooltip': {deps: ['jquery'], exports: '$.fn.tooltip'}
         , 'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'}
         , 'hotkeys': {deps: ['jquery'], exports: 'jQuery'}
+        , 'jwplayer': {exports: 'jwplayer'}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
     , paths: {
@@ -34,6 +36,7 @@ require.config({
         , handlebars: ["vendor/handlebars-v4.0.5"]
         , moment: ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
+        , "moment-hijri": ["vendor/moment-hijri"]
         , "bootstrap": ["vendor/bootstrap"]
         , "toastr": ["vendor/toastr.min"]
         , pdate: ["vendor/persian-date"]
@@ -43,6 +46,8 @@ require.config({
         , hotkeys: ["vendor/jquery.hotkeys"]
         , "jstree": ["vendor/jstree.min"]
         , "tus": ["vendor/tus"]
+        , "jwplayer": ["vendor/jwplayer/jwplayer"]
+        , "bootbox": ["vendor/bootbox.min"]
 
         , typeahead: ["vendor/typeahead.jquery.min"]
         , bloodhound: ["vendor/bloodhound.min"]
@@ -62,6 +67,7 @@ require.config({
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
         , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
+        , "resources.review.model": ["../../app/resources/review/review.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -74,6 +80,7 @@ require.config({
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
         , "resources.metadata.view": ["../../app/resources/metadata/metadata.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
+        , "resources.review.view": ["../../app/resources/review/review.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
@@ -86,6 +93,7 @@ require.config({
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
+        , "reviewHelper": ["../../app/resources/review/review.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/categories.helper"]
         , "tree.helper": ["helpers/tree"]
