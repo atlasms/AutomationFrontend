@@ -5,6 +5,7 @@ define(["jquery", "underscore", "backbone", "config"
         , initialize: function (options) {
             this.query = (options && options.query) ? '?' + options.query : '';
             this.path = (options && options.path) ? options.path : '';
+            this.path = (options && options.id) ? '/' + options.id : '';
         }
         , url: function () {
             return Config.api.tree + this.path + this.query;
