@@ -24,6 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=show-subtoolbar]': 'showSubtoolbar'
             , 'click [data-task=duplicate]': 'duplicate'
             , 'change [name=force]': 'warnForceDuplicate'
+            , 'focus input.time': 'selectInput'
         }
         , submit: function () {
             var $this = this;
@@ -40,6 +41,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     $this.reLoad();
                 }
             });
+        }
+        , selectInput: function(e) {
+            $(e.target).trigger('select');
         }
         , duplicate: function (e) {
             e.preventDefault();
