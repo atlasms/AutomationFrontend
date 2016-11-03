@@ -1,19 +1,17 @@
 <table class="table table-bordered table-striped table-condensed flip-content">
 	<thead>
 		<tr>
-			<th class="col-xs-1">#</th>
 			<th class="col-xs-1"></th>
-			<th class="col-xs-7">نام برنامه</th>
-			<th class="col-xs-1">قسمت</th>
-			<th class="col-xs-2">مدت</th>
+			<th class="col-xs-5">نام برنامه</th>
+			<th class="col-xs-2 text-center">زمان ثبت</th>
+			<th class="col-xs-1 text-center">قسمت</th>
+			<th class="col-xs-1 text-center">مدت</th>
+			<th class="col-xs-2 text-center">وضعیت</th>
 		</tr>
 	</thead>
 	<tbody>
 		{{#each []}}
-		<tr data-id="{{Id}}">
-			<td class="text-center" data-type="index">
-				{{math @index "+" 1}}
-			</td>
+		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
 			<td class="text-center">
 				<figure>
 					<img src="{{Thumbnail}}" alt="" />
@@ -23,11 +21,17 @@
 				{{Title}}
 				<small class="help-block text-muted clip-line">{{Description}}</small>
 			</td>
+			<td class="text-right">
+				<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+			</td>
 			<td class="text-center">
 				{{EpisodeNumber}}
 			</td>
 			<td class="text-center">
-				{{time Duration}}
+				<span class="time">{{time Duration}}</span>
+			</td>
+			<td class="text-center">
+				<span class="">{{StateText}}</span>
 			</td>
 		</tr>
 		{{/each}}
