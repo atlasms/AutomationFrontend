@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
-], function ($, _, Backbone, Handlebars, Config, Global) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri'
+], function ($, _, Backbone, Handlebars, Config, Global, moment) {
 
     var template = {
         handlebarHelpers: function () {
@@ -115,8 +115,26 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global'
             Handlebars.registerHelper('time', function (timestamp, options) {
                 return Global.createTime(timestamp);
             });
-            Handlebars.registerHelper('convert2Jalali', function (value, options) {
-                return Global.convertDateTime(value);
+            Handlebars.registerHelper('config', function (value, options) {
+                return Config[value];
+            });
+            Handlebars.registerHelper('formatJalali', function (value, format, options) {
+                var date = (value && value.indexOf("T") !== -1) ? Global.gregorianToJalali(value.split('T')[0]).split('-') : Global.gregorianToJalali(value).split('-');
+                for (var i = 0; i < date.length; i++)
+                    date[i] = parseInt(date[i]);
+                return persianDate(date).format(format);
+            });
+            Handlebars.registerHelper('formatGregorian', function (value, format, options) {
+                var date = (value && value.indexOf("T") !== -1) ? value.split('T')[0].split('-') : value.split('-');
+                for (var i = 0; i < date.length; i++)
+                    date[i] = (i === 1) ? parseInt(date[i]) - 1 : parseInt(date[i]);
+                return new moment(date).format(format);
+            });
+            Handlebars.registerHelper('formatHijri', function (value, format, options) {
+                var date = (value && value.indexOf("T") !== -1) ? value.split('T')[0].split('-') : value.split('-');
+                for (var i = 0; i < date.length; i++)
+                    date[i] = (i === 1) ? parseInt(date[i]) - 1 : parseInt(date[i]);
+                return new moment(date).format(format);
             });
         }
         , handlebarPartials: function() {
