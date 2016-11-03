@@ -4,7 +4,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'CategoriesModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
+//            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
+//            , {'button': {cssClass: 'btn red', text: 'Delete Node', type: 'button', task: 'delete-node', icon: 'fa fa-trash'}}
+//            , {'button': {cssClass: 'btn green', text: 'New node', type: 'button', task: 'add-node', icon: 'fa fa-plus'}}
         ]
         , statusbar: []
         , flags: {}
@@ -54,10 +56,54 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     self.afterRender();
                 });
             });
-            self.renderToolbar();
+//            self.renderToolbar();
         }
         , afterRender: function () {
-            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
+            var $this = this;
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, $this).render();
+        }
+        , handleTreeCallbacks: function (params, $tree, node) {
+            if (typeof params === "undefined")
+                return false;
+            switch (params.method) {
+                case 'delete':
+                    new CategoriesModel({id: params.id}).destroy({
+                        success: function (d) {
+                            var node = $tree.jstree(true).get_node(params.id, true);
+                            node.attr('deleted', 'true');
+                        }
+                    });
+                    break;
+                case 'post':
+                    new CategoriesModel().save(null, {
+                        data: JSON.stringify({
+                            text: params.text
+                            , pid: params.parent
+                        })
+                        , contentType: 'application/json'
+                        , processData: false
+                        , error: function (e, data) {
+                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        }
+                        , success: function (model, response) {
+                            $tree.jstree(true).set_id(node, response);
+                        }
+                    });
+                    break;
+                case 'put':
+                    new CategoriesModel({id: params.id}).save({
+                        text: params.text
+                        , pid: params.parent
+                        , error: function (e, data) {
+                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        }
+                        , success: function (d) {
+//                            $tree.jstree(true).set_id(node, d);
+//                            node.attr('deleted', 'true');
+                        }
+                    });
+                    break;
+            }
         }
         , renderToolbar: function () {
             var self = this;
