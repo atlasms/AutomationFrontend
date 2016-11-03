@@ -121,16 +121,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , rebuildTable: function () {
             var $rows = $("#schedule-page tbody tr");
             var start = 0;
+            var error = false;
+//            var scheduleStart = Global.processTime($rows.eq(0).find("[data-type=start]").val());
             $rows.each(function (i) {
                 var $this = $(this);
                 $(this).find(".idx").text(i + 1);
                 start = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
-                if (!(/^\d+$/.test(start)))
+                var preStart = Global.processTime($this.find("[data-type=start]").val());
+                if (!(/^\d+$/.test(start)) || error)
                     $this.addClass("error");
                 else
                     $this.removeClass("error");
                 if ($this.next().length) {
                     $this.next().find("[data-type=start]").val(Global.createTime(start));
+                if (Global.processTime(Global.createTime(start)) < preStart)
+                    error = true;
                 }
             });
             ScheduleHelper.setStates();
@@ -162,10 +167,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , validate: function () {
             this.time = function ($element) {
+//                console.log($element.parents('tr:first').prev().find("[data-type=start]").val());
                 if (!moment($element.val(), 'HH:mm:SS', true).isValid())
                     $element.parent().addClass("has-error");
                 else
                     $element.parent().removeClass("has-error");
+
+//               Global.processTime($element.parents('tr:first').find("[data-type=start]").val()) < Global.processTime($element.parents('tr:first').prev().find("[data-type=start]").val())
+
             };
             this.beforeSave = function () {
                 if ($("#schedule-page tbody tr.error").length) {
@@ -190,11 +199,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var getTotalTime = function () {
                 return function () {
                     var $rows = $("#schedule-page tbody tr");
-                    if ($rows.length > 1)
-                        return Global.createTime((Global.processTime($rows.last().find("[data-type=start]").val()) +
-                                Global.processTime($rows.last().find("[data-type=duration]").val())) -
-                                Global.processTime($rows.first().find("[data-type=start]").val())
-                                );
+                    if ($rows.length > 1) {
+                        var duration = 0;
+                        $.each($rows, function () {
+                            duration += Global.processTime($(this).find("[data-type=duration]").val());
+                        });
+                        return Global.createTime2(duration);
+                    }
                     if ($rows.length === 1) {
                         return $rows.find("[data-type=duration]").val();
                     }
@@ -219,7 +230,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 var $target = $(e.target).closest("tr");
                 if (!$target.hasClass("new"))
                     $target.addClass('edited');
-                
+
                 // Handle unloads
                 if (typeof $this.flags.updatedContent === "undefined" || $this.flags.updatedContent !== true) {
                     var myEvent = window.attachEvent || window.addEventListener;
