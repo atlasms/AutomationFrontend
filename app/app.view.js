@@ -20,7 +20,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'lay
             }
         }
         , render404: function () {
-            this.$el.html('<h1 class="text-center">404!</h1>');
+            $("body").attr('class', 'page-404-full-page')
+            this.$el.html('<div class="page-404"><div class="number font-red"> 404 </div><div class="details"><h3>پیدا نشد!</h3><p>متاسفانه صفحه مورد نظر شما وجود ندارد.<br><a href="/"> بازگشت به داشبورد </a></p></div></div></div>');
         }
     });
     return AppView;
