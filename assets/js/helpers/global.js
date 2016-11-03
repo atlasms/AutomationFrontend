@@ -66,12 +66,20 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             }
             return seconds;
         }
+        , createTime2: function (timestamp, showSign) {
+            if (typeof timestamp !== 'undefined') {
+                var hours = Global.zeroFill(parseInt(timestamp / 3600));
+                var minutes = Global.zeroFill(parseInt(timestamp / 60) % 60);
+                var seconds = Global.zeroFill(timestamp % 60);
+                return hours + ":" + minutes + ":" + seconds;
+            }
+        }
         , createTime: function (timestamp, showSign) {
             var output;
             var sign;
             showSign = (typeof showSign !== 'undefined') ? true : false;
             if (typeof timestamp !== 'undefined') {
-                sign = (timestamp != Math.abs(timestamp)) ? '-' : '+';
+                sign = (timestamp !== Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
                 var time = new Date(0, 0, 0, 0, 0, timestamp, 0);
                 var hours = Global.zeroFill(time.getHours(), 2);
