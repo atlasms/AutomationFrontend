@@ -1,5 +1,6 @@
 define({
     "title": "اتوماسیون تولید و پخش",
+    "channel": "ایران‌کالا",
     "env": "dev",
     "settings": {
         "datepicker": {
@@ -23,6 +24,7 @@ define({
         , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
         , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
         , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
+        , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
     },
     "positions": {
         "wrapper": "body"
@@ -37,6 +39,7 @@ define({
         , "tree": "metacategories"
         , "storagefiles": "storagefiles"
         , "metadata": "metadata"
+        , "review": "metadata?categoryid=11"
     },
     "dependencies": [
         {
