@@ -7,14 +7,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , model: 'IngestModel'
         , toolbar: [
 //            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
-            {'button': {cssClass: 'btn blue-sharp hidden', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
+            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=add]': 'openAddForm'
-            , 'click #storagefiles': 'selectRow'
+            , 'click #storagefiles tbody tr': 'selectRow'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
                     $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
             });
-            $('button[data-task=add]').removeClass('hidden').find("span").html($.trim($row.find('[data-type="index"]').text()));
+            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
         }
         , reLoad: function () {
             this.load();
@@ -86,7 +86,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , afterRender: function () {
             IngestHelper.mask("time");
-            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+            if (typeof this.flags.treeLoaded === "undefined") {
+                $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+                this.flags.treeLoaded = true;
+            }
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
