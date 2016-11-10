@@ -134,8 +134,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $this.removeClass("error");
                 if ($this.next().length) {
                     $this.next().find("[data-type=start]").val(Global.createTime(start));
-                if (Global.processTime(Global.createTime(start)) < preStart)
-                    error = true;
+                    if (Global.processTime(Global.createTime(start)) < preStart)
+                        error = true;
                 }
             });
             ScheduleHelper.setStates();
