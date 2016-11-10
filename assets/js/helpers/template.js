@@ -136,6 +136,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     date[i] = (i === 1) ? parseInt(date[i]) - 1 : parseInt(date[i]);
                 return new moment(date).format(format);
             });
+            Handlebars.registerHelper('getMedia', function (value, options) {
+                return value.replace('.jpg', '_lq.mp4');
+            });
         }
         , handlebarPartials: function() {
             Handlebars.registerPartial('scheduleRowTools', function() {
