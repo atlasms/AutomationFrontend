@@ -31,6 +31,7 @@ require.config({
     , paths: {
         // Library Dependencies
         jquery: ["vendor/jquery-3.1.1.min"]
+        , "jquery-ui": ["vendor/jquery-ui.min"]
         , underscore: ["vendor/underscore-min"]
         , backbone: ["vendor/backbone-min"]
         , handlebars: ["vendor/handlebars-v4.0.5"]
@@ -97,6 +98,7 @@ require.config({
 //        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/categories.helper"]
         , "tree.helper": ["helpers/tree"]
+        , "player.helper": ["helpers/player"]
     }
 });
 require([
