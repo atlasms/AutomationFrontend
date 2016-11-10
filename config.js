@@ -1,6 +1,7 @@
 define({
     "title": "اتوماسیون تولید و پخش",
     "channel": "ایران‌کالا",
+    "siteUrl": "http://localhost",
     "env": "dev",
     "settings": {
         "datepicker": {
