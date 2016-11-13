@@ -44,11 +44,33 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     accum += block.fn(i);
                 return accum;
             });
-            Handlebars.registerHelper('ifCond', function (v1, v2, options) {
-                if (v1 === v2) {
-                    return options.fn(this);
+//            Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+//                if (v1 === v2) {
+//                    return options.fn(this);
+//                }
+//                return options.inverse(this);
+//            });
+            Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+                switch (operator) {
+                    case '==':
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
                 }
-                return options.inverse(this);
             });
             Handlebars.registerHelper('ifCondNot', function (v1, v2, options) {
                 if (v1 !== v2) {
@@ -140,8 +162,8 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return value.replace('.jpg', '_lq.mp4');
             });
         }
-        , handlebarPartials: function() {
-            Handlebars.registerPartial('scheduleRowTools', function() {
+        , handlebarPartials: function () {
+            Handlebars.registerPartial('scheduleRowTools', function () {
                 var output = '<div class="tools"><button class="btn" data-task="add"><i class="fa fa-plus"></i></button><button class="btn" data-task="delete"><i class="fa fa-minus"></i></button></div>';
                 return output;
             });
