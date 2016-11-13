@@ -1,38 +1,59 @@
 <div id="player"></div>
+{{#if template}}
+{{#if template.seekbar}}
 <div id="seekbar">
-	<div class="original">
-		<div class="pull-right"><span class="start">00:00:00</span></div>
-		<div class="pull-left"><span class="end">00:00:00</span></div>
-		<div class="clearfix"></div>
-	</div>
+	{{#if template.seekbar.seeker}}
 	<div class="time">
 		<div class="interval-minor"></div>
 		<!--<div class="interval-major"></div>-->
 	</div>
+	{{/if}}
+	{{#if template.seekbar.seeker}}
 	<div class="seeker">
 		<div class="inner"></div>
 	</div>
-</div>
-<div class="controls">
-	<div class="pull-left">
-		<div id="speed">
-			<div class="inner speed">
-				<!--<div class="handle">o</div>-->
-			</div>
-		</div>
+	{{/if}}
+	{{#ifCond template.seekbar.duration "||" template.seekbar.current}}
+	<div class="original clearfix">
+		{{#if template.seekbar.current}}
+		<div class="pull-right current"><span>00:00:00</span></div>
+		{{/if}}
+		{{#if template.seekbar.duration}}
+		<div class="pull-left duration"><span>00:00:00</span></div>
+		{{/if}}
 	</div>
+	{{/ifCond}}
+</div>
+{{/if}}
+{{#if template.controls}}
+<div class="controls clearfix">
+	{{#if template.controls.speed}}
+	<div class="pull-left">
+		<ul class="speed">
+			<li data-value="0.50">½&times;</li>
+			<li data-value="1" class="active">1&times;</li>
+			<li data-value="2">2&times;</li>
+			<li data-value="4">4&times;</li>
+			<li data-value="8">8&times;</li>
+		</ul>
+	</div>
+	{{/if}}
+	{{#if template.controls.volume}}
 	<div class="pull-right">
 		<div id="volume">
-			<div class="inner volume">
-				<!--<div class="handle">o</div>-->
-			</div>
+			<div class="inner volume"></div>
 		</div>
 	</div>
+	{{/if}}
+	{{#if template.controls.keys}}
 	<div class="controls-container text-center">
 		<!--<a href="#"><i class="icon-fast-backward-1"></i></a>-->
-		<!--<a data-type="controls" class="forward" href="#"><i class="fa fa-forward"></i></a>-->
+		<a data-type="controls" data-task="forwards" class="forward" href="#"><i class="fa fa-forward"></i></a>
 		<a data-type="controls" data-task="play-pause" class="play" href="#" data-state="play"></a>
-		<!--<a data-type="controls" class="backward" href="#"><i class="fa fa-backward"></i></a>-->
+		<a data-type="controls" data-task="backwards" class="backward" href="#"><i class="fa fa-backward"></i></a>
 		<!--<a href="#"><i class="icon-fast-forward-1"></i></a>-->
 	</div>
+	{{/if}}
 </div>
+{{/if}}
+{{/if}}
