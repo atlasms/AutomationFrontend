@@ -4,7 +4,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
         el: $(Config.positions.wrapper)
         , playerInstance: null
         , model: 'MetadataModel'
-        , $playerControls: $(".controls")
         , toolbar: [
             {'button': {cssClass: 'btn red pull-right', text: 'رد', type: 'button', task: 'reject'}}
             , {'button': {cssClass: 'btn green-jungle pull-right', text: 'قبول', type: 'button', task: 'accept'}}
@@ -23,19 +22,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             'click [type=submit]': 'submit'
             , 'change [data-type=filter-table]': 'filterTable'
             , 'click #review-table tbody tr': 'collapseRow'
-            , 'click a[data-type="controls"]': 'playerControls'
-        }
-        , playerControls: function (e) {
-//            alert()
-            e.preventDefault();
-            var $this = this;
-            var $target = $(e.currentTarget);
-            var task = $target.attr('data-task');
-            switch (task) {
-                case 'play-pause':
-                    $this.player.play(this.playerInstance, $(e.currentTarget));
-                    break;
-            }
         }
         , collapseRow: function (e) {
             var $this = this;
@@ -44,6 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             var media = {
                 thumbnail: $row.attr('data-thumbnail')
                 , video: $row.attr('data-media')
+                , duration: $row.attr('data-duration')
             };
             var file = $row.attr('data-filename');
             var file = $row.attr('data-filename');
@@ -68,8 +55,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                     $row.after(output).promise().done(function () {
                         var player = new Player('#player-container', {
                             image: media.thumbnail
-                            , file: media.video
-                        }, $this.handlePlayerCallbacks, $this.$playerControls);
+//                            , file: media.video
+                            , duration: media.duration
+                            , playlist: [{
+                                    sources: [
+                                        {file: media.video, label: 'LQ', default: true}
+                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+//                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
+                                    ]
+                                }]
+                        }, $this.handlePlayerCallbacks);
                         player.render();
                         $this.player = player;
                         $this.playerInstance = player.instance;
@@ -137,33 +132,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             ReviewHelper.mask("time");
         }
         , handlePlayerCallbacks: function (instance, type, value) {
-            var $this = this;
-            switch (type) { 
-                case 'setDuration':
-                    $("#seekbar .end").length && $("#seekbar .end").text(Global.createTime(value));
-                    break;
-                case 'setPosition':
-                    $("#seekbar .start").length && $("#seekbar .start").text(Global.createTime(value));
-                    break;
-                case 'initElements':
-                    $("#seekbar .seeker .inner:first").slider({
-                        value: 0
-                        , slide: function (e, ui) {
-                            instance.seek(ui.value);
-                        }
-                    });
-                    break;
-                case 'setSeekbar':
-                    $("#seekbar .seeker").find(".inner:first").slider('option', 'value', value);
-                    break;
-                case 'controls':
-                    var $playPause = this.$playerControls.find('[data-type="controls"][data-task="play-pause"]');
-                    if (value === "play")
-                        $playPause.attr('data-state', 'play');
-                    else
-                        $playPause.attr('data-state', 'pause');
-                    break;
-            }
         }
         , renderToolbar: function () {
             var self = this;
