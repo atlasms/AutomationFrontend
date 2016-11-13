@@ -155,6 +155,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         return $.map(response, function (item) {
                             return {
                                 value: item.ConductorTitle
+                                , data: item
                             };
                         });
                     }
@@ -163,6 +164,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $('input[data-type="title"]').typeahead(null, {
                 display: 'value',
                 source: items
+            });
+            $('input[data-type="title"]').bind('typeahead:select', function (ev, suggestion) {
+                console.log('Selection: ' + JSON.stringify(suggestion));
             });
         }
         , validate: function () {
