@@ -9,9 +9,9 @@
 						<th class="hide">فیکس</th>
 						<th class="col-xs-1">شروع</th>
 						<th class="col-xs-1">مدت</th>
-						<th class="col-xs-3">برنامه</th>
-						<th>قسمت</th>
-						<th>نوع برنامه</th>
+						<th class="col-xs-2">برنامه</th>
+						<th class="col-xs-2">قسمت</th>
+						<th class="col-xs-1">نوع برنامه</th>
 						<th class="col-xs-3">توضیحات</th>
 						<th>تکرار</th>
 						<th>منتخب</th>
@@ -80,10 +80,8 @@
 							</div>
 						</td>
 						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorNote" value="{{ConductorNote}}">
-								<!--<label for="form_control_{{@index}}">{{#unless ConductorNote}}توضیحات برنامه{{/unless}}</label>-->
-								<span class="help-block">اطلاعات تکمیلی در خصوص برنامه در این قسمت وارد می‌شود</span>
+							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
+								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
 							</div>
 						</td>
 						<td class="text-center">
