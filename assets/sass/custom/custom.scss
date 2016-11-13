@@ -72,6 +72,10 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
 .modal-content { border-radius: 0; }
 .clip-line { margin-bottom: 0; max-height: 16px; overflow: hidden; }
+////// JWPlayer hacks
+#player_controlbar.jwcontrolbar { opacity: 1 !important; display: inline-block !important; visibility: visible !important; }
+.jwrailgroup.Buffer { opacity: 1 !important; }
+.jwicon { width: 72px !important; }
 
 // Plugins
 .toast { direction: ltr; text-align: left }
@@ -140,6 +144,7 @@ body.fixed-toolbar {
     thead tr {
         th:not([class]) { min-width: 50px; }
     }
+    .text-area-container { padding-top: 0; }
 } 
 
 /// Reviews
@@ -171,19 +176,26 @@ body.fixed-toolbar {
 }
 
 
+#player-container { background: #3C3E3F }
 
-
-.interval-minor { background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAMCAMAAACdvocfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFzMzM////040VdgAAAAJ0Uk5T/wDltzBKAAAAEklEQVR42mJgYAQCBopJgAADAAbwADHy2qHzAAAAAElFTkSuQmCC") repeat -2px top transparent; white-space: nowrap; padding: 0; height: 6px; }
-#seekbar a { transition: none 0s; }
-#seekbar .original span { color: #717778 }
-#seekbar .time { margin-top: 10px; }
-#seekbar .seeker { width: 100%; height: 10px; margin-bottom: 10px; }
-#seekbar .seeker > .inner { height: 20px; position: relative; width: 100%; }
-#seekbar .seeker > .inner:before { background: none repeat scroll 0 0 #242828; box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.05);  content: "";  height: 10px; left: 0; position: absolute; top: 0px; width: 100%; }
-#seekbar .seeker .ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 8px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px; position: absolute; z-index: 59; top: -4px; }
-#seekbar .seeker .ui-slider-handle ~ .ui-slider-handle { top: -20px; }
-#seekbar .seeker .ui-slider-range { position: absolute; top: 0; left: 0; background: #449d44; height: 10px; }
+/*.interval-minor {  white-space: nowrap; padding: 0; height: 6px; }*/
+#seekbar {
+    padding: 0 10px;
+    a { transition: none 0s; }
+    .current, .duration { color: #717778; }
+    .seeker {
+        width: 100%; height: 10px; margin-bottom: 10px;
+        > .inner {
+            height: 10px; position: relative; width: 100%; background: #242828; padding: 2px 0;
+            &:before { background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAMCAMAAACdvocfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFzMzM////040VdgAAAAJ0Uk5T/wDltzBKAAAAEklEQVR42mJgYAQCBopJgAADAAbwADHy2qHzAAAAAElFTkSuQmCC") repeat -2px top transparent; box-shadow: 0 -1px 0 transparent; content: "";  height: 6px; left: 0; position: absolute; top: 2px; width: 100%; overflow: hidden; }
+        }
+        .ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 6px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px; position: absolute; z-index: 59; top: -4px; }
+        .ui-slider-handle ~ .ui-slider-handle { top: -20px; }
+        .ui-slider-range { position: absolute; top: 0; left: 0; background: #449d44; height: 10px; }
+    }
+}
 .controls {
+    padding: 0 20px;
     a[data-type="controls"] {
         display: inline-block; width: 40px; height: 30px; color: #bbb; font-size: 24px; line-height: 30px; text-shadow: 0 0 2px #000;
         &:hover, &:focus, &:active { color: #fff; text-decoration: none; outline: 0 none; }
@@ -193,15 +205,34 @@ body.fixed-toolbar {
             &[data-state="pause"]:before { content: "\f04c"; }
         }
     }
+    .controls-container { margin: 0 100px 10px; }
 }
-.controls-container { margin: 10px 100px }
 /* Volume Bar */
-#volume { width: 100px; min-height: 5px; margin-top: 8px; margin-right: 18px; }
-#volume .inner { position: relative; width: 100%; height: 18px; }
-#volume .inner:before { content: ''; position: absolute; top: 7px; left: 0; width: 118px; height: 3px; background: none repeat scroll 0 0 #242828; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05); }
-#volume .ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 18px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px; position: relative; z-index: 59; top: -18px; }
+#volume {
+    width: 100px; min-height: 5px; margin-top: 8px; margin-left: 18px;
+    .inner {
+        position: relative; width: 100%; height: 18px;
+        &:before { content: ''; position: absolute; top: 7px; right: 0; width: 118px; height: 3px; background: none repeat scroll 0 0 #242828; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05); }
+        span.ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 18px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px !important; position: absolute; z-index: 59; top: 0; }
+    }
+}
 /* Spped Bar */
-#speed { width: 100px; min-height: 5px; margin-top: 8px; }
-#speed .inner { position: relative; width: 100%; height: 18px; }
-#speed .inner:before { content: ''; position: absolute; top: 7px; left: 0; width: 118px; height: 3px; background: none repeat scroll 0 0 #242828; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05); }
-#speed .ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 18px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px; position: relative; z-index: 59; top: -18px; }
+#speed {
+    width: 100px; min-height: 5px; margin-top: 8px;
+    .inner {
+        position: relative; width: 100%; height: 18px;
+        &:before { content: ''; position: absolute; top: 7px; right: 0; width: 118px; height: 3px; background: none repeat scroll 0 0 #242828; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05); }
+        .ui-slider-handle { display: block; cursor: pointer; box-shadow: 0 0 3px #000; width: 18px; height: 18px; overflow: hidden; background: silver; text-indent: -999px; border-radius: 9px !important; position: absolute; z-index: 59; top: 0; }
+    }
+}
+.speed { 
+    list-style: none; padding: 0; margin: 0; direction: rtl;
+    li {
+        display: inline-block; font-size: 10px; font-family: Tahoma; color: #ababab; padding: 0 5px; cursor: pointer;
+        &.active {
+            color: red; text-shadow: 0 0 1px darkred; cursor: default;
+            &:hover { text-shadow: 0 0 transparent; }
+        }
+        &:hover { text-shadow: 0 0 1px #bbb }
+    }
+}
