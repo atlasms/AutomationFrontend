@@ -162,15 +162,25 @@ body.fixed-toolbar {
 }
 .chat-form {
     margin-top: 0;
-    .form-horizontal { margin-bottom: 10px; } 
+    .form-horizontal {
+        margin-bottom: 10px;
+        .form-group.form-md-line-input { padding-top: 0; }
+    }
 }
 #chats .chats {
     li {
         position: relative;
+        .name { display: block; float: right; position: absolute; top: 50px; right: 0; font-size: 12px; }
+        .body { margin-top: 8px; }
+        .message { text-align: left; }
         &.out {
             .label-type { float: right; }
-            .name { display: block; float: right; position: absolute; top: 50px; right: 0; font-size: 12px; }
-            .body { margin-top: 8px; }
+        }
+        &.in {
+            .label-type { float: left; }
+            .name { float: left; right: auto; left: 0; }
+            .message { text-align: right; }
+            .body { text-align: left; }
         }
     }
 }
