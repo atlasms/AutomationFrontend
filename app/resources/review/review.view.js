@@ -3,10 +3,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
     var ReviewView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , playerInstance: null
-        , model: 'MetadataModel'
+        , model: 'ReviewModel'
         , toolbar: [
-            {'button': {cssClass: 'btn red pull-right hidden fade', text: 'رد', type: 'button', task: 'reject'}}
-            , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'قبول', type: 'button', task: 'accept'}}
+            {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'قبول', type: 'submit', task: '1'}} // accept
+            , {'button': {cssClass: 'btn red pull-right hidden fade', text: 'رد', type: 'submit', task: '2'}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}}
@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             };
             if ($row.hasClass('active') || $row.hasClass('preview-pane') || $row.parents(".preview-pane").length || typeof media.video === "undefined")
                 return;
-            $("#toolbar [data-task=reject], #toolbar [data-task=accept]").removeClass('hidden').addClass('in');
+            $("#toolbar [type=submit]").removeClass('hidden').addClass('in');
             $el.parents("tbody").find("tr").removeClass('active');
             $row.addClass('active');
             if ($(document).find(".preview-pane").length)
@@ -48,9 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate({});
                     $row.after(output).promise().done(function () {
-                        console.log(media.thumbnail);
                         var player = new Player('#player-container', {
-                            
 //                            , file: media.video
                             duration: media.duration
                             , playlist: [{
@@ -67,25 +65,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                         $this.playerInstance = player.instance;
                     });
                 });
-
             }, 300);
 
         }
         , filterTable: function (e) {
             alert($(e.target).val());
         }
-        , submit: function () {
+        , submit: function (e) {
+            e.preventDefault();
             var $this = this;
-            var helper = new ReviewHelper.validate();
-            if (!helper.beforeSave())
-                return;
-            var data = this.prepareSave();
-            new MetadataModel().save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+            var task = new ReviewModel({id: $("tr.active").attr('data-id')}).save({
+                State: $(e.currentTarget).attr('data-task')
+            }, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $this.reLoad();
                 }
             });
@@ -140,6 +137,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             });
         }
         , afterRender: function () {
+            $(document).mouseup(function (e) {
+                var container = $("#review-table tbody, #toolbar");
+                if (!container.is(e.target) // if the target of the click isn't the container...
+                        && container.has(e.target).length === 0) // ... nor a descendant of the container
+                {
+                    if ($(document).find(".preview-pane").length) {
+                        $("#toolbar [type=submit]").addClass('hidden').removeClass('in');
+                        container.find("tr.active").removeClass('active');
+                        $(document).find(".preview-pane").fadeOut(200, function () {
+                            var $target = $(this);
+                            $this.player.remove();
+                            window.setTimeout(function () {
+                                $target.remove();
+                            }, 200);
+                        });
+                    }
+                }
+            });
             var $this = this;
             ReviewHelper.mask("time");
         }
