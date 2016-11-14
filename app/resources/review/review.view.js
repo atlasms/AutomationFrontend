@@ -166,7 +166,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
             });
             toolbar.render();
             self.flags.toolbarRendered = true;
-
+            $(document).on('change', "#toolbar select", function() {
+                self.load();
+            });
             var $datePickers = $(".datepicker");
             var datepickerConf = {
                 onSelect: function () {
