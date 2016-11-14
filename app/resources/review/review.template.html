@@ -9,7 +9,6 @@
 								<th>#</th>
 								<th>نام</th>
 								<th class="col-xs-1"></th>
-								<th>وضعیت</th>
 								<th>مدت</th>
 								<th>نوع</th>
 								<th>زمان ثبت</th>
@@ -32,9 +31,6 @@
 									</figure>
 								</td>
 								<td class="text-center">
-									<span class="">{{StateText}}</span>
-								</td>
-								<td class="text-center">
 									<span class="time">{{time Duration}}</span>
 								</td>
 								<td>
@@ -46,11 +42,11 @@
 								<td class="text-right">
 									<span class="">{{extractTime Modified}} {{extractDate Created}}</span>
 								</td>
-								<td>
+								<td class="text-center">
 									{{EpisodeNumber}}
 								</td>
 								<td>
-									کالای ایرانی
+									{{MetaCategoryName}}
 								</td>
 							</tr>
 							{{/each}}
