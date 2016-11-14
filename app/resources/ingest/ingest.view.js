@@ -6,7 +6,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-//            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
             {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
         ]
         , statusbar: []
@@ -32,11 +31,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , processData: false
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $($this.$modal).find("form").trigger('reset');
                     $($this.$modal).modal('hide');
                 }
             });
-            
-//            return false;
         }
         , openAddForm: function (e) {
             $(this.$modal).modal('toggle');
