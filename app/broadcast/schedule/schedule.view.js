@@ -26,8 +26,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'change [name=force]': 'warnForceDuplicate'
             , 'focus input.time': 'selectInput'
         }
-        , submit: function () {
-            var $this = this;
+        , submit: function (e) {
+            e.preventDefault();
+            var $this = this; 
             var helper = new ScheduleHelper.validate();
             if (!helper.beforeSave())
                 return;
