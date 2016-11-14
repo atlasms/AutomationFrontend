@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'mask', 'jdate', 'mousetrap', 'hotkeys', 'toastr'
+], function ($, _, Backbone, Config, Global, moment, Mask, jDate, Mousetrap, Hotkeys, toastr) {
     var ReviewHelper = {
         flags: {}
         , init: function (reinit) {
