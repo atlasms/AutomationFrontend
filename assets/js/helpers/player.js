@@ -10,8 +10,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             , controls: true
             , aspectratio: '16:9'
             , steps: 5 // Secnods used in forward and backwards seeking
-//            , autostart: true
+            , autostart: false
 //            , primary: 'flash'
+            , analytics: {
+                enabled: false,
+                cookies: false
+            }
             , template: {
                 controlbar: 'auto' // [auto, fixed]
                 , seekbar: {
@@ -162,8 +166,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             instance = this.getInstance(instance);
             var $this = this;
             // we don't have a duration yet, so start playing
-            if (this.duration === 0 && this.isPlaying === false)
-                instance.play();
+//            if (this.duration === 0 && this.isPlaying === false)
+//                instance.play();
             instance.onTime(function () {
                 $this.duration = instance.getDuration();
                 $this.position = $this.instance.getPosition();
@@ -188,9 +192,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 $('[data-type="controls"][data-task="play-pause"]').attr('data-state', 'play');
             });
             instance.onComplete(function () {
-                $this.callback && window.setTimeout(function () {
+                window.setTimeout(function () {
                     $('[data-type="controls"][data-task="play-pause"]').attr('data-state', 'play');
-                    $this.callback(instance, 'setSeekbar', 0);
+                    $("ul.speed li").removeClass('active');
+                    $("ul.speed").find('li[data-value="1"]').addClass('active');
+                     $("#seekbar .seeker .inner:first").slider('option', 'value', 0);
                 }, 50);
             });
         }
