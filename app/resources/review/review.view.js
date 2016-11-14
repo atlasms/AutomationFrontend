@@ -5,21 +5,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
         , playerInstance: null
         , model: 'MetadataModel'
         , toolbar: [
-            {'button': {cssClass: 'btn red pull-right', text: 'رد', type: 'button', task: 'reject'}}
-            , {'button': {cssClass: 'btn green-jungle pull-right', text: 'قبول', type: 'button', task: 'accept'}}
+            {'button': {cssClass: 'btn red pull-right hidden fade', text: 'رد', type: 'button', task: 'reject'}}
+            , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'قبول', type: 'button', task: 'accept'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
-            , {'select': {text: 'فیلتر', name: 'filter-table', addon: true, icon: 'fa fa-filter', options: [
-                        {value: '0', text: 'بازبینی نشده'}
-                        , {value: '1', text: 'تائید شده'}
-                        , {value: '2', text: 'رد شده'}
-                    ]}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
+            , 'click [data-task=load]': 'load'
             , 'change [data-type=filter-table]': 'filterTable'
             , 'click #review-table tbody tr': 'collapseRow'
         }
@@ -32,10 +28,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                 , video: $row.attr('data-media')
                 , duration: $row.attr('data-duration')
             };
-            var file = $row.attr('data-filename');
-            var file = $row.attr('data-filename');
             if ($row.hasClass('active') || $row.hasClass('preview-pane') || $row.parents(".preview-pane").length || typeof media.video === "undefined")
                 return;
+            $("#toolbar [data-task=reject], #toolbar [data-task=accept]").removeClass('hidden').addClass('in');
             $el.parents("tbody").find("tr").removeClass('active');
             $row.addClass('active');
             if ($(document).find(".preview-pane").length)
@@ -53,12 +48,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate({});
                     $row.after(output).promise().done(function () {
+                        console.log(media.thumbnail);
                         var player = new Player('#player-container', {
-                            image: media.thumbnail
+                            
 //                            , file: media.video
-                            , duration: media.duration
+                            duration: media.duration
                             , playlist: [{
-                                    sources: [
+                                    image: media.thumbnail
+                                    , sources: [
                                         {file: media.video, label: 'LQ', default: true}
                                         , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
 //                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
@@ -97,12 +94,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             this.load();
         }
         , load: function (e, extend) {
+//            console.info($("#toolbar").serializeObject());
+//            return false;
             console.info('Loading items');
-            var params = {};
+            $("#toolbar").serializeObject();
+            var params = this.getToolbarParams();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
+        , getToolbarParams: function () {
+            var params = {
+                state: $("#toolbar [name=state]").val()
+                , startdate: Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T00:00:00'
+                , enddate: Global.jalaliToGregorian($("#toolbar [name=enddate]").val()) + 'T23:59:59'
+            };
+            return params;
+        }
         , render: function (params) {
+            if (!this.flags.toolbarRendered)
+                this.renderToolbar();
+            if (typeof params === "undefined")
+                var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');
             var $container = $(Config.positions.main);
             var model = new ReviewModel(params);
@@ -118,7 +130,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                             self.afterRender();
                         });
                     });
-                    self.renderToolbar();
+
                 }
                 , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
@@ -137,8 +149,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             var self = this;
             if (self.flags.toolbarRendered)
                 return;
-            var elements = self.toolbar;
             var toolbar = new Toolbar();
+            var definedItems = toolbar.getDefinedToolbar("resources.review");
+            var elements = $.merge(self.toolbar, definedItems);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
