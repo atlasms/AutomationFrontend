@@ -65,10 +65,24 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .form-horizontal {
     .checkbox { margin-top: 6px; }
 }
-.fixed-label.form-group.form-md-line-input .form-control ~ label { color: #cdcdcd; font-size: 12px; }
+.fixed-label.form-group.form-md-line-input label {
+    color: #cdcdcd; font-size: 12px;
+    width: 100%;
+    position: absolute;  
+    left: 0;       
+    bottom: 0;  
+    pointer-events: none;
+}
 .box.portlet { direction: ltr; text-align: left; }
+// Typeahead
 .tt-cursor { background: #eee; }
-.tt-hint { color: #ccc !important } 
+.tt-hint { color: #ccc !important }     
+.tt-menu {
+     .fa.suggestion-1:before { content: "\f07b"; } // Folder
+     .fa.suggestion-2:before { content: "\f15b"; } // File
+     .fa.suggestion-3:before { content: "\f0ce"; } // Table
+}
+
 .form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
 .modal-content { border-radius: 0; }
 .clip-line { margin-bottom: 0; max-height: 16px; overflow: hidden; }

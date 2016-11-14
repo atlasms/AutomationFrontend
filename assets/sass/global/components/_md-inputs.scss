@@ -63,7 +63,13 @@
 		color: $input-md-label-color;     
 		@include opacity($input-md-label-opacity);	
   	}
-
+	  label {    
+			top: 0;  
+			margin-bottom: 0;
+			font-size: $input-md-label-font-size;
+			color: $input-md-label-color;     
+			@include opacity($input-md-label-opacity);  
+		}
 	.form-control {     
 		background: none;
 		border: 0;
@@ -119,13 +125,7 @@
 			}
 		}   
 
-		~ label {    
-			top: 0;  
-			margin-bottom: 0;
-			font-size: $input-md-label-font-size;
-			color: $input-md-label-color;     
-			@include opacity($input-md-label-opacity);  
-		}     
+		/*~      */
 
 		~ .help-block-error {
 			@include opacity(1);
