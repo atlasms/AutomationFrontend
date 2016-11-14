@@ -20,6 +20,31 @@ define(['jquery', 'underscore', 'backbone', 'config'
                 }
             });
         }
+        , getDefinedToolbar: function(type) {
+            var items = [];
+            $.each(Config.definitions, function() {
+                if (this.Key === "filters") {
+                    var filters = this.Children;
+                    $.each(filters, function() {
+                        if (this.Key === type) {
+                            var $this = this;
+                            var item = {};
+                            item[$this.Description] = {
+                                name: $this.Value
+                                , options: []
+                                , addon: true
+                                , icon: 'fa fa-filter'
+                            };
+                            for (i = 0; i < $this.Children.length; i++) {
+                                item[$this.Description].options.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
+                            }
+                            items.push(item);
+                        }
+                    });
+                }
+            });
+            return items;
+        }
         , render: function () {
             this.$el.html(this.toolbar + '<div class="clearfix"></div>');
         }
@@ -60,6 +85,22 @@ define(['jquery', 'underscore', 'backbone', 'config'
             var output = '<div class="form-group"><div class="input-group">';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
                 output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '">' + options + '</select></div></div>';
+            this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
+        }
+        , radio: function(args) {
+            var cssClass = (typeof args.cssClass !== "undefined") ? args.cssClass : 'form-control';
+            var name = (typeof args.name !== "undefined") ? args.name : '';
+            var label = (typeof args.text !== "undefined") ? args.text : '';
+            var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
+            var addon = (typeof args.addon !== "undefined") ? args.addon : false;
+            var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
+            var options = '';
+            if (typeof args.options !== "undefined" && args.options.length)
+                for (var i = 0; i < args.options.length; i++)
+                    options += '<div class="radio"><label><input type="radio" name="{name}" value="' + args.options[i].value + '" />' + args.options[i].text + '</label></div>';
+            var output = '<div class="form-group">';
+                output += options.replace(/{name}/gi, args.name);
+                output += '</div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
     });
