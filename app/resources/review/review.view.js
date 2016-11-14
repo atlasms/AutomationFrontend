@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jquery-ui', 'moment-with-locales', 'resources.review.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'reviewHelper', 'player.helper'
-], function ($, _, Backbone, Template, Config, Global, ui, moment, ReviewModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ReviewHelper, Player) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper'
+], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player) {
     var ReviewView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , playerInstance: null
@@ -16,7 +16,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=load]': 'load'
-            , 'change [data-type=filter-table]': 'filterTable'
             , 'click #review-table tbody tr': 'collapseRow'
         }
         , collapseRow: function (e) {
@@ -66,10 +65,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
                     });
                 });
             }, 300);
-
-        }
-        , filterTable: function (e) {
-            alert($(e.target).val());
         }
         , submit: function (e) {
             e.preventDefault();
@@ -91,10 +86,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'jqu
             this.load();
         }
         , load: function (e, extend) {
-//            console.info($("#toolbar").serializeObject());
-//            return false;
             console.info('Loading items');
-            $("#toolbar").serializeObject();
+            $("#toolbar [type=submit]").addClass('hidden').removeClass('in');
             var params = this.getToolbarParams();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
