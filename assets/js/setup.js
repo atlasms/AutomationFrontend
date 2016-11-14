@@ -63,6 +63,7 @@ require.config({
 
                 // Models
         , user: ["../../app/user/user.model"]
+        , "definitions": ["../../app/shared/definitions.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
