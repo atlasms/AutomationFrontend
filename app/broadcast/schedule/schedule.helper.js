@@ -171,14 +171,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , validate: function () {
             this.time = function ($element) {
-//                console.log($element.parents('tr:first').prev().find("[data-type=start]").val());
                 if (!moment($element.val(), 'HH:mm:SS', true).isValid())
                     $element.parent().addClass("has-error");
                 else
                     $element.parent().removeClass("has-error");
-
-//               Global.processTime($element.parents('tr:first').find("[data-type=start]").val()) < Global.processTime($element.parents('tr:first').prev().find("[data-type=start]").val())
-
             };
             this.beforeSave = function () {
                 if ($("#schedule-page tbody tr.error").length) {
@@ -191,8 +187,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             };
         }
         , setStates: function () {
-//                (typeof schedulePeriodicals !== "undefined") && window.clearInterval("schedulePeriodicals");
-//                window.schedulePeriodicals = window.setInterval(function () {
             var getRowsCount = function () {
                 return function () {
                     if ($("#schedule-page tbody tr").length)
@@ -234,7 +228,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 var $target = $(e.target).closest("tr");
                 if (!$target.hasClass("new"))
                     $target.addClass('edited');
-
                 // Handle unloads
                 if (typeof $this.flags.updatedContent === "undefined" || $this.flags.updatedContent !== true) {
                     var myEvent = window.attachEvent || window.addEventListener;
