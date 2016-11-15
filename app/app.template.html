@@ -303,41 +303,77 @@
 				<div>
 					<div class="portlet box toolbar-box">
 						<form class="portlet-body form-inline" id="toolbar"></form>
-						<div class="portlet light bg-inverse collapse" id="sub-toolbar">
-							<div class="portlet-body">
-								<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
-									<strong>اخطار!</strong>
-									توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
-								</div>
-								<form class="form-horizontal" id="duplicate-schedule">
-									<div class="row">
-										<div class="col-xs-12 col-sm-3">
-											<div class="form-group">
-												<label class="control-label col-sm-3">تاریخ مبدا</label>
-												<div class="col-sm-9">
-													<input type="text" name="startdate" class="form-control datepicker" />
-												</div>
-											</div>
-										</div>
-										<div class="col-xs-12 col-sm-3">
-											<div class="form-group">
-												<label class="control-label col-sm-3">تاریخ مقصد</label>
-												<div class="col-sm-9">
-													<input type="text" name="destinationdate" class="form-control datepicker" />
-												</div>
-											</div>
-										</div>
-										<div class="col-xs-12 col-sm-3">
-											<div class="checkbox checkbox-danger checkbox-circle col-xs-12">
-												<input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
-												<label for="checkbox_2_0">جایگزین کردن در مقصد</label>
-											</div>
-										</div>
-										<div class="col-xs-12 col-sm-3">
-											<button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
-										</div>
+						<div class="" id="sub-toolbar">
+							<div class="portlet light bg-inverse duplicate-schedule hidden">
+								<div class="portlet-body">
+									<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+										<strong>اخطار!</strong>
+										توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
 									</div>
-								</form>
+									<form class="form-horizontal" id="duplicate-schedule">
+										<div class="row">
+											<div class="col-xs-12 col-sm-3">
+												<div class="form-group">
+													<label class="control-label col-sm-3">تاریخ مبدا</label>
+													<div class="col-sm-9">
+														<input type="text" name="startdate" class="form-control datepicker" />
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												<div class="form-group">
+													<label class="control-label col-sm-3">تاریخ مقصد</label>
+													<div class="col-sm-9">
+														<input type="text" name="destinationdate" class="form-control datepicker" />
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												<div class="checkbox checkbox-danger checkbox-circle col-xs-12">
+													<input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
+													<label for="checkbox_2_0">جایگزین کردن در مقصد</label>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												<button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="portlet light bg-inverse export-schedule hidden">
+								<div class="portlet-body">
+									<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+										<strong>اخطار!</strong>
+										توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
+									</div>
+									<form class="form-horizontal" id="export-schedule">
+										<div class="row">
+											<div class="col-xs-12 col-sm-3">
+												<div class="form-group">
+													<label class="control-label col-sm-3">زمان شروع</label>
+													<div class="col-sm-9">
+														<select class="form-control" name="starttime"></select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												<div class="form-group">
+													<label class="control-label col-sm-3">زمان پایان</label>
+													<div class="col-sm-9">
+														<select class="form-control" name="endtime"></select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												
+											</div>
+											<div class="col-xs-12 col-sm-3">
+												<button class="btn btn-primary pull-right" data-task="export">ثبت</button>
+											</div>
+										</div>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -349,7 +385,7 @@
 	<div class="page-footer">
 		<div class="page-footer-inner">
 			<ul class="list-inline" id="status-items">
-				
+
 			</ul>
 			<div id="server-time"><i class="fa fa-clock-o"></i> <span></span></div>
 		</div>
