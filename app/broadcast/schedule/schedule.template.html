@@ -10,7 +10,8 @@
 						<th class="col-xs-1">شروع</th>
 						<th class="col-xs-1">مدت</th>
 						<th class="col-xs-2">برنامه</th>
-						<th class="col-xs-2">قسمت</th>
+						<th class="col-xs-2">عنوان قسمت</th>
+						<th>قسمت</th>
 						<th class="col-xs-1">نوع برنامه</th>
 						<th class="col-xs-3">توضیحات</th>
 						<th>تکرار</th>
@@ -27,7 +28,7 @@
 						</td>
 						<td class="text-center">
 							<figure>
-								<img src="/assets/img/placeholder.png" alt="" />
+								<img src="{{#if Thumbnail}}{{Thumbnail}}{{else}}/assets/img/placeholder.png{{/if}}" alt="" />
 							</figure>
 						</td>
 						<td class="text-center hide">
@@ -46,22 +47,30 @@
 						<td class="text-center">
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
-								<label for="ConductorDuration_{{@index}}"></label>
+								<label></label>
 								<span class="help-block">مدت برنامه</span>
 							</div>
 						</td>
 						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
-								<input type="text" data-type="title" class="form-control" id="form_control_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
-								<!--<label for="form_control_{{@index}}">{{#unless ConductorTitle}}نام برنامه{{/unless}}</label>-->
+							<div class="form-group form-md-line-input fixed-label">
+								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
+								<input type="text" class="form-control" data-suggestion="true" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required>
+								<label for="program_{{@index}}">{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}</label>
 								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input fixed-label">
+								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
+								<input type="text" class="form-control" data-suggestion="true" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
+								<label for="episode_{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
+								<span class="help-block">عنوان قسمت برنامه</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<input type="text" class="form-control" id="form_control_{{@index}}" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
-								<!--<label for="form_control_{{@index}}">{{#unless ConductorEpisodeNumber}}شماره قسمت{{/unless}}</label>-->
+								<label></label>
 								<span class="help-block">شماره قسمت برنامه</span>
 							</div>
 						</td>
@@ -77,11 +86,13 @@
 									<option value="5">آگهی بازرگانی</option>
 									{{/select}}
 								</select>
+								<label></label>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
 								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
+								<label></label>
 							</div>
 						</td>
 						<td class="text-center">
