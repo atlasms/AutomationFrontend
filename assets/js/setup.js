@@ -2,67 +2,70 @@ require.config({
     waitSeconds: 300,
     shim: {
         enforceDefine: true
-        , underscore: {exports: '_'}
-        , backbone: {deps: ['underscore', 'jquery', 'handlebars'], exports: 'Backbone'}
-        , moment: {deps: ['jquery'], exports: 'moment'}
-        , "moment-hijri": {deps: ['jquery', 'moment', 'moment-with-locales'], exports: 'moment'}
-        , cookie: {deps: ['jquery'], exports: 'Cookies'}
-        , mask: {deps: ['jquery'], exports: 'mask'}
-        , toastr: {deps: ['jquery'], exports: 'toastr'}
-        , pdate: {deps: ['jquery'], exports: 'pdate'}
-        , pdatepicker: {deps: ['jquery', 'pdate'], exports: 'pdatepicker'}
-//        , 'bootstrap': {deps: ['jquery'], exports: 'Bootstrap'}
-        , 'bootstrap/affix': {deps: ['jquery'], exports: '$.fn.affix'}
-        , 'bootstrap/alert': {deps: ['jquery'], exports: '$.fn.alert'}
-        , 'bootstrap/button': {deps: ['jquery'], exports: '$.fn.button'}
-//        , 'bootstrap/carousel':   { deps: ['jquery'], exports: '$.fn.carousel' }
-//        , 'bootstrap/collapse':   { deps: ['jquery'], exports: '$.fn.collapse' }
-        , 'bootstrap/dropdown': {deps: ['jquery'], exports: '$.fn.dropdown'}
-        , 'bootstrap/modal': {deps: ['jquery'], exports: '$.fn.modal'}
-//        , 'bootstrap/popover':    { deps: ['jquery'], exports: '$.fn.popover' }
-//        , 'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy' }
-        , 'bootstrap/tab': {deps: ['jquery'], exports: '$.fn.tab'}
-        , 'bootstrap/tooltip': {deps: ['jquery'], exports: '$.fn.tooltip'}
-        , 'bootstrap/transition': {deps: ['jquery'], exports: '$.fn.transition'}
-        , 'hotkeys': {deps: ['jquery'], exports: 'jQuery'}
-        , 'jwplayer': {exports: 'jwplayer'}
+        , underscore: {exports: "_"}
+        , backbone: {deps: ["underscore", "jquery", "handlebars"], exports: "Backbone"}
+        , moment: {deps: ["jquery"], exports: "moment"}
+        , "moment-hijri": {deps: ["jquery", "moment", "moment-with-locales"], exports: "moment"}
+        , cookie: {deps: ["jquery"], exports: "Cookies"}
+        , mask: {deps: ["jquery"], exports: "mask"}
+        , toastr: {deps: ["jquery"], exports: "toastr"}
+        , pdate: {deps: ["jquery"], exports: "pdate"}
+        , pdatepicker: {deps: ["jquery", "pdate"], exports: "pdatepicker"}
+//        , "bootstrap": {deps: ["jquery"], exports: "Bootstrap"}
+        , "bootstrap/affix": {deps: ["jquery"], exports: "$.fn.affix"}
+        , "bootstrap/alert": {deps: ["jquery"], exports: "$.fn.alert"}
+        , "bootstrap/button": {deps: ["jquery"], exports: "$.fn.button"}
+//        , "bootstrap/carousel":   { deps: ["jquery"], exports: "$.fn.carousel" }
+//        , "bootstrap/collapse":   { deps: ["jquery"], exports: "$.fn.collapse" }
+        , "bootstrap/dropdown": {deps: ["jquery"], exports: "$.fn.dropdown"}
+        , "bootstrap/modal": {deps: ["jquery"], exports: "$.fn.modal"}
+//        , "bootstrap/popover":    { deps: ["jquery"], exports: "$.fn.popover" }
+//        , "bootstrap/scrollspy":  { deps: ["jquery"], exports: "$.fn.scrollspy" }
+        , "bootstrap/tab": {deps: ["jquery"], exports: "$.fn.tab"}
+        , "bootstrap/tooltip": {deps: ["jquery"], exports: "$.fn.tooltip"}
+        , "bootstrap/transition": {deps: ["jquery"], exports: "$.fn.transition"}
+        , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
+        , "jwplayer": {exports: "jwplayer"}
+        , "ladda": {deps: ["spin"]}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
     , paths: {
         // Library Dependencies
         jquery: ["vendor/jquery-3.1.1.min"]
         , "jquery-ui": ["vendor/jquery-ui.min"]
-        , underscore: ["vendor/underscore-min"]
-        , backbone: ["vendor/backbone-min"]
-        , handlebars: ["vendor/handlebars-v4.0.5"]
-        , moment: ["vendor/moment.min"]
+        , "underscore": ["vendor/underscore-min"]
+        , "backbone": ["vendor/backbone-min"]
+        , "handlebars": ["vendor/handlebars-v4.0.5"]
+        , "moment": ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
         , "moment-hijri": ["vendor/moment-hijri"]
         , "bootstrap": ["vendor/bootstrap"]
         , "toastr": ["vendor/toastr.min"]
-        , pdate: ["vendor/persian-date"]
-        , pdatepicker: ["vendor/persian-datepicker-0.4.5.min"]
-        , jdate: ["vendor/jdate.min"]
-        , mousetrap: ["vendor/mousetrap.min"]
-        , hotkeys: ["vendor/jquery.hotkeys"]
+        , "pdate": ["vendor/persian-date"]
+        , "pdatepicker": ["vendor/persian-datepicker-0.4.5.min"]
+        , "jdate": ["vendor/jdate.min"]
+        , "mousetrap": ["vendor/mousetrap.min"]
+        , "hotkeys": ["vendor/jquery.hotkeys"]
         , "jstree": ["vendor/jstree.min"]
         , "tus": ["vendor/tus"]
         , "jwplayer": ["vendor/jwplayer/jwplayer"]
         , "bootbox": ["vendor/bootbox.min"]
+        , "spin": ["vendor/spin.min"]
+        , "ladda": ["vendor/ladda.min"]
 
-        , typeahead: ["vendor/typeahead.jquery.min"]
-        , bloodhound: ["vendor/bloodhound.min"]
+        , "typeahead": ["vendor/typeahead.jquery.min"]
+        , "bloodhound": ["vendor/bloodhound.min"]
 
                 // Application Dependencies
-        , app: ["app/app"]
-        , router: ["app/router"]
+        , "app": ["app/app"]
+        , "router": ["app/router"]
 
                 // Config
-        , defines: ["app/defines"]
-        , config: ["../../config"]
+        , "defines": ["app/defines"]
+        , "config": ["../../config"]
 
                 // Models
-        , user: ["../../app/user/user.model"]
+        , "user": ["../../app/user/user.model"]
         , "definitions": ["../../app/shared/definitions.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]

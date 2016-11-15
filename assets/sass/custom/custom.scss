@@ -6,6 +6,7 @@
 @import "login";
 @import "jstree";
 @import "modal-transitions";
+@import "ladda.min";
  
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
@@ -37,7 +38,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 }
 #sub-toolbar {
     .duplicate-schedule { border-top: 3px solid #8E44AD; }
-    .export-schedule { border-top: 3px solid #4B77BE; }
+    .export-schedule { border-top: 3px solid #EF4836; }
 }
 .dropdown-menu { font-family: 'Vazir', Tahoma; }
 .ltr { font-family: Tahoma, Arial; direction: rtl; }
