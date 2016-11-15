@@ -4,8 +4,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-subtoolbar'}}
+            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
             , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
+            , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
 //            , {'input': {cssClass: 'form-control datepicker hidden', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
@@ -15,20 +16,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
             , {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
         ]
+        , timeArrays: {}
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'keyup input.time': 'processTime'
             , 'click [data-task=load]': 'load'
             , 'click [data-task=file]': 'loadFile'
-            , 'click [data-task=show-subtoolbar]': 'showSubtoolbar'
+            , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
+            , 'click [data-task=show-export-form]': 'showExportToolbar'
             , 'click [data-task=duplicate]': 'duplicate'
+            , 'click [data-task=export]': 'exportPlaylist'
             , 'change [name=force]': 'warnForceDuplicate'
             , 'focus input.time': 'selectInput'
         }
         , submit: function (e) {
             e.preventDefault();
-            var $this = this; 
+            var $this = this;
             var helper = new ScheduleHelper.validate();
             if (!helper.beforeSave())
                 return;
@@ -43,7 +47,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
-        , selectInput: function(e) {
+        , selectInput: function (e) {
             $(e.target).trigger('select');
         }
         , duplicate: function (e) {
@@ -63,7 +67,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'عملیات کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $("#sub-toolbar").removeClass("in");
+                    $("#sub-toolbar .duplicate-schedule").removeClass("in");
+                }
+            });
+        }
+        , exportPlaylist: function (e) {
+            e.preventDefault();
+            var params = $("#export-schedule").serializeObject();
+            new ScheduleModel({path: '/export'}).save(null, {
+                data: JSON.stringify(params)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $("#sub-toolbar .export-schedule").removeClass("in");
                 }
             });
         }
@@ -74,14 +94,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             else
                 $("#schedule-overwrite-alert").removeClass('in');
         }
-        , showSubtoolbar: function () {
-            if ($("#sub-toolbar").is(":hidden"))
-                $("#sub-toolbar").addClass("in");
+        , showDuplicateToolbar: function () {
+            if ($("#sub-toolbar").find(".portlet").not(".duplicate-schedule").is(":visible"))
+                $("#sub-toolbar").find(".portlet").not(".duplicate-schedule").removeClass("in").addClass("hidden");
+            if ($("#sub-toolbar .duplicate-schedule").is(":hidden"))
+                $("#sub-toolbar .duplicate-schedule").removeClass('hidden').addClass("in");
             else
-                $("#sub-toolbar").removeClass("in");
+                $("#sub-toolbar .duplicate-schedule").removeClass("in").addClass("hidden");
+            $("html, body").animate({'scrollTop': 0});
+        }
+        , showExportToolbar: function () {
+            if ($("#sub-toolbar").find(".portlet").not(".export-schedule").is(":visible"))
+                $("#sub-toolbar").find(".portlet").not(".export-schedule").removeClass("in").addClass("hidden");
+            if ($("#sub-toolbar .export-schedule").is(":hidden"))
+                $("#sub-toolbar .export-schedule").removeClass('hidden').addClass("in");
+            else
+                $("#sub-toolbar .export-schedule").removeClass("in").addClass("hidden");
             $("html, body").animate({'scrollTop': 0});
         }
         , loadFile: function (e) {
+            e.preventDefault();
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
@@ -89,6 +121,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             };
             var model = new ScheduleModel(params);
             model.navigate((typeof params !== "undefined") ? $.param(params) : null);
+            return false;
         }
         , processTime: function (options) {
             var validate = new ScheduleHelper.validate();
@@ -140,11 +173,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 this.flags.helperLoaded = true;
             } else
                 ScheduleHelper.init(true);
-            
+
             var dateParts = $("[name=startdate]").val().split('-');
             for (var i = 0; i < dateParts.length; i++)
                 dateParts[i] = parseInt(dateParts[i]);
             $("[name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
+            ScheduleHelper.generateTimeArray(this);
         }
         , renderToolbar: function () {
             var self = this;
@@ -169,7 +203,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
             this.flags.toolbarRendered = true;
         }
-        , renderStatusbar: function() {
+        , renderStatusbar: function () {
 //            var self = this;
             if (this.flags.statusbarRendered)
                 return;
