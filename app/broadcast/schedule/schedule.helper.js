@@ -314,12 +314,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ends.shift();
             if (typeof callback === "object")
                 callback.timeArrays = {starts: starts, ends: ends};
-            if ($("select[name=starttime]").length)
+            if ($(".export-schedule select[name=startdate]").length)
                 for (var i = 0; i < starts.length; i++)
-                    $("select[name=starttime]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
-            if ($("select[name=endtime]").length)
+                    $(".export-schedule select[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+            if ($(".export-schedule select[name=enddate]").length)
                 for (var i = 0; i < ends.length; i++)
-                    $("select[name=endtime]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                    $(".export-schedule select[name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
         }
     };
     return ScheduleHelper;
