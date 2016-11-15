@@ -35,7 +35,10 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
         > i { color: #888; }
     }
 }
-#sub-toolbar { border-top: 3px solid #8E44AD; }
+#sub-toolbar {
+    .duplicate-schedule { border-top: 3px solid #8E44AD; }
+    .export-schedule { border-top: 3px solid #4B77BE; }
+}
 .dropdown-menu { font-family: 'Vazir', Tahoma; }
 .ltr { font-family: Tahoma, Arial; direction: rtl; }
 .btn .index {
@@ -67,21 +70,19 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 }
 .fixed-label.form-group.form-md-line-input label {
     color: #cdcdcd; font-size: 12px;
-    width: 100%;
-    position: absolute;  
-    left: 0;       
-    bottom: 0;  
-    pointer-events: none;
+    width: 100%; position: absolute; left: 0; bottom: 0; pointer-events: none;
 }
 .box.portlet { direction: ltr; text-align: left; }
 // Typeahead
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important }     
 .tt-menu {
+    min-width: 100% !important; width: auto !important; right: auto !important; left: 0 !important; max-width: 400px;
      .fa.suggestion-1:before { content: "\f07b"; } // Folder
      .fa.suggestion-2:before { content: "\f15b"; } // File
      .fa.suggestion-3:before { content: "\f0ce"; } // Table
 }
+.tt-suggestion { font-size: 13px !important; white-space: nowrap; text-overflow: ellipsis; }
 
 .form-group.form-md-line-input .help-block { max-height: 18px; overflow: hidden; }
 .modal-content { border-radius: 0; }
