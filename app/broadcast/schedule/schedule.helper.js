@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars'
+], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars) {
     var ScheduleHelper = {
         flags: {}
         , init: function (reinit) {
@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 else
                     $(this).attr('value', 0);
             });
-            $(document).on('keyup', "#schedule-page tbody [data-type=duration], #schedule-page tbody [data-type=start]", function () {
+            $(document).on('keyup change', "#schedule-page tbody [data-type=duration], #schedule-page tbody [data-type=start]", function () {
                 ScheduleHelper.rebuildTable();
             });
         }
@@ -142,30 +142,80 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , suggestion: function () {
 // Instantiate the Bloodhound suggestion engine
-            var items = new Bloodhound({
+            $.fn.typeahead.defaults = {items: 'all'};
+            var suggestionsAdapter = new Bloodhound({
                 datumTokenizer: function (datum) {
                     return Bloodhound.tokenizers.whitespace(datum.value);
-                },
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
+                }
+                , limit: 100
+                , items: 100
+                , queryTokenizer: Bloodhound.tokenizers.whitespace
+                , remote: {
                     wildcard: '%QUERY'
-                    , url: CONFIG.api.url + CONFIG.api.schedule + '?q=%QUERY'
+                    , cache: false
+                    , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE'
+                    , replace: function (url, uriEncodedQuery) {
+                        return url.replace('%TYPE', $('[data-type="title"]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
+                    }
                     , transform: function (response) {
                         // Map the remote source JSON array to a JavaScript object array
                         return $.map(response, function (item) {
                             return {
-                                value: item.ConductorTitle
+                                value: item.text
                                 , data: item
                             };
                         });
                     }
                 }
             });
-            $('input[data-type="title"]').typeahead(null, {
-                display: 'value',
-                source: items
+            $('input[data-suggestion="true"]').typeahead({
+                limit: 100
+                , items: 100
+                , minLength: 0
+                , highlight: true
+                , hint: true
+            }, {
+                display: 'value'
+                , source: suggestionsAdapter
+                , templates: {
+                    suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}</div>')
+                }
             });
-            $('input[data-type="title"]').bind('typeahead:select', function (ev, suggestion) {
+            $('input[data-suggestion="true"]').bind('typeahead:select', function (e, suggestion) {
+                var data = suggestion.data;
+                var $target = $(e.target);
+                var $parent = $target.parents(".form-group:first");
+                var $row = $target.parents("tr:first");
+                switch ($target.attr('data-suggestion-type')) {
+                    case 'cat':
+                        if (parseInt(data.kind) !== 3) {
+                            $parent.find("label").text(data.text);
+                            $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
+                            $parent.find('[name="ConductorMetaCategoryId"]').val(data.externalId);
+                        } else {
+                            $parent.find("label").text('');
+                            $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
+                            $parent.find('[name="ConductorMetaCategoryId"]').val('');
+                        }
+                        break;
+                    case 'media':
+                        if (parseInt(data.kind) !== 3) {
+                            $parent.find("label").html(data.text);
+                            $row.find("img").attr('src', data.thumbnail);
+                            $parent.find('[name="ConductorTitle"]').val(data.text);
+                            $parent.find('[name="ConductorMediaId"]').val(data.externalId);
+                            $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
+                            $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
+                        } else {
+                            $parent.find("label").html('');
+                            $row.find("img").attr('src', data.thumbnail);
+                            $parent.find('[name="ConductorTitle"]').val(data.text);
+                            $parent.find('[name="ConductorMediaId"]').val('');
+//                            $parent.find('[name="ConductorDuration"]').val('00:00:00');
+                        }
+                        $row.find("input").trigger('change');
+                        break;
+                }
                 console.log('Selection: ' + JSON.stringify(suggestion));
             });
         }
@@ -184,7 +234,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     return false;
                 }
                 return true;
-            };
+            }
+            ;
         }
         , setStates: function () {
             var getRowsCount = function () {
@@ -233,7 +284,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     var myEvent = window.attachEvent || window.addEventListener;
                     var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compitable
                     myEvent(chkevent, function (e) { // For >=IE7, Chrome, Firefox
-                        var confirmationMessage = 'Are you sure to leave the page?';  // a space
+                        var confirmationMessage = 'Are you sure to leave the page?'; // a space
                         (e || window.event).returnValue = confirmationMessage;
                         return confirmationMessage;
                     });
@@ -241,6 +292,34 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 
                 $this.flags.updatedContent = true;
             });
+        }
+        , generateTimeArray: function (callback) {
+            /*
+             * Method to generate two arrays containing all start times and all end times
+             */
+            var $rows = $("#schedule-page table tbody tr");
+            var starts = [];
+            $.each($rows, function () {
+                starts.push({
+                    time: $(this).find('[data-type="start"]').val()
+                    , title: $(this).find('[name="ConductorCategoryTitle"]').val() + ' ' + $(this).find('[name="ConductorTitle"]').val()
+                });
+            });
+            var last = {
+                time: Global.createTime(Global.processTime($rows.last().find('[data-type="start"]').val()) + Global.processTime($rows.last().find('[data-type="duration"]').val()))
+                , title: ''
+            };
+            var ends = $.extend([], starts);
+            ends.push(last);
+            ends.shift();
+            if (typeof callback === "object")
+                callback.timeArrays = {starts: starts, ends: ends};
+            if ($("select[name=starttime]").length)
+                for (var i = 0; i < starts.length; i++)
+                    $("select[name=starttime]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+            if ($("select[name=endtime]").length)
+                for (var i = 0; i < ends.length; i++)
+                    $("select[name=endtime]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
         }
     };
     return ScheduleHelper;
