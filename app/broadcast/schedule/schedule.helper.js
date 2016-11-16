@@ -96,6 +96,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 e.preventDefault();
             });
             $(document).on('click', ".tools [data-task=delete]", function (e) {
+                var rows = $("#schedule-page tbody").find("tr");
+                if (rows.length < 2)
+                    return false;
                 var row = $("#schedule-page tbody").find("tr.active");
                 row.remove().promise().done(function () {
                     ScheduleHelper.rebuildTable();
@@ -104,13 +107,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , duplicateRow: function (row) {
-            if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
-                row.addClass("error");
-                return;
+            var rows = $("#schedule-page tbody").find("tr");
+            if (rows.length > 1) {
+                if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
+                    row.addClass("error");
+                    return;
+                }
             }
             var clone = row.clone();
             clone.addClass('error new');
             clone.find('[id]').removeAttr('id');
+            clone.find('img').attr('src', Config.placeholderImage);
             clone.find('input[type="text"]').val('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
             clone.insertAfter(row);
