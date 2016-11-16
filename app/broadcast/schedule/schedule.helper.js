@@ -160,7 +160,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     , cache: false
                     , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE'
                     , replace: function (url, uriEncodedQuery) {
-                        return url.replace('%TYPE', $('[data-type="title"]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
+                        return url.replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
                     }
                     , transform: function (response) {
                         // Map the remote source JSON array to a JavaScript object array
