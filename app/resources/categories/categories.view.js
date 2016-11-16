@@ -3,11 +3,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
     var CategoriesView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'CategoriesModel'
-        , toolbar: [
-//            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
-//            , {'button': {cssClass: 'btn red', text: 'Delete Node', type: 'button', task: 'delete-node', icon: 'fa fa-trash'}}
-//            , {'button': {cssClass: 'btn green', text: 'New node', type: 'button', task: 'add-node', icon: 'fa fa-plus'}}
-        ]
+        , toolbar: []
         , statusbar: []
         , flags: {}
         , events: {
@@ -16,9 +12,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , submit: function () {
             var $this = this;
-//            var helper = new MetadataHelper.validate();
-//            if (!helper.beforeSave())
-//                return;
             var data = this.prepareSave();
             new CategoriesModel().save(null, {
                 data: JSON.stringify(data)
