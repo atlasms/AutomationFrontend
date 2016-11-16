@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "channel": "ایران‌کالا",
         "siteUrl": "http://localhost",
         "env": "dev",
+        "placeholderImage": "/assets/img/placeholder.png",
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
