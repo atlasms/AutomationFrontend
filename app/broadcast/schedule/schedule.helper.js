@@ -147,8 +147,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 datumTokenizer: function (datum) {
                     return Bloodhound.tokenizers.whitespace(datum.value);
                 }
-                , limit: 100
-                , items: 100
                 , queryTokenizer: Bloodhound.tokenizers.whitespace
                 , remote: {
                     wildcard: '%QUERY'
@@ -169,13 +167,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 }
             });
             $('input[data-suggestion="true"]').typeahead({
-                limit: 100
-                , items: 100
-                , minLength: 0
+                minLength: 0
                 , highlight: true
                 , hint: true
             }, {
                 display: 'value'
+                , items: 100
+                , limit: 100
                 , source: suggestionsAdapter
                 , templates: {
                     suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}</div>')
