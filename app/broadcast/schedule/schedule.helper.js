@@ -133,7 +133,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var $rows = $("#schedule-page tbody tr");
             var start = 0;
             var error = false;
-//            var scheduleStart = Global.processTime($rows.eq(0).find("[data-type=start]").val());
             $rows.each(function (i) {
                 var $this = $(this);
                 $(this).find(".idx").text(i + 1);
@@ -152,8 +151,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ScheduleHelper.setStates();
         }
         , suggestion: function ($obj) {
-// Instantiate the Bloodhound suggestion engine
-            $.fn.typeahead.defaults = {items: 'all'};
+            // Instantiate the Bloodhound suggestion engine
             var suggestionsAdapter = new Bloodhound({
                 datumTokenizer: function (datum) {
                     return Bloodhound.tokenizers.whitespace(datum.value);
@@ -286,6 +284,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , handleEdits: function () {
             var $this = this;
             $(document).on('input', "#schedule-page tbody", function (e) {
+                ScheduleHelper.generateTimeArray();
                 var $target = $(e.target).closest("tr");
                 if (!$target.hasClass("new"))
                     $target.addClass('edited');
@@ -304,6 +303,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , generateTimeArray: function (callback) {
+            Config.env === "dev" && console.log('Generating Time Arrays');
             /*
              * Method to generate two arrays containing all start times and all end times
              */
@@ -324,12 +324,16 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ends.shift();
             if (typeof callback === "object")
                 callback.timeArrays = {starts: starts, ends: ends};
-            if ($(".export-schedule select[name=startdate]").length)
+            if ($(".export-schedule select[name=startdate]").length) {
+                $(".export-schedule select[name=startdate]").empty();
                 for (var i = 0; i < starts.length; i++)
                     $(".export-schedule select[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
-            if ($(".export-schedule select[name=enddate]").length)
+            }
+            if ($(".export-schedule select[name=enddate]").length) {
+                $(".export-schedule select[name=enddate]").empty();
                 for (var i = 0; i < ends.length; i++)
                     $(".export-schedule select[name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+            }
         }
     };
     return ScheduleHelper;
