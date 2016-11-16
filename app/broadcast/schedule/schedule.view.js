@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootstrap/transition'
-], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootbox', 'bootstrap/modal', 'bootstrap/transition'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox) {
+    bootbox.setLocale('fa');
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'ScheduleModel'
@@ -27,6 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=show-export-form]': 'showExportToolbar'
             , 'click [data-task=duplicate]': 'duplicate'
             , 'click [data-task=export]': 'exportPlaylist'
+            , 'click [data-task=refresh]': 'refreshList'
             , 'change [name=force]': 'warnForceDuplicate'
             , 'focus input.time': 'selectInput'
         }
@@ -49,6 +51,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , selectInput: function (e) {
             $(e.target).trigger('select');
+        }
+        , refreshList: function (e) {
+            e.preventDefault();
+            var target = $(e.currentTarget).attr('data-target');
+            switch (target) {
+                case 'export':
+                    ScheduleHelper.generateTimeArray();
+                    break;
+            }
         }
         , duplicate: function (e) {
             e.preventDefault();
@@ -80,22 +91,37 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toastr.warning('زمان شروع از زمان پایان بزرگتر است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
+            if ($("#schedule-page table tbody").find('.edited, .new, .error').length) {
+                toastr.error('تغییرات ذخیره نشده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
             params.startdate = Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T' + params.startdate;
             params.enddate = Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T' + params.enddate;
-            var l = Ladda.create(e.currentTarget);
-            l.start();
-            new ScheduleModel({path: '/export'}).save(null, {
-                data: JSON.stringify(params)
-                , contentType: 'application/json'
-                , processData: false
-                , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    l.stop();
+            bootbox.confirm({
+                message: "آیا مطمئن هستید پلی‌لیست از روی جدول پخش انتخاب شده ساخته شود؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
                 }
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $("#sub-toolbar .export-schedule").removeClass("in");
-                    l.stop();
+                , callback: function (results) {
+                    if (results) {
+                        var l = Ladda.create(e.currentTarget);
+                        l.start();
+                        new ScheduleModel({path: '/export'}).save(null, {
+                            data: JSON.stringify(params)
+                            , contentType: 'application/json'
+                            , processData: false
+                            , error: function (e, data) {
+                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                l.stop();
+                            }
+                            , success: function () {
+                                toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                $("#sub-toolbar .export-schedule").removeClass("in");
+                                l.stop();
+                            }
+                        });
+                    }
                 }
             });
         }
