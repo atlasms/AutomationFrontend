@@ -114,16 +114,20 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     return;
                 }
             }
+            $('input[data-suggestion="true"]').typeahead("destroy");
             var clone = row.clone();
             clone.addClass('error new');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
+            clone.find('input[type="hidden"]').val('');
             clone.find('input[type="text"]').val('');
+            clone.find('input[data-suggestion="true"]').parent().find("label").text('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
             clone.insertAfter(row);
             ScheduleHelper.rebuildTable();
             row.next().find("input:first").trigger('click');
             ScheduleHelper.mask("time");
+            ScheduleHelper.suggestion();
         }
         , rebuildTable: function () {
             var $rows = $("#schedule-page tbody tr");
@@ -147,7 +151,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
             ScheduleHelper.setStates();
         }
-        , suggestion: function () {
+        , suggestion: function ($obj) {
 // Instantiate the Bloodhound suggestion engine
             $.fn.typeahead.defaults = {items: 'all'};
             var suggestionsAdapter = new Bloodhound({
@@ -173,7 +177,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
                 }
             });
-            $('input[data-suggestion="true"]').typeahead({
+            var $obj = (typeof $obj !== "undefined") ? $obj : $('input[data-suggestion="true"]');
+            $obj.typeahead({
                 minLength: 0
                 , highlight: true
                 , hint: true
