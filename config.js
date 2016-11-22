@@ -50,6 +50,14 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "metadata": "metadata"
 //            , "review": "metadata?categoryid=11"
             , "definitions": "dfn"
+        },
+        "temp": {
+            "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
+                    {Id: "2", Key: "دو خطی", Value: "2"},
+                    {Id: "1", Key: "تک خط", Value: "1"},
+                    {Id: "3", Key: "سه خطی", Value: "3"}
+                ]
+            }
         }
     };
 
