@@ -140,6 +140,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('config', function (value, options) {
                 return Config[value];
             });
+            Handlebars.registerHelper('getName', function (value, source, options) {
+                return source[value];
+            });
             Handlebars.registerHelper('formatJalali', function (value, format, options) {
                 var date = (value && value.indexOf("T") !== -1) ? Global.gregorianToJalali(value.split('T')[0]).split('-') : Global.gregorianToJalali(value).split('-');
                 for (var i = 0; i < date.length; i++)
