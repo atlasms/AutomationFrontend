@@ -139,28 +139,41 @@ body.fixed-toolbar {
 
 /// Schedules
 #schedule-page {
-    tbody tr {
-        border-left: 5px solid #ddd;
-        td:first-child { position: relative; }
-        .tools {
-            position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; transition: 0.2s all; height: 100%;
-            .btn {
-                height: 50%; transition: 0.2s all;
-                &:hover { background: #c9c9c9; }
+    .table {
+        p { margin-bottom: 0; }
+        &:not(.titles) {
+            th {
+                &.small { min-width: 40px; max-width: 50px; }
             }
-        } 
-        &.active {
-            border-left-color: #cbcbcb;
-            .tools { left: -42px; opacity: 1; visibility: visible; }
+            *:not(.preview-pane) tr {
+                border-left: 5px solid #ddd;
+                td:first-child { position: relative; }
+                .tools {
+                    position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; transition: 0.2s all; height: 100%;
+                    .btn {
+                        height: 50%; transition: 0.2s all;
+                        &:hover { background: #c9c9c9; }
+                    }
+                } 
+                &.active {
+                    border-left-color: #cbcbcb;
+                    .tools { left: -42px; opacity: 1; visibility: visible; }
+                }
+                &.new { border-left-color: lightgreen; }
+                &.error { border-left-color: red !important; }
+                &.edited { border-left-color: #6C9EE0; }
+            }
+            .table {
+                margin-bottom: 0;
+                tr { cursor: default; }
+                .portlet { margin-bottom: 0; }
+            }
+            thead tr {
+                th:not([class]) { min-width: 50px; }
+            }
+            .text-area-container { padding-top: 0; }
         }
-        &.new { border-left-color: lightgreen; }
-        &.error { border-left-color: red !important; }
-        &.edited { border-left-color: #6C9EE0; }
     }
-    thead tr {
-        th:not([class]) { min-width: 50px; }
-    }
-    .text-area-container { padding-top: 0; }
 } 
 
 /// Reviews
@@ -230,6 +243,7 @@ body.fixed-toolbar {
             &:before { content: "\f04b";  }
             &[data-state="pause"]:before { content: "\f04c"; }
         }
+        &[data-task="clip-start"], &[data-task="clip-end"] { font-weight: bold; font-family: 'Arial Black'; }
     }
     .controls-container { margin: 0 100px 10px; }
 }
