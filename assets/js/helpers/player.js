@@ -158,6 +158,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                         case 'backwards':
                             $this.backwards();
                             break;
+                        case 'clip-start':
+                            $('[data-type="clip-start"]').length && $('[data-type="clip-start"]').val(Global.createTime($this.position));
+                            break;
+                        case 'clip-end':
+                            $('[data-type="clip-end"]').length && $('[data-type="clip-end"]').val(Global.createTime($this.position));
+                            break;
                     }
                 });
             }

@@ -47,11 +47,11 @@
 	{{/if}}
 	{{#if template.controls.keys}}
 	<div class="controls-container text-center">
-		<!--<a href="#"><i class="icon-fast-backward-1"></i></a>-->
+		<a data-type="controls" data-task="clip-end" class="forward" href="#">[</a>
 		<a data-type="controls" data-task="forwards" class="forward" href="#"><i class="fa fa-forward"></i></a>
 		<a data-type="controls" data-task="play-pause" class="play" href="#" data-state="play"></a>
 		<a data-type="controls" data-task="backwards" class="backward" href="#"><i class="fa fa-backward"></i></a>
-		<!--<a href="#"><i class="icon-fast-forward-1"></i></a>-->
+		<a data-type="controls" data-task="clip-start" class="backward" href="#">]</a>
 	</div>
 	{{/if}}
 </div>
