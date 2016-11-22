@@ -1,0 +1,179 @@
+<tr class="preview-pane" data-relating-id="{{id}}">
+	<td colspan="100%">
+		<div class="">
+			<div class="col-xs-7">
+				<div class="portlet light bordered">
+					<div class="portlet-title tabbable-line">
+						<ul class="nav nav-tabs tabs-reversed">
+							<li class="active">
+								<a href="#subtitle-form" data-toggle="tab"> زیرنویس </a>
+							</li>
+							<li>
+								<a href="#titles-form" data-toggle="tab"> تایتل </a>
+							</li>
+						</ul>
+					</div>
+					<div class="portlet-body">
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="subtitle-form">
+								<form role="form">
+									<input type="text" name="editing" value="" class="hidden" />
+									<div class="row">
+										<div class="col-xs-12 col-sm-5">
+											<!--
+											<div class="form-group form-md-line-input fixed-label">
+												<select class="form-control" name="subtitle_type">
+													{{#each definitions.titleTypes.Children}}
+													<option value="{{Id}}" data-rows="{{Value}}">{{Key}}</option>
+													{{/each}}
+												</select>
+												<label>نوع </label>
+											</div>
+											-->
+										</div>
+										<div class="col-xs-12 col-sm-3">
+											<div class="form-group form-md-line-input fixed-label">
+												<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-start" step="1" id="" name="subtitle_start" value="00:00:00" required>
+												<label>شروع زیرنویس</label>
+												<span class="help-block"></span>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-3">
+											<div class="form-group form-md-line-input fixed-label">
+												<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-end" step="1" id="" name="subtitle_end" value="00:00:00" required>
+												<label>پایان زیرنویس</label>
+												<span class="help-block"></span>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-1">
+											<div class="form-group form-md-line-input fixed-label" data-task="save-subtitle">
+												<button class="btn btn-success">ثبت</button>
+												<label></label>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">
+											<div class="form-group form-md-line-input fixed-label">
+												<textarea class="form-control" id="" name="subtitle" rows="2"></textarea>
+											</div>
+										</div>
+									</div>
+								</form>
+								<hr />
+								<table class="table table-striped table-condensed flip-content" data-related-form="#subtitle-form form">
+									{{#each subtitles}}
+									<tr>
+										<td class="col-xs-1 text-center" data-field="subtitle_start">00:00:00</td>
+										<td class="col-xs-1 text-center" data-field="subtitle_end">00:00:00</td>
+										<td class="col-xs-8"><small data-field="subtitle">علیرغم چنین پیشینه‌ای، براساس گمانه زنی‌های رسانه‌های آمریکا، میت رامنی می‌تواند کاندیدایی برای پست وزارت خارجه باشد، هر چند که رودی جولیانی، شهردار سابق نیویورک هم یکی از مدعیان دیگر کسب این سمت است.</small></td>
+										<td class="col-xs-2 text-right">
+											<button class="btn sbold btn-outline green-seagreen btn-sm" data-task="edit-subtitle"><i class="fa fa-edit"></i></button>
+											<button class="btn sbold btn-outline red-thunderbird btn-sm" data-task="delete-subtitle"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									{{else}}
+									<tr>
+										<td class="col-xs-1 text-center" data-field="subtitle_start">00:00:00</td>
+										<td class="col-xs-1 text-center" data-field="subtitle_end">00:00:00</td>
+										<td class="col-xs-8"><small data-field="subtitle"></small></td>
+										<td class="col-xs-2 text-right">
+											<button class="btn sbold btn-outline green-seagreen btn-sm" data-task="edit-subtitle"><i class="fa fa-edit"></i></button>
+											<button class="btn sbold btn-outline red-thunderbird btn-sm" data-task="delete-subtitle"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									{{/each}}
+								</table>
+							</div>
+							<div class="tab-pane fade" id="titles-form">
+								<form role="form">
+									<input type="text" name="editing" value="" class="hidden" />
+									<div class="row">
+										<div class="col-xs-12 col-sm-5">
+											<div class="form-group form-md-line-input fixed-label">
+												<select class="form-control" name="{{definitions.titleTypes.Value}}" data-task="update-title-rows">
+													{{#each definitions.titleTypes.Children}}
+													<option value="{{Id}}" data-rows="{{Value}}">{{Key}}</option>
+													{{/each}}
+												</select>
+												<label>نوع </label>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-3">
+											<div class="form-group form-md-line-input fixed-label">
+												<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-start" step="1" id="" name="title_start" value="00:00:00" required>
+												<label>شروع تایتل</label>
+												<span class="help-block"></span>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-3">
+											<div class="form-group form-md-line-input fixed-label">
+												<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-end" step="1" id="" name="title_end" value="00:00:00" required>
+												<label>پایان تایتل</label>
+												<span class="help-block"></span>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-1">
+											<div class="form-group form-md-line-input fixed-label">
+												<button class="btn btn-success" data-task="save-titles">ثبت</button>
+												<label></label>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										{{#each titleRowsHelper}}
+										<div class="col-xs-12 form-horizontal title-rows-container">
+											<div class="form-group form-md-line-input">
+												<label class="col-md-1 control-label">{{math @index "+" 1}}</label>
+												<div class="col-md-11">
+													<input type="text" class="form-control" id="" name="title[]" data-type="array" data-group="title" required />
+													<div class="form-control-focus"></div>
+												</div>
+											</div>
+										</div>
+										{{/each}}
+									</div>
+								</form>
+								<hr />
+								<table class="table table-striped table-condensed flip-content" data-related-form="#titles-form form">
+									{{#each titles}}
+									<tr>
+										<td class="col-xs-1 text-center" data-field="title_start">{{title_start}}</td>
+										<td class="col-xs-1 text-center" data-field="title_end">{{title_end}}</td>
+										<td class="col-xs-1" data-field="title_type">{{getName title_type definitions.titleTypes.Children}}</td>
+										<td class="col-xs-7" data-field="title" data-group="title">
+											{{#each titles}}
+											<p><small><span class="badge badge-info badge-sm">{{math @index "+" 1}}</span> <span class="text">{{text}}</span></small></p>
+											{{/each}}
+										</td>
+										<td class="col-xs-2 text-right">
+											<button class="btn sbold btn-outline green-seagreen btn-sm" data-task="edit-title"><i class="fa fa-edit"></i></button>
+											<button class="btn sbold btn-outline red-thunderbird btn-sm" data-task="delete-title"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									{{else}}
+									<tr>
+										<td class="col-xs-1 text-center" data-field="title_start">00:00:00</td>
+										<td class="col-xs-1 text-center" data-field="title_end">00:00:00</td>
+										<td class="col-xs-1" data-field="title_type">{{getName title_type definitions.titleTypes.Children}}</td>
+										<td class="col-xs-7" data-field="title" data-group="title">
+											<p><small><span class="badge badge-info badge-sm">1</span> <span class="text"></span></small></p>
+										</td>
+										<td class="col-xs-2 text-right">
+											<button class="btn sbold btn-outline green-seagreen btn-sm" data-task="edit-title"><i class="fa fa-edit"></i></button>
+											<button class="btn sbold btn-outline red-thunderbird btn-sm" data-task="delete-title"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									{{/each}}
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-5">
+				<div id="player-container"></div>
+			</div>
+		</div>
+	</td>
+</tr>

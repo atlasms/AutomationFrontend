@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootbox', 'bootstrap/modal', 'bootstrap/transition'
-], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootbox', 'player.helper', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Player) {
     bootbox.setLocale('fa');
     var ScheduleView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
@@ -31,6 +31,298 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=refresh]': 'refreshList'
             , 'change [name=force]': 'warnForceDuplicate'
             , 'focus input.time': 'selectInput'
+            , 'click [data-task=show-titlerow]': 'showTitlesRow'
+            , 'change [data-task=update-title-rows]': 'handleTitleRows'
+            , 'click [data-task=save-titles]': 'saveTitles'
+            , 'click [data-task=save-subtitle]': 'saveSubtitle'
+            , 'click [data-task=edit-subtitle]': 'editSubtitle'
+            , 'click [data-task=edit-title]': 'editTitle'
+            , 'click [data-task=delete-title]': 'deleteTitle'
+            , 'click [data-task=delete-subtitle]': 'deleteSubtitle'
+        }
+        , deleteTitle: function (e) {
+            e.preventDefault();
+            var $this = this;
+            bootbox.confirm({
+                message: "تایتل انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $(e.target).parents("tr:first").remove();
+                        var $table = $("#titles-form table");
+                        var $form = $("#titles-form form:first");
+                        var id = $form.parents(".preview-pane").attr('data-relating-id');
+                        $this.saveScheduleTitles($table, 'title', id);
+                    }
+                }
+            });
+        }
+        , deleteSubtitle: function (e) {
+            e.preventDefault();
+            var $this = this;
+            bootbox.confirm({
+                message: "زیرنویس انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $(e.target).parents("tr:first").remove();
+                        var $table = $("#subtitle-form table");
+                        var $form = $("#subtitle-form form:first");
+                        var id = $form.parents(".preview-pane").attr('data-relating-id');
+                        $this.saveScheduleTitles($table, 'subtitle', id);
+                    }
+                }
+            });
+        }
+        , editTitle: function (e) {
+            e.preventDefault();
+            var $this = this;
+            var $data = $(e.target).parents("tr:first");
+            var $relatedForm = $($data.parents("table:first").attr('data-related-form'));
+            $relatedForm.find('[name=editing]').val($data.index());
+            $data.find("[data-field]").each(function () {
+                $relatedForm.find('[name="' + $(this).attr('data-field') + '"]').val($(this).text());
+                if (typeof $(this).attr('data-group') !== "undefined") {
+                    $this.generateTitleRows($(this).find(">p").length);
+                    for (var i = 0; i < $(this).find(">p").length; i++)
+                        $relatedForm.find('[name="' + $(this).attr('data-group') + '[]"]').eq(i).val($(this).find(">p").eq(i).text());
+                }
+            });
+        }
+        , editSubtitle: function (e) {
+            e.preventDefault();
+            var $data = $(e.target).parents("tr:first");
+            var $relatedForm = $($data.parents("table:first").attr('data-related-form'));
+            $relatedForm.find('[name=editing]').val($data.index());
+            $data.find("[data-field]").each(function () {
+                $relatedForm.find('[name="' + $(this).attr('data-field') + '"]').val($(this).text());
+            });
+        }
+        , saveSubtitle: function (e) {
+            e.preventDefault();
+            var $form = $("#subtitle-form form:first");
+            var id = $form.parents(".preview-pane").attr('data-relating-id');
+            var data = {};
+            $form.find("input, textarea, select").each(function () {
+                var $input = $(this);
+                if (typeof $input.attr("name") !== "undefined")
+                    data[$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
+            });
+            if (_.isEmpty(data))
+                return;
+            // Append data to table
+            var $table = $("#subtitle-form table");
+            var lastRow = $table.find("tr:last");
+            if (typeof data.editing !== "undefined" && data.editing !== "") {
+                for (var prop in data)
+                    if ($table.find("tr").eq(data.editing).find('[data-field=' + prop + ']').length)
+                        $table.find("tr").eq(data.editing).find('[data-field=' + prop + ']').text(data[prop]);
+            } else {
+                var clone = lastRow.clone();
+                for (var prop in data)
+                    if (clone.find('[data-field=' + prop + ']').length) {
+                        clone.removeClass('active');
+                        clone.find('[data-field=' + prop + ']').text(data[prop]);
+                    }
+                clone.insertAfter(lastRow);
+            }
+            // Add data to main object
+            this.saveScheduleTitles($table, 'subtitle', id);
+            // Reset subtitle form
+            $form.trigger('reset');
+        }
+        , saveScheduleTitles: function ($table, type, rowId) {
+            var $mainRow = $("#schedule-page table").find('tr[data-id="' + rowId + '"]');
+            switch (type) {
+                case 'subtitle':
+                    var subtitles = [];
+                    // Get data from table and push it to array
+                    $table.find("tr").each(function () {
+                        var rowData = {};
+                        $(this).find("[data-field]").each(function () {
+                            // TODO: Save Validations
+                            rowData[$(this).attr('data-field')] = $(this).text();
+                        });
+                        subtitles.push(rowData);
+                    });
+                    // Save data to the corresponding field
+                    $mainRow.find('[name="subtitles"]').val(JSON.stringify(subtitles));
+                    break;
+                case 'title':
+                    var titles = [];
+                    $table.find("tr").each(function () {
+                        var rowData = {};
+                        $(this).find("[data-field]").each(function () {
+                            var field = $(this).attr("data-field");
+                            // TODO: Save Validations
+                            if (typeof $(this).attr('data-group') !== "undefined") {
+                                rowData[field + 's'] = [];
+                                $(this).find(".title").each(function () {
+                                    rowData[field + 's'].push($(this).text());
+                                });
+                            } else
+                                rowData[$(this).attr('data-field')] = $(this).text();
+                        });
+                        titles.push(rowData);
+                    });
+                    // Save data to the corresponding field
+                    $mainRow.find('[name="titles"]').val(JSON.stringify(titles));
+                    break;
+            }
+        }
+        , saveTitles: function (e) {
+            e.preventDefault();
+            var $form = $("#titles-form form:first");
+            var id = $form.parents(".preview-pane").attr('data-relating-id');
+            var data = {};
+            $form.find("input, textarea, select").each(function () {
+                var $input = $(this);
+                if (typeof $input.attr("name") !== "undefined") {
+                    if ($input.attr('data-type') === "array") {
+                        if (typeof data[$input.attr('data-group')] === "undefined")
+                            data[$input.attr('data-group')] = [];
+                        data[$input.attr('data-group')].push({text: $input.val()});
+                    } else
+                        data[$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
+                }
+            });
+            if (_.isEmpty(data))
+                return;
+            // Append data to table
+            var $table = $("#titles-form table");
+            var lastRow = $table.find("tr:last");
+            if (typeof data.editing !== "undefined" && data.editing !== "") {
+                for (var prop in data) {
+                    delete html;
+                    if (_.isArray(data[prop])) {
+                        html = '';
+                        for (var i = 0; i < data[prop].length; i++)
+                            html += '<p><small><span class="badge badge-info badge-sm">' + (i + 1) + '</span> <span class="title">' + data[prop][i]["text"] + '<span></small></p>';
+                    }
+                    if ($table.find("tr").eq(data.editing).find('[data-field=' + prop + ']').length)
+                        $table.find("tr").eq(data.editing).find('[data-field=' + prop + ']').html((typeof html !== "undefined") ? html : data[prop]);
+                }
+            } else {
+                var clone = lastRow.clone();
+                for (var prop in data) {
+                    delete html;
+                    if (_.isArray(data[prop])) {
+                        html = '';
+                        for (var i = 0; i < data[prop].length; i++) {
+                            html += '<p><small><span class="badge badge-info badge-sm">' + (i + 1) + '</span> <span class="title">' + data[prop][i]["text"] + '<span></small></p>';
+                        }
+                    }
+                    if (clone.find('[data-field=' + prop + ']').length) {
+                        clone.removeClass('active');
+                        clone.find('[data-field=' + prop + ']').html((typeof html !== "undefined") ? html : data[prop]);
+                    }
+                }
+                clone.insertAfter(lastRow);
+            }
+            // Add data to main object
+            this.saveScheduleTitles($table, 'title', id);
+            // Reset subtitle form
+            $form.trigger('reset');
+        }
+        , handleTitleRows: function (e) {
+            var $target = $(e.target);
+            var rows = $target.find("option:selected").attr('data-rows');
+            this.generateTitleRows(rows);
+        }
+        , generateTitleRows: function (count) {
+            var $container = $(".title-rows-container");
+            var children = $container.children();
+            var count = parseInt(count);
+            if (typeof count === "undefined" || $.isNumeric(count) === false || count === null || count === children.length)
+                return;
+            if (count < children.length)
+                children.slice(count).remove();
+            else {
+                for (var i = children.length; i < count; i++) {
+                    var clone = children.first().clone();
+                    clone.find("label").text(i + 1);
+                    clone.find("input, textarea, select").val('');
+                    clone.insertAfter(children.last());
+                }
+            }
+        }
+        , getMedia: function (imageSrc) {
+            return imageSrc.replace('.jpg', '_lq.mp4');
+        }
+        , getRowData: function (type, id) {
+            switch (type) {
+                case 'subtitles':
+                    var data = $('tr[data-id="' + id + '"]').find('[name="subtitles"]').val();
+                    return data = (typeof data !== "undefined" && data !== "") ? JSON.parse(data) : [];
+                    break;
+                case 'titles':
+                    var data = $('tr[data-id="' + id + '"]').find('[name="titles"]').val();
+                    return data = (typeof data !== "undefined" && data !== "") ? JSON.parse(data) : [];
+                    break;
+            }
+        }
+        , showTitlesRow: function (e) {
+            e.preventDefault();
+            var $row = $(e.target).parents("tr:first");
+            var $this = this;
+            var media = {
+                thumbnail: $row.find(".thumbnail").attr('src')
+                , video: $this.getMedia($row.find(".thumbnail").attr('src'))
+                , duration: Global.processTime($row.find("[data-type=duration]").val())
+            };
+            if ($row.hasClass('preview-pane') || $row.parents(".preview-pane").length || typeof media.video === "undefined")
+                return;
+            if ($(document).find(".preview-pane").length)
+                $(document).find(".preview-pane").fadeOut(200, function () {
+                    var $target = $(this);
+                    $this.player.remove();
+                    window.setTimeout(function () {
+                        $target.remove();
+                    }, 50);
+                });
+            // Loading review partial template
+            window.setTimeout(function () {
+                var template = Template.template.load('broadcast/schedule', 'schedule.titles.partial');
+                template.done(function (data) {
+                    var templateData = {
+                        id: $row.attr("data-id")
+                        , subtitles: $this.getRowData('subtitles', $row.attr("data-id"))
+                        , titles: $this.getRowData('titles', $row.attr("data-id"))
+                        , definitions: Config.temp
+                    };
+                    // Temporary solution for Handlebars problem
+                    templateData.titleRowsHelper = [];
+                    for (var i = 0; i < Config.temp.titleTypes.Children[0].Value; i++)
+                        templateData.titleRowsHelper.push(i);
+
+                    // Loading partial template
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    var output = handlebarsTemplate(templateData);
+                    $row.after(output).promise().done(function () {
+                        var player = new Player('#player-container', {
+                            file: media.video
+                            , duration: media.duration
+                            , playlist: [{
+                                    image: media.thumbnail
+                                    , sources: [
+                                        {file: media.video, label: 'LQ', default: true}
+                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+//                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
+                                    ]
+                                }]
+                        }, $this.handlePlayerCallbacks);
+                        player.render();
+                        $this.player = player;
+                        $this.playerInstance = player.instance;
+                    });
+                });
+            }, 300);
         }
         , submit: function (e) {
             e.preventDefault();
@@ -272,9 +564,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var row = {};
                 $(this).find("input, textarea, select").each(function () {
                     var $input = $(this);
+                    if ($input.parents(".preview-pane").length)
+                        return;
                     if (typeof $input.attr("name") !== "undefined") {
                         row[$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
-//                        row[$input.attr("name")] = ($input.attr("data-validation") === 'digit')
                         if (typeof $input.attr('data-before-save') !== "undefined") {
                             switch ($input.attr('data-before-save')) {
                                 case 'prepend-date':
@@ -287,7 +580,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         }
                     }
                 });
-                data.push(row);
+                if (!_.isEmpty(row))
+                    data.push(row);
             });
             return data;
         }

@@ -14,13 +14,16 @@
 						<th>قسمت</th>
 						<th class="col-xs-1">نوع برنامه</th>
 						<th class="col-xs-3">توضیحات</th>
+						<th class="text-center small"><i class="fa fa-text-width"></i></th>
 						<th>تکرار</th>
 						<th>منتخب</th>
 					</tr>
 				</thead>
 				<tbody>
 					{{#each []}}
-					<tr data-id="{{ConductorId}}" data-start="" data-end="">
+					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="">
+						<input type="hidden" name="titles" value="" />
+						<input type="hidden" name="subtitles" value="" />
 						<td class="text-center">
 							<input type="text" class="focus-helper" />
 							<span class="idx">{{math @index "+" 1}}</span>
@@ -28,7 +31,7 @@
 						</td>
 						<td class="text-center">
 							<figure>
-								<img src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" />
+								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" />
 							</figure>
 						</td>
 						<td class="text-center hide">
@@ -92,6 +95,12 @@
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
 								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
+								<label></label>
+							</div>
+						</td>
+						<td>
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<button type="button" data-task="show-titlerow" class="btn btn-block btn-link">{{ConductorEpisodeNumber}}</button>
 								<label></label>
 							</div>
 						</td>

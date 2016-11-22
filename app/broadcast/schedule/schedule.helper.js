@@ -15,7 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ScheduleHelper.setStates();
         }
         , tableHelper: function () {
-            $(document).on('click', 'tbody tr', function () {
+            $(document).on('click', 'tbody > tr:not(.preview-pane)', function () {
                 $(this).parent().find("tr").removeClass('active');
                 $(this).addClass("active");
             });
