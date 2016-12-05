@@ -11,16 +11,14 @@ require.config({
         , toastr: {deps: ["jquery"], exports: "toastr"}
         , pdate: {deps: ["jquery"], exports: "pdate"}
         , pdatepicker: {deps: ["jquery", "pdate"], exports: "pdatepicker"}
-//        , "bootstrap": {deps: ["jquery"], exports: "Bootstrap"}
         , "bootstrap/affix": {deps: ["jquery"], exports: "$.fn.affix"}
         , "bootstrap/alert": {deps: ["jquery"], exports: "$.fn.alert"}
         , "bootstrap/button": {deps: ["jquery"], exports: "$.fn.button"}
-//        , "bootstrap/carousel":   { deps: ["jquery"], exports: "$.fn.carousel" }
-//        , "bootstrap/collapse":   { deps: ["jquery"], exports: "$.fn.collapse" }
+        , "bootstrap/collapse":   { deps: ["jquery"], exports: "$.fn.collapse" }
         , "bootstrap/dropdown": {deps: ["jquery"], exports: "$.fn.dropdown"}
         , "bootstrap/modal": {deps: ["jquery"], exports: "$.fn.modal"}
-//        , "bootstrap/popover":    { deps: ["jquery"], exports: "$.fn.popover" }
-//        , "bootstrap/scrollspy":  { deps: ["jquery"], exports: "$.fn.scrollspy" }
+        , "bootstrap/popover":    { deps: ["jquery"], exports: "$.fn.popover" }
+        , "bootstrap/scrollspy":  { deps: ["jquery"], exports: "$.fn.scrollspy" }
         , "bootstrap/tab": {deps: ["jquery"], exports: "$.fn.tab"}
         , "bootstrap/tooltip": {deps: ["jquery"], exports: "$.fn.tooltip"}
         , "bootstrap/transition": {deps: ["jquery"], exports: "$.fn.transition"}
@@ -69,6 +67,7 @@ require.config({
         , "definitions": ["../../app/shared/definitions.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
         , "broadcast.schedule.model": ["../../app/broadcast/schedule/schedule.model"]
+        , "broadcast.crawl.model": ["../../app/broadcast/crawl/crawl.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
         , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
@@ -82,6 +81,7 @@ require.config({
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
+        , "broadcast.crawl.view": ["../../app/broadcast/crawl/crawl.view"]
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
         , "resources.metadata.view": ["../../app/resources/metadata/metadata.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
@@ -97,6 +97,7 @@ require.config({
         , "global": ["helpers/global"]
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
+        , "crawlHelper": ["../../app/broadcast/crawl/crawl.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
         , "reviewHelper": ["../../app/resources/review/review.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
