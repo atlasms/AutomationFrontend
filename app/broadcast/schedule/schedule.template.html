@@ -22,9 +22,9 @@
 				<tbody>
 					{{#each []}}
 					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="">
-						<input type="hidden" name="titles" value="" />
-						<input type="hidden" name="subtitles" value="" />
 						<td class="text-center">
+							<input type="hidden" name="titles" value="" />
+							<input type="hidden" name="subtitles" value="" />
 							<input type="text" class="focus-helper" />
 							<span class="idx">{{math @index "+" 1}}</span>
 							{{> scheduleRowTools}}
