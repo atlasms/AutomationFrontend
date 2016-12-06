@@ -1,3 +1,6 @@
+// TODO: Colors for crawl items
+// TODO: Using real data services
+// TODO: Make editor as an standalone helper
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'ladda', 'bootbox', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
 ], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, Ladda, bootbox) {
     bootbox.setLocale('fa');
@@ -6,17 +9,87 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , model: 'CrawlModel'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().format('YYYY-MM-DD'), addon: true}}
         ]
         , statusbar: [
             {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
         ]
-        , timeArrays: {}
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=load]': 'load'
+            , 'click [data-task=add-repository]': 'addToRepository'
+            , 'click [data-task=add-crawl]': 'addSingle'
+            , 'change [data-type="type-select"]': 'loadRepositoryItems'
+            , 'click [data-task="add-crawls"]': 'addBatch'
+            , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
+            , 'click .editor-toolbar .btn': function (e) {
+                e.preventDefault();
+                var button = $(e.currentTarget);
+                $editor = $(".editable-input");
+                switch (button.attr('data-task')) {
+                    case 'bold':
+                        document.execCommand("bold");
+                        break;
+                    case 'color':
+                        var value = button.attr('data-value');
+                        document.execCommand("insertHTML", false, '<font color="' + value + '">' + document.getSelection() + "</font>");
+                        break;
+                }
+            }
+            , 'paste .editable-input': function (e) {
+                e.preventDefault();
+                var text = e.originalEvent.clipboardData.getData("text/plain");
+                document.execCommand("insertHTML", false, text);
+            }
+        }
+        , toggleRowSelection: function (e) {
+            e.preventDefault();
+            $(e.currentTarget).find("input[type=checkbox]").prop("checked", !$(e.currentTarget).find("input[type=checkbox]").prop("checked"));
+            return true;
+        }
+        , loadRepositoryItems: function (e) {
+            e.preventDefault();
+            var select = $(this);
+            // TODO: Load items based on selected items type
+        }
+        , addBatch: function (e) {
+            e.preventDefault();
+            var self = this;
+            var items = $(".crawl-items-select").find("input[type=checkbox]:checked");
+            items.each(function () {
+                var row = $(this).parents("tr:first");
+                self.addCrawl({
+                    content: row.find(".text").html()
+                    , type: $('[data-type="type-select"]').val()
+                });
+            });
+        }
+        , addSingle: function (e) {
+            var self = this;
+            e.preventDefault();
+            $editor = $(".editable-input");
+            if ($editor.text() === "")
+                return;
+            self.addCrawl({
+                content: $editor.html()
+                , type: $('[data-type="type-select"]').val()
+            });
+        }
+        , addCrawl: function (params) {
+            $(".crawl-items").find("tbody").append('<tr><td><span class="label label-info label-sm">' + $('[data-type="type-select"]').find(":selected").text() + '</span> <span class="text">' + params.content + '</span></td></tr>');
+        }
+        , addToRepository: function (e) {
+            e.preventDefault();
+            $editor = $(".editable-input");
+            if ($editor.text() === "")
+                return;
+            var params = {
+                content: $editor.html()
+                , type: $('[data-type="type-select"]').val()
+            };
+            // Save item and get insert id
+            var id = 0;
+            $(".crawl-items-select").find("tbody").append('<tr data-id="' + id + '"><td><div class="checkbox checkbox-success checkbox-circle"><input type="checkbox" /><label></label></div></td><td><span class="text">' + params.content + '</span></td></tr>');
         }
         , submit: function (e) {
             e.preventDefault();
@@ -49,6 +122,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , reLoad: function () {
             this.load();
         }
+        , loadCrawls: function () {
+            // TODO
+            this.load();
+        }
         , load: function (e, extend) {
             console.info('Loading items');
             var params = {
@@ -59,7 +136,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.render(params);
         }
         , render: function (params) {
-            var template = Template.template.load('broadcast/schedule', 'schedule');
+            var template = Template.template.load('broadcast/crawl', 'crawl');
             var $container = $(Config.positions.main);
             var model = new CrawlModel(params);
             var self = this;
@@ -85,6 +162,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             self.renderStatusbar();
         }
         , afterRender: function () {
+            var self = this;
             CrawlHelper.mask("time");
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
@@ -92,11 +170,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 this.flags.helperLoaded = true;
             } else
                 CrawlHelper.init(true);
-
-            var dateParts = $("[name=startdate]").val().split('-');
-            for (var i = 0; i < dateParts.length; i++)
-                dateParts[i] = parseInt(dateParts[i]);
-            $("[name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
+            var $datePickers = $(".datepicker");
+            var datepickerConf = {
+                onSelect: function () {
+                    self.loadCrawls();
+                    $datePickers.blur();
+                }
+            };
+            $.each($datePickers, function () {
+                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+            });
         }
         , renderToolbar: function () {
             var self = this;
@@ -109,16 +192,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            var $datePickers = $(".datepicker");
-            var datepickerConf = {
-                onSelect: function () {
-                    self.load();
-                    $datePickers.blur();
-                }
-            };
-            $.each($datePickers, function () {
-                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
-            });
             this.flags.toolbarRendered = true;
         }
         , renderStatusbar: function () {

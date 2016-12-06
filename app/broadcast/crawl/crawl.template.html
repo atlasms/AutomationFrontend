@@ -1,125 +1,121 @@
-<div id="crawl-page" class="portlet box">
-	<div class="portlet-body">
-		<div class="mainbody">
-			<table class="table table-bordered table-striped table-condensed flip-content">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th class="col-xs-1"></th>
-						<th class="hide">فیکس</th>
-						<th class="col-xs-1">شروع</th>
-						<th class="col-xs-1">مدت</th>
-						<th class="col-xs-2">برنامه</th>
-						<th class="col-xs-2">عنوان قسمت</th>
-						<th>قسمت</th>
-						<th class="col-xs-1">نوع برنامه</th>
-						<th class="col-xs-3">توضیحات</th>
-						<th class="text-center small"><i class="fa fa-text-width"></i></th>
-						<th>تکرار</th>
-						<th>منتخب</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each []}}
-					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="">
-						<input type="hidden" name="titles" value="" />
-						<input type="hidden" name="subtitles" value="" />
-						<td class="text-center">
-							<input type="text" class="focus-helper" />
-							<span class="idx">{{math @index "+" 1}}</span>
-							{{> scheduleRowTools}}
-						</td>
-						<td class="text-center">
-							<figure>
-								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" />
-							</figure>
-						</td>
-						<td class="text-center hide">
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
-									   <label for="checkbox_1_{{@index}}"></label>
+<div id="crawl-page" class="row">
+	<div class="col-md-6">
+		<button type="button" class="btn btn-default btn-lg" data-task="add-crawls"><i class="fa fa-arrow-right"></i></button>
+		<div class="portlet light box">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-database"></i>
+					<span class="caption-subject font-dark bold uppercase">انبار زیرنویس‌ها</span>
+				</div>
+				<div class="actions">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon">انتخاب نوع</span>
+							<select class="form-control" data-type="type-select">
+								<option>گنج سخن</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="mainbody">
+					<div class="editor-toolbar">
+						<ul class="list-inline list-unstyled">
+							<li><a href="#" class="btn btn-xs btn-default" data-task="bold"><i class="fa fa-bold"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red"><i class="fa fa-circle" style="color: red"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="green"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue"><i class="fa fa-circle" style="color: blue"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="purple"><i class="fa fa-circle" style="color: purple"></i></a></li>
+						</ul>
+					</div>
+					<div class="row">
+						<div class="col-xs-11">
+							<div class="crawl-input form-group">
+								<div class="editable-input" contenteditable="true"></div>
 							</div>
-						</td>
-						<td class="text-center">
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="CondcutorStartTime_{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
-								<label for="CondcutorStartTime_{{@index}}">{{extractDate CondcutorStartTime}}</label>
-								<span class="help-block">شروع برنامه</span>
-							</div>
-						</td>
-						<td class="text-center">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
-								<label></label>
-								<span class="help-block">مدت برنامه</span>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required>
-								<label for="program_{{@index}}">{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}</label>
-								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
-								<label for="episode_{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
-								<span class="help-block">عنوان قسمت برنامه</span>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control text-center" id="form_control_{{@index}}" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
-								<label></label>
-								<span class="help-block">شماره قسمت برنامه</span>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<select class="form-control" name="ConductorType">
-									{{#select ConductorType}}
-									<option value="0">مجموعه خارجی</option>
-									<option value="1">مجموعه ایرانی</option>
-									<option value="2">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
-									<option value="3">سینمایی</option>
-									<option value="4">آنونس، تیزر، میان&zwnj;برنامه</option>
-									<option value="5">آگهی بازرگانی</option>
-									{{/select}}
-								</select>
-								<label></label>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
-								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
-								<label></label>
-							</div>
-						</td>
-						<td>
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<button type="button" data-task="show-titlerow" class="btn btn-block btn-link">{{ConductorEpisodeNumber}}</button>
-								<label></label>
-							</div>
-						</td>
-						<td class="text-center">
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="ConductorRepeat" data-validation="digit" id="checkbox_2_{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="checkbox_2_{{@index}}"></label>
-							</div>
-						</td>
-						<td class="text-center">
-							<div class="checkbox checkbox-primary checkbox-circle">
-								<input name="CondcutorFeatured" data-validation="digit" id="checkbox_3_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="checkbox_3_{{@index}}"></label>
-							</div>
-						</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
+						</div>
+						<div class="col-xs-1">
+							<a href="#" class="btn btn-primary btn-block" data-task="add-repository"><i class="fa fa-plus"></i></a>
+							<a href="#" class="btn btn-primary btn-block" data-task="add-crawl"><i class="fa fa-arrow-right"></i></a>
+						</div>
+					</div>
+					<div class="crawl-items-select">
+						<table class="table table-condensed table-bordered table-hover table-striped">
+							<thead class="hide fade">
+								<tr>
+									<th></th>
+									<th class="col-xs-12"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-id="">
+									<td class="">
+										<div class="checkbox checkbox-success checkbox-circle">
+											<input type="checkbox" />
+											<label></label>
+										</div>
+									</td>
+									<td><span class="text">برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="portlet light box">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-font"></i>
+					<span class="caption-subject font-dark bold uppercase">زیرنویس پخش</span>
+				</div>
+				<div class="actions form-inline">
+					<div class="form-group pull-right">
+						<div class="input-group">
+							<span class="input-group-addon">گروه</span>
+							<select class="form-control" data-type="group-select">
+								<option>گنج سخن</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group pull-right">
+						<div class="input-group">
+							<span class="input-group-addon">تاریخ</span>
+							<input type="text" class="form-control datepicker" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="mainbody">
+					<div class="crawl-items">
+						<table class="table table-condensed table-bordered table-hover table-striped">
+							<thead class="">
+								<tr>
+									<th class="col-xs-12"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="">
+										<span class="label label-sm bg-green-turquoise bg-font-green-turquoise">هواشناسی</span><span class="text"> خانه دكورين تلويزيوني با همراهي مجريان وكارشناسان گردد</span></td>
+								</tr>
+								<tr>
+									<td class="">
+										<span class="label label-sm bg-red-sunglo bg-font-red-sunglo">بورس</span><span class="text"> برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span></td>
+								</tr>
+								<tr>
+									<td class="">
+										<span class="label label-sm bg-yellow-gold bg-font-yellow-gold">گنج سخن</span><span class="text"> يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي  واستوديي است يك برنامه تركيبي زنده واستوديي است يك برنامه تركيبي زنده واستوديي است </span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
