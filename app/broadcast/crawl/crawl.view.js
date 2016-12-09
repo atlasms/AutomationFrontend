@@ -1,8 +1,8 @@
 // TODO: Colors for crawl items
 // TODO: Using real data services
 // TODO: Make editor as an standalone helper
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'ladda', 'bootbox', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, Ladda, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'ladda', 'bootbox', 'jquery-ui', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, Ladda, bootbox, ui) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
@@ -179,6 +179,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             };
             $.each($datePickers, function () {
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+            });
+            $(".crawl-items").sortable({
+                items: "tr"
+                , cancel: 'a, button'
+                , axis: 'y'
+                , forcePlaceholderSize: true
+                , placeholder: ".sort-placeholder"
+                , containment: "parent"
             });
         }
         , renderToolbar: function () {

@@ -236,8 +236,14 @@ body.fixed-toolbar {
             }
         }
         .crawl-items {
-            thead { opacity: 0; border: 0 none; height: 0;
-                * { margin: 0; padding: 0; border: 0 none; height: 0px; }
+            thead {
+                opacity: 0; border: 0 none; height: 0;
+                * {
+                    margin: 0; padding: 0; border: 0 none; height: 0px; cursor: move;
+                }
+            }
+            tbody {
+                tr { cursor: move }
             }
             .label {display: inline-block; margin-bottom: 2px; }
         }
