@@ -492,10 +492,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         $("#schedule-page tbody").empty();
                 }
             });
-            self.renderToolbar();
             self.renderStatusbar();
         }
         , afterRender: function () {
+            var self = this;
+            self.renderToolbar();
             ScheduleHelper.mask("time");
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
@@ -507,7 +508,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var dateParts = $("[name=startdate]").val().split('-');
             for (var i = 0; i < dateParts.length; i++)
                 dateParts[i] = parseInt(dateParts[i]);
-            $("[name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
+            $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
             ScheduleHelper.generateTimeArray(this);
         }
         , renderToolbar: function () {

@@ -1,24 +1,24 @@
-<div class="" id="sub-toolbar">
+<div class="portlet box toolbar-box" id="sub-toolbar">
 	<div class="portlet light bg-inverse duplicate-schedule hidden">
 		<div class="portlet-body">
 			<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
 				<strong>اخطار!</strong>
 				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
 			</div>
-			<form class="form-horizontal" id="duplicate-schedule">
+			<form class="" id="duplicate-schedule">
 				<div class="row">
 					<div class="col-xs-12 col-sm-3">
 						<div class="form-group">
-							<label class="control-label col-sm-3">تاریخ مبدا</label>
-							<div class="col-sm-9">
+							<div class="input-group">
+								<span class="input-group-addon">تاریخ مبدا</span>
 								<input type="text" name="startdate" class="form-control datepicker" />
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-3">
 						<div class="form-group">
-							<label class="control-label col-sm-3">تاریخ مقصد</label>
-							<div class="col-sm-9">
+							<div class="input-group">
+								<span class="input-group-addon">تاریخ مقصد</span>
 								<input type="text" name="destinationdate" class="form-control datepicker" />
 							</div>
 						</div>
@@ -42,20 +42,20 @@
 				<strong>اخطار!</strong>
 				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
 			</div>
-			<form class="form-horizontal" id="export-schedule">
+			<form class="" id="export-schedule">
 				<div class="row">
-					<div class="col-xs-12 col-sm-4">
+					<div class="col-xs-12 col-sm-3">
 						<div class="form-group">
-							<label class="control-label col-sm-4">زمان شروع</label>
-							<div class="col-sm-8">
+							<div class="input-group">
+								<span class="input-group-addon">زمان شروع</span>
 								<select class="form-control" name="startdate"></select>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-4">
+					<div class="col-xs-12 col-sm-3">
 						<div class="form-group">
-							<label class="control-label col-sm-4">زمان پایان</label>
-							<div class="col-sm-8">
+							<div class="input-group">
+								<span class="input-group-addon">زمان پایان</span>
 								<select class="form-control" name="enddate"></select>
 							</div>
 						</div>
@@ -63,7 +63,7 @@
 					<div class="col-xs-12 col-sm-1">
 						<button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export"><i class="fa fa-refresh"></i></button>
 					</div>
-					<div class="col-xs-12 col-sm-3">
+					<div class="col-xs-12 col-sm-5">
 						<button class="btn btn-primary pull-right mt-ladda-btn ladda-button" data-style="zoom-out" data-task="export"><span class="ladda-label">ارسال</span></button>
 					</div>
 				</div>
