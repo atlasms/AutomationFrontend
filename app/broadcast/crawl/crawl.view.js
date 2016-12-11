@@ -26,6 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
             , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
             , 'click [data-task=show-export-form]': 'showExportToolbar'
+            , 'change [name=force]': 'warnForceDuplicate'
             , 'click .editor-toolbar .btn': function (e) {
                 e.preventDefault();
                 var button = $(e.currentTarget);
@@ -48,6 +49,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var text = e.originalEvent.clipboardData.getData("text/plain");
                 document.execCommand("insertHTML", false, text);
             }
+        }
+        , warnForceDuplicate: function (e) {
+            var $checkbox = $(e.target);
+            if ($checkbox.is(":checked"))
+                $("#schedule-overwrite-alert").addClass('in');
+            else
+                $("#schedule-overwrite-alert").removeClass('in');
         }
         , showDuplicateToolbar: function () {
             if ($("#sub-toolbar").find(".portlet").not(".duplicate-crawl").is(":visible"))
