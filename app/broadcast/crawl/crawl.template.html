@@ -1,3 +1,72 @@
+<div class="" id="sub-toolbar">
+	<div class="portlet light bg-inverse duplicate-crawl hidden">
+		<div class="portlet-body">
+			<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+				<strong>اخطار!</strong>
+				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
+			</div>
+			<form class="form-horizontal" id="duplicate-crawl">
+				<div class="row">
+					<div class="col-xs-12 col-sm-3">
+						<div class="form-group">
+							<label class="control-label col-sm-3">تاریخ مبدا</label>
+							<div class="col-sm-9">
+								<input type="text" name="startdate" class="form-control datepicker" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-3">
+						<div class="form-group">
+							<label class="control-label col-sm-3">تاریخ مقصد</label>
+							<div class="col-sm-9">
+								<input type="text" name="destinationdate" class="form-control datepicker" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-3">
+						<div class="checkbox checkbox-danger checkbox-circle col-xs-12">
+							<input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
+							<label for="checkbox_2_0">جایگزین کردن در مقصد</label>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-3">
+						<button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="portlet light bg-inverse export-crawl hidden">
+		<div class="portlet-body">
+			<form class="form-horizontal" id="export-crawl">
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label class="control-label col-sm-4">زمان شروع</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="startdate"></select>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label class="control-label col-sm-4">زمان پایان</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="enddate"></select>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-1">
+						<button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export"><i class="fa fa-refresh"></i></button>
+					</div>
+					<div class="col-xs-12 col-sm-3">
+						<button class="btn btn-primary pull-right mt-ladda-btn ladda-button" data-style="zoom-out" data-task="export"><span class="ladda-label">ارسال</span></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 <div id="crawl-page" class="row">
 	<div class="col-md-6">
 		<button type="button" class="btn btn-default btn-lg" data-task="add-crawls"><i class="fa fa-arrow-right"></i></button>
@@ -22,11 +91,12 @@
 				<div class="mainbody">
 					<div class="editor-toolbar">
 						<ul class="list-inline list-unstyled">
-							<li><a href="#" class="btn btn-xs btn-default" data-task="bold"><i class="fa fa-bold"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red"><i class="fa fa-circle" style="color: red"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="green"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue"><i class="fa fa-circle" style="color: blue"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="purple"><i class="fa fa-circle" style="color: purple"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="bold" title="پررنگ"><i class="fa fa-bold"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="italic" title="پررنگ"><i class="fa fa-italic"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red" title="قرمز"><i class="fa fa-circle" style="color: red"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="lightgreen" title="سبز"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue" title="آبی"><i class="fa fa-circle" style="color: blue"></i></a></li>
+							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="violet" title="بنفش"><i class="fa fa-circle" style="color: violet"></i></a></li>
 						</ul>
 					</div>
 					<div class="row">
