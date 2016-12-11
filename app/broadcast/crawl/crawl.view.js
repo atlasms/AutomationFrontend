@@ -8,7 +8,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         el: $(Config.positions.wrapper)
         , model: 'CrawlModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
+            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
+            , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
+            , {'button': {cssClass: 'btn red-flamingo', text: "ارسال زیرنویس", type: 'button', task: 'show-export-form'}}
         ]
         , statusbar: [
             {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
@@ -22,6 +24,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'change [data-type="type-select"]': 'loadRepositoryItems'
             , 'click [data-task="add-crawls"]': 'addBatch'
             , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
+            , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
+            , 'click [data-task=show-export-form]': 'showExportToolbar'
             , 'click .editor-toolbar .btn': function (e) {
                 e.preventDefault();
                 var button = $(e.currentTarget);
@@ -29,6 +33,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 switch (button.attr('data-task')) {
                     case 'bold':
                         document.execCommand("bold");
+                        break;
+                    case 'italic':
+                        document.execCommand("insertHTML", false, '<i>' + document.getSelection() + "</i>");
                         break;
                     case 'color':
                         var value = button.attr('data-value');
@@ -41,6 +48,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var text = e.originalEvent.clipboardData.getData("text/plain");
                 document.execCommand("insertHTML", false, text);
             }
+        }
+        , showDuplicateToolbar: function () {
+            if ($("#sub-toolbar").find(".portlet").not(".duplicate-crawl").is(":visible"))
+                $("#sub-toolbar").find(".portlet").not(".duplicate-crawl").removeClass("in").addClass("hidden");
+            if ($("#sub-toolbar .duplicate-crawl").is(":hidden"))
+                $("#sub-toolbar .duplicate-crawl").removeClass('hidden').addClass("in");
+            else
+                $("#sub-toolbar .duplicate-crawl").removeClass("in").addClass("hidden");
+            $("html, body").animate({'scrollTop': 0});
+        }
+        , showExportToolbar: function () {
+            if ($("#sub-toolbar").find(".portlet").not(".export-crawl").is(":visible"))
+                $("#sub-toolbar").find(".portlet").not(".export-crawl").removeClass("in").addClass("hidden");
+            if ($("#sub-toolbar .export-crawl").is(":hidden"))
+                $("#sub-toolbar .export-crawl").removeClass('hidden').addClass("in");
+            else
+                $("#sub-toolbar .export-crawl").removeClass("in").addClass("hidden");
+            $("html, body").animate({'scrollTop': 0});
         }
         , toggleRowSelection: function (e) {
             e.preventDefault();
