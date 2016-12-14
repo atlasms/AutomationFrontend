@@ -10,7 +10,7 @@
  
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
-.help-block, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
+.help-block, #main, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
 .label { font-family: 'Vazir', Tahoma; direction: ltr; }
 
 // Header
@@ -61,6 +61,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
     }
     .form-group.form-md-line-input { margin-bottom: 0; }
 }
+ul.tabs-left { padding-right: 0; padding-left: 20px; }
 input[type="checkbox"] { outline: 0 none !important; }
 input.focus-helper { width: 0px; height: 0px; border: 0 none; box-shadow: 0 none; background: transparent; }
 input.time { text-align: center; direction: rtl; } 
@@ -254,6 +255,29 @@ body.fixed-toolbar {
             .editable-input { display: block; border: 1px solid #ccc;  height: auto; min-height: 80px; max-height: 150px; overflow-y: auto; padding: 6px 12px; }
         }
     }
+}
+.table.hidden-header {
+    thead {
+        opacity: 0; border: 0 none; height: 0;
+        * {
+            margin: 0; padding: 0; border: 0 none; height: 0px; cursor: move;
+        }
+    }
+}
+
+/// Metadata page
+#metadata-page {
+    .table {
+        .label { margin-top: 10px; display: inline-block; }
+        tbody tr {
+            cursor: pointer;
+        }
+    }
+}
+
+/// Media Item page
+#mediaitem-page {
+
 }
 
 #player-container { background: #3C3E3F }
