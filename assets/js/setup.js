@@ -50,6 +50,7 @@ require.config({
         , "bootbox": ["vendor/bootbox.min"]
         , "spin": ["vendor/spin.min"]
         , "ladda": ["vendor/ladda.min"]
+        , "pace": ["vendor/pace.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -72,6 +73,7 @@ require.config({
         , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
         , "resources.review.model": ["../../app/resources/review/review.model"]
+        , "resources.mediaitem.model": ["../../app/resources/mediaitem/mediaitem.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -86,6 +88,7 @@ require.config({
         , "resources.metadata.view": ["../../app/resources/metadata/metadata.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
         , "resources.review.view": ["../../app/resources/review/review.view"]
+        , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
