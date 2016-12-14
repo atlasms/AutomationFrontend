@@ -164,6 +164,17 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('getMedia', function (value, options) {
                 return value.replace('.jpg', '_lq.mp4');
             });
+            Handlebars.registerHelper('resolveLabel', function (value, options) {
+                var value = +value;
+                switch (value) {
+                    case 0:
+                        return 'warning';
+                    case 1:
+                        return 'success';
+                    default:
+                        return 'danger';
+                }
+            });
         }
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {
