@@ -1,0 +1,149 @@
+<div id="mediaitem-page">
+	<div class="row">
+		<div class="item-details col-md-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					<div class="row">
+						<div class="col-md-7">
+							<strong>اطلاعات پایه</strong>
+							<table class="table table-bordered table-hover hidden-header">
+								<thead>
+									<tr>
+										<th class="col-xs-3"></th>
+										<th class="col-xs-9"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>شناسه</td>
+										<td>{{Id}}</td>
+									</tr>
+									<tr>
+										<td>عنوان</td>
+										<td>{{Title}}</td>
+									</tr>
+									<tr>
+										<td>برنامه</td>
+										<td>{{MetaCategoryName}}</td>
+									</tr>
+									<tr>
+										<td>وضعیت</td>
+										<td>
+											<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
+										</td>
+									</tr>
+									<tr>
+										<td>توضیحات</td>
+										<td>{{Description}}</td>
+									</tr>
+									<tr>
+										<td>مدت</td>
+										<td>{{time Duration}}</td>
+									</tr>
+									<tr>
+										<td>شماره قسمت</td>
+										<td>{{EpisodeNumber}}</td>
+									</tr>
+									<tr>
+										<td>تاریخ ایجاد</td>
+										<td>{{extractTime Created}} {{extractDate Created}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-5">
+							<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>
+							<div id="player-container"><!-- Player Container --></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="item-forms col-xs-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					<div class="row">
+						<div class="col-xs-2">
+							<ul class="nav nav-tabs tabs-left">
+								<li class="active"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
+								<li><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
+								<li><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
+								<li><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>
+							</ul>
+						</div>
+						<div class="col-xs-10">
+							<div class="tab-content">
+								<div class="tab-pane fade in active" id="tab-review">
+									<div class="scroller" id="chats" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
+										<ul class="chats">
+											<li class="out">
+												<img class="avatar" alt="" src="/assets/img/avatar2.jpg" />
+												<span class="name"> نام کاربر </span>
+												<div class="message">
+													<span class="arrow"> </span>
+													<span class="label label-danger label-sm label-type">ایراد فنی</span>
+													<span class="datetime label">از 12:30:12 تا 13:33:01</span>
+													<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
+												</div>
+											</li>
+											<li class="out">
+												<img class="avatar" alt="" src="/assets/img/avatar1.jpg" />
+												<span class="name"> نام کاربر </span>
+												<div class="message">
+													<span class="arrow"> </span>
+													<span class="label label-warning label-sm label-type">ریختگی تصویر</span>
+													<span class="datetime label">از 12:30:12 تا 13:33:01</span>
+													<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
+												</div>
+											</li>
+											<li class="in">
+												<img class="avatar" alt="" src="/assets/img/avatar3.jpg" />
+												<span class="name"> نام کاربر </span>
+												<div class="message">
+													<span class="arrow"> </span>
+													<span class="label label-danger label-sm label-type">ریختگی تصویر</span>
+													<span class="datetime label">از 12:30:12 تا 13:33:01</span>
+													<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
+												</div>
+											</li>
+										</ul>
+									</div>
+									<form class="chat-form">
+										<div class="form-horizontal">
+											<div class="form-group form-md-line-input form-md-floating-label">
+												<div class="col-xs-4">
+													<input type="text" class="time form-control" data-before-save="timestamp" data-type="start" step="2" name="" id="" value="" required>
+												</div>
+												<div class="col-xs-4">
+													<input type="text" class="time form-control" data-before-save="timestamp" data-type="start" step="2" name="" id="" value="" required>
+												</div>
+												<div class="col-xs-4">
+													<select class="form-control">
+														<option value="0">ایراد فنی</option>
+														<option value="1">ایراد محتوایی</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="input-cont">
+											<input class="form-control" type="text" placeholder="توضیحات ایراد..." />
+										</div>
+										<div class="btn-cont">
+											<span class="arrow"> </span>
+											<a href="" class="btn blue icn-only">
+												<i class="fa fa-check icon-white"></i>
+											</a>
+										</div>
+									</form>
+								</div>
+								<div class="tab-pane fade" id="tab-metadata"></div>
+								<div class="tab-pane fade" id="tab-versions"></div>
+								<div class="tab-pane fade" id="tab-publicdata"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
