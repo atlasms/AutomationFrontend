@@ -63,3 +63,5 @@ gulpfile.js.map
 .DS_Store
 src/client/app/shared/config/env.config.js
 src/client/app/shared/config/env.config.js.map
+
+assets/js/vendor/tus_1.js
