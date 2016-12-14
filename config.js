@@ -35,9 +35,11 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
+            , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
         },
         "positions": {
             "wrapper": "body"
+            , "sidebar": "#sidebar"
             , "main": "#main"
             , "toolbar": "#toolbar"
             , "status": "#status-items"
