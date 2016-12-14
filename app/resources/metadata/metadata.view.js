@@ -1,22 +1,21 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'metadataHelper', 'tree.helper', 'tus'
-], function ($, _, Backbone, Template, Config, Global, moment, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, MetadataHelper, Tree, tus) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'tus'
+], function ($, _, Backbone, Template, Config, Global, moment, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, tus) {
     var MetadataView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'MetadataModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
-            , {'button': {cssClass: 'btn red', text: 'Delete Node', type: 'button', task: 'delete-node', icon: 'fa fa-trash'}}
-            , {'button': {cssClass: 'btn green', text: 'New node', type: 'button', task: 'add-node', icon: 'fa fa-plus'}}
+            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'button', task: 'load'}}
+            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
-            , 'click #storagefiles': 'selectRow'
+            , 'click [data-task=load]': 'load'
+            , 'click #metadata-page tbody tr': 'selectRow'
         }
         , submit: function () {
             var $this = this;
-            var helper = new MetadataHelper.validate();
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
@@ -31,10 +30,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , selectRow: function (e) {
-            var $el = $(e.target);
-            var $row = $el.parents("tr:first");
-            $el.parents("tbody").find("tr").removeClass('active');
-            $row.addClass('active');
+            var $el = $(e.currentTarget);
+            var id = $el.attr("data-id");
+            !Backbone.History.started && Backbone.history.start({pushState: true});
+            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
+            return;
         }
         , reLoad: function () {
             this.load();
@@ -42,6 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , load: function (e, extend) {
             console.info('Loading items');
             var params = {};
+            params.q = $("[name=q]").val();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
@@ -49,18 +50,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             var template = Template.template.load('resources/metadata', 'metadata');
             var $container = $(Config.positions.main);
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    self.afterRender();
-                });
+            var model = new MetadataModel(params);
+            var self = this;
+            params = (typeof params !== "undefined") ? params : {q: ' '};
+            var data = (typeof params !== "undefined") ? $.param(params) : null;
+            model.fetch({
+                data: (typeof params !== "undefined") ? $.param(params) : null
+                , success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            self.afterRender();
+                        });
+                    });
+                }
             });
             self.renderToolbar();
         }
         , afterRender: function () {
-            MetadataHelper.mask("time");
-            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
+//            MetadataHelper.mask("time");
+//            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
         }
         , renderToolbar: function () {
             var self = this;

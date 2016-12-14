@@ -7,7 +7,7 @@ define(["jquery", "underscore", "backbone", "config"
             this.path = (options && options.path) ? options.path : '';
         }
         , url: function () {
-            return Config.api.tree + this.path + this.query;
+            return Config.api.metadata + this.path + this.query;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);
