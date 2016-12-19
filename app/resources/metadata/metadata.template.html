@@ -4,6 +4,7 @@
 			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
 				<thead>
 					<tr>
+						<th class="">شناسه</th>
 						<th class="col-xs-1"></th>
 						<th class="col-xs-5">نام برنامه</th>
 						<th class="col-xs-2 text-center">زمان ثبت</th>
@@ -15,6 +16,7 @@
 				<tbody>
 					{{#each []}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+						<td>{{Id}}</td>
 						<td class="text-center">
 							<figure>
 								<img src="{{Thumbnail}}" alt="" />
