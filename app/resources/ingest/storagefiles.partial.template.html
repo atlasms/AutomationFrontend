@@ -1,0 +1,38 @@
+<table id="storagefiles" class="table table-bordered table-striped table-condensed table-hover flip-content">
+	<thead class=" ">
+		<tr>
+			<th class="col-xs-2 text-center">مدت</th>
+			<th class="col-xs-2 text-center">حجم</th>
+			<th class="col-xs-2 text-center">ساعت و تاریخ</th>
+			<th class="col-xs-5 text-center">نام فایل</th>
+			<th class="col-xs-1 text-center">#</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each []}}
+		<tr data-filename="{{FileName}}">
+			<td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
+			<td>
+				<div class="ltr">
+					{{Size}}
+				</div>
+			</td>
+			<td>
+				<div class="text-right">
+					{{extractTime DateTime}} {{extractDate DateTime}}
+				</div>
+			</td>
+			<td>
+				<div class="ltr text-right">
+					<a class="preview-link" href="javascript:preview('{{Url}}/{{FileName}}');">
+						<i class="fa fa-play-circle"></i> <span data-prop="FileName">{{FileName}}</span>
+					</a>
+				</div>
+			</td>
+			<td class="text-center" data-type="index">
+				{{math @index "+" 1}}
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
