@@ -10,33 +10,22 @@ define(['jquery', 'cookie'], function ($, Cookies) {
     */
    !function(e){jQuery.fn.extend({slimScroll:function(i){var o={width:"auto",height:"250px",size:"7px",color:"#000",position:"right",distance:"1px",start:"top",opacity:.4,alwaysVisible:!1,disableFadeOut:!1,railVisible:!1,railColor:"#333",railOpacity:.2,railDraggable:!0,railClass:"slimScrollRail",barClass:"slimScrollBar",wrapperClass:"slimScrollDiv",allowPageScroll:!1,wheelStep:20,touchScrollStep:200,borderRadius:"7px",railBorderRadius:"7px",animate:!0},a=e.extend(o,i);return this.each(function(){function o(t){if(u){var t=t||window.event,i=0;t.wheelDelta&&(i=-t.wheelDelta/120),t.detail&&(i=t.detail/3);var o=t.target||t.srcTarget||t.srcElement;e(o).closest("."+a.wrapperClass).is(S.parent())&&r(i,!0),t.preventDefault&&!y&&t.preventDefault(),y||(t.returnValue=!1)}}function r(e,t,i){y=!1;var o=e,r=S.outerHeight()-M.outerHeight();if(t&&(o=parseInt(M.css("top"))+e*parseInt(a.wheelStep)/100*M.outerHeight(),o=Math.min(Math.max(o,0),r),o=e>0?Math.ceil(o):Math.floor(o),M.css({top:o+"px"})),v=parseInt(M.css("top"))/(S.outerHeight()-M.outerHeight()),o=v*(S[0].scrollHeight-S.outerHeight()),i){o=e;var s=o/S[0].scrollHeight*S.outerHeight();s=Math.min(Math.max(s,0),r),M.css({top:s+"px"})}"scrollTo"in a&&a.animate?S.animate({scrollTop:o}):S.scrollTop(o),S.trigger("slimscrolling",~~o),l(),c()}function s(){window.addEventListener?(this.addEventListener("DOMMouseScroll",o,!1),this.addEventListener("mousewheel",o,!1)):document.attachEvent("onmousewheel",o)}function n(){f=Math.max(S.outerHeight()/S[0].scrollHeight*S.outerHeight(),m),M.css({height:f+"px"});var e=f==S.outerHeight()?"none":"block";M.css({display:e})}function l(){if(n(),clearTimeout(p),v==~~v){if(y=a.allowPageScroll,b!=v){var e=0==~~v?"top":"bottom";S.trigger("slimscroll",e)}}else y=!1;return b=v,f>=S.outerHeight()?void(y=!0):(M.stop(!0,!0).fadeIn("fast"),void(a.railVisible&&H.stop(!0,!0).fadeIn("fast")))}function c(){a.alwaysVisible||(p=setTimeout(function(){a.disableFadeOut&&u||h||d||(M.fadeOut("slow"),H.fadeOut("slow"))},1e3))}var u,h,d,p,g,f,v,b,w="<div></div>",m=30,y=!1,S=e(this);if("ontouchstart"in window&&window.navigator.msPointerEnabled&&S.css("-ms-touch-action","none"),S.parent().hasClass(a.wrapperClass)){var E=S.scrollTop();if(M=S.parent().find("."+a.barClass),H=S.parent().find("."+a.railClass),n(),e.isPlainObject(i)){if("height"in i&&"auto"==i.height){S.parent().css("height","auto"),S.css("height","auto");var x=S.parent().parent().height();S.parent().css("height",x),S.css("height",x)}if("scrollTo"in i)E=parseInt(a.scrollTo);else if("scrollBy"in i)E+=parseInt(a.scrollBy);else if("destroy"in i)return M.remove(),H.remove(),void S.unwrap();r(E,!1,!0)}}else{a.height="auto"==i.height?S.parent().height():i.height;var C=e(w).addClass(a.wrapperClass).css({position:"relative",overflow:"hidden",width:a.width,height:a.height});S.css({overflow:"hidden",width:a.width,height:a.height});var H=e(w).addClass(a.railClass).css({width:a.size,height:"100%",position:"absolute",top:0,display:a.alwaysVisible&&a.railVisible?"block":"none","border-radius":a.railBorderRadius,background:a.railColor,opacity:a.railOpacity,zIndex:90}),M=e(w).addClass(a.barClass).css({background:a.color,width:a.size,position:"absolute",top:0,opacity:a.opacity,display:a.alwaysVisible?"block":"none","border-radius":a.borderRadius,BorderRadius:a.borderRadius,MozBorderRadius:a.borderRadius,WebkitBorderRadius:a.borderRadius,zIndex:99}),D="right"==a.position?{right:a.distance}:{left:a.distance};H.css(D),M.css(D),S.wrap(C),S.parent().append(M),S.parent().append(H),a.railDraggable&&M.bind("mousedown",function(i){var o=e(document);return d=!0,t=parseFloat(M.css("top")),pageY=i.pageY,o.bind("mousemove.slimscroll",function(e){currTop=t+e.pageY-pageY,M.css("top",currTop),r(0,M.position().top,!1)}),o.bind("mouseup.slimscroll",function(){d=!1,c(),o.unbind(".slimscroll")}),!1}).bind("selectstart.slimscroll",function(e){return e.stopPropagation(),e.preventDefault(),!1}),"ontouchstart"in window&&window.navigator.msPointerEnabled&&(S.bind("MSPointerDown",function(e){g=e.originalEvent.pageY}),S.bind("MSPointerMove",function(e){e.originalEvent.preventDefault();var t=(g-e.originalEvent.pageY)/a.touchScrollStep;r(t,!0),g=e.originalEvent.pageY})),H.hover(function(){l()},function(){c()}),M.hover(function(){h=!0},function(){h=!1}),S.hover(function(){u=!0,l(),c()},function(){u=!1,c()}),S.bind("touchstart",function(e){e.originalEvent.touches.length&&(g=e.originalEvent.touches[0].pageY)}),S.bind("touchmove",function(e){if(y||e.originalEvent.preventDefault(),e.originalEvent.touches.length){var t=(g-e.originalEvent.touches[0].pageY)/a.touchScrollStep;r(t,!0),g=e.originalEvent.touches[0].pageY}}),n(),"bottom"===a.start?(M.css({top:S.outerHeight()-M.outerHeight()}),r(0,!0)):"top"!==a.start&&(r(e(a.start).position().top,null,!0),a.alwaysVisible||M.hide()),s()}}),this}}),jQuery.fn.extend({slimscroll:jQuery.fn.slimScroll})}(jQuery);
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////    App.js     //////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
+     * App.js
      Core script to handle the entire theme and core functions
      **/
     var App = function () {
 
-        // IE mode
+// IE mode
         var isRTL = false;
         var isIE8 = false;
         var isIE9 = false;
         var isIE10 = false;
-
         var resizeHandlers = [];
-
         var assetsPath = '../assets/';
-
         var globalImgPath = 'global/img/';
-
         var globalPluginsPath = 'global/plugins/';
-
         var globalCssPath = 'global/css/';
-
         // theme layout color set
 
         var brandColors = {
@@ -47,7 +36,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             'grey': '#95a5a6',
             'yellow': '#F8CB00'
         };
-
         // initializes main settings
         var handleInit = function () {
 
@@ -58,7 +46,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             isIE8 = !!navigator.userAgent.match(/MSIE 8.0/);
             isIE9 = !!navigator.userAgent.match(/MSIE 9.0/);
             isIE10 = !!navigator.userAgent.match(/MSIE 10.0/);
-
             if (isIE10) {
                 $('html').addClass('ie10'); // detect IE10 version
             }
@@ -67,7 +54,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 $('html').addClass('ie'); // detect IE10 version
             }
         };
-
         // runs callback functions set by App.addResponsiveHandler().
         var _runResizeHandlers = function () {
             // reinitialize other subscribed elements
@@ -76,7 +62,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 each.call();
             }
         };
-
         var handleOnResize = function () {
             var windowWidth = $(window).width();
             var resize;
@@ -108,14 +93,12 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Handles portlet tools & actions
         var handlePortletTools = function () {
             // handle portlet remove
             $('body').on('click', '.portlet > .portlet-title > .tools > a.remove', function (e) {
                 e.preventDefault();
                 var portlet = $(this).closest(".portlet");
-
                 if ($('body').hasClass('page-portlet-fullscreen')) {
                     $('body').removeClass('page-portlet-fullscreen');
                 }
@@ -128,7 +111,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
                 portlet.remove();
             });
-
             // handle portlet fullscreen
             $('body').on('click', '.portlet > .portlet-title .fullscreen', function (e) {
                 e.preventDefault();
@@ -143,14 +125,12 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                             portlet.children('.portlet-title').outerHeight() -
                             parseInt(portlet.children('.portlet-body').css('padding-top')) -
                             parseInt(portlet.children('.portlet-body').css('padding-bottom'));
-
                     $(this).addClass('on');
                     portlet.addClass('portlet-fullscreen');
                     $('body').addClass('page-portlet-fullscreen');
                     portlet.children('.portlet-body').css('height', height);
                 }
             });
-
             $('body').on('click', '.portlet > .portlet-title > .tools > a.reload', function (e) {
                 e.preventDefault();
                 var el = $(this).closest(".portlet").children(".portlet-body");
@@ -200,10 +180,8 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     }, 1000);
                 }
             });
-
             // load ajax data on page init
             $('.portlet .portlet-title a.reload[data-load="true"]').click();
-
             $('body').on('click', '.portlet > .portlet-title > .tools > .collapse, .portlet .portlet-title > .tools > .expand', function (e) {
                 e.preventDefault();
                 var el = $(this).closest(".portlet").children(".portlet-body");
@@ -216,7 +194,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 }
             });
         };
-
         // Handlesmaterial design checkboxes
         var handleMaterialDesign = function () {
 
@@ -225,34 +202,27 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 var the = $(this);
                 // find the first span which is our circle/bubble
                 var el = $(this).children('span:first-child');
-
                 // add the bubble class (we do this so it doesnt show on page load)
                 el.addClass('inc');
-
                 // clone it
                 var newone = el.clone(true);
-
                 // add the cloned version before our original
                 el.before(newone);
-
                 // remove the original so that it is ready to run on next click
                 $("." + el.attr("class") + ":last", the).remove();
             });
-
             if ($('body').hasClass('page-md')) {
                 // Material design click effect
                 // credit where credit's due; http://thecodeplayer.com/walkthrough/ripple-click-effect-google-material-design       
                 var element, circle, d, x, y;
                 $('body').on('click', 'a.btn, button.btn, input.btn, label.btn', function (e) {
                     element = $(this);
-
                     if (element.find(".md-click-circle").length == 0) {
                         element.prepend("<span class='md-click-circle'></span>");
                     }
 
                     circle = element.find(".md-click-circle");
                     circle.removeClass("md-click-animate");
-
                     if (!circle.height() && !circle.width()) {
                         d = Math.max(element.outerWidth(), element.outerHeight());
                         circle.css({height: d, width: d});
@@ -260,9 +230,7 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
                     x = e.pageX - element.offset().left - circle.width() / 2;
                     y = e.pageY - element.offset().top - circle.height() / 2;
-
                     circle.css({top: y + 'px', left: x + 'px'}).addClass("md-click-animate");
-
                     setTimeout(function () {
                         circle.remove();
                     }, 1000);
@@ -286,7 +254,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 // Farid
                 $(this).removeClass("edited");
             });
-
             $('.form-md-floating-label .form-control').each(function () {
                 if ($(this).val().length > 0) {
                     $(this).addClass('edited');
@@ -294,7 +261,7 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             });
         }
 
-        // Handles custom checkboxes & radios using jQuery iCheck plugin
+// Handles custom checkboxes & radios using jQuery iCheck plugin
         var handleiCheck = function () {
             if (!$().iCheck) {
                 return;
@@ -303,7 +270,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             $('.icheck').each(function () {
                 var checkboxClass = $(this).attr('data-checkbox') ? $(this).attr('data-checkbox') : 'icheckbox_minimal-grey';
                 var radioClass = $(this).attr('data-radio') ? $(this).attr('data-radio') : 'iradio_minimal-grey';
-
                 if (checkboxClass.indexOf('_line') > -1 || radioClass.indexOf('_line') > -1) {
                     $(this).iCheck({
                         checkboxClass: checkboxClass,
@@ -318,7 +284,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 }
             });
         };
-
         // Handles Bootstrap switches
         var handleBootstrapSwitch = function () {
             if (!$().bootstrapSwitch) {
@@ -326,7 +291,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             }
             $('.make-switch').bootstrapSwitch();
         };
-
         // Handles Bootstrap confirmations
         var handleBootstrapConfirmation = function () {
             if (!$().confirmation) {
@@ -335,13 +299,12 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             $('[data-toggle=confirmation]').confirmation({btnOkClass: 'btn btn-sm btn-success', btnCancelClass: 'btn btn-sm btn-danger'});
         }
 
-        // Handles Bootstrap Accordions.
+// Handles Bootstrap Accordions.
         var handleAccordions = function () {
             $('body').on('shown.bs.collapse', '.accordion.scrollable', function (e) {
                 App.scrollTo($(e.target));
             });
         };
-
         // Handles Bootstrap Tabs.
         var handleTabs = function () {
             //activate tab if tab id provided in the URL
@@ -360,7 +323,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Handles Bootstrap Modals.
         var handleModals = function () {
             // fix stackable modal issue: when 2 or more modals opened, closing one of modal will remove .modal-open class. 
@@ -371,25 +333,21 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     $('html').removeClass('modal-open');
                 }
             });
-
             // fix page scrollbars issue
             $('body').on('show.bs.modal', '.modal', function () {
                 if ($(this).hasClass("modal-scroll")) {
                     $('body').addClass("modal-open-noscroll");
                 }
             });
-
             // fix page scrollbars issue
             $('body').on('hidden.bs.modal', '.modal', function () {
                 $('body').removeClass("modal-open-noscroll");
             });
-
             // remove ajax content and remove cache on modal closed 
             $('body').on('hidden.bs.modal', '.modal:not(.modal-cached)', function () {
                 $(this).removeData('bs.modal');
             });
         };
-
         // Handles Bootstrap Tooltips.
         var handleTooltips = function () {
             // global tooltips
@@ -422,7 +380,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 //            title: 'Collapse/Expand'
 //        });
         };
-
         // Handles Bootstrap Dropdowns
         var handleDropdowns = function () {
             /*
@@ -432,25 +389,21 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 e.stopPropagation();
             });
         };
-
         var handleAlerts = function () {
             $('body').on('click', '[data-close="alert"]', function (e) {
                 $(this).parent('.alert').hide();
                 $(this).closest('.note').hide();
                 e.preventDefault();
             });
-
             $('body').on('click', '[data-close="note"]', function (e) {
                 $(this).closest('.note').hide();
                 e.preventDefault();
             });
-
             $('body').on('click', '[data-remove="note"]', function (e) {
                 $(this).closest('.note').remove();
                 e.preventDefault();
             });
         };
-
         // Handle textarea autosize 
         var handleTextareaAutosize = function () {
             if (typeof (autosize) == "function") {
@@ -458,11 +411,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             }
         }
 
-        // Handles Bootstrap Popovers
+// Handles Bootstrap Popovers
 
-        // last popep popover
+// last popep popover
         var lastPopedPopover;
-
         var handlePopovers = function () {
 //        $('.popovers').popover();
 //
@@ -474,12 +426,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 //            }
 //        });
         };
-
         // Handles scrollable contents using jQuery SlimScroll plugin.
         var handleScrollers = function () {
             App.initSlimScroll('.scroller');
         };
-
         // Handles Image Preview using jQuery Fancybox plugin
         var handleFancybox = function () {
             if (!jQuery.fancybox) {
@@ -500,7 +450,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Handles counterup plugin wrapper
         var handleCounterup = function () {
             if (!$().counterUp) {
@@ -512,7 +461,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 time: 1000
             });
         };
-
         // Fix input placeholder issue for IE8 and IE9
         var handleFixInputPlaceholderForIE = function () {
             //fix html5 placeholder attribute for ie7 & ie8
@@ -520,7 +468,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 // this is html5 placeholder fix for inputs, inputs with placeholder-no-fix class will be skipped(e.g: we need this for password fields)
                 $('input[placeholder]:not(.placeholder-no-fix), textarea[placeholder]:not(.placeholder-no-fix)').each(function () {
                     var input = $(this);
-
                     if (input.val() === '' && input.attr("placeholder") !== '') {
                         input.addClass("placeholder").val(input.attr('placeholder'));
                     }
@@ -530,7 +477,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                             input.val('');
                         }
                     });
-
                     input.blur(function () {
                         if (input.val() === '' || input.val() == input.attr('placeholder')) {
                             input.val(input.attr('placeholder'));
@@ -539,7 +485,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Handle Select2 Dropdowns
         var handleSelect2 = function () {
             if ($().select2) {
@@ -551,7 +496,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // handle group element heights
         var handleHeight = function () {
             $('[data-auto-height]').each(function () {
@@ -560,7 +504,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 var height = 0;
                 var mode = parent.attr('data-mode');
                 var offset = parseInt(parent.attr('data-offset') ? parent.attr('data-offset') : 0);
-
                 items.each(function () {
                     if ($(this).attr('data-height') == "height") {
                         $(this).css('height', '');
@@ -573,9 +516,7 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                         height = height_;
                     }
                 });
-
                 height = height + offset;
-
                 items.each(function () {
                     if ($(this).attr('data-height') == "height") {
                         $(this).css('height', height);
@@ -583,21 +524,20 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                         $(this).css('min-height', height);
                     }
                 });
-
                 if (parent.attr('data-related')) {
                     $(parent.attr('data-related')).css('height', parent.height());
                 }
             });
         }
 
-        //* END:CORE HANDLERS *//
+//* END:CORE HANDLERS *//
 
         return {
-            //main function to initiate the theme
+//main function to initiate the theme
             init: function () {
-                //IMPORTANT!!!: Do not modify the core handlers call order.
+//IMPORTANT!!!: Do not modify the core handlers call order.
 
-                //Core handlers
+//Core handlers
                 handleInit(); // initialize core variables
                 handleOnResize(); // set and handle responsive    
 
@@ -659,7 +599,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             // wrApper function to scroll(focus) to an element
             scrollTo: function (el, offeset) {
                 var pos = (el && el.length > 0) ? el.offset().top : 0;
-
                 if (el) {
                     if ($('body').hasClass('page-header-fixed')) {
                         pos = pos - $('.page-header').height();
@@ -686,7 +625,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     }
 
                     var height;
-
                     if ($(this).attr("data-height")) {
                         height = $(this).attr("data-height");
                     } else {
@@ -705,7 +643,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                         railVisible: ($(this).attr("data-rail-visible") == "1" ? true : false),
                         disableFadeOut: true
                     });
-
                     $(this).attr("data-initialized", "1");
                 });
             },
@@ -718,9 +655,7 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     if ($(this).attr("data-initialized") === "1") { // destroy existing instance before updating the height
                         $(this).removeAttr("data-initialized");
                         $(this).removeAttr("style");
-
                         var attrList = {};
-
                         // store the custom attribures so later we will reassign.
                         if ($(this).attr("data-handle-color")) {
                             attrList["data-handle-color"] = $(this).attr("data-handle-color");
@@ -742,14 +677,11 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                             wrapperClass: ($(this).attr("data-wrapper-class") ? $(this).attr("data-wrapper-class") : 'slimScrollDiv'),
                             destroy: true
                         });
-
                         var the = $(this);
-
                         // reassign custom attributes
                         $.each(attrList, function (key, value) {
                             the.attr(key, value);
                         });
-
                     }
                 });
             },
@@ -847,11 +779,8 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     closeInSeconds: 0, // auto close after defined seconds
                     icon: "" // put icon before the message
                 }, options);
-
                 var id = App.getUniqueID("App_alert");
-
                 var html = '<div id="' + id + '" class="custom-alerts alert alert-' + options.type + ' fade in">' + (options.close ? '<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>' : '') + (options.icon !== "" ? '<i class="fa-lg fa fa-' + options.icon + '"></i>  ' : '') + options.message + '</div>';
-
                 if (options.reset) {
                     $('.custom-alerts').remove();
                 }
@@ -904,7 +833,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             getURLParameter: function (paramName) {
                 var searchString = window.location.search.substring(1),
                         i, val, params = searchString.split("&");
-
                 for (i = 0; i < params.length; i++) {
                     val = params[i].split("=");
                     if (val[0] == paramName) {
@@ -992,36 +920,21 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     'md': 992, // medium
                     'lg': 1200     // large
                 };
-
                 return sizes[size] ? sizes[size] : 0;
             }
         };
-
     }();
-
-    jQuery(document).ready(function () {
-        App.init(); // init metronic core componets
-    });
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////   Layout.js   //////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
+     * Layout.js
      Core script to handle the entire theme and core functions
      **/
     var Layout = function () {
 
         var layoutImgPath = '/assets/img/';
-
         var layoutCssPath = '/assets/css/';
-
         var resBreakpointMd = App.getResponsiveBreakpoint('md');
-
         var ajaxContentSuccessCallbacks = [];
         var ajaxContentErrorCallbacks = [];
-
         //* BEGIN:CORE HANDLERS *//
         // this function handles responsive layout on screen size resize or mobile device rotate.
 
@@ -1031,7 +944,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             var sidebar = $('.page-sidebar');
             var body = $('body');
             var height;
-
             if (body.hasClass("page-footer-fixed") === true && body.hasClass("page-sidebar-fixed") === false) {
                 var available_height = App.getViewPort().height - $('.page-footer').outerHeight() - $('.page-header').outerHeight();
                 var sidebar_height = sidebar.outerHeight();
@@ -1050,7 +962,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 } else {
                     var headerHeight = $('.page-header').outerHeight();
                     var footerHeight = $('.page-footer').outerHeight();
-
                     if (App.getViewPort().width < resBreakpointMd) {
                         height = App.getViewPort().height - headerHeight - footerHeight;
                     } else {
@@ -1064,12 +975,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 content.css('min-height', height);
             }
         };
-
         // Handle sidebar menu links
         var handleSidebarMenuActiveLink = function (mode, el, $state) {
             var url = location.hash.toLowerCase();
             var menu = $('.page-sidebar-menu');
-
             if (mode === 'click' || mode === 'set') {
                 el = $(el);
             } else if (mode === 'match') {
@@ -1108,7 +1017,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
             var slideSpeed = parseInt(menu.data('slide-speed'));
             var keepExpand = menu.data('keep-expanded');
-
             // begin: handle active state
             if (menu.hasClass('page-sidebar-menu-hover-submenu') === false) {
                 menu.find('li.nav-item.open').each(function () {
@@ -1125,7 +1033,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                             return;
                         }
                     });
-
                     if (match === true) {
                         return;
                     }
@@ -1145,7 +1052,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             el.parents('li').each(function () {
                 $(this).addClass('active');
                 $(this).find('> a > span.arrow').addClass('open');
-
                 if ($(this).parent('ul.page-sidebar-menu').length === 1) {
                     $(this).find('> a').append('<span class="selected"></span>');
                 }
@@ -1154,14 +1060,12 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     $(this).addClass('open');
                 }
             });
-
             if (mode === 'click') {
                 if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass('in')) { // close the menu on mobile view while laoding a page 
                     $('.page-header .responsive-toggler').click();
                 }
             }
         };
-
         // Handle sidebar menu
         var handleSidebarMenu = function () {
             $('.page-sidebar').on('click', 'li > a', function (e) {
@@ -1181,11 +1085,9 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 var the = $(this);
                 var menu = $('.page-sidebar-menu');
                 var sub = $(this).next();
-
                 var autoScroll = menu.data("auto-scroll");
                 var slideSpeed = parseInt(menu.data("slide-speed"));
                 var keepExpand = menu.data("keep-expanded");
-
                 if (keepExpand !== true) {
                     parent.children('li.open').children('a').children('.arrow').removeClass('open');
                     parent.children('li.open').children('.sub-menu:not(.always-open)').slideUp(slideSpeed);
@@ -1193,7 +1095,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 }
 
                 var slideOffeset = -200;
-
                 if (sub.is(":visible")) {
                     $('.arrow', $(this)).removeClass("open");
                     $(this).parent().removeClass("open");
@@ -1228,7 +1129,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
                 e.preventDefault();
             });
-
             // handle menu close for angularjs version
 //        if (App.isAngularJsApp()) {
 //            $(".page-sidebar-menu li > a").on("click", function (e) {
@@ -1242,49 +1142,38 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             $('.page-sidebar').on('click', ' li > a.ajaxify', function (e) {
                 e.preventDefault();
                 App.scrollTop();
-
                 var url = $(this).attr("href");
                 var menuContainer = $('.page-sidebar ul');
-
                 menuContainer.children('li.active').removeClass('active');
                 menuContainer.children('arrow.open').removeClass('open');
-
                 $(this).parents('li').each(function () {
                     $(this).addClass('active');
                     $(this).children('a > span.arrow').addClass('open');
                 });
                 $(this).parents('li').addClass('active');
-
                 if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
                     $('.page-header .responsive-toggler').click();
                 }
 
                 Layout.loadAjaxContent(url, $(this));
             });
-
             // handle ajax link within main content
             $('.page-content').on('click', '.ajaxify', function (e) {
                 e.preventDefault();
                 App.scrollTop();
-
                 var url = $(this).attr("href");
-
-
                 App.startPageLoading();
-
                 if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
                     $('.page-header .responsive-toggler').click();
                 }
 
                 Layout.loadAjaxContent(url);
             });
-
             // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view
             $(document).on('click', '.page-header-fixed-mobile .responsive-toggler', function () {
                 App.scrollTop();
             });
         };
-
         var _calculateFixedSidebarViewportHeight = function () {
             var sidebarHeight = App.getViewPort().height - $('.page-header').outerHeight(true);
             if ($('body').hasClass("page-footer-fixed")) {
@@ -1293,13 +1182,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
             return sidebarHeight;
         };
-
         // Handles fixed sidebar
         var handleFixedSidebar = function () {
             var menu = $('.page-sidebar-menu');
-
             handleSidebarAndContentHeight();
-
             if ($('.page-sidebar-fixed').length === 0) {
                 return;
             }
@@ -1311,7 +1197,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 handleSidebarAndContentHeight();
             }
         };
-
         // Handles sidebar toggler to close/hide the sidebar.
         var handleFixedSidebarHoverEffect = function () {
             var body = $('body');
@@ -1327,11 +1212,9 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Hanles sidebar toggler
         var handleSidebarToggler = function () {
             var body = $('body');
-
             /**
              if (Cookies && Cookies.get('sidebar_closed') === '1' && App.getViewPort().width >= resBreakpointMd) {
              $('body').addClass('page-sidebar-closed');
@@ -1344,7 +1227,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 var sidebar = $('.page-sidebar');
                 var sidebarMenu = $('.page-sidebar-menu');
                 $(".sidebar-search", sidebar).removeClass("open");
-
                 if (body.hasClass("page-sidebar-closed")) {
                     body.removeClass("page-sidebar-closed");
                     sidebarMenu.removeClass("page-sidebar-menu-closed");
@@ -1364,15 +1246,12 @@ define(['jquery', 'cookie'], function ($, Cookies) {
 
                 $(window).trigger('resize');
             });
-
             handleFixedSidebarHoverEffect();
-
             // handle the search bar close
             $('.page-sidebar').on('click', '.sidebar-search .remove', function (e) {
                 e.preventDefault();
                 $('.sidebar-search').removeClass("open");
             });
-
             // handle the search query submit on enter press
             $('.page-sidebar .sidebar-search').on('keypress', 'input.form-control', function (e) {
                 if (e.which == 13) {
@@ -1380,7 +1259,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     return false; //<---- Add this line
                 }
             });
-
             // handle the search submit(for sidebar search and responsive mode of the header search)
             $('.sidebar-search .submit').on('click', function (e) {
                 e.preventDefault();
@@ -1397,13 +1275,11 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     $('.sidebar-search').submit();
                 }
             });
-
             // handle close on body click
             if ($('.sidebar-search').length !== 0) {
                 $('.sidebar-search .input-group').on('click', function (e) {
                     e.stopPropagation();
                 });
-
                 $('body').on('click', function () {
                     if ($('.sidebar-search').hasClass('open')) {
                         $('.sidebar-search').removeClass("open");
@@ -1411,20 +1287,17 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 });
             }
         };
-
         // Handles the horizontal menu
         var handleHeader = function () {
             // handle search box expand/collapse        
             $('.page-header').on('click', '.search-form', function (e) {
                 $(this).addClass("open");
                 $(this).find('.form-control').focus();
-
                 $('.page-header .search-form .form-control').on('blur', function (e) {
                     $(this).closest('.search-form').removeClass("open");
                     $(this).unbind("blur");
                 });
             });
-
             // handle hor menu search form on enter press
             $('.page-header').on('keypress', '.hor-menu .search-form .form-control', function (e) {
                 if (e.which == 13) {
@@ -1432,7 +1305,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     return false;
                 }
             });
-
             // handle header search button click
             $('.page-header').on('mousedown', '.search-form.open .submit', function (e) {
                 e.preventDefault();
@@ -1440,12 +1312,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 $(this).closest('.search-form').submit();
             });
         };
-
         // Handles the go to top button at the footer
         var handleGoTop = function () {
             var offset = 300;
             var duration = 500;
-
             if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) { // ios supported
                 $(window).bind("touchend touchcancel touchleave", function (e) {
                     if ($(this).scrollTop() > offset) {
@@ -1513,9 +1383,7 @@ define(['jquery', 'cookie'], function ($, Cookies) {
             },
             loadAjaxContent: function (url, sidebarMenuLink) {
                 var pageContent = $('.page-content .page-content-body');
-
                 App.startPageLoading({animate: true});
-
                 $.ajax({
                     type: "GET",
                     cache: false,
@@ -1523,7 +1391,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     dataType: "html",
                     success: function (res) {
                         App.stopPageLoading();
-
                         for (var i = 0; i < ajaxContentSuccessCallbacks.length; i++) {
                             ajaxContentSuccessCallbacks[i].call(res);
                         }
@@ -1539,7 +1406,6 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     error: function (res, ajaxOptions, thrownError) {
                         App.stopPageLoading();
                         pageContent.html('<h4>Could not load the requested content.</h4>');
-
                         for (var i = 0; i < ajaxContentErrorCallbacks.length; i++) {
                             ajaxContentSuccessCallbacks[i].call(res);
                         }
@@ -1569,23 +1435,9 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 return App.getAssetsPath() + layoutCssPath;
             }
         };
-
     }();
-
-    if (App.isAngularJsApp() === false) {
-        jQuery(document).ready(function () {
-            Layout.init(); // init metronic core componets
-        });
-    }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////// quick-sidebar.js ///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
+     * quick-sidebar.js
      Core script to handle the entire theme and core functions
      **/
     var QuickSidebar = function () {
@@ -1597,50 +1449,39 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 $('body').toggleClass('page-quick-sidebar-open');
             });
         };
-
         // Handles quick sidebar chats
         var handleQuickSidebarChat = function () {
             var wrapper = $('.page-quick-sidebar-wrapper');
             var wrapperChat = wrapper.find('.page-quick-sidebar-chat');
-
             var initChatSlimScroll = function () {
                 var chatUsers = wrapper.find('.page-quick-sidebar-chat-users');
                 var chatUsersHeight;
-
                 chatUsersHeight = wrapper.height() - wrapper.find('.nav-tabs').outerHeight(true);
-
                 // chat user list 
                 App.destroySlimScroll(chatUsers);
                 chatUsers.attr("data-height", chatUsersHeight);
                 App.initSlimScroll(chatUsers);
-
                 var chatMessages = wrapperChat.find('.page-quick-sidebar-chat-user-messages');
                 var chatMessagesHeight = chatUsersHeight - wrapperChat.find('.page-quick-sidebar-chat-user-form').outerHeight(true);
                 chatMessagesHeight = chatMessagesHeight - wrapperChat.find('.page-quick-sidebar-nav').outerHeight(true);
-
                 // user chat messages 
                 App.destroySlimScroll(chatMessages);
                 chatMessages.attr("data-height", chatMessagesHeight);
                 App.initSlimScroll(chatMessages);
             };
-
             initChatSlimScroll();
             App.addResizeHandler(initChatSlimScroll); // reinitialize on window resize
 
             wrapper.find('.page-quick-sidebar-chat-users .media-list > .media').click(function () {
                 wrapperChat.addClass("page-quick-sidebar-content-item-shown");
             });
-
             wrapper.find('.page-quick-sidebar-chat-user .page-quick-sidebar-back-to-list').click(function () {
                 wrapperChat.removeClass("page-quick-sidebar-content-item-shown");
             });
-
             var handleChatMessagePost = function (e) {
                 e.preventDefault();
-
                 var chatContainer = wrapperChat.find(".page-quick-sidebar-chat-user-messages");
                 var input = wrapperChat.find('.page-quick-sidebar-chat-user-form .form-control');
-
                 var text = input.val();
                 if (text.length === 0) {
                     return;
@@ -1659,35 +1500,28 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     tpl += '</span>';
                     tpl += '</div>';
                     tpl += '</div>';
-
                     return tpl;
                 };
-
                 // handle post
                 var time = new Date();
                 var message = preparePost('out', (time.getHours() + ':' + time.getMinutes()), "Bob Nilson", 'avatar3', text);
                 message = $(message);
                 chatContainer.append(message);
-
                 chatContainer.slimScroll({
                     scrollTo: '1000000px'
                 });
-
                 input.val("");
-
                 // simulate reply
                 setTimeout(function () {
                     var time = new Date();
                     var message = preparePost('in', (time.getHours() + ':' + time.getMinutes()), "Ella Wong", 'avatar2', 'Lorem ipsum doloriam nibh...');
                     message = $(message);
                     chatContainer.append(message);
-
                     chatContainer.slimScroll({
                         scrollTo: '1000000px'
                     });
                 }, 3000);
             };
-
             wrapperChat.find('.page-quick-sidebar-chat-user-form .btn').click(handleChatMessagePost);
             wrapperChat.find('.page-quick-sidebar-chat-user-form .form-control').keypress(function (e) {
                 if (e.which == 13) {
@@ -1696,47 +1530,36 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 }
             });
         };
-
         // Handles quick sidebar tasks
         var handleQuickSidebarAlerts = function () {
             var wrapper = $('.page-quick-sidebar-wrapper');
-
             var initAlertsSlimScroll = function () {
                 var alertList = wrapper.find('.page-quick-sidebar-alerts-list');
                 var alertListHeight;
-
                 alertListHeight = wrapper.height() - 80 - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
-
                 // alerts list 
                 App.destroySlimScroll(alertList);
                 alertList.attr("data-height", alertListHeight);
                 App.initSlimScroll(alertList);
             };
-
             initAlertsSlimScroll();
             App.addResizeHandler(initAlertsSlimScroll); // reinitialize on window resize
         };
-
         // Handles quick sidebar settings
         var handleQuickSidebarSettings = function () {
             var wrapper = $('.page-quick-sidebar-wrapper');
-
             var initSettingsSlimScroll = function () {
                 var settingsList = wrapper.find('.page-quick-sidebar-settings-list');
                 var settingsListHeight;
-
                 settingsListHeight = wrapper.height() - 80 - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
-
                 // alerts list 
                 App.destroySlimScroll(settingsList);
                 settingsList.attr("data-height", settingsListHeight);
                 App.initSlimScroll(settingsList);
             };
-
             initSettingsSlimScroll();
             App.addResizeHandler(initSettingsSlimScroll); // reinitialize on window resize
         };
-
         return {
             init: function () {
                 //layout handlers
@@ -1746,21 +1569,10 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                 handleQuickSidebarSettings(); // handles quick sidebar's setting
             }
         };
-
     }();
-
-    if (App.isAngularJsApp() === false) {
-        jQuery(document).ready(function () {
-            QuickSidebar.init(); // init metronic core componets
-        });
-    }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////  quick-nav.js  /////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+     * quick-nav.js
+     */
     var QuickNav = function () {
 
         return {
@@ -1770,13 +1582,11 @@ define(['jquery', 'cookie'], function ($, Cookies) {
                     stretchyNavs.each(function () {
                         var stretchyNav = $(this),
                                 stretchyNavTrigger = stretchyNav.find('.quick-nav-trigger');
-
                         stretchyNavTrigger.on('click', function (event) {
                             event.preventDefault();
                             stretchyNav.toggleClass('nav-is-visible');
                         });
                     });
-
                     $(document).on('click', function (event) {
                         (!$(event.target).is('.quick-nav-trigger') && !$(event.target).is('.quick-nav-trigger span')) && stretchyNavs.removeClass('nav-is-visible');
                     });
@@ -1785,5 +1595,15 @@ define(['jquery', 'cookie'], function ($, Cookies) {
         };
     }();
 
-    QuickNav.init(); // init metronic core componets
+    var TemplateLayout = {
+        init: function () {
+            $(function () {
+                App.init(); // init metronic core componets
+                Layout.init(); // init metronic core componets
+                QuickSidebar.init(); // init metronic core componets
+            });
+            QuickNav.init(); // init metronic core componets
+        }
+    };
+    return TemplateLayout;
 });
