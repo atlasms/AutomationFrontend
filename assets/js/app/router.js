@@ -1,6 +1,6 @@
 // Filename: router.js
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "app.view"
-], function ($, _, Backbone, Login, Template, Config, AppView) {
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "app.view", "layout"
+], function ($, _, Backbone, Login, Template, Config, AppView, Layout) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             'login': 'Login'
@@ -51,6 +51,8 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                     var output = handlebarsTemplate();
                     $(Config.positions.wrapper).html(output);
                     app.load(actions);
+                    //
+                    Layout.init();
                 });
                 // Master layout is present, only loading page contents
             } else {
