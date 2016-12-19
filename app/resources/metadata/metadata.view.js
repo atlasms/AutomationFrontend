@@ -32,8 +32,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            !Backbone.History.started && Backbone.history.start({pushState: true});
-            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
+            window.open('/resources/mediaitem/' + id);
+//            !Backbone.History.started && Backbone.history.start({pushState: true});
+//            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
             return;
         }
         , reLoad: function () {
