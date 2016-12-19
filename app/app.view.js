@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'layout', 'pace'
-], function ($, _, Backbone, Template, Config, Cookies, Layout, pace) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'toolbar', 'bootstrap/dropdown'
+], function ($, _, Backbone, Template, Config, Cookies, ToolbarHelper) {
     var AppView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , render: function () {
@@ -13,15 +13,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'lay
             if (typeof actions !== "undefined" && actions) {
                 var request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
                 requirejs([request], function (View) {
-//                    pace.start();
                     var view = new View(actions, actionArray);
                     var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
+                    
+                    // Emptying Toolbar
+//                    var toolbar = new ToolbarHelper();
+//                    var $toolbar = $(Config.positions.toolbar).find("form");
+//                    $toolbar.empty();
+                    
+                    // Render view
                     view.render(content, actionArray);
-                    var $sidebarMenu = $(Config.positions.sidebar).find("ul:first");
                     
                     // Setting active menu
+                    var $sidebarMenu = $(Config.positions.sidebar).find("ul:first");
                     $sidebarMenu.find("li").removeClass("active open");
                     $sidebarMenu.find('a[href="/' + actions + '"]').parents("li").addClass("active open");
+                    
                 });
             }
         }
