@@ -49,7 +49,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     self.afterRender();
                 });
             });
-//            self.renderToolbar();
         }
         , afterRender: function () {
             var $this = this;
