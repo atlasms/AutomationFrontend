@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'config'
 ], function ($, _, Backbone, Config) {
     var ToolbarHelper = Backbone.View.extend({
-        el: $(Config.positions.toolbar)
+        el: Config.positions.toolbar
         , toolbar: ''
         , events: {
 //            'submit': 'submit'
