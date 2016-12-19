@@ -1,8 +1,10 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app.view", 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app.view", 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, bootbox) {
+    bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'MediaitemModel'
+        , modal: '#storage-modal'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
@@ -11,6 +13,65 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=load]': 'load'
+            , 'click [data-task=change-video]': 'changeVideo'
+            , 'click #storagefiles tbody tr': 'setVideo'
+        }
+        , setVideo: function (e) {
+            e.preventDefault();
+            var self = this;
+            bootbox.confirm({
+                message: "آیتم فعلی حذف و آیتم جدید با ویدیوی انتخاب شده جایگزین خواهد شد. آیا مطمئن هستید؟<br />نکته: پس از جابجایی موفقیت‌آمیز به آیتم جدید هدایت خواهید شد."
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var $item = $(e.relatedTarget);
+                        var params = {
+                            FileName: $item.attr('data-filename')
+                        };
+                        new IngestModel({overrideUrl: Config.api.metadata, id: self.getId()}).save({
+                            FileName: $item.attr('data-filename')
+                        }, {
+                            error: function (e, data) {
+                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            }
+                            , success: function (d) {
+                                var id = d.toJSON()[0]["Id"];
+                                if (+id == id) {
+                                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                    $(self.modal).find("form").trigger('reset');
+                                    $(self.modal).modal('hide');
+                                    !Backbone.History.started && Backbone.history.start({pushState: true});
+                                    new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        , changeVideo: function (e) {
+            e.preventDefault();
+            var self = this;
+            var params = {};
+            var template = Template.template.load('resources/ingest', 'storagefiles.partial');
+            var $modal = $(self.modal);
+            var model = new IngestModel(params);
+            model.fetch({
+                data: params
+                , success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    template.done(function (params) {
+                        var handlebarsTemplate = Template.handlebars.compile(params);
+                        var output = handlebarsTemplate(items);
+                        $modal.find(".modal-content").html(output).promise().done(function () {
+                            $modal.modal('show');
+                        });
+                    });
+                }
+            });
         }
         , submit: function () {
             var $this = this;
@@ -85,7 +146,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                         , sources: [
                             {file: media.video, label: 'LQ', default: true}
                             , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-//                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
                         ]
                     }]
             });
