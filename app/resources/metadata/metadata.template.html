@@ -6,9 +6,11 @@
 					<tr>
 						<th class="">شناسه</th>
 						<th class="col-xs-1"></th>
-						<th class="col-xs-5">نام برنامه</th>
+						<th class="col-xs-4">نام آیتم</th>
+						<th class="col-xs-1 text-center">برنامه</th>
 						<th class="col-xs-2 text-center">زمان ثبت</th>
-						<th class="col-xs-1 text-center">قسمت</th>
+						<th class="col-xs-2 text-center">آخرین ویرایش</th>
+						<th class="text-center">قسمت</th>
 						<th class="col-xs-1 text-center">مدت</th>
 						<th class="col-xs-2 text-center">وضعیت</th>
 					</tr>
@@ -26,8 +28,14 @@
 							{{Title}}
 							<small class="help-block text-muted clip-line">{{Description}}</small>
 						</td>
+						<td class="text-left">
+							<span class="">{{MetaCategoryName}}</span>
+						</td>
 						<td class="text-right">
 							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+						</td>
+						<td class="text-right">
+							<span class="">{{extractTime Modified}} {{extractDate Modified}}</span>
 						</td>
 						<td class="text-center">
 							{{EpisodeNumber}}
