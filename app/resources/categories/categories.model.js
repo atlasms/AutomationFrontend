@@ -5,7 +5,8 @@ define(["jquery", "underscore", "backbone", "config"
         , initialize: function (options) {
             this.query = (options && options.query) ? '?' + options.query : '';
             this.path = (options && options.path) ? options.path : '';
-            this.path = (options && options.id) ? '/' + options.id : '';
+            this.path = (options && options.id) ? '/' + options.id : this.path;
+            options = {};
         }
         , url: function () {
             return Config.api.tree + this.path + this.query;
@@ -13,10 +14,6 @@ define(["jquery", "underscore", "backbone", "config"
         , parse: function (data) {
             data = _.map(data, _.identity);
             return data;
-        }
-        , navigate: function (data) {
-//            var win = window.open(Config.api.url + Config.api.storagefiles + '?' + data, '_blank');
-//            win && win.focus();
         }
         , save: function (key, val, options) {
             return Backbone.Model.prototype.save.call(this, key, val, options);
