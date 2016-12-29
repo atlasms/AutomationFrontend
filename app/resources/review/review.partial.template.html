@@ -1,82 +1,64 @@
-<tr class="preview-pane">
-	<td colspan="100%">
-		<table class="table">
-			<!--<tbody>-->
-			<tr>
-				<td class="col-xs-7">
-					<div class="portlet light">
-						<div class="portlet-body" id="chats">
-							<div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
-								<ul class="chats">
-									<li class="out">
-										<img class="avatar" alt="" src="../assets/img/avatar2.jpg" />
-										<span class="name"> نام کاربر </span>
-										<div class="message">
-											<span class="arrow"> </span>
-											<span class="label label-danger label-sm label-type">ایراد فنی</span>
-											<span class="datetime label">از 12:30:12 تا 13:33:01</span>
-											<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
-										</div>
-									</li>
-									<li class="out">
-										<img class="avatar" alt="" src="../assets/img/avatar1.jpg" />
-										<span class="name"> نام کاربر </span>
-										<div class="message">
-											<span class="arrow"> </span>
-											<span class="label label-warning label-sm label-type">ریختگی تصویر</span>
-											<span class="datetime label">از 12:30:12 تا 13:33:01</span>
-											<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
-										</div>
-									</li>
-									<li class="in">
-										<img class="avatar" alt="" src="../assets/img/avatar3.jpg" />
-										<span class="name"> نام کاربر </span>
-										<div class="message">
-											<span class="arrow"> </span>
-											<span class="label label-danger label-sm label-type">ریختگی تصویر</span>
-											<span class="datetime label">از 12:30:12 تا 13:33:01</span>
-											<span class="body clearfix">ساعت ٢٢:٣٠ سه شنبه دو دستگاه موتورسيكلت در محور كيلومتر ١٥ مباركه (روستاي باغ ملك) با هم برخورد كردند كه متاسفانه منجر به كشته شدن ٢ نفر و مجروح شدن ٣ نفر ديگر شد.</span>
-										</div>
-									</li>
-								</ul>
-							</div>
-							<form class="chat-form">
-								<div class="form-horizontal">
-									<div class="form-group form-md-line-input form-md-floating-label">
-										<div class="col-xs-4">
-											<input type="text" class="time form-control" data-before-save="timestamp" data-type="start" step="2" name="" id="" value="" required>
-										</div>
-										<div class="col-xs-4">
-											<input type="text" class="time form-control" data-before-save="timestamp" data-type="start" step="2" name="" id="" value="" required>
-										</div>
-										<div class="col-xs-4">
-											<select class="form-control">
-												<option value="0">ایراد فنی</option>
-												<option value="1">ایراد محتوایی</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="input-cont">
-									<input class="form-control" type="text" placeholder="توضیحات ایراد..." />
-								</div>
-								<div class="btn-cont">
+<table class="table">
+	<!--<tbody>-->
+	<tr>
+		<td class="col-xs-7">
+			<div class="portlet light">
+				<div class="portlet-body" id="chats">
+					<div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
+						<ul class="chats">
+							{{#each []}}
+							<li class="out">
+								<img class="avatar" alt="" src="/assets/img/avatar2.jpg" />
+								<span class="name"> {{Title}} </span>
+								<div class="message">
 									<span class="arrow"> </span>
-									<a href="" class="btn blue icn-only">
-										<i class="fa fa-check icon-white"></i>
-									</a>
+									<span class="label label-danger label-sm label-type">ایراد فنی</span>
+									{{#if Data.start}}
+									<span class="datetime label">
+										<span class="label label-default label-sm">{{Data.start}} - {{Data.end}}</span>
+									</span>
+									{{/if}}
+									<span class="body clearfix">{{Body}}</span>
 								</div>
-							</form>
+							</li>
+							{{/each}}
+						</ul>
+					</div>
+					<form class="chat-form">
+						<div class="form-horizontal">
+							<div class="form-group form-md-line-input form-md-floating-label">
+								<div class="col-xs-4">
+									<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-start" step="2" name="" id="" value="" />
+								</div>
+								<div class="col-xs-4">
+									<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-end" step="2" name="" id="" value="" />
+								</div>
+								<div class="col-xs-4">
+									<select class="form-control">
+										<option value="0">ایراد فنی</option>
+										<option value="1">ایراد محتوایی</option>
+									</select>
+								</div>
+							</div>
 						</div>
-					</div>
-				</td>
-				<td class="col-xs-5">
-					<div id="player-container">
+						<div class="input-cont">
+							<input class="form-control" type="text" name="Body" placeholder="توضیحات ایراد..." />
+						</div>
+						<div class="btn-cont">
+							<span class="arrow"> </span>
+							<button type="submit" class="btn blue icn-only">
+								<i class="fa fa-check icon-white"></i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</td>
+		<td class="col-xs-5">
+			<div id="player-container">
 
-					</div>
-				</td>
-			</tr>
-			<!--</tbody>-->
-		</table>
-	</td>
-</tr>
+			</div>
+		</td>
+	</tr>
+	<!--</tbody>-->
+</table>

@@ -1,12 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper'
 ], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player) {
     var ReviewView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , playerInstance: null
         , model: 'ReviewModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'قبول', type: 'submit', task: '1'}} // accept
-            , {'button': {cssClass: 'btn red pull-right hidden fade', text: 'رد', type: 'submit', task: '2'}} // reject
+            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1'}} // accept
+            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2'}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}}
@@ -14,12 +14,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
         , statusbar: []
         , flags: {}
         , events: {
-            'click [type=submit]': 'submit'
+            'click .submit': 'submit'
             , 'click [data-task=load]': 'load'
             , 'click #review-table tbody tr': 'collapseRow'
+            , 'submit .chat-form': 'insertComment'
         }
         , collapseRow: function (e) {
-            var $this = this;
+            var self = this;
             var $el = $(e.target);
             var $row = ($(e.target).is("tr")) ? $(e.target) : $(e.target).parents("tr:first");
             var media = {
@@ -29,48 +30,91 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
             };
             if ($row.hasClass('active') || $row.hasClass('preview-pane') || $row.parents(".preview-pane").length || typeof media.video === "undefined")
                 return;
-            $("#toolbar [type=submit]").removeClass('hidden').addClass('in');
+            $("#toolbar .submit").removeClass('hidden').addClass('in');
             $el.parents("tbody").find("tr").removeClass('active');
             $row.addClass('active');
+            var id = $row.attr('data-id');
             if ($(document).find(".preview-pane").length)
                 $(document).find(".preview-pane").fadeOut(200, function () {
                     var $target = $(this);
-                    $this.player.remove();
+                    self.player.remove();
                     window.setTimeout(function () {
                         $target.remove();
                     }, 50);
                 });
             // Loading review partial template
-            window.setTimeout(function () {
-                var template = Template.template.load('resources/review', 'review.partial');
-                template.done(function (data) {
-                    var handlebarsTemplate = Template.handlebars.compile(data);
-                    var output = handlebarsTemplate({});
-                    $row.after(output).promise().done(function () {
-                        var player = new Player('#player-container', {
-//                            , file: media.video
-                            duration: media.duration
-                            , playlist: [{
-                                    image: media.thumbnail
-                                    , sources: [
-                                        {file: media.video, label: 'LQ', default: true}
-                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-//                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
-                                    ]
-                                }]
-                        }, $this.handlePlayerCallbacks);
-                        player.render();
-                        $this.player = player;
-                        $this.playerInstance = player.instance;
+            var template = Template.template.load('resources/review', 'review.partial');
+            var params = {
+                query: 'externalid=' + id
+                , overrideUrl: Config.api.comments
+            };
+            new ReviewModel(params).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $row.after('<tr class="preview-pane"><td colspan="100%">' + output + '</td></tr>').promise().done(function () {
+                            if ($("table").find(".scroller").length)
+                                $("table").find(".scroller").slimScroll({
+                                    height: $("table").find(".scroller").height()
+                                    , start: 'bottom'
+                                });
+                            var player = new Player('#player-container', {
+                                duration: media.duration
+                                , playlist: [{
+                                        image: media.thumbnail
+                                        , sources: [
+                                            {file: media.video, label: 'LQ', default: true}
+                                            , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                                        ]
+                                    }]
+                            }, self.handlePlayerCallbacks);
+                            player.render();
+                            self.player = player;
+                            self.playerInstance = player.instance;
+                        });
                     });
-                });
-            }, 300);
+                }
+            });
+//            window.setTimeout(function () {
+//                template.done(function (data) {
+//
+//                });
+//            }, 300);
+        }
+        , insertComment: function (e) {
+            e.preventDefault();
+            var self = this;
+            var $form = $(e.currentTarget);
+            var data = [];
+            data.push($form.serializeObject());
+            data[0].externalid = $form.parents(".preview-pane").prev().attr('data-id');
+            data[0].Data = JSON.stringify({
+                start: $form.find('[data-type="clip-start"]').val()
+                , end: $form.find('[data-type="clip-end"]').val()
+            });
+            new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // TODO: reload comments
+                    //  self.loadTab(null, true);
+                }
+            });
+            return false;
         }
         , submit: function (e) {
             e.preventDefault();
-            var $this = this;
+            var self = this;
             var task = new ReviewModel({id: $("tr.active").attr('data-id')}).save({
-                State: $(e.currentTarget).attr('data-task')
+                key: 'State'
+                , value: $(e.currentTarget).attr('data-task')
             }, {
                 patch: true
                 , error: function (e, data) {
@@ -78,7 +122,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $this.reLoad();
+                    self.reLoad();
                 }
             });
         }
@@ -87,7 +131,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
         }
         , load: function (e, extend) {
             console.info('Loading items');
-            $("#toolbar [type=submit]").addClass('hidden').removeClass('in');
+            $("#toolbar .submit").addClass('hidden').removeClass('in');
             var params = this.getToolbarParams();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
@@ -101,8 +145,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
             return params;
         }
         , render: function (params) {
-            if (!this.flags.toolbarRendered)
-                this.renderToolbar();
+//            if (!this.flags.toolbarRendered)
+//                this.renderToolbar();
             if (typeof params === "undefined")
                 var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');
@@ -136,11 +180,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
                         && container.has(e.target).length === 0) // ... nor a descendant of the container
                 {
                     if ($(document).find(".preview-pane").length) {
-                        $("#toolbar [type=submit]").addClass('hidden').removeClass('in');
+                        $("#toolbar .submit").addClass('hidden').removeClass('in');
                         container.find("tr.active").removeClass('active');
                         $(document).find(".preview-pane").fadeOut(200, function () {
                             var $target = $(this);
-                            $this.player.remove();
+                            self.player.remove();
                             window.setTimeout(function () {
                                 $target.remove();
                             }, 200);
@@ -148,15 +192,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
                     }
                 }
             });
-            var $this = this;
+            var self = this;
             ReviewHelper.mask("time");
         }
         , handlePlayerCallbacks: function (instance, type, value) {
         }
         , renderToolbar: function () {
             var self = this;
-            if (self.flags.toolbarRendered)
-                return;
+//            if (self.flags.toolbarRendered)
+//                return;
             var toolbar = new Toolbar();
             var definedItems = toolbar.getDefinedToolbar("resources.review");
             var elements = $.merge(self.toolbar, definedItems);
@@ -165,8 +209,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            self.flags.toolbarRendered = true;
-            $(document).on('change', "#toolbar select", function() {
+//            self.flags.toolbarRendered = true;
+            $(document).on('change', "#toolbar select", function () {
                 self.load();
             });
             var $datePickers = $(".datepicker");
@@ -189,9 +233,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global','reso
                     delete items[prop];
                 }
             }
+            $.each(items, function () {
+                if (typeof this.Data === "string" && this.Data !== "")
+                    this.Data = JSON.parse(this.Data);
+            });
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             data = null;

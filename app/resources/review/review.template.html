@@ -6,29 +6,32 @@
 					<table id="review-table" class="table table-hover table-bordered table-condensed table-striped flip-content">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>نام</th>
+								<th>شناسه</th>
 								<th class="col-xs-1"></th>
+								<th class="col-xs-4">نام</th>
+								<th>برنامه</th>
 								<th>مدت</th>
 								<th>نوع</th>
 								<th>زمان ثبت</th>
 								<th>آخرین ویرایش</th>
 								<th>قسمت</th>
-								<th>برنامه</th>
 							</tr>
 						</thead>
 						<tbody>
 							{{#each []}}
-							<tr data-media="{{getMedia Thumbnail}}" data-thumbnail="{{Thumbnail}}" data-duration="{{Duration}}" data-id="{{Id}}">
-								<td>{{math @index "+" 1}}</td>
-								<td>
-									{{Title}}
-									<small class="help-block text-muted clip-line">{{Description}}</small>
-								</td>
+							<tr data-media="{{getMedia Thumbnail}}" data-thumbnail="{{Thumbnail}}" data-duration="{{Duration}}" data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+								<td>{{Id}}</td>
 								<td class="text-center">
 									<figure>
 										<img src="{{Thumbnail}}" alt="" />
 									</figure>
+								</td>
+								<td>
+									{{Title}}
+									<small class="help-block text-muted clip-line">{{Description}}</small>
+								</td>
+								<td>
+									{{MetaCategoryName}}
 								</td>
 								<td class="text-center">
 									<span class="time">{{time Duration}}</span>
@@ -44,9 +47,6 @@
 								</td>
 								<td class="text-center">
 									{{EpisodeNumber}}
-								</td>
-								<td>
-									{{MetaCategoryName}}
 								</td>
 							</tr>
 							{{/each}}
