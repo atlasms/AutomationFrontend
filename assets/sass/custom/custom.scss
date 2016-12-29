@@ -7,7 +7,8 @@
 @import "jstree";
 @import "modal-transitions";
 @import "ladda.min";
- 
+@import "x-editable";
+
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, #main, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
@@ -78,6 +79,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
     width: 100%; position: absolute; left: 0; bottom: 0; pointer-events: none;
 }
 .box.portlet { direction: ltr; text-align: left; }
+.editable-input textarea { min-width: 350px; }
 // Typeahead
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important }     
