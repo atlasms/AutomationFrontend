@@ -44,16 +44,12 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     accum += block.fn(i);
                 return accum;
             });
-//            Handlebars.registerHelper('ifCond', function (v1, v2, options) {
-//                if (v1 === v2) {
-//                    return options.fn(this);
-//                }
-//                return options.inverse(this);
-//            });
             Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
                 switch (operator) {
                     case '==':
                         return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '!=':
+                        return (v1 != v2) ? options.fn(this) : options.inverse(this);
                     case '===':
                         return (v1 === v2) ? options.fn(this) : options.inverse(this);
                     case '<':
@@ -171,9 +167,26 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return 'warning';
                     case 1:
                         return 'success';
+                    case 10:
+                        return 'info';
                     default:
                         return 'danger';
                 }
+            });
+            Handlebars.registerHelper('getDefinitions', function (id, options) {
+                var items = [];
+                $.each(Config.definitions, function () {
+                    var filters = this.Children;
+                    $.each(filters, function () {
+                        if (this.Id === id) {
+                            var $this = this;
+                            for (i = 0; i < $this.Children.length; i++) {
+                                items.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
+                            }
+                        }
+                    });
+                });
+                return JSON.stringify(items);
             });
         }
         , handlebarPartials: function () {
