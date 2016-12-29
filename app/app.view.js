@@ -15,20 +15,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'cookie', 'too
                 requirejs([request], function (View) {
                     var view = new View(actions, actionArray);
                     var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
-                    
-                    // Emptying Toolbar
-//                    var toolbar = new ToolbarHelper();
-//                    var $toolbar = $(Config.positions.toolbar).find("form");
-//                    $toolbar.empty();
-                    
+//                    $(Config.positions.toolbar).empty().promise().done(function () {
                     // Render view
                     view.render(content, actionArray);
-                    
+//                    });
                     // Setting active menu
                     var $sidebarMenu = $(Config.positions.sidebar).find("ul:first");
                     $sidebarMenu.find("li").removeClass("active open");
                     $sidebarMenu.find('a[href="/' + actions + '"]').parents("li").addClass("active open");
-                    
+
                 });
             }
         }
