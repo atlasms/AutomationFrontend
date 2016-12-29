@@ -17,7 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
         ]
         , timeArrays: {}
-        , flags: {}
+        , flags: {toolbarRendered: false}
         , events: {
             'click [type=submit]': 'submit'
             , 'keyup input.time': 'processTime'
@@ -495,7 +495,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , afterRender: function () {
             var self = this;
-            self.renderToolbar();
+            
             ScheduleHelper.mask("time");
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
@@ -512,8 +512,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderToolbar: function () {
             var self = this;
-            if (this.flags.toolbarRendered)
-                return;
+//            if (this.flags.toolbarRendered)
+//                return;
             var elements = this.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -531,7 +531,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $.each($datePickers, function () {
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
-            this.flags.toolbarRendered = true;
+//            this.flags.toolbarRendered = true;
         }
         , renderStatusbar: function () {
 //            var self = this;
@@ -556,6 +556,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             var data = [];
