@@ -46,7 +46,10 @@ define(['jquery', 'underscore', 'backbone', 'config'
             return items;
         }
         , render: function () {
-            this.$el.html(this.toolbar + '<div class="clearfix"></div>');
+            if (this.toolbar === "")
+                this.$el.slideUp();
+            else
+                this.$el.html(this.toolbar + '<div class="clearfix"></div>').slideDown();
         }
         , button: function (args) {
             var cssClass = (typeof args.cssClass !== "undefined") ? args.cssClass : 'btn';
