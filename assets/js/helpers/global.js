@@ -1,5 +1,6 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
 ], function ($, _, Backbone, Config, jDate) {
+//    window.formatPersian = false;
     !(function () {
         "use strict";
         $.fn.serializeObject = function () {
@@ -148,6 +149,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
         }
         , jalaliToGregorian: function (datetime, splitter) {
             splitter = (typeof splitter !== "undefined") ? splitter : '-';
+            if (typeof datetime === "undefined")
+                return false;
             var datetime = datetime.split(' ');
             var date = datetime[0].split(splitter);
             var JDate = require('jdate');
