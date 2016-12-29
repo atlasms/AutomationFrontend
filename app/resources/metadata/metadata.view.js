@@ -41,11 +41,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.load();
         }
         , load: function (e, extend) {
+            e.preventDefault();
             console.info('Loading items');
             var params = {};
             params.q = $("[name=q]").val();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
+            return false;
         }
         , render: function (params) {
             var self = this;
@@ -68,7 +70,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
             });
-            self.renderToolbar();
         }
         , afterRender: function () {
 //            MetadataHelper.mask("time");
@@ -76,8 +77,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderToolbar: function () {
             var self = this;
-            if (self.flags.toolbarRendered)
-                return;
+//            if (self.flags.toolbarRendered)
+//                return;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -85,7 +86,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            self.flags.toolbarRendered = true;
+//            self.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -98,6 +99,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             data = null;
