@@ -1,24 +1,77 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app.view", 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app.view", 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'MediaitemModel'
-        , modal: '#storage-modal'
+        , modal_storage: '#storage-modal'
+        , modal_tree: '#tree-modal'
+        , treeInstance: {}
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
-            'click [type=submit]': 'submit'
-            , 'click [data-task=load]': 'load'
+//            'click [type=submit]': 'submit'
+            'click [data-task=load]': 'load'
             , 'click [data-task=change-video]': 'changeVideo'
             , 'click #storagefiles tbody tr': 'setVideo'
+            , 'click [data-task=change-category]': 'changeCatgory'
+            , 'click [data-task=select-folder]': 'setCategory'
+            , 'click [data-task=return-item]': 'returnItem'
+            , 'click .item-forms .nav-tabs li a': 'loadTab'
+            , 'submit .chat-form': 'insertComment'
+            , 'click .open-item': 'openItem'
+        }
+        , openItem: function (e) {
+            var $el = $(e.currentTarget);
+            var id = $el.attr("data-id");
+            window.open('/resources/mediaitem/' + id);
+        }
+        , returnItem: function (e) {
+            var $el = $(e.currentTarget);
+            var id = $el.attr('data-id');
+            this.handleEditables(id, {
+                key: 'State'
+                , value: 0
+            }, this.returnItemCallback);
+        }
+        , returnItemCallback: function() {
+            window.setTimeout(function() {
+                Backbone.history.loadUrl();
+            }, 500);
+            return false;
+        }
+        , insertComment: function (e) {
+            var self = this;
+            var $form = $(e.currentTarget);
+            var data = [];
+            data.push($form.serializeObject());
+            data[0].externalid = this.getId();
+            data[0].Data = JSON.stringify({
+                start: $form.find('[data-type="clip-start"]').val()
+                , end: $form.find('[data-type="clip-end"]').val()
+            });
+            new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.loadTab(null, true);
+                }
+            });
+            e.preventDefault();
+            return false;
         }
         , setVideo: function (e) {
             e.preventDefault();
             var self = this;
+            var $item = $(e.currentTarget);
             bootbox.confirm({
                 message: "آیتم فعلی حذف و آیتم جدید با ویدیوی انتخاب شده جایگزین خواهد شد. آیا مطمئن هستید؟<br />نکته: پس از جابجایی موفقیت‌آمیز به آیتم جدید هدایت خواهید شد."
                 , buttons: {
@@ -27,13 +80,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                 }
                 , callback: function (results) {
                     if (results) {
-                        var $item = $(e.relatedTarget);
-                        var params = {
-                            FileName: $item.attr('data-filename')
-                        };
-                        new IngestModel({overrideUrl: Config.api.metadata, id: self.getId()}).save({
-                            FileName: $item.attr('data-filename')
-                        }, {
+                        new IngestModel({id: self.getId(), overrideUrl: Config.api.metadata}).save({FileName: $item.attr('data-filename'), Duration: $item.attr('data-duration')}, {
                             error: function (e, data) {
                                 toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                             }
@@ -41,8 +88,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                                 var id = d.toJSON()[0]["Id"];
                                 if (+id == id) {
                                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                                    $(self.modal).find("form").trigger('reset');
-                                    $(self.modal).modal('hide');
+                                    $(self.modal_storage).find("form").trigger('reset');
+                                    $(self.modal_storage).modal('hide');
                                     !Backbone.History.started && Backbone.history.start({pushState: true});
                                     new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
                                 }
@@ -57,7 +104,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
             var self = this;
             var params = {};
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
-            var $modal = $(self.modal);
+            var $modal = $(self.modal_storage);
             var model = new IngestModel(params);
             model.fetch({
                 data: params
@@ -72,6 +119,58 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                     });
                 }
             });
+        }
+        , changeCatgory: function (e) {
+            e.preventDefault();
+            var self = this;
+            var id = $(e.currentTarget).attr('data-id');
+
+            var style = $("#mediaitem-page").find("style");
+            if (style.length)
+                style.empty().text('[aria-labelledby="' + id + '_anchor"] a { background: lightgreen !important }');
+            else
+                $("#mediaitem-page").prepend('<style>[aria-labelledby="' + id + '_anchor"] a { background: lightgreen !important }</style>');
+
+            var params = {path: '/getparents/' + $(e.currentTarget).attr('data-id')};
+            var $modal = $(self.modal_tree);
+            var model = new CategoriesModel(params);
+            model.fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var path = $.map(items, function (value, index) {
+                        return [value];
+                    }).reverse();
+                    STORAGE.setItem("tree", '{"state":{"core":{"open":' + JSON.stringify(path) + ',"scroll":{"left":0,"top":0},"selected":["' + id + '"]}},"ttl":false,"sec":' + +new Date() + '}');
+                    $modal.modal('show');
+                    if ($("#tree").length) {
+                        self.treeInstance = new Tree($("#tree"), Config.api.tree, self, {contextmenu: false});
+                        self.treeInstance.render();
+                    }
+                }
+            });
+        }
+        , setCategory: function (e) {
+            e.preventDefault();
+            var self = this;
+            bootbox.confirm({
+                message: "برنامه تعویض خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {confirm: {className: 'btn-success'}, cancel: {className: 'btn-danger'}}
+                , callback: function (results) {
+                    if (results) {
+                        self.handleEditables(self.getId(), {
+                            key: 'MetaCategoryId'
+                            , value: self.treeInstance.selected.id
+                        }, self.updateCategory);
+                    }
+                }
+            });
+        }
+        , updateCategory: function (id, params, that) {
+            var self = that;
+            $(self.modal_tree).modal('hide');
+            var $item = $('[data-type="category"]');
+            $item.text(self.treeInstance.selected.text);
+            $item.next().attr('data-id', params.value);
         }
         , submit: function () {
             var $this = this;
@@ -88,6 +187,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                 }
             });
         }
+        , initEditables: function () {
+            var self = this;
+            var editable = new Editable({service: Config.api.url + Config.api.metadata}, self);
+            editable.init();
+        }
+        , handleEditables: function (id, params, callback) {
+            var self = this;
+            new MediaitemModel({id: id}).save(params, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // reset editable field
+                    if (typeof callback !== "undefined")
+                        callback(id, params, self);
+                }
+            });
+        }
         , reLoad: function () {
             this.load();
         }
@@ -97,6 +216,60 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
             params.q = $("[name=q]").val();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
+        }
+        , loadTab: function (e, force) {
+            var self = this;
+            if (typeof e !== "undefined" && e !== null) {
+                e.preventDefault();
+                var el = $(e.currentTarget).parent();
+            } else
+                var el = $(".item-forms .nav-tabs li.active");
+            if ((typeof force !== "undefined" && force !== true) && (!$(el.find("a").attr('href')).length || $(el.find("a").attr('href')).html() !== ""))
+                return;
+            var tmpl, model, data;
+            var $container = $(el.find("a").attr('href'));
+            switch (el.attr('data-service')) {
+                default:
+                    return false;
+                    break;
+                case 'review':
+                    var params = {
+                        query: 'externalid=' + self.getId()
+                        , overrideUrl: Config.api.comments
+                    };
+                    tmpl = ['resources/review', 'review.partial'];
+                    model = new ReviewModel(params);
+                    break;
+                case 'mediaversions':
+                    var params = {
+                        id: self.getId()
+                        , overrideUrl: Config.api.mediaversions
+                    };
+                    console.log(params);
+                    tmpl = ['resources/mediaitem', 'versions.partial'];
+                    model = new MediaitemModel(params);
+                    break;
+            }
+            if (tmpl && model) {
+                var template = Template.template.load(tmpl[0], tmpl[1]);
+                model.fetch({
+                    success: function (items) {
+                        items = self.prepareItems(items.toJSON(), params);
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(items);
+                            $container.html(output).promise().done(function () {
+                                if ($container.find(".scroller").length)
+                                    $container.find(".scroller").slimScroll({
+                                        height: $container.find(".scroller").height()
+                                        , start: 'bottom'
+                                    });
+                            });
+                        });
+                    }
+                });
+            }
+
         }
         , getId: function () {
             return Backbone.history.getFragment().split("/").pop().split("?")[0];
@@ -111,7 +284,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                 app.load(404);
                 return false;
             }
-            var params = {path: +id};
+            var params = {id: +id};
             var model = new MediaitemModel(params);
             model.fetch({
                 success: function (items) {
@@ -126,13 +299,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                     });
                 }
             });
-            self.renderToolbar();
+//            self.renderToolbar();
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');
         }
         , afterRender: function (item, params) {
             var self = this;
+            self.loadTab();
+            self.initEditables();
             var media = {
                 thumbnail: item.Thumbnail
                 , video: self.getMedia(item.Thumbnail)
@@ -155,16 +330,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
         }
         , renderToolbar: function () {
             var self = this;
-            if (self.flags.toolbarRendered)
-                return;
+//            if (self.flags.toolbarRendered)
+//                return;
             var elements = self.toolbar;
-            var toolbar = new Toolbar();
-            $.each(elements, function () {
-                var method = Object.getOwnPropertyNames(this);
-                toolbar[method](this[method]);
-            });
-            toolbar.render();
-            self.flags.toolbarRendered = true;
+            if (elements.length) {
+                var toolbar = new Toolbar();
+                $.each(elements, function () {
+                    var method = Object.getOwnPropertyNames(this);
+                    toolbar[method](this[method]);
+                });
+                toolbar.render();
+//                self.flags.toolbarRendered = true;
+            }
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -174,9 +351,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                     delete items[prop];
                 }
             }
+            $.each(items, function () {
+                if (typeof this.Data === "string" && this.Data !== "")
+                    this.Data = JSON.parse(this.Data);
+            });
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             data = null;
