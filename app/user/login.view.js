@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
     var LoginView = Backbone.View.extend({
         data: {}
         , events: {
-            'submit': 'login'
+            'click [data-task=login]': 'login'
         }
         , el: $(Config.positions.wrapper)
         , model: 'UserModel'
