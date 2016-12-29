@@ -39,6 +39,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.render(params);
         }
         , render: function (params) {
+//            if (!this.flags.toolbarRendered)
+                
             var self = this;
             var template = Template.template.load('resources/categories', 'categories');
             var $container = $(Config.positions.main);
@@ -99,8 +101,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderToolbar: function () {
             var self = this;
-            if (self.flags.toolbarRendered)
-                return;
+//            if (self.flags.toolbarRendered)
+//                return;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -121,6 +123,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             data = null;
