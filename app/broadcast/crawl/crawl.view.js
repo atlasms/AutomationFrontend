@@ -191,7 +191,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         $("#crawl-page tbody").empty();
                 }
             });
-            self.renderToolbar();
             self.renderStatusbar();
         }
         , afterRender: function () {
@@ -224,8 +223,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderToolbar: function () {
             var self = this;
-            if (this.flags.toolbarRendered)
-                return;
             var elements = this.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -233,10 +230,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            this.flags.toolbarRendered = true;
         }
         , renderStatusbar: function () {
-//            var self = this;
             if (this.flags.statusbarRendered)
                 return;
             var elements = this.statusbar;
@@ -258,6 +253,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return items;
         }
         , prepareContent: function () {
+            this.renderToolbar();
         }
         , prepareSave: function () {
             var data = [];
