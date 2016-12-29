@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 "format": 'YYYY-MM-DD'
                 , "autoClose": true
                 , "observer": true
+                , "persianDigit": false
                 , "navigator": {
                     "enabled": true
                     , "text": {
@@ -35,6 +36,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
+            , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
         },
         "positions": {
@@ -52,8 +54,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "tree": "metacategories"
             , "storagefiles": "storagefiles"
             , "metadata": "metadata"
+            , "mediaversions": "metadata/history"
 //            , "review": "metadata?categoryid=11"
             , "definitions": "dfn"
+            , "comments": "comments"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
