@@ -3,7 +3,6 @@ define(["jquery", "underscore", "backbone", "config"
     var MetadataModel = Backbone.Model.extend({
         defaults: {}
         , initialize: function (options) {
-            console.log(options);
             this.query = (options && options.query) ? '?' + options.query : '';
             this.path = (options && options.path) ? '/' + options.path : '';
             this.path = (options && options.id) ? '/' + options.id : this.path;

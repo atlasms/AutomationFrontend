@@ -41,61 +41,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
         }
         , hotkeys: function () {
-            $.hotkeys.options.filterInputAcceptingElements = false;
-            $.hotkeys.options.filterTextInputs = false;
-            $(document).on('keydown', null, 'f2', function () {
-                alert('Hi');
-            });
-            $(document).on('keydown', null, 'down', function (e) {
-                var activeRow = $("#crawl-page tbody").find("tr.active");
-                if (activeRow.length && !activeRow.find('input[data-type="title"], select').is(":focus"))
-                    if (activeRow.find("+ tr").length) {
-                        activeRow.removeClass('active').next('tr').addClass('active');
-                        if ($(e.target).is("input")) {
-                            var cellIndex = $(e.target).parents("td:first").index();
-                            activeRow.find("+ tr").find("td").eq(cellIndex).find("input")[0].focus();
-                        }
-                    }
-            });
-            $(document).on('keydown', null, 'up', function (e) {
-                var activeRow = $("#crawl-page tbody").find("tr.active");
-                if (activeRow.length && !activeRow.find('input[data-type="title"]').is(":focus"))
-                    if (activeRow.prev('tr').length) {
-                        activeRow.removeClass('active').prev('tr').addClass('active');
-                        if ($(e.target).is("input")) {
-                            var cellIndex = $(e.target).parents("td:first").index();
-                            activeRow.prev('tr').find("td").eq(cellIndex).find("input")[0].focus();
-                        }
-                    }
-            });
-            $(document).on('keydown', null, 'insert', function (e) {
-                var activeRow = $("#crawl-page tbody").find("tr.active");
-                CrawlHelper.duplicateRow(activeRow);
-                e.preventDefault();
-            });
-            $(document).on('keydown', null, 'space', function (e) {
-                if ($(e.target).is("input, textarea, select"))
-                    return;
-                var activeRow = $("#crawl-page tbody").find("tr.active");
-                if (activeRow.length) {
-                    activeRow.find("input.time:first").focus();
-                }
-            });
-            $(document).on('click', ".tools [data-task=add]", function (e) {
-                var row = $("#crawl-page tbody").find("tr.active");
-                CrawlHelper.duplicateRow(row);
-                e.preventDefault();
-            });
-            $(document).on('click', ".tools [data-task=delete]", function (e) {
-                var rows = $("#crawl-page tbody").find("tr");
-                if (rows.length < 2)
-                    return false;
-                var row = $("#crawl-page tbody").find("tr.active");
-                row.remove().promise().done(function () {
-                    CrawlHelper.rebuildTable();
-                });
-                e.preventDefault();
-            });
         }
         , duplicateRow: function (row) {
             var rows = $("#crawl-page tbody").find("tr");
