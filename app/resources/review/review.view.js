@@ -8,8 +8,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1'}} // accept
             , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2'}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}}
         ]
         , statusbar: []
         , flags: {}
@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // Loading review partial template
             var template = Template.template.load('resources/review', 'review.partial');
             var params = {
-                query: 'externalid=' + id
+                query: 'externalid=' + id + '&kind=1'
                 , overrideUrl: Config.api.comments
             };
             new ReviewModel(params).fetch({
@@ -199,17 +199,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , renderToolbar: function () {
             var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
             var toolbar = new Toolbar();
-            var definedItems = toolbar.getDefinedToolbar("resources.review");
-            var elements = $.merge(self.toolbar, definedItems);
+            var definedItems = toolbar.getDefinedToolbar(2, 'state');
+            var elements = $.merge($.merge([], self.toolbar), definedItems);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
-//            self.flags.toolbarRendered = true;
             $(document).on('change', "#toolbar select", function () {
                 self.load();
             });
