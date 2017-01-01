@@ -119,7 +119,10 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 // Sidebar
 .page-sidebar { text-align: left; }
 
-@media (min-width: 992px) { .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: 0; } }
+@media (min-width: 992px) {
+    // .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: -235px; }
+    .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed>li:not(.heading):hover { right: -235px }
+}
 
 // Footer
 .page-footer-fixed .page-footer {
