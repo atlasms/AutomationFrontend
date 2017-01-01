@@ -6,8 +6,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , model: 'ReviewModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD')}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD')}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
@@ -15,9 +15,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             'click #review-table tbody tr': 'openItem'
         }
         , openItem: function (e) {
+            e.preventDefault();
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id);
+            window.open('/resources/mediaitem/' + id + '#review');
+            return false;
         }
         , reLoad: function () {
             this.load();
