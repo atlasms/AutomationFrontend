@@ -1,6 +1,5 @@
 define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri'
 ], function ($, _, Backbone, Handlebars, Config, Global, moment) {
-
     var template = {
         handlebarHelpers: function () {
             if (typeof Handlebars === "undefined")
@@ -187,6 +186,15 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     });
                 });
                 return JSON.stringify(items);
+            });
+            Handlebars.registerHelper('getDefinitionOptions', function (id, options) {
+                var items = '';
+                $.each(Config.definitions, function () {
+                    if (this.Id === id)
+                        for (i = 0; i < this.Children.length; i++)
+                            items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
+                });
+                return items;
             });
         }
         , handlebarPartials: function () {
