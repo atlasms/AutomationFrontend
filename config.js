@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "siteUrl": "http://localhost",
         "env": "dev",
         "placeholderImage": "/assets/img/placeholder.png",
+        "transitionSpedd": 200,
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
@@ -77,8 +78,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         async: false
         , success: function (items) {
             items = items.toJSON();
-            for (var prop in Config)
-                delete items[prop];
+//            for (var prop in Config)
+//                delete items[prop];
 //            var items = $.map(items, function (value, index) {
 //                return [value];
 //            });
