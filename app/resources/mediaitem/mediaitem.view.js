@@ -37,8 +37,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                 , value: 0
             }, this.returnItemCallback);
         }
-        , returnItemCallback: function() {
-            window.setTimeout(function() {
+        , returnItemCallback: function () {
+            window.setTimeout(function () {
                 Backbone.history.loadUrl();
             }, 500);
             return false;
@@ -234,18 +234,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
                     break;
                 case 'review':
                     var params = {
-                        query: 'externalid=' + self.getId()
+                        query: 'externalid=' + self.getId() + '&kind=1'
                         , overrideUrl: Config.api.comments
                     };
                     tmpl = ['resources/review', 'review.partial'];
                     model = new ReviewModel(params);
                     break;
-                case 'mediaversions':
+                case 'versions':
                     var params = {
                         id: self.getId()
                         , overrideUrl: Config.api.mediaversions
                     };
-                    console.log(params);
                     tmpl = ['resources/mediaitem', 'versions.partial'];
                     model = new MediaitemModel(params);
                     break;
@@ -306,7 +305,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
         }
         , afterRender: function (item, params) {
             var self = this;
-            self.loadTab();
+            if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
+                $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
+                $("html, body").animate({'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50}, 500);
+            } else
+                self.loadTab();
             self.initEditables();
             var media = {
                 thumbnail: item.Thumbnail
