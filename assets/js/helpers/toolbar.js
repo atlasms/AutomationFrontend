@@ -9,6 +9,8 @@ define(['jquery', 'underscore', 'backbone', 'config'
         }
         , initialize: function () {
             var $toolbar = this.$el;
+            if (!this.$el.length)
+                return;
             var gap = $toolbar.offset().top;
             var width = $toolbar.parent().width() - 30;
             $(window).on('scroll', function () {
