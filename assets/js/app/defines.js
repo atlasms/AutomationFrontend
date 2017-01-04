@@ -3,6 +3,7 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
         (function () {
             window.CONFIG = Config;
             window.DEBUG = (Config.env === "dev") ? true : false;
+            window.STORAGEKEY = Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
             window.STORAGE = localStorage;
             window.SESSION = sessionStorage;
             window.$$ = function (element) {
