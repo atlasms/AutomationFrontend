@@ -39,6 +39,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
             , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
+            , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
+            , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
+            , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
         },
         "positions": {
             "wrapper": "body"
@@ -49,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         },
         "api": {
             "url": "http://93.190.24.246:81/api/"
-            , "login": "http://93.190.24.246:81/token"
+            , "login": "login"
             , "schedule": "conductor"
             , "crawl": "conductor"
             , "tree": "metacategories"
@@ -59,6 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
 //            , "review": "metadata?categoryid=11"
             , "definitions": "dfn"
             , "comments": "comments"
+            , "users": "accounts"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
