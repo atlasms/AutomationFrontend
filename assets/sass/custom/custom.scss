@@ -3,6 +3,7 @@
 @import "../bootstrap/_mixins";
 @import "awesome-bootstrap-checkbox";
 @import "font";
+@import "bootstrap-wysisyg";
 @import "login";
 @import "jstree";
 @import "modal-transitions";
@@ -186,7 +187,7 @@ body.fixed-toolbar {
 } 
 
 /// Reviews
-#review-table {
+#returnees-table, #review-table {
     tbody tr {
         cursor: pointer;
         td[colspan="100%"] { padding: 0; }
@@ -284,6 +285,10 @@ body.fixed-toolbar {
 #mediaitem-page {
 
 }
+
+// User Manage Page
+
+
 
 #player-container { background: #3C3E3F }
 
