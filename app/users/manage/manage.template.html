@@ -1,0 +1,65 @@
+<div id="users-manage-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
+				<thead>
+					<tr>
+						<th class="">شناسه</th>
+						<th class="col-xs-1"></th>
+						<th class="col-xs-2">نام</th>
+						<th class="col-xs-1">نام کاربری</th>
+						<th class="col-xs-2">ایمیل</th>
+						<th class="col-xs-1">شماره تلفن</th>
+						<th class="col-xs-1">نقش[ها]</th>
+						<th class="col-xs-2">آخرین ورود</th>
+						<th class="col-xs-2">آخرین IP</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+						<td>{{math @index "+" 1}}</td>
+						<td class="text-center">
+							<figure>
+								<img src="{{Thumbnail}}" alt="" />
+							</figure>
+						</td>
+						<td class="">
+							<span class="">{{Name}} {{Family}}</span>
+						</td>
+						<td class=" text-right">
+							<span class="ltr">{{UserName}}</span>
+						</td>
+						<td class="text-right">
+							<span class="">{{Email}}</span>
+						</td>
+						<td class="text-right">
+							<span class="">{{Phone}}</span>
+						</td>
+						<td class="">
+							{{Roles}}
+						</td>
+						<td class="text-right">
+							{{extractTime LoginDate}} {{extractDate LoginDate}}
+						</td>
+						<td class="ltr text-center">
+							{{LoginIp}}
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog container" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">کاربر جدید</h4>
+			</div>
+				<div class="modal-body"></div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
