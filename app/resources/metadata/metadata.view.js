@@ -1,38 +1,38 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'tus'
-], function ($, _, Backbone, Template, Config, Global, moment, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, tus) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker'
+], function ($, _, Backbone, Template, Config, Global, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
     var MetadataView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'MetadataModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true}}
+            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
+            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
-            'click [type=submit]': 'submit'
-            , 'click [data-task=load]': 'load'
+            'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
         }
-        , submit: function () {
+        , initialize: function () {
+//            for (var prop in this.events) {
+//                var ev = prop.substr(0, prop.indexOf(' '));
+//                var el = prop.substr(prop.indexOf(' ') + 1);
+//                console.log(ev, el);
+//                $(document).on(ev, el);
+//            }
             var $this = this;
-            if (!helper.beforeSave())
-                return;
-            var data = this.prepareSave();
-            new MetadataModel().save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $this.reLoad();
-                }
-            });
+//            console.log($("#toolbar"));
+//            $(document).off('submit', "#toolbar").on('submit', "#toolbar", function (e) {
+////                e.preventDefault();
+//                console.log(e);
+////                $this.load(e);
+//                return false;
+//            });
         }
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id);
+            window.open('/resources/mediaitem/' + id + '#versions');
 //            !Backbone.History.started && Backbone.history.start({pushState: true});
 //            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
             return;

@@ -1,18 +1,18 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'moment-with-locales'
-], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, moment) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker'
+], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker) {
     var ReturneesView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , playerInstance: null
         , model: 'ReviewModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+            {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
         , events: {
-            'click #review-table tbody tr': 'openItem'
+            'click #returnees-table tbody tr': 'openItem'
         }
         , openItem: function (e) {
             e.preventDefault();
@@ -61,14 +61,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    if ($("#review-table tbody tr").length)
-                        $("#review-table tbody").empty();
+                    if ($("#returnees-table tbody tr").length)
+                        $("#returnees-table tbody").empty();
                 }
             });
         }
         , afterRender: function () {
             var self = this;
-            ReviewHelper.mask("time");
+            if ($("#review-table").length)
+                $("#review-table").attr('id', 'returnees-table');
         }
         , renderToolbar: function () {
             var self = this;

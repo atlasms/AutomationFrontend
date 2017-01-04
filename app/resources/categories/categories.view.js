@@ -6,29 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , toolbar: []
         , statusbar: []
         , flags: {}
-        , events: {
-            'click [type=submit]': 'submit'
-            , 'click #storagefiles': 'selectRow'
-        }
-        , submit: function () {
-            var $this = this;
-            var data = this.prepareSave();
-            new CategoriesModel().save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $this.reLoad();
-                }
-            });
-        }
-        , selectRow: function (e) {
-            var $el = $(e.target);
-            var $row = $el.parents("tr:first");
-            $el.parents("tbody").find("tr").removeClass('active');
-            $row.addClass('active');
-        }
+        , events: {}
         , reLoad: function () {
             this.load();
         }
@@ -39,8 +17,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.render(params);
         }
         , render: function (params) {
-//            if (!this.flags.toolbarRendered)
-                
             var self = this;
             var template = Template.template.load('resources/categories', 'categories');
             var $container = $(Config.positions.main);
