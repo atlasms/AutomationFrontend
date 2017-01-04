@@ -26,6 +26,7 @@ require.config({
         , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
         , "jwplayer": {exports: "jwplayer"}
         , "ladda": {deps: ["spin"]}
+        , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
     , paths: {
@@ -53,6 +54,7 @@ require.config({
         , "ladda": ["vendor/ladda.min"]
         , "pace": ["vendor/pace.min"]
         , "x-editable": ["vendor/bootstrap-editable.min"]
+        , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -76,11 +78,15 @@ require.config({
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
         , "resources.review.model": ["../../app/resources/review/review.model"]
         , "resources.mediaitem.model": ["../../app/resources/mediaitem/mediaitem.model"]
+        , "users.model": ["../../app/users/users.model"]
+        , "users.manage.model": ["../../app/users/manage/manage.model"]
+        , "inbox.model": ["../../app/user/messages/inbox.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
         , "app.view": ["../../app/app.view"]
         , "login.view": ["../../app/user/login.view"]
+        , "user.helper": ["../../app/user/user.helper"]
         , "dashboard.view": ["../../app/dashboard/dashboard.view"]
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
@@ -92,6 +98,9 @@ require.config({
         , "resources.review.view": ["../../app/resources/review/review.view"]
         , "resources.returnees.view": ["../../app/resources/returnees/returnees.view"]
         , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
+        , "user.messages.view": ["../../app/user/messages/inbox.view"]
+        , "users.view": ["../../app/users/users.view"]
+        , "users.manage.view": ["../../app/users/manage/manage.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
 
@@ -113,11 +122,12 @@ require.config({
         , "editable.helper": ["helpers/editable"]
     }
 });
+
 require([
-    'jquery', 'config', 'defines', 'app', 'router', 'user'
-], function ($, Config, Defines, App, Router, User) {
+    'jquery', 'config', 'defines', 'app', 'router', 'user.helper', 'toastr'
+], function ($, Config, Defines, App, Router, UserHelper, toastr) {
     Defines.initialize();
-    var user = new User();
+//    var user = new User();
     var backboneSync = Backbone.sync;
     Backbone.sync = function (method, model, options) {
         /*
@@ -129,9 +139,9 @@ require([
         options = _.extend(options, {
             url: (((_.isFunction(model.url) ? model.url() : model.url)).indexOf('//') === -1 ? Config.api.url : '') + (_.isFunction(model.url) ? model.url() : model.url)
         });
-        if (user.token !== null) {
+        if (UserHelper.getToken() !== null) {
             options = _.extend(options, {
-                headers: {"Authorization": user.token}
+                headers: {"Authorization": UserHelper.getToken()}
             });
         }
         /*
@@ -140,7 +150,36 @@ require([
          */
         backboneSync(method, model, options);
     };
-    Router.initialize(user);
+
+    toastr.options.positionClass = 'toast-bottom-left';
+    toastr.options.progressBar = true;
+    toastr.options.closeButton = true;
+    $.ajaxSetup({
+        statusCode: {
+            0: function () {
+                toastr.error('Not connect.\n Verify Network.', 'خطا');
+            },
+            400: function () {
+                toastr.error('درخواست نا معتبر. [400]', 'خطا');
+            },
+            401: function () {
+                toastr.error('درخواست غیر مجاز [401]', 'خطا');
+            },
+            403: function () {
+                toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
+            },
+            404: function () {
+                toastr.error('سرویس پیدا نشد! [404]', 'خطا');
+            },
+            500: function () {
+                toastr.error('خطا در سرور. [500]', 'خطا');
+            },
+            503: function () {
+                toastr.error('سرویس در دسترس نیست. [503]', 'خطا');
+            }
+        }
+    });
+    Router.initialize(UserHelper.getUser());
     // The "app" dependency is passed in as "App"
     // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
     App.initialize();

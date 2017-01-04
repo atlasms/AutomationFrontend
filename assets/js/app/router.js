@@ -1,6 +1,6 @@
 // Filename: router.js
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "app.view", "layout"
-], function ($, _, Backbone, Login, Template, Config, AppView, Layout) {
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "app.view", "layout", "user.helper"
+], function ($, _, Backbone, Login, Template, Config, AppView, Layout, UserHelper) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             'login': 'Login'
@@ -48,7 +48,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 template.done(function (data) {
                     var html = $(data).wrap('<p/>').parent().html();
                     var handlebarsTemplate = Template.handlebars.compile(html);
-                    var output = handlebarsTemplate();
+                    var output = handlebarsTemplate(UserHelper.getUser());
                     $(Config.positions.wrapper).html(output);
                     app.load(actions);
                     //
@@ -76,13 +76,15 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
         // TODO: make routig more dynamic by supporting url parameters, ids, etc.
         appRouter.on("route:app", function (actions) {
             actions = (actions === null) ? "/" : actions;
-            var appAction = actions.split('/').slice(0, 2).join('/');
+            // Sanitization of actions
+            var appAction = actions.replace(/\/+/g, '/').split('/').slice(0, 2).join('/').replace(/\/+$/, '');
+            appAction = (appAction === '') ? '/' : appAction;
             if (typeof map[appAction] === "undefined") { /// show 404
                 var app = new AppView();
                 app.load(404);
                 return;
             }
-            if (user.authorize(appAction, map)) { // Page needs access, redirecting to login page
+            if (UserHelper.authorize(appAction, map)) { // Page needs access, redirecting to login page
                 if (typeof map[appAction].skipLayout !== "undefined" && map[appAction].skipLayout === true) { // Page doesn't need master layout
                     if (/print$/.test(appAction))
                         $("head link").length && $("head link").remove();

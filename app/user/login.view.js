@@ -7,7 +7,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
             'click [data-task=login]': 'login'
         }
         , el: $(Config.positions.wrapper)
-        , model: 'UserModel'
         , render: function () {
             STORAGE.clear();
             var template = Template.template.load('user', 'login');
@@ -20,13 +19,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
             return this;
         }
         , login: function (options) {
-            var user = new User();
+            var key = STORAGEKEY;
             var form = this.$el.find("form:first").serializeObject();
-            user.login(form);
+            new User({path: '/login'}).save(null, {
+                data: JSON.stringify(form)
+                , contentType: 'application/json'
+                , success: function (d) {
+                    var d = d.toJSON();
+                    delete d['path'];
+
+                    var userData = {
+                        username: form.username
+                        , token: d.Token
+                        , data: d
+                    };
+                    STORAGE.setItem(key, JSON.stringify(userData));
+                    // Redirect to home/dashboard
+                    location.href = '/';
+                    return false;
+                }
+            });
             return false;
         }
     });
-
     return LoginView;
-
 });
