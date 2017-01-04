@@ -3,10 +3,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'broadcast.mod
     var BroadcastView = Backbone.View.extend({
         el: $(Config.positions.wrapper)
         , model: 'BroadcastModel'
-        , render: function (content) {
-            this.$el.html('<h1>Broadcast</h1>' + content);
-        }
-        , prepareContent: function () {
+        , initialize: function(options) {
             var model = new BroadcastModel();
             model.initialize();
         }
