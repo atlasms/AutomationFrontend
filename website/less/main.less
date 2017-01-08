@@ -1,0 +1,19 @@
+.wrapper {
+    &.black { background: #000; }
+    &.white { background: #fff; }
+    &.gray { background: @gray-light; }
+    &.gray-light { background: @gray-lighter; }
+    &.blue, .bg-blue { background: @primary; }
+    
+    // Dark backgrounds
+    &.black, &.blue, .bg-blue {
+        a { color: #fff; }
+        h3 a { color: #fff; }
+        p { color: @gray; }
+    }
+}
+.main {
+    & > .wrapper {
+        padding: @grid-gutter-width * 2 0;
+    }
+}
