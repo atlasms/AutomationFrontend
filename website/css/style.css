@@ -3692,8 +3692,13 @@ and open the template in the editor.
 .wrapper.black {
   background: #000;
 }
-.wrapper.white {
+.wrapper.white,
+.wrapper .bg-white {
   background: #fff;
+}
+.wrapper.gray-dark,
+.wrapper .bg-darkgray {
+  background: #666;
 }
 .wrapper.gray {
   background: #e5e5e5;
@@ -3726,6 +3731,7 @@ and open the template in the editor.
 .box {
   margin-top: 20px;
   margin-bottom: 20px;
+  /*p { margin-bottom: 0; }*/
 }
 .box a {
   text-decoration: none;
@@ -3784,6 +3790,54 @@ and open the template in the editor.
 }
 .box.hidden-header > header {
   display: none !important;
+}
+.box.bg-white {
+  padding: 10px 20px 20px;
+}
+.box.bg-white ul li .desc h4 a,
+.box.bg-white ul li .desc h3 a {
+  color: #666;
+}
+.box.bg-white ul li .desc p {
+  color: #808080;
+}
+.box.bg-white ul li:hover .desc h4 a,
+.box.bg-white ul li:hover .desc h3 a {
+  color: #222;
+}
+.box.bg-darkgray {
+  padding: 10px 20px 20px;
+}
+.box.bg-darkgray ul li .desc h4 a,
+.box.bg-darkgray ul li .desc h3 a {
+  color: #fff;
+}
+.box.bg-darkgray ul li .desc p {
+  color: #e5e5e5;
+}
+.box.bg-darkgray ul li:hover .desc h4 a,
+.box.bg-darkgray ul li:hover .desc h3 a {
+  color: #ec602b;
+}
+.box.box-joined {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.box.box-joined ul li:before,
+.box.box-joined ul li:after {
+  content: " ";
+  display: table;
+}
+.box.box-joined ul li:after {
+  clear: both;
+}
+.box.box-joined ul li:before,
+.box.box-joined ul li:after {
+  content: " ";
+  display: table;
+}
+.box.box-joined ul li:after {
+  clear: both;
 }
 .box figure img {
   display: block;
@@ -3862,14 +3916,18 @@ and open the template in the editor.
 .box.cols ul li:nth-child(2n+1) {
   clear: both;
 }
+.box.list.list-thumbs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 .box.list.list-thumbs ul li figure {
   width: 120px;
   float: right;
   margin-left: 10px;
 }
 .box.list.list-thumbs ul li .desc {
-  /*padding-right: @grid-gutter-width /2 ;*/
-  margin-right: 120px;
+  /*margin-right: @thumb-xs;*/
 }
 .box.list.list-thumbs ul li .desc h3 {
   font-size: 14px;
@@ -3877,9 +3935,19 @@ and open the template in the editor.
   font-weight: bold;
   line-height: 1.3;
 }
+.box.list.list-thumbs ul li .desc h3 a {
+  display: block;
+  padding-bottom: 10px;
+}
+.box.list.list-thumbs ul li .desc p {
+  font-size: 12px;
+  max-height: 54px;
+  overflow: hidden;
+}
 .box.list.list-thumbs.first-featured ul li:first-child {
   width: 100%;
   clear: both;
+  margin-bottom: 20px;
 }
 .box.list.list-thumbs.first-featured ul li:first-child figure {
   width: 350px;
@@ -3891,11 +3959,22 @@ and open the template in the editor.
   padding-left: 20px;
   /*margin-left: @thumb-md;*/
 }
+.box.list.list-thumbs.first-featured ul li:first-child .desc p {
+  font-size: 13px;
+}
 .box.list.list-thumbs.first-featured.cols ul li:nth-child(2n+1) {
   clear: none;
 }
 .box.list.list-thumbs.first-featured.cols ul li:nth-child(2n) {
   clear: both;
+}
+.box.list.list-thumbs.thumb-md ul li figure {
+  width: 185px;
+}
+.box.list.list-thumbs.thumb-left ul li figure {
+  margin-left: 0;
+  float: left;
+  margin-right: 10px;
 }
 .box.ticker {
   margin: 0;
