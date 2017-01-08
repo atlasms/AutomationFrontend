@@ -2,8 +2,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 ], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Player) {
     bootbox.setLocale('fa');
     var ScheduleView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'ScheduleModel'
+//        el: $(Config.positions.wrapper)
+        model: 'ScheduleModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
             , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}

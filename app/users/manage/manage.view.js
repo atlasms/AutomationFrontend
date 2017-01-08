@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar) {
     var UsersManageView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , modal_register: '#register-modal'
+//        el: $(Config.positions.wrapper)
+        modal_register: '#register-modal'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_users'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}

@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
-], function ($, _, Backbone, Template, Config, User) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global'
+], function ($, _, Backbone, Template, Config, User, Global) {
 
     var LoginView = Backbone.View.extend({
         data: {}
@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
         , el: $(Config.positions.wrapper)
         , render: function () {
             STORAGE.clear();
+            console.log($_GET);
             var template = Template.template.load('user', 'login');
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
@@ -20,7 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user'
         }
         , login: function (options) {
             var key = STORAGEKEY;
-            var form = this.$el.find("form:first").serializeObject();
+            var form = $(".login-content").find("form:first").serializeObject();
             new User({path: '/login'}).save(null, {
                 data: JSON.stringify(form)
                 , contentType: 'application/json'

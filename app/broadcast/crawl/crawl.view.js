@@ -5,8 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 ], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'CrawlModel'
+//        el: $(Config.positions.wrapper)
+        model: 'CrawlModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
             , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}

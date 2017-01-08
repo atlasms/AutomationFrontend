@@ -16,9 +16,12 @@ define(['jquery', 'underscore', 'backbone', 'config'
             return false;
         }
         , storageKey: typeof storageKey !== "undefined" ? Config.storageKey : Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0]
-        , redirect: function () {
+        , redirect: function (post, data) {
             // Redirecting User to login page
-            location.href = '/login';
+            if (typeof post === "undefined" || post !== true)
+                location.href = '/login';
+            else
+                location.href = '/login?msg=' + data.msg + '&redirect=' + data.url;
             return false;
         }
         , getUser: function () {

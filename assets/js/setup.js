@@ -151,19 +151,28 @@ require([
         backboneSync(method, model, options);
     };
 
+    Backbone.View.prototype.el = $(Config.positions.wrapper);
+    Backbone.View.prototype.close = function () {
+        this.undelegateEvents();
+        this.stopListening();
+//        this.$el.empty();
+//        this.remove();
+    }
+
     toastr.options.positionClass = 'toast-bottom-left';
     toastr.options.progressBar = true;
     toastr.options.closeButton = true;
     $.ajaxSetup({
         statusCode: {
             0: function () {
-                toastr.error('Not connect.\n Verify Network.', 'خطا');
+                toastr.error('Request Cancelled.', 'خطا');
             },
             400: function () {
                 toastr.error('درخواست نا معتبر. [400]', 'خطا');
             },
             401: function () {
                 toastr.error('درخواست غیر مجاز [401]', 'خطا');
+                UserHelper.redirect(true, {msg: 'TOKEN_EXPIRED', url: Backbone.history.fragment});
             },
             403: function () {
                 toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
@@ -179,7 +188,7 @@ require([
             }
         }
     });
-    Router.initialize(UserHelper.getUser());
+    new Router(UserHelper.getUser());
     // The "app" dependency is passed in as "App"
     // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
     App.initialize();

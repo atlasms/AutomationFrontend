@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toastr', 'toolbar', 'wysihtml5', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, InboxModel, toastr, Toolbar, wysihtml5) {
     var InboxView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , modal_register: '#register-modal'
+//        el: $(Config.positions.wrapper)
+        modal_register: '#register-modal'
         , toolbar: []
         , flags: {}
         , events: {

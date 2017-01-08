@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker'
 ], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker) {
     var ReturneesView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , playerInstance: null
+//        el: $(Config.positions.wrapper)
+        playerInstance: null
         , model: 'ReviewModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}

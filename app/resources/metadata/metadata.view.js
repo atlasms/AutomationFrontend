@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker'
 ], function ($, _, Backbone, Template, Config, Global, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
     var MetadataView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'MetadataModel'
+//        el: $(Config.positions.wrapper),
+        model: 'MetadataModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
@@ -12,22 +12,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , events: {
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
-        }
-        , initialize: function () {
-//            for (var prop in this.events) {
-//                var ev = prop.substr(0, prop.indexOf(' '));
-//                var el = prop.substr(prop.indexOf(' ') + 1);
-//                console.log(ev, el);
-//                $(document).on(ev, el);
-//            }
-            var $this = this;
-//            console.log($("#toolbar"));
-//            $(document).off('submit', "#toolbar").on('submit', "#toolbar", function (e) {
-////                e.preventDefault();
-//                console.log(e);
-////                $this.load(e);
-//                return false;
-//            });
         }
         , selectRow: function (e) {
             var $el = $(e.currentTarget);

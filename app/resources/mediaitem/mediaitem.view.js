@@ -2,8 +2,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
 ], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'MediaitemModel'
+//        el: $(Config.positions.wrapper)
+        model: 'MediaitemModel'
         , modal_storage: '#storage-modal'
         , modal_tree: '#tree-modal'
         , treeInstance: {}

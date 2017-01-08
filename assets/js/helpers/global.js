@@ -17,6 +17,16 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             }, {});
         };
     })($);
+
+    window.$_GET = {};
+    document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+        function decode(s) {
+            return decodeURIComponent(s.split("+").join(" "));
+        }
+
+        $_GET[decode(arguments[1])] = decode(arguments[2]);
+    });
+
     window.versionCompare = function (left, right) {
         /**
          * Simply compares two string version values.

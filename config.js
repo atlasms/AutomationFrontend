@@ -73,7 +73,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             }
         }
     };
-
+//    window.setTimeout(function () {
+//        console.log(Backbone.history.getFragment());
+//        if (Backbone.history.fragment && !Backbone.history.fragment.search(/login/gi)) {
     /*
      * Adding server-side definition params to main Config object
      */
@@ -82,14 +84,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         async: false
         , success: function (items) {
             items = items.toJSON();
-//            for (var prop in Config)
-//                delete items[prop];
-//            var items = $.map(items, function (value, index) {
-//                return [value];
-//            });
             Config.definitions = items.Children;
         }
     });
+//        }
+//
+//    }, 100);
 
     return Config;
 });

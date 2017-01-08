@@ -1,7 +1,7 @@
 // Filename: router.js
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "app.view", "layout", "user.helper"
-], function ($, _, Backbone, Login, Template, Config, AppView, Layout, UserHelper) {
-    var AppRouter = Backbone.Router.extend({
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper", 'bootstrap/dropdown'
+], function ($, _, Backbone, Login, Template, Config, Layout, UserHelper) {
+    var Router = Backbone.Router.extend({
         routes: {
             'login': 'Login'
             , '*actions': 'app' // Other routes
@@ -35,78 +35,104 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 params: params
             };
         }
-    });
+        , initialize: function (user) {
+            var self = this;
+            var map = self.map;
+            // TODO: make routig more dynamic by supporting url parameters, ids, etc.
+            self.on("route:app", function (actions) {
+                actions = (actions === null) ? "/" : actions;
+                // Sanitization of actions
+                var appAction = actions.replace(/\/+/g, '/').split('/').slice(0, 2).join('/').replace(/\/+$/, '');
+                appAction = (appAction === '') ? '/' : appAction;
+                if (typeof map[appAction] === "undefined") { /// show 404
+                    var app = new AppView();
+                    app.load(404);
+                    return;
+                }
+                if (UserHelper.authorize(appAction, map)) { // Page needs access, redirecting to login page
+                    if (typeof map[appAction].skipLayout !== "undefined" && map[appAction].skipLayout === true) { // Page doesn't need master layout
+                        if (/print$/.test(appAction))
+                            $("head link").length && $("head link").remove();
+                        self.loadLayout(appAction, true);
+                    } else { // Normal Routing
+                        self.loadLayout(appAction);
+                    }
+                }
+            });
+            $(document).on("click", 'a[href^="/"]', function (evt) {
+                var href = {prop: $(this).prop("href"), attr: $(this).attr("href")};
+                var root = location.protocol + "//" + location.host + Backbone.history.options.root;
 
-    var initMasterLayout = function (actions) {
-        var app = new AppView();
-        // App is accessible
-        if (typeof app.load === "function") {
-            // Master layout has not been loaded before
-            if (!$("body").hasClass("has-master-layout")) {
-                $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed");
-                var template = Template.template.load('', 'app');
-                template.done(function (data) {
-                    var html = $(data).wrap('<p/>').parent().html();
-                    var handlebarsTemplate = Template.handlebars.compile(html);
-                    var output = handlebarsTemplate(UserHelper.getUser());
-                    $(Config.positions.wrapper).html(output);
-                    app.load(actions);
-                    //
-                    Layout.init();
-                });
-                // Master layout is present, only loading page contents
-            } else {
-                app.load(actions);
-            }
-        } else
-            app.load(404);
-    };
+                if (href.prop && href.prop.slice(0, root.length) === root) {
+                    evt.preventDefault();
+                    Backbone.history.navigate(href.attr, true);
+                }
+            });
+            Backbone.history.start({pushState: true});
+        }
 
-    var initCleanLayout = function (actions) {
-        var app = new AppView();
-        if (typeof app.load === "function")
-            app.load(actions);
-        else
-            app.load(404);
-    };
-
-    var initialize = function (user) {
-        var appRouter = new AppRouter();
-        var map = appRouter.map;
-        // TODO: make routig more dynamic by supporting url parameters, ids, etc.
-        appRouter.on("route:app", function (actions) {
-            actions = (actions === null) ? "/" : actions;
-            // Sanitization of actions
-            var appAction = actions.replace(/\/+/g, '/').split('/').slice(0, 2).join('/').replace(/\/+$/, '');
-            appAction = (appAction === '') ? '/' : appAction;
-            if (typeof map[appAction] === "undefined") { /// show 404
-                var app = new AppView();
-                app.load(404);
+        , loadLayout: function (actions, clean) {
+            var self = this;
+            if (typeof clean !== "undefined" && clean === true) {
+//                $("body").removeClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed");
+                self.loadPage(actions);
                 return;
             }
-            if (UserHelper.authorize(appAction, map)) { // Page needs access, redirecting to login page
-                if (typeof map[appAction].skipLayout !== "undefined" && map[appAction].skipLayout === true) { // Page doesn't need master layout
-                    if (/print$/.test(appAction))
-                        $("head link").length && $("head link").remove();
-                    initCleanLayout(appAction);
-                } else { // Normal Routing
-                    initMasterLayout(appAction);
-                }
+            if ($("body").hasClass("has-master-layout")) {
+                self.loadPage(actions);
+                Layout.init();
+                return;
             }
-        });
-        $(document).on("click", 'a[href^="/"]', function (evt) {
-            var href = {prop: $(this).prop("href"), attr: $(this).attr("href")};
-            var root = location.protocol + "//" + location.host + Backbone.history.options.root;
-
-            if (href.prop && href.prop.slice(0, root.length) === root) {
-                evt.preventDefault();
-                Backbone.history.navigate(href.attr, true);
+            $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed");
+            var template = Template.template.load('', 'app');
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile($(data).wrap('<p/>').parent().html());
+                var output = handlebarsTemplate(UserHelper.getUser());
+                $(Config.positions.wrapper).html(output);
+                self.loadPage(actions);
+                // Initialize Layout helpers
+                Layout.init();
+            });
+        }
+        , loadPage: function (actions) {
+            var self = this;
+            if (typeof actions === "undefined" || actions === 404) {
+                self.throwNotFound();
+                return false;
             }
-        });
-        Backbone.history.start({pushState: true});
-    };
+            // Cleaning up last view
+//            self.view && (self.view.close ? self.view.close() : self.view.remove());
+            self.view && self.view.close();
+            
+            var request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
+            requirejs([request], function (View) {
+                
+                // Instantiating new view
+                var view = new View({actions: actions});
+                self.view = view;
+            
+                console.log(view);
+                
+                var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
+                self.loadContents(view, content);
 
-    return {
-        initialize: initialize
-    };
+                // Setting active menu
+                var $sidebarMenu = $(Config.positions.sidebar).find("ul:first");
+                $sidebarMenu.find("li").removeClass("active open");
+                $sidebarMenu.find('a[href="/' + actions + '"]').parents("li").addClass("active open");
+            });
+        }
+        , loadContents: function (view, content, actionArray) {
+            // Render view
+            view.render(content, actionArray);
+            return this;
+        }
+        , throwNotFound: function (message) {
+            var message = typeof message !== "undefined" ? message : 'متاسفانه صفحه مورد نظر شما وجود ندارد.';
+            $("body").attr('class', 'page-404-full-page');
+            $(Config.positions.wrapper).html('<div class="page-404"><div class="number font-red"> 404 </div><div class="details"><h3>پیدا نشد!</h3><p>' + message + '<br><a href="/"> بازگشت به داشبورد </a></p></div></div></div>');
+        }
+    });
+
+    return Router;
 });

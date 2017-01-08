@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
     var DashboardView = Backbone.View.extend({
         data: {}
         , events: {}
-        , el: $(Config.positions.main)
+//        , el: 
         , render: function () {
             var self = this;
             var template = Template.template.load('dashboard', 'dashboard');
@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
                 var html = $(data).wrap('<p/>').parent().html();
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(this.data);
-                self.$el.html(output);
+                $(Config.positions.main).html(output);
             });
             return this;
         }

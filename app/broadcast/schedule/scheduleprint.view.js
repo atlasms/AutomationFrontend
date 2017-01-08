@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'bootstrap/transition'
 ], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper) {
     var SchedulePrintView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'ScheduleModel'
+//        el: $(Config.positions.wrapper)
+        model: 'ScheduleModel'
         , toolbar: []
         , statusbar: []
         , flags: {}
@@ -18,7 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , render: function (params) {
             var template = Template.template.load('broadcast/schedule', 'scheduleprint');
-            var $container = this.$el;
+            var $container = $(Config.positions.wrapper);
             var params = {
                 startdate: Global.getVar("startdate") ? Global.getVar("startdate") : Global.today() + 'T00:00:00'
                 , enddate: Global.getVar("startdate") ? Global.getVar("startdate").split('T')[0] + 'T23:59:59' : Global.today() + 'T23:59:59'

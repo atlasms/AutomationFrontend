@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'tus'
 ], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, tus) {
     var CategoriesView = Backbone.View.extend({
-        el: $(Config.positions.wrapper)
-        , model: 'CategoriesModel'
+//        el: $(Config.positions.wrapper)
+        model: 'CategoriesModel'
         , toolbar: []
         , statusbar: []
         , flags: {}
