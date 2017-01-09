@@ -5,10 +5,9 @@
 				<img class="login-logo login-6 hide" src="../assets/img/login-invert.png" />
 				<div class="login-content">
 					<h1>ورود به سامانه اتوماسیون</h1>
-					<form name="form" method="post">
+					<form class="login-form" name="form" method="post">
 						<div class="clearfix"></div>
-						<div class="alert alert-danger fade">
-							<button class="close" data-close="alert"></button>
+						<div class="alert alert-danger" style="display: none;">
 							<strong>نام کاربری یا رمز عبور اشتباه است یا کاربر وجود ندارد.</strong>
 						</div>
 						<div class="clearfix"></div>
@@ -39,24 +38,11 @@
 								<div class="forgot-password hide">
 									<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
 								</div>
-								<a href="#" class="btn blue" data-task="login">ورود</a>
+								<button type="submit" class="btn blue" data-task="login">ورود</a>
 								<img class="hide" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 							</div>
 						</div>
 					</form>
-					<!-- BEGIN FORGOT PASSWORD FORM -->
-					<form class="forget-form hide" action="javascript:;" method="post">
-						<h3>Forgot Password ?</h3>
-						<p> Enter your e-mail address below to reset your password. </p>
-						<div class="form-group">
-							<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" />
-						</div>
-						<div class="form-actions">
-							<button type="button" id="back-btn" class="btn blue btn-outline">Back</button>
-							<button type="submit" class="btn blue uppercase pull-right">Submit</button>
-						</div>
-					</form>
-					<!-- END FORGOT PASSWORD FORM -->
 				</div>
 			</div>
 			<div class="col-xs-12 col-md-6 bs-reset mt-login-5-bsfix">

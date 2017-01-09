@@ -1,4 +1,4 @@
-define(['jquery', 'cookie'], function ($, Cookies) {
+define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
 
     /*! Copyright (c) 2011 Piotr Rochala (http://rocha.la)
     * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)

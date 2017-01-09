@@ -4,12 +4,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
     var LoginView = Backbone.View.extend({
         data: {}
         , events: {
-            'click [data-task=login]': 'login'
+            'submit .login-form': 'login'
         }
         , el: $(Config.positions.wrapper)
         , render: function () {
             STORAGE.clear();
-            console.log($_GET);
+            typeof $_GET.redirect !== "undefined" && console.log($_GET);
             var template = Template.template.load('user', 'login');
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
@@ -19,7 +19,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
             });
             return this;
         }
-        , login: function (options) {
+        , login: function (e) {
+            e.preventDefault();
             var key = STORAGEKEY;
             var form = $(".login-content").find("form:first").serializeObject();
             new User({path: '/login'}).save(null, {
@@ -38,6 +39,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                     // Redirect to home/dashboard
                     location.href = '/';
                     return false;
+                }
+                , error: function () {
+                    $(".login-form .alert").slideDown();
                 }
             });
             return false;

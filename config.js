@@ -2,12 +2,14 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
     /*
      * Check localStorage for any pre-processed and cached configurations
      */
+    // TODO
     /*
      * Use following configurations
      */
     window.Config = {
         "title": "اتوماسیون تولید و پخش",
         "channel": "ایران‌کالا",
+        "storageKey": "automation" + '_' + window.location.host.replace(/\./g, '').split(":")[0],
         "siteUrl": "http://localhost",
         "env": "dev",
         "placeholderImage": "/assets/img/placeholder.png",
@@ -73,9 +75,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             }
         }
     };
-//    window.setTimeout(function () {
-//        console.log(Backbone.history.getFragment());
-//        if (Backbone.history.fragment && !Backbone.history.fragment.search(/login/gi)) {
+
     /*
      * Adding server-side definition params to main Config object
      */
@@ -87,9 +87,6 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             Config.definitions = items.Children;
         }
     });
-//        }
-//
-//    }, 100);
 
     return Config;
 });

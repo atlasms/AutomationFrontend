@@ -60,7 +60,7 @@ require.config({
         , "bloodhound": ["vendor/bloodhound.min"]
 
                 // Application Dependencies
-        , "app": ["app/app"]
+//        , "app": ["app/app"]
         , "router": ["app/router"]
 
                 // Config
@@ -123,74 +123,6 @@ require.config({
     }
 });
 
-require([
-    'jquery', 'config', 'defines', 'app', 'router', 'user.helper', 'toastr'
-], function ($, Config, Defines, App, Router, UserHelper, toastr) {
-    Defines.initialize();
-//    var user = new User();
-    var backboneSync = Backbone.sync;
-    Backbone.sync = function (method, model, options) {
-        /*
-         * Change the `url` property of options to begin
-         * with the URL from settings
-         * This works because the options object gets sent as
-         * the jQuery ajax options, which includes the `url` property
-         */
-        options = _.extend(options, {
-            url: (((_.isFunction(model.url) ? model.url() : model.url)).indexOf('//') === -1 ? Config.api.url : '') + (_.isFunction(model.url) ? model.url() : model.url)
-        });
-        if (UserHelper.getToken() !== null) {
-            options = _.extend(options, {
-                headers: {"Authorization": UserHelper.getToken()}
-            });
-        }
-        /*
-         *  Call the stored original Backbone.sync
-         * method with the new url property
-         */
-        backboneSync(method, model, options);
-    };
-
-    Backbone.View.prototype.el = $(Config.positions.wrapper);
-    Backbone.View.prototype.close = function () {
-        this.undelegateEvents();
-        this.stopListening();
-//        this.$el.empty();
-//        this.remove();
-    }
-
-    toastr.options.positionClass = 'toast-bottom-left';
-    toastr.options.progressBar = true;
-    toastr.options.closeButton = true;
-    $.ajaxSetup({
-        statusCode: {
-            0: function () {
-                toastr.error('Request Cancelled.', 'خطا');
-            },
-            400: function () {
-                toastr.error('درخواست نا معتبر. [400]', 'خطا');
-            },
-            401: function () {
-                toastr.error('درخواست غیر مجاز [401]', 'خطا');
-                UserHelper.redirect(true, {msg: 'TOKEN_EXPIRED', url: Backbone.history.fragment});
-            },
-            403: function () {
-                toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
-            },
-            404: function () {
-                toastr.error('سرویس پیدا نشد! [404]', 'خطا');
-            },
-            500: function () {
-                toastr.error('خطا در سرور. [500]', 'خطا');
-            },
-            503: function () {
-                toastr.error('سرویس در دسترس نیست. [503]', 'خطا');
-            }
-        }
-    });
-    new Router(UserHelper.getUser());
-    // The "app" dependency is passed in as "App"
-    // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
-    App.initialize();
-    return {};
+require(["jquery", "underscore", "backbone", 'defines', 'router', 'user.helper'], function ($, _, Backbone, Defines, Router, UserHelper) {
+    Defines.initialize() && new Router(UserHelper.getUser());
 });

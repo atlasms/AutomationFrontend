@@ -1,5 +1,5 @@
 // Filename: router.js
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper", 'bootstrap/dropdown'
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper"
 ], function ($, _, Backbone, Login, Template, Config, Layout, UserHelper) {
     var Router = Backbone.Router.extend({
         routes: {
@@ -74,7 +74,6 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
         , loadLayout: function (actions, clean) {
             var self = this;
             if (typeof clean !== "undefined" && clean === true) {
-//                $("body").removeClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed");
                 self.loadPage(actions);
                 return;
             }
@@ -110,8 +109,6 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 // Instantiating new view
                 var view = new View({actions: actions});
                 self.view = view;
-            
-                console.log(view);
                 
                 var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
                 self.loadContents(view, content);

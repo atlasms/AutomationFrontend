@@ -15,7 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'config'
             this.redirect();
             return false;
         }
-        , storageKey: typeof storageKey !== "undefined" ? Config.storageKey : Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0]
+        , storageKey: Config.storageKey
         , redirect: function (post, data) {
             // Redirecting User to login page
             if (typeof post === "undefined" || post !== true)

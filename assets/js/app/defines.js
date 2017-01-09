@@ -1,16 +1,81 @@
-define(["config", "jquery", "underscore", "backbone", "router", "template", "global"], function (Config, $, _, Backbone, Router, Template, Global) {
+define(["config", "jquery", "underscore", "backbone", "router", "template", "global", 'user.helper', 'toastr'], function (Config, $, _, Backbone, Router, Template, Global, UserHelper, toastr) {
     var initialize = function () {
         (function () {
             window.CONFIG = Config;
             window.DEBUG = (Config.env === "dev") ? true : false;
-            window.STORAGEKEY = Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
+//            window.STORAGEKEY = Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
+//            window.STORAGEKEY = Config.key.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
+            window.STORAGEKEY = Config.storageKey;
             window.STORAGE = localStorage;
             window.SESSION = sessionStorage;
             window.$$ = function (element) {
                 return document.querySelectorAll(element);
             };
+
+            var backboneSync = Backbone.sync;
+            Backbone.sync = function (method, model, options) {
+                /*
+                 * Change the `url` property of options to begin
+                 * with the URL from settings
+                 * This works because the options object gets sent as
+                 * the jQuery ajax options, which includes the `url` property
+                 */
+                options = _.extend(options, {
+                    url: (((_.isFunction(model.url) ? model.url() : model.url)).indexOf('//') === -1 ? Config.api.url : '') + (_.isFunction(model.url) ? model.url() : model.url)
+                });
+                if (UserHelper.getToken() !== null) {
+                    options = _.extend(options, {
+                        headers: {"Authorization": UserHelper.getToken()}
+                    });
+                }
+                /*
+                 *  Call the stored original Backbone.sync
+                 * method with the new url property
+                 */
+                backboneSync(method, model, options);
+            };
+
+            Backbone.View.prototype.el = $(Config.positions.wrapper);
+            Backbone.View.prototype.close = function () {
+                this.undelegateEvents();
+                this.stopListening();
+//        this.$el.empty();
+//        this.remove();
+            };
+
+            toastr.options.positionClass = 'toast-bottom-left';
+            toastr.options.progressBar = true;
+            toastr.options.closeButton = true;
+            $.ajaxSetup({
+                statusCode: {
+                    0: function () {
+                        toastr.error('Request Cancelled.', 'خطا');
+                    },
+                    400: function () {
+                        toastr.error('درخواست نا معتبر. [400]', 'خطا');
+                    },
+                    401: function () {
+                        toastr.error('درخواست غیر مجاز [401]', 'خطا');
+                        if (Backbone.history.fragment.lastIndexOf('login', 0) !== 0)
+                            UserHelper.redirect(true, {msg: 'TOKEN_EXPIRED', url: Backbone.history.fragment});
+                    },
+                    403: function () {
+                        toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
+                    },
+                    404: function () {
+                        toastr.error('سرویس پیدا نشد! [404]', 'خطا');
+                    },
+                    500: function () {
+                        toastr.error('خطا در سرور. [500]', 'خطا');
+                    },
+                    503: function () {
+                        toastr.error('سرویس در دسترس نیست. [503]', 'خطا');
+                    }
+                }
+            });
+
         })();
-        setRoutes(Config);
+
         registerHandlebarsHelpers();
         $("title").text(Config.title);
 
@@ -19,7 +84,6 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             , url: window.location.href.toString()
             , success: function (data, textStatus, request) {
                 var serverDate = request.getResponseHeader('Date');
-//                console.log(serverDate);
                 var d = new Date(serverDate);
                 d.setSeconds(d.getSeconds() + 1);
                 window.setInterval(function () {
@@ -29,24 +93,14 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                 }, 1000);
             }
         });
+
+        return true;
     };
+
     var registerHandlebarsHelpers = function () {
         Template.template.handlebarHelpers();
         Template.template.handlebarPartials();
     };
-
-    var setRoutes = function (Config) {
-//        var Routes = {}
-//        $.each(Config.routes, function () {
-//            Routes[this.path] = this.action;
-//        });
-//        var AppRouter = Backbone.Router.extend({routes: Routes, BroadcastView: function () {
-//                alert();
-//            }
-//        });
-    };
-
-
 
     return {
         initialize: initialize
