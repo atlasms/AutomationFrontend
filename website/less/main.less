@@ -8,13 +8,18 @@
     
     // Dark backgrounds
     &.black, &.blue, .bg-blue {
+        color: @gray-light;
         a { color: #fff; }
         h3 a { color: #fff; }
-        p { color: @gray; }
+        p { color: @gray-light; }
     }
 }
 .main {
     & > .wrapper {
         padding: @grid-gutter-width * 2 0;
+        
+        &.we-support {
+            height: 700px; position: relative; background: url('../img/iran-bg.png') no-repeat center top @primary;
+        }
     }
 }

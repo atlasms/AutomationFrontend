@@ -3710,6 +3710,11 @@ and open the template in the editor.
 .wrapper .bg-blue {
   background: #3852c1;
 }
+.wrapper.black,
+.wrapper.blue,
+.wrapper .bg-blue {
+  color: #e5e5e5;
+}
 .wrapper.black a,
 .wrapper.blue a,
 .wrapper .bg-blue a {
@@ -3723,15 +3728,19 @@ and open the template in the editor.
 .wrapper.black p,
 .wrapper.blue p,
 .wrapper .bg-blue p {
-  color: #808080;
+  color: #e5e5e5;
 }
 .main > .wrapper {
   padding: 40px 0;
 }
+.main > .wrapper.we-support {
+  height: 700px;
+  position: relative;
+  background: url('../img/iran-bg.png') no-repeat center top #3852c1;
+}
 .box {
   margin-top: 20px;
   margin-bottom: 20px;
-  /*p { margin-bottom: 0; }*/
 }
 .box a {
   text-decoration: none;
@@ -3771,6 +3780,179 @@ and open the template in the editor.
 .box > header > ul li a {
   color: #808080;
 }
+.box > footer .more {
+  display: block;
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #337ab7;
+  font-weight: normal;
+  border-radius: 0;
+  color: #3852c1;
+  font-weight: bold;
+  margin-bottom: 10px;
+  position: relative;
+}
+.box > footer .more:focus,
+.box > footer .more:active:focus,
+.box > footer .more.active:focus,
+.box > footer .more.focus,
+.box > footer .more:active.focus,
+.box > footer .more.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.box > footer .more:hover,
+.box > footer .more:focus,
+.box > footer .more.focus {
+  color: #333;
+  text-decoration: none;
+}
+.box > footer .more:active,
+.box > footer .more.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.box > footer .more.disabled,
+.box > footer .more[disabled],
+fieldset[disabled] .box > footer .more {
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+a.box > footer .more.disabled,
+fieldset[disabled] a.box > footer .more {
+  pointer-events: none;
+}
+.box > footer .more,
+.box > footer .more:active,
+.box > footer .more.active,
+.box > footer .more[disabled],
+fieldset[disabled] .box > footer .more {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.box > footer .more,
+.box > footer .more:hover,
+.box > footer .more:focus,
+.box > footer .more:active {
+  border-color: transparent;
+}
+.box > footer .more:hover,
+.box > footer .more:focus {
+  color: #23527c;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.box > footer .more[disabled]:hover,
+fieldset[disabled] .box > footer .more:hover,
+.box > footer .more[disabled]:focus,
+fieldset[disabled] .box > footer .more:focus {
+  color: #e5e5e5;
+  text-decoration: none;
+}
+.box > footer .more:before {
+  content: '> ';
+}
+.box ul li .desc .more {
+  display: block;
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  background: #ec602b;
+  border-radius: 2px;
+}
+.box ul li .desc .more:focus,
+.box ul li .desc .more:active:focus,
+.box ul li .desc .more.active:focus,
+.box ul li .desc .more.focus,
+.box ul li .desc .more:active.focus,
+.box ul li .desc .more.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.box ul li .desc .more:hover,
+.box ul li .desc .more:focus,
+.box ul li .desc .more.focus {
+  color: #333;
+  text-decoration: none;
+}
+.box ul li .desc .more:active,
+.box ul li .desc .more.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.box ul li .desc .more.disabled,
+.box ul li .desc .more[disabled],
+fieldset[disabled] .box ul li .desc .more {
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+a.box ul li .desc .more.disabled,
+fieldset[disabled] a.box ul li .desc .more {
+  pointer-events: none;
+}
+.box ul li.video figure a {
+  position: relative;
+}
+.box ul li.video figure a:after {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 100%;
+  color: #ec602b;
+  text-align: center;
+  line-height: 80px;
+  margin: -40px 0 0 -40px;
+  font-size: 20px;
+}
 .box.header-menu-right > header > ul {
   float: none;
   display: inline-block;
@@ -3790,6 +3972,19 @@ and open the template in the editor.
 }
 .box.hidden-header > header {
   display: none !important;
+}
+.box.header-overlay {
+  position: relative;
+}
+.box.header-overlay > header {
+  float: right;
+}
+.box.header-invert > header h2 {
+  background: #ec602b;
+}
+.box.header-invert > header h2 a {
+  color: #fff;
+  padding: 0 20px;
 }
 .box.bg-white {
   padding: 10px 20px 20px;
@@ -3838,6 +4033,12 @@ and open the template in the editor.
 }
 .box.box-joined ul li:after {
   clear: both;
+}
+.box.box-joined > header h2 {
+  font-size: 16px;
+}
+.box figure a {
+  display: block;
 }
 .box figure img {
   display: block;
@@ -3916,6 +4117,39 @@ and open the template in the editor.
 .box.cols ul li:nth-child(2n+1) {
   clear: both;
 }
+.box.list.list-bullets ul {
+  list-style: disc outside;
+  margin: 0;
+  padding: 0;
+}
+.box.list.list-bullets ul li {
+  margin-right: 20px;
+  color: #808080;
+}
+.box.list.list-bullets ul li:before {
+  display: none;
+}
+.box.list.list-bullets ul li figure {
+  display: none;
+}
+.box.list.list-bullets ul li p {
+  display: none;
+}
+.box.list.list-bullets ul li h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.box.list.list-bullets ul li h3 a {
+  display: block;
+  color: #666;
+  padding: 3px 0;
+}
+.box.list.list-bullets ul li:hover {
+  color: #222;
+}
+.box.list.list-bullets ul li:hover h3 a {
+  color: #ec602b;
+}
 .box.list.list-thumbs ul {
   list-style: none;
   margin: 0;
@@ -3944,6 +4178,12 @@ and open the template in the editor.
   max-height: 54px;
   overflow: hidden;
 }
+.box.list.list-thumbs ul li.video figure a:after {
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  font-size: 14px;
+}
 .box.list.list-thumbs.first-featured ul li:first-child {
   width: 100%;
   clear: both;
@@ -3952,6 +4192,12 @@ and open the template in the editor.
 .box.list.list-thumbs.first-featured ul li:first-child figure {
   width: 350px;
   float: left;
+}
+.box.list.list-thumbs.first-featured ul li:first-child.video figure a:after {
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  font-size: 20px;
 }
 .box.list.list-thumbs.first-featured ul li:first-child .desc {
   margin-right: 0;
@@ -3967,6 +4213,85 @@ and open the template in the editor.
 }
 .box.list.list-thumbs.first-featured.cols ul li:nth-child(2n) {
   clear: both;
+}
+.box.list.list-thumbs.first-featured.we-support {
+  position: relative;
+}
+.box.list.list-thumbs.first-featured.we-support > header {
+  position: absolute;
+  top: 0;
+  left: 63%;
+}
+.box.list.list-thumbs.first-featured.we-support > header h2 {
+  margin: 0;
+  line-height: 1.8;
+}
+.box.list.list-thumbs.first-featured.we-support > header h2 a span {
+  background: #fff;
+  color: #ec602b;
+  display: block;
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.box.list.list-thumbs.first-featured.we-support ul li {
+  width: 20%;
+  float: right;
+}
+.box.list.list-thumbs.first-featured.we-support ul li figure {
+  width: 100%;
+  margin: 0;
+  float: none;
+  background: #424242;
+}
+.box.list.list-thumbs.first-featured.we-support ul li figure a {
+  width: 70%;
+}
+.box.list.list-thumbs.first-featured.we-support ul li .desc h3 {
+  font-size: 12px;
+}
+.box.list.list-thumbs.first-featured.we-support ul li .desc h3 a {
+  display: block;
+  padding-top: 4px;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:nth-child(2) {
+  margin-top: 60px;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child {
+  width: 80%;
+  height: 390px;
+  clear: none;
+  padding-left: 20px;
+  margin-top: 0;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child figure {
+  width: 700px;
+  margin-top: 60px;
+  float: left;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child figure a {
+  width: 100%;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child .desc {
+  height: 100%;
+  background: url('../img/fingerprint_flag.png') no-repeat right top #424242;
+  padding: 20px;
+  margin-left: 700px;
+  padding-top: 60px;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child .desc h3 {
+  font-size: 16px;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child .desc p {
+  font-size: 12px;
+  max-height: none;
+}
+.box.list.list-thumbs.first-featured.we-support ul li:first-child .desc .more {
+  padding: 3px 50px;
+  position: absolute;
+  margin-right: 60px;
+  margin-top: 50px;
+  font-weight: bold;
 }
 .box.list.list-thumbs.thumb-md ul li figure {
   width: 185px;
@@ -4200,6 +4525,38 @@ and open the template in the editor.
   margin-bottom: 0;
   margin-top: 10px;
   color: #e5e5e5;
+}
+.box.multimedia ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.box.multimedia ul li {
+  width: 1160px;
+  position: relative;
+}
+.box.multimedia ul li .desc {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 180px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  min-height: 400px;
+}
+.box.multimedia ul li .desc h3 {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.6;
+  margin: 0;
+}
+.box.multimedia ul li .desc h3 a {
+  color: #fff;
+}
+.box.multimedia ul li .desc p {
+  color: #e5e5e5;
+  font-size: 12px;
+  margin-top: 20px;
 }
 /*
 To change this license header, choose License Headers in Project Properties.
