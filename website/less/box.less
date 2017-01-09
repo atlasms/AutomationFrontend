@@ -73,6 +73,12 @@
             }
         }
     }
+    &.header-dark {
+        h2 {
+            font-size: @font-size-base+2;
+            a { color: @text-color; background: #fff; }
+        }
+    }
 
     &.bg-white {
         padding: @grid-gutter-width / 2 @grid-gutter-width @grid-gutter-width;
@@ -412,6 +418,28 @@
                 }
             }
         }
+    }
+    
+    &.contact-details {
+        & > header { margin-bottom: @grid-gutter-width / 2; }
+        ul {
+            li {
+                &:last-child { width: 100%; }
+                &:before {
+                    display: inline-block; // TODO
+                }
+                color: @gray;
+                span {
+                    color: @gray-darker; display: inline-block;
+                    &:before { content: ': '; color: @gray; }
+                }
+            }
+        }
+    }
+    &.contact-form {
+        & > header { margin-bottom: @grid-gutter-width / 2; }
+        .form-control { background: @gray-lighter; border: 0 none; }
+        button[type="submit"] { float: left; margin-left: @grid-gutter-width*2; margin-top: -@grid-gutter-width; }
     }
 
 }

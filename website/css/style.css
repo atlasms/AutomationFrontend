@@ -3986,6 +3986,13 @@ fieldset[disabled] a.box ul li .desc .more {
   color: #fff;
   padding: 0 20px;
 }
+.box.header-dark h2 {
+  font-size: 16px;
+}
+.box.header-dark h2 a {
+  color: #222;
+  background: #fff;
+}
 .box.bg-white {
   padding: 10px 20px 20px;
 }
@@ -4557,6 +4564,38 @@ fieldset[disabled] a.box ul li .desc .more {
   color: #e5e5e5;
   font-size: 12px;
   margin-top: 20px;
+}
+.box.contact-details > header {
+  margin-bottom: 10px;
+}
+.box.contact-details ul li {
+  color: #808080;
+}
+.box.contact-details ul li:last-child {
+  width: 100%;
+}
+.box.contact-details ul li:before {
+  display: inline-block;
+}
+.box.contact-details ul li span {
+  color: #424242;
+  display: inline-block;
+}
+.box.contact-details ul li span:before {
+  content: ': ';
+  color: #808080;
+}
+.box.contact-form > header {
+  margin-bottom: 10px;
+}
+.box.contact-form .form-control {
+  background: #f2f2f2;
+  border: 0 none;
+}
+.box.contact-form button[type="submit"] {
+  float: left;
+  margin-left: 40px;
+  margin-top: -20px;
 }
 /*
 To change this license header, choose License Headers in Project Properties.
