@@ -53,7 +53,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "status": "#status-items"
         },
         "api": {
-            "url": "http://93.190.24.246:81/api/"
+            "url": "http://au.iktv.ir:8080/api/"
             , "login": "login"
             , "schedule": "conductor"
             , "crawl": "conductor"
