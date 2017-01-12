@@ -1129,46 +1129,7 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
 
                 e.preventDefault();
             });
-            // handle menu close for angularjs version
-//        if (App.isAngularJsApp()) {
-//            $(".page-sidebar-menu li > a").on("click", function (e) {
-//                if (App.getViewPort().width < resBreakpointMd && $(this).next().hasClass('sub-menu') === false) {
-//                    $('.page-header .responsive-toggler').click();
-//                }
-//            });
-//        }
 
-            // handle ajax links within sidebar menu
-            $('.page-sidebar').on('click', ' li > a.ajaxify', function (e) {
-                e.preventDefault();
-                App.scrollTop();
-                var url = $(this).attr("href");
-                var menuContainer = $('.page-sidebar ul');
-                menuContainer.children('li.active').removeClass('active');
-                menuContainer.children('arrow.open').removeClass('open');
-                $(this).parents('li').each(function () {
-                    $(this).addClass('active');
-                    $(this).children('a > span.arrow').addClass('open');
-                });
-                $(this).parents('li').addClass('active');
-                if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
-                    $('.page-header .responsive-toggler').click();
-                }
-
-                Layout.loadAjaxContent(url, $(this));
-            });
-            // handle ajax link within main content
-            $('.page-content').on('click', '.ajaxify', function (e) {
-                e.preventDefault();
-                App.scrollTop();
-                var url = $(this).attr("href");
-                App.startPageLoading();
-                if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
-                    $('.page-header .responsive-toggler').click();
-                }
-
-                Layout.loadAjaxContent(url);
-            });
             // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view
             $(document).on('click', '.page-header-fixed-mobile .responsive-toggler', function () {
                 App.scrollTop();

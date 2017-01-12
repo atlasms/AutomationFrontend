@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app.view", 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, AppView, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -282,11 +282,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', "app
             var template = Template.template.load('resources/mediaitem', 'mediaitem');
             var $container = $(Config.positions.main);
             var id = self.getId();
-            var app = new AppView();
-            if (+id != id) {
-                app.load(404);
-                return false;
-            }
+            // TODO
+//            var app = new AppView();
+//            if (+id != id) {
+//                app.load(404);
+//                return false;
+//            }
             var params = {id: +id};
             var model = new MediaitemModel(params);
             model.fetch({
