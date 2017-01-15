@@ -10,6 +10,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             , 'click [href="#compose"]': 'loadCompose'
             , 'click .mail-to .inbox-cc': 'handleCCInput'
             , 'submit form.inbox-compose': 'sendMessage'
+            , 'click .view-message': 'viewMessage'
+        }
+        , viewMessage: function (e) {
+            e.preventDefault();
+            var self = this;
+            var params = {id: $(e.currentTarget).parents("tr:first").attr('data-messageid')};
+            var model = new InboxModel(params);
+            var template = Template.template.load('user/messages', 'message.partial');
+            var $container = $(".inbox-content");
+            model.fetch({
+                success: function (items) {
+                    items = items.toJSON();
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            // Do something after partial module changed or updated
+                        });
+                    });
+                }
+            });
+            return false;
         }
         , reLoad: function () {
             this.load();
@@ -71,7 +93,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (model, response) {
-                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('پیام با موفقیت ارسال شد.', 'ارسال پیام', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     // TODO: reload comments
                 }
             });
@@ -101,7 +123,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 $li.addClass('active');
             } else
                 var $li = $(".inbox-nav li.active");
-            var params = {query: 'externalid=0&kind=2&type=' + $li.attr('data-type')};
+            var params = {query: 'externalid=0&kind=2&provider=' + $li.attr('data-type')};
             var model = new InboxModel(params);
             var template = Template.template.load('user/messages', 'messages.partial');
             var $container = $(".inbox-content");

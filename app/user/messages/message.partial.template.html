@@ -1,0 +1,26 @@
+<div class="inbox-header inbox-view-header">
+	<h1 class="">
+		{{#ifCond this.Owner '==' 1}}<span class="label label-info">پیام سیستم</span>{{/ifCond}}
+		{{this.Title}}
+		<a href="/user/messages" class="pull-right"> پیام‌های رسیده </a>
+	</h1>
+</div>
+<div class="inbox-view-info">
+	<div class="row">
+		<div class="col-md-7">
+			<img src="/assets/img/avatar1.jpg" class="inbox-author">
+			<span class="sbold">{{FromUserText}} </span>
+			در  
+			<span class="">{{extractTime this.SendDate}} {{extractDate this.SendDate}}</span>
+		</div>
+		<div class="col-md-5 inbox-info-btn">
+			
+		</div>
+		<div class="clearfix"></div>
+		<div class="col-xs-12">
+			<div class="inbox-view">
+				{{this.Body}}
+			</div>
+		</div>
+	</div>
+</div>

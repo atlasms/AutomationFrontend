@@ -1,10 +1,9 @@
-define(["config", "jquery", "underscore", "backbone", "router", "template", "global", 'user.helper', 'toastr'], function (Config, $, _, Backbone, Router, Template, Global, UserHelper, toastr) {
+define(["config", "jquery", "underscore", "backbone", "router", "template", "global", 'user.helper', 'toastr'
+], function (Config, $, _, Backbone, Router, Template, Global, UserHelper, toastr) {
     var initialize = function () {
         (function () {
             window.CONFIG = Config;
             window.DEBUG = (Config.env === "dev") ? true : false;
-//            window.STORAGEKEY = Config.title.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
-//            window.STORAGEKEY = Config.key.toLowerCase() + '_' + window.location.host.replace(/\./g, '').split(":")[0];
             window.STORAGEKEY = Config.storageKey;
             window.STORAGE = localStorage;
             window.SESSION = sessionStorage;
@@ -73,7 +72,6 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                     }
                 }
             });
-
         })();
 
         registerHandlebarsHelpers();

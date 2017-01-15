@@ -16,7 +16,7 @@ define(["jquery", "underscore", "backbone", "config"
                 return Config.api.metadata + this.path + this.query;
         }
         , parse: function (data) {
-            data = _.map(data, _.identity);
+//            data = _.map(data, _.identity);
             return data;
         }
         , navigate: function (data) {

@@ -53,7 +53,6 @@ require.config({
         , "bootbox": ["vendor/bootbox.min"]
         , "spin": ["vendor/spin.min"]
         , "ladda": ["vendor/ladda.min"]
-        , "pace": ["vendor/pace.min"]
         , "x-editable": ["vendor/bootstrap-editable.min"]
         , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
         , "select2": ["vendor/select2.full.min"]

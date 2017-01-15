@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            this.renderToolbar();
             if (typeof params === "undefined")
                 var params = this.getToolbarParams();
-            var template = Template.template.load('resources/review', 'review');
+            var template = Template.template.load('resources/returnees', 'returnees');
             var $container = $(Config.positions.main);
             var model = new ReviewModel(params);
             var self = this;

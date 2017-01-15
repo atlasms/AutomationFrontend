@@ -1,4 +1,3 @@
-// Filename: router.js
 define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper"
 ], function ($, _, Backbone, Login, Template, Config, Layout, UserHelper) {
     var Router = Backbone.Router.extend({
@@ -102,14 +101,14 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             // Cleaning up last view
 //            self.view && (self.view.close ? self.view.close() : self.view.remove());
             self.view && self.view.close();
-            
+
             var request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
             requirejs([request], function (View) {
-                
+
                 // Instantiating new view
                 var view = new View({actions: actions});
                 self.view = view;
-                
+
                 var content = (typeof view.prepareContent !== "undefined") ? view.prepareContent() : null;
                 self.loadContents(view, content);
 
