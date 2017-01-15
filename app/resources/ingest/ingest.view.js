@@ -6,7 +6,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
+//            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
+            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
         ]
         , statusbar: []
         , flags: {}
@@ -48,7 +49,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
                     $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
             });
-            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
+//            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
+            $('button[data-task=add]').removeClass('disabled');
         }
         , reLoad: function () {
             this.load();
