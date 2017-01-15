@@ -214,6 +214,7 @@ body.fixed-toolbar {
         .name { display: block; float: right; position: absolute; top: 50px; right: 0; font-size: 12px; }
         .body { margin-top: 8px; }
         .message { text-align: left; }
+        .date { color: #777; font-size: 90%; opacity: .1; visibility: hidden; transition: 0.2s all; text-align: center; }
         &.out {
             .label-type { float: right; }
         }
@@ -223,6 +224,16 @@ body.fixed-toolbar {
             .message { text-align: right; }
             .body { text-align: left; }
         }
+        &.system {
+            .avatar { display: none; }
+            .name { display: none; }
+            .arrow { display: none; }
+            .message {
+                margin-right: 0; text-align: center; background: #efefef; margin: 0 200px; border: 1px solid #eee; border-radius: 2px !important; padding: 0;
+                .body { margin: 5px 0; color: #666; font-size: 80%; }
+            }
+        }
+        &:hover { .date { opacity: 1; visibility: visible } }
     }
 }
 

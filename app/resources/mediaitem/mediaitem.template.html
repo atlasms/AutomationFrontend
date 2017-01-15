@@ -35,9 +35,6 @@
 										<td>وضعیت</td>
 										<td>
 											<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
-											<!--											<a href="#" class="x-editable" id="state-field" data-type="select" data-source="{{getDefinitions 2}}" data-pk="{{Id}}" data-field="State" data-original-title="وضعیت">
-																							<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
-																						</a>-->
 											{{#ifCond State '==' 2}}
 											<button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}">
 												<i class="fa fa-reply"></i> بازگشت به بازبینی

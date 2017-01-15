@@ -7,18 +7,21 @@
 					<div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
 						<ul class="chats">
 							{{#each []}}
-							<li class="out">
+							<li class="out {{#ifCond Owner '==' 1}}system{{/ifCond}}">
 								<img class="avatar" alt="" src="/assets/img/avatar2.jpg" />
-								<span class="name"> {{Title}} </span>
+								<div class="date">{{extractTime SendDate}} {{extractDate SendDate}}</div>
+								<span class="name"> {{FromUserText}} </span>
 								<div class="message">
 									<span class="arrow"> </span>
+									{{#if TypeText}}
 									<span class="label label-danger label-sm label-type">{{TypeText}}</span>
+									{{/if}}
 									{{#if Data.start}}
 									<span class="datetime label">
 										<span class="label label-default label-sm">{{Data.start}} - {{Data.end}}</span>
 									</span>
 									{{/if}}
-									<span class="body clearfix">{{Body}}</span>
+									<span class="body clearfix">{{#ifCond Owner '==' 1}}{{FromUserText}}{{/ifCond}} {{Body}}</span>
 								</div>
 							</li>
 							{{/each}}

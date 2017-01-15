@@ -201,6 +201,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.loadTab(null, true);
                     // reset editable field
                     if (typeof callback !== "undefined")
                         callback(id, params, self);
