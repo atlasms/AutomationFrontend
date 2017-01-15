@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.ingest.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'tus', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, moment, IngestModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, tus) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
     var IngestView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         $modal: "#metadata-form-modal"
@@ -82,7 +82,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , afterRender: function () {
-            IngestHelper.mask("time");
             if (typeof this.flags.treeLoaded === "undefined") {
                 $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
                 this.flags.treeLoaded = true;
