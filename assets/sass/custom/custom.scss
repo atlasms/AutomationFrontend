@@ -9,6 +9,8 @@
 @import "modal-transitions";
 @import "ladda.min";
 @import "x-editable";
+@import "select2";
+@import "../global/plugins/select2";
 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
@@ -288,6 +290,8 @@ body.fixed-toolbar {
 
 // User Manage Page
 
+// User Messages
+.user-select { max-width: 70%; }
 
 
 #player-container { background: #3C3E3F }

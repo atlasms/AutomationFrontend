@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toastr', 'toolbar', 'wysihtml5', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, InboxModel, toastr, Toolbar, wysihtml5) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'resources.review.model', 'users.manage.model', 'toastr', 'toolbar', 'select2', 'wysihtml5', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, InboxModel, ReviewModel, UsersManageModel, toastr, Toolbar, select2, wysihtml5) {
     var InboxView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         modal_register: '#register-modal'
@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             'click .inbox-nav li a': 'loadTab'
             , 'click [href="#compose"]': 'loadCompose'
             , 'click .mail-to .inbox-cc': 'handleCCInput'
-            , 'click .mail-to .inbox-bcc': 'handleBCCInput'
+            , 'submit form.inbox-compose': 'sendMessage'
         }
         , reLoad: function () {
             this.load();
@@ -43,27 +43,49 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 $container.html(output).promise().done(function () {
                     if ($('.inbox-wysihtml5').length)
                         self.initWysihtml5();
+                    if ($("[name=ToUserId]").length)
+                        self.loadUsersList();
                 });
             });
+        }
+        , loadUsersList: function () {
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+//                        $("[name=ToUserId]").select2('data', {id: this.Id, text: this.Name});
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Name + ' ' + this.Family + '</option>');
+                    });
+//                    $(".select2").select2({
+//                        rtl: true
+//                    });
+                }
+            });
+        }
+        , sendMessage: function (e) {
+            e.preventDefault();
+            var $form = $("form.inbox-compose");
+            var data = [$form.serializeObject()];
+            new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function (model, response) {
+                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // TODO: reload comments
+                }
+            });
+            return false;
         }
         , initWysihtml5: function () {
             $('.inbox-wysihtml5').wysihtml5({
                 "stylesheets": ["/assets/css/vendor/wysiwyg-color.css"]
+                , ignore: ":hidden:not(textarea)"
             });
         }
         , handleCCInput: function () {
             var the = $('.inbox-compose .mail-to .inbox-cc');
             var input = $('.inbox-compose .input-cc');
-            the.hide();
-            input.show();
-            $('.close', input).click(function () {
-                input.hide();
-                the.show();
-            });
-        }
-        , handleBCCInput: function () {
-            var the = $('.inbox-compose .mail-to .inbox-bcc');
-            var input = $('.inbox-compose .input-bcc');
             the.hide();
             input.show();
             $('.close', input).click(function () {
@@ -98,6 +120,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
         }
         , afterRender: function () {
             this.handleHash();
+//            $(".select2").select2();
         }
         , handleHash: function () {
             var self = this;

@@ -15,10 +15,6 @@ define(["jquery", "underscore", "backbone", "config"
             else
                 return Config.api.users + this.path + this.query;
         }
-        , parse: function (data) {
-            data = _.map(data, _.identity);
-            return data;
-        }
         , save: function (key, val, options) {
             return Backbone.Model.prototype.save.call(this, key, val, options);
         }

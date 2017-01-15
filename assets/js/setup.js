@@ -27,6 +27,7 @@ require.config({
         , "jwplayer": {exports: "jwplayer"}
         , "ladda": {deps: ["spin"]}
         , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
+//        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
     , paths: {
@@ -55,6 +56,7 @@ require.config({
         , "pace": ["vendor/pace.min"]
         , "x-editable": ["vendor/bootstrap-editable.min"]
         , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
+        , "select2": ["vendor/select2.full.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
