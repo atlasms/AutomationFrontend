@@ -11,7 +11,7 @@
 @import "x-editable";
 @import "select2";
 @import "loading";
-@import "../global/plugins/select2";
+// @import "../global/plugins/select2";
 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
@@ -31,6 +31,10 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
     width: 315px;
     .logo-default { margin-top: 5px; }
 }
+.page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu { width: 400px; max-width: 400px; }
+.page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-menu { width: 400px; max-width: 400px; }
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu .dropdown-menu-list>li>a { font-size: 80%; }
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time { max-width: 100px; }
 
 // Toolbar
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }

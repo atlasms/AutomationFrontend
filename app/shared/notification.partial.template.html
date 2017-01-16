@@ -1,0 +1,13 @@
+{{#each []}}
+<li>
+	<a href="#">
+		<span class="message clearfix">{{Body}}</span>
+		<span class="subject clearfix">
+			<span class="time" title="{{extractDate SendDate}} {{extractTime SendDate}}">
+				{{#ifIsToday SendDate}}{{extractTime SendDate}}{{/ifIsToday}}
+			</span>
+			{{#ifCond Owner '==' 1}}<span class="time">پیام سیستم</span>{{/ifCond}}
+		</span>
+	</a>
+</li>
+{{/each}}

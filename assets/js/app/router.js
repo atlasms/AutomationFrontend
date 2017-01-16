@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper"
-], function ($, _, Backbone, Login, Template, Config, Layout, UserHelper) {
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', "layout", "user.helper", "notifications"
+], function ($, _, Backbone, Login, Template, Config, Layout, UserHelper, Notifications) {
     var Router = Backbone.Router.extend({
         routes: {
             'login': 'Login'
@@ -83,13 +83,17 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             }
             $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-header-fixed-mobile");
             var template = Template.template.load('', 'app');
+            var user = UserHelper.getUser();
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile($(data).wrap('<p/>').parent().html());
-                var output = handlebarsTemplate(UserHelper.getUser());
+                var output = handlebarsTemplate(user);
                 $(Config.positions.wrapper).html(output);
                 self.loadPage(actions);
                 // Initialize Layout helpers
                 Layout.init();
+                
+                // TODO: to replace current method with socket.io
+                new Notifications(user);
             });
         }
         , loadPage: function (actions) {
