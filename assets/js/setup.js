@@ -56,6 +56,7 @@ require.config({
         , "x-editable": ["vendor/bootstrap-editable.min"]
         , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
         , "select2": ["vendor/select2.full.min"]
+        , "notifications": ["helpers/notifications"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -124,6 +125,6 @@ require.config({
     }
 });
 
-require(["jquery", "underscore", "backbone", 'defines', 'router', 'user.helper'], function ($, _, Backbone, Defines, Router, UserHelper) {
-    Defines.initialize() && new Router(UserHelper.getUser());
+require(["jquery", "underscore", "backbone", 'defines', 'router'], function ($, _, Backbone, Defines, Router) {
+    Defines.initialize() && new Router();
 });
