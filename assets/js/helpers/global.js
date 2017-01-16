@@ -182,10 +182,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             return greg_date = gdate.getFullYear() + '-' + Global.zeroFill(gdate.getMonth() + 1) + '-' + Global.zeroFill(gdate.getDate());
         }
         , gregorianToJalali: function (datetime, splitter) {
+            if (typeof datetime === "undefined")
+                return null;
             splitter = (typeof splitter !== "undefined") ? splitter : '-';
-            var JDate = require('jdate');
-            var dt = datetime.split(' ');
+            var dt = (datetime.indexOf(' ') !== -1) ? datetime.split(' ') : [datetime];
             var d = dt[0].split(splitter);
+            var JDate = require('jdate');
             var jdate = new JDate(new Date(d[0], (d[1] - 1), d[2]));
             for (var i in jdate.date)
                 jdate.date[i] = Global.zeroFill(jdate.date[i]);
