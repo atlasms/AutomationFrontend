@@ -17,8 +17,8 @@
 									{{#each []}}
 									<tr class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
 										<!--<td class="view-message hidden-xs"> {{FromUserText}} </td>-->
-										<td class="view-message "> {{Body}} </td>
-										<td class="view-message text-right" title="{{extractTime SendDate}} {{extractDate SendDate}}"> {{extractDate SendDate}} </td>
+										<td class="view-message col-xs-9"> {{Body}} </td>
+										<td class="view-message text-right col-xs-3" title="{{extractTime SendDate}} {{extractDate SendDate}}">{{extractTime SendDate}} {{extractDate SendDate}}</td>
 									</tr>
 									{{/each}}
 								</tbody>

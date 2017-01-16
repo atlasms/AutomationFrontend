@@ -16,10 +16,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , events: {
             'click .submit': 'submit'
             , 'click [data-task=load_review]': 'load'
-            , 'click #review-table tbody tr': 'collapseRow'
             , 'submit .chat-form': 'insertComment'
+            , 'click #review-table tbody tr td': 'collapseRow'
+            , 'click #review-table tbody tr td a': function(e) {
+                e.stopPropagation();
+            }
         }
         , collapseRow: function (e) {
+//            if ($(e.currentTarget).find('a[target="_blank"]'))
+//                return false;
             var self = this;
             var $el = $(e.target);
             var $row = ($(e.target).is("tr")) ? $(e.target) : $(e.target).parents("tr:first");
@@ -81,11 +86,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
             });
-//            window.setTimeout(function () {
-//                template.done(function (data) {
-//
-//                });
-//            }, 300);
         }
         , insertComment: function (e) {
             e.preventDefault();
@@ -178,6 +178,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
+            /*
             $(document).mouseup(function (e) {
                 var container = $("#review-table tbody, #toolbar");
                 if (!container.is(e.target) // if the target of the click isn't the container...
@@ -196,6 +197,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 }
             });
+            */
             var self = this;
             ReviewHelper.mask("time");
         }
