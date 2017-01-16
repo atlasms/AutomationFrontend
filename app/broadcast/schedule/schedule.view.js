@@ -495,8 +495,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , afterRender: function () {
             var self = this;
-            
+
             ScheduleHelper.mask("time");
+
+            self.attachDatepickers();
+
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 ScheduleHelper.init();
@@ -509,6 +512,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 dateParts[i] = parseInt(dateParts[i]);
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
             ScheduleHelper.generateTimeArray(this);
+
         }
         , renderToolbar: function () {
             var self = this;
@@ -521,6 +525,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 toolbar[method](this[method]);
             });
             toolbar.render();
+            self.attachDatepickers();
+//            this.flags.toolbarRendered = true;
+        }
+        , attachDatepickers: function () {
             var $datePickers = $(".datepicker");
             var datepickerConf = {
                 onSelect: function () {
@@ -529,9 +537,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             };
             $.each($datePickers, function () {
-                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+                if ($(this).data('datepicker') == undefined)
+                    $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
-//            this.flags.toolbarRendered = true;
         }
         , renderStatusbar: function () {
 //            var self = this;
