@@ -13,8 +13,9 @@
 		{{#each []}}
 		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
 			<td class="text-center">
+					{{config placeholderImage}}
 				<figure>
-					<img src="{{Thumbnail}}" alt="" />
+					<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 				</figure>
 			</td>
 			<td>
