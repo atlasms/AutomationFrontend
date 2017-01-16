@@ -102,14 +102,18 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
     .checkbox { margin-top: 6px; } 
 }
 .fixed-label.form-group.form-md-line-input label {
-    color: #cdcdcd; font-size: 12px;
+    color: #cdcdcd; font-size: 12px; text-indent: 16px;
     width: 100%; position: absolute; left: 0; bottom: 0; pointer-events: none;
+}
+.remove-meta {
+    position: absolute; top: 0; left: 0; font-weight: bold; color: gray;
+    &:hover { color: #333; text-decoration: none; }
 }
 .box.portlet { direction: ltr; text-align: left; }
 .editable-input textarea { min-width: 350px; }
 // Typeahead
 .tt-cursor { background: #eee; }
-.tt-hint { color: #ccc !important }     
+.tt-hint { color: #ccc !important }
 .tt-menu {
     min-width: 100% !important; width: auto !important; right: auto !important; left: 0 !important; max-width: 400px;
      .fa.suggestion-1:before { content: "\f07b"; } // Folder
@@ -311,7 +315,7 @@ body.fixed-toolbar {
 /// Metadata page
 #metadata-page {
     .table {
-        .label { margin-top: 10px; display: inline-block; }
+        .label { margin-top: 10px; display: inline-block; min-width: 100px; }
         tbody tr {
             cursor: pointer;
         }
