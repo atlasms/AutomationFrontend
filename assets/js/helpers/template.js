@@ -67,6 +67,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return options.inverse(this);
                 }
             });
+            Handlebars.registerHelper('ifIsToday', function (value, options) {
+                var givenDate = (value && value.indexOf("T") !== -1) ? value.split('T')[0] : value;
+                var today = moment().format('YYYY-MM-DD');
+                if (givenDate === today)
+                    return '<i class="fa fa-clock-o"></i> ' + value.split('T')[1];
+                return '<i class="fa fa-calendar"></i> ' + Global.gregorianToJalali(value.split('T')[0]);
+            });
             Handlebars.registerHelper('ifCondNot', function (v1, v2, options) {
                 if (v1 !== v2) {
                     return options.fn(this);
