@@ -25,6 +25,8 @@ define(['jquery', 'underscore', 'backbone', 'config'
             return false;
         }
         , getUser: function () {
+            if (typeof STORAGE === "undefined" || !STORAGE || !STORAGE.getItem)
+                return null;
             if (STORAGE.getItem(UserHelper.storageKey)) {
                 var content = JSON.parse(STORAGE.getItem(UserHelper.storageKey));
                 if (content.data) {
@@ -33,6 +35,8 @@ define(['jquery', 'underscore', 'backbone', 'config'
             }
         }
         , getToken: function () {
+            if (typeof STORAGE === "undefined" || !STORAGE || !STORAGE.getItem)
+                return null;
             if (STORAGE.getItem(UserHelper.storageKey)) {
                 var content = JSON.parse(STORAGE.getItem(UserHelper.storageKey));
                 if (content.token) {
