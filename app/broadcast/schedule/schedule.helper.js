@@ -42,7 +42,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 return false;
             switch (type) {
                 case 'time':
-//                    $("input.time").unmask();
                     $("input.time").mask('H0:M0:S0', {
                         placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
                     });
@@ -199,9 +198,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         if (parseInt(data.kind) !== 3) {
                             $parent.find("label").text(data.text);
                             $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
-                            $parent.find('[name="ConductorMetaCategoryId"]').val(data.externalId);
+                            $parent.find('[name="ConductorMetaCategoryId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
                         } else {
                             $parent.find("label").text('');
+                            $parent.find(".remove-meta").remove();
                             $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
                             $parent.find('[name="ConductorMetaCategoryId"]').val('');
                         }
@@ -211,20 +211,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $parent.find("label").html(data.text);
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
-                            $parent.find('[name="ConductorMediaId"]').val(data.externalId);
+                            $parent.find('[name="ConductorMediaId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
                         } else {
                             $parent.find("label").html('');
+                            $parent.find(".remove-meta").remove();
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
                             $parent.find('[name="ConductorMediaId"]').val('');
-//                            $parent.find('[name="ConductorDuration"]').val('00:00:00');
                         }
                         $row.find("input").trigger('change');
                         break;
                 }
-                console.log('Selection: ' + JSON.stringify(suggestion));
             });
         }
         , validate: function () {
