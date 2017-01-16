@@ -6,10 +6,12 @@
 					<tr>
 						<th class="">شناسه</th>
 						<th class="col-xs-1"></th>
-						<th class="col-xs-4">نام آیتم</th>
+						<th class="col-xs-3">نام آیتم</th>
 						<th class="col-xs-1 text-center">برنامه</th>
 						<th class="col-xs-2 text-center">زمان ثبت</th>
+						<th class="col-xs-1">ایجاد کننده</th>
 						<th class="col-xs-2 text-center">آخرین ویرایش</th>
+						<th class="col-xs-1">ویرایش کننده</th>
 						<th class="text-center">قسمت</th>
 						<th class="col-xs-1 text-center">مدت</th>
 						<th class="col-xs-2 text-center">وضعیت</th>
@@ -21,7 +23,7 @@
 						<td>{{Id}}</td>
 						<td class="text-center">
 							<figure>
-								<img src="{{Thumbnail}}" alt="" />
+								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 							</figure>
 						</td>
 						<td>
@@ -34,8 +36,14 @@
 						<td class="text-right">
 							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
 						</td>
+						<td class="text-left">
+							<span class="">{{CreatedByText}}</span>
+						</td>
 						<td class="text-right">
 							<span class="">{{extractTime Modified}} {{extractDate Modified}}</span>
+						</td>
+						<td class="text-left">
+							<span class="">{{ModifiedByText}}</span>
 						</td>
 						<td class="text-center">
 							{{EpisodeNumber}}

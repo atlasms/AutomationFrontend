@@ -11,7 +11,7 @@
 								<th class="col-xs-1"></th>
 								<th>مدت</th>
 								<th>رد شده توسط</th>
-								<th>زمان ثبت</th>
+								<th>زمان رد</th>
 								<th>آخرین ویرایش</th>
 								<th>قسمت</th>
 								<th>برنامه</th>
@@ -27,7 +27,7 @@
 								</td>
 								<td class="text-center">
 									<figure>
-										<img src="{{Thumbnail}}" alt="" />
+										<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 									</figure>
 								</td>
 								<td class="text-center">
@@ -37,7 +37,7 @@
 									{{PublishedByText}}
 								</td>
 								<td class="text-right">
-									<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+									<span class="">{{extractTime Published}} {{extractDate Published}}</span>
 								</td>
 								<td class="text-right">
 									<span class="">{{extractTime Modified}} {{extractDate Created}}</span>
