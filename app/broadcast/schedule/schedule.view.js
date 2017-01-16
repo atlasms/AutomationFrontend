@@ -38,6 +38,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=edit-title]': 'editTitle'
             , 'click [data-task=delete-title]': 'deleteTitle'
             , 'click [data-task=delete-subtitle]': 'deleteSubtitle'
+            , 'click .remove-meta': 'removeMetaId'
+        }
+        , removeMetaId: function (e) {
+            e.preventDefault();
+            var $this = $(e.currentTarget);
+            var $parent = $this.parent();
+            $this.remove();
+            $parent.find("label").empty();
+            $parent.find('input[type="hidden"]').val('');
         }
         , deleteTitle: function (e) {
             e.preventDefault();
@@ -486,7 +495,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if (typeof data.responseJSON.Message !== "undefined")
+                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     if ($("#schedule-page tbody tr").length)
                         $("#schedule-page tbody").empty();
                 }

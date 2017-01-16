@@ -104,7 +104,7 @@
 						</td>
 						<td class="text-center">
 							<figure>
-								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" />
+								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt=""  onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 							</figure>
 						</td>
 						<td class="text-center hide">
@@ -130,14 +130,18 @@
 						<td>
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
+								{{#if ConductorMetaCategoryId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
 								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required>
-								<label for="program_{{@index}}">{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}</label>
+								<label for="program_{{@index}}">
+									{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}
+								</label>
 								<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
+								{{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
 								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
 								<label for="episode_{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
 								<span class="help-block">عنوان قسمت برنامه</span>
