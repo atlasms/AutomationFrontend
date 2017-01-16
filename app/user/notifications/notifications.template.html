@@ -16,7 +16,7 @@
 								<tbody>
 									{{#each []}}
 									<tr class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
-										<td class="view-message hidden-xs"> {{FromUserText}} </td>
+										<!--<td class="view-message hidden-xs"> {{FromUserText}} </td>-->
 										<td class="view-message "> {{Body}} </td>
 										<td class="view-message text-right" title="{{extractTime SendDate}} {{extractDate SendDate}}"> {{extractDate SendDate}} </td>
 									</tr>
@@ -29,15 +29,4 @@
 			</div>
 		</div>
 	</div>
-<!--	<div class="modal" id="notifications-detail-modal" tabindex="-1" role="dialog">
-		<div class="modal-dialog container" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">اعلان</h4>
-				</div>
-				<div class="modal-body"></div>
-			</div> /.modal-content 
-		</div> /.modal-dialog 
-	</div> /.modal -->
 </div>
