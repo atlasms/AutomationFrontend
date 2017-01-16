@@ -31,10 +31,29 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
     width: 315px;
     .logo-default { margin-top: 5px; }
 }
-.page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu { width: 400px; max-width: 400px; }
-.page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-menu { width: 400px; max-width: 400px; }
-.page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu .dropdown-menu-list>li>a { font-size: 80%; }
-.page-header.navbar .top-menu .navbar-nav>li.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time { max-width: 100px; }
+.page-header.navbar .top-menu .navbar-nav > li{
+    &.dropdown-extended .dropdown-menu { width: 400px; max-width: 400px; }
+    &.dropdown-extended .dropdown-menu .dropdown-menu-list>li>a {
+        font-size: 80%;
+        &.seen-status { border: 2px solid #dadce4 !important; }
+    }
+    &.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time { max-width: 100px; }
+}
+
+.notifications-list li {
+    position: relative;
+    .seen-status {
+        padding: 0 !important; position: absolute; top: 15px; right: 15px; display: block; content: ''; background: #dadce4;
+        width: 10px; height: 10px; border-radius: 100% !important;
+        &:hover { background: #dadce4 !important; }
+    }
+    &.read {
+        .seen-status {
+            background: transparent !important; cursor: default;
+            &:hover { background: transparent !important; }
+        }
+    }
+}
 
 // Toolbar
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }

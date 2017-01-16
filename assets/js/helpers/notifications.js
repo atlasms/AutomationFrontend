@@ -6,7 +6,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inb
             self.checkNotifications();
             this.interval = window.setInterval(function () {
                 self.checkNotifications();
-            }, 20000);
+            }, Config.notificationsInterval);
+            $(document).on('click', ".notifications-list li a.seen-status", function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                if ($this.parent().hasClass("unread")) {
+                    new InboxModel({id: $this.parents("li:first").attr("data-messageid")}).fetch({
+                        success: function () {
+                            $this.parents("li:first").removeClass("unread").addClass("read");
+                        }
+                    });
+                }
+                return false;
+            });
         }
         , checkNotifications: function () {
             var self = this;
@@ -25,8 +37,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inb
                             });
                         }
                     });
-                    if ($("#header_notification_bar").find(".badge").text() !== items.length)
-                        $("#header_notification_bar").find(".badge").text(_.size(items));
+                    var i = 0;
+                    $.each(items, function () {
+                        if (!this.SeenDate)
+                            i++;
+                    });
+                    if ($("#header_notification_bar").find(".badge").text() !== i)
+                        $("#header_notification_bar").find(".badge").text(i);
                 }
             });
         }

@@ -1,5 +1,6 @@
 {{#each []}}
-<li>
+<li class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
+	<a href="#" class="seen-status"></a>
 	<a href="#">
 		<span class="message clearfix">{{Body}}</span>
 		<span class="subject clearfix">
