@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id + '#versions');
+            window.open('/resources/mediaitem/' + id + '#review');
 //            !Backbone.History.started && Backbone.history.start({pushState: true});
 //            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
             return;
