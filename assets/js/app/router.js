@@ -58,7 +58,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                     }
                 }
             });
-            $(document).on("click", 'a[href^="/"]', function (evt) {
+            $(document).on("click", 'a[href^="/"]:not([target="_blank"])', function (evt) {
                 var href = {prop: $(this).prop("href"), attr: $(this).attr("href")};
                 var root = location.protocol + "//" + location.host + Backbone.history.options.root;
 
