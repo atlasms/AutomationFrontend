@@ -101,6 +101,7 @@ require.config({
         , "resources.returnees.view": ["../../app/resources/returnees/returnees.view"]
         , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
         , "user.messages.view": ["../../app/user/messages/inbox.view"]
+        , "user.notifications.view": ["../../app/user/notifications/notifications.view"]
         , "users.view": ["../../app/users/users.view"]
         , "users.manage.view": ["../../app/users/manage/manage.view"]
         , "toolbar": ["helpers/toolbar"]

@@ -1,0 +1,43 @@
+<div id="notifications-page" class="notifications">
+	<div class="mainbody">
+		<div class="inbox">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="inbox-body">
+						<div class="inbox-content">
+							<table class="table table-striped table-advance table-hover">
+								<thead>
+									<tr>
+										<th colspan="100%">
+											<button type="button" class="btn btn-default btn-sm pull-right" data-task="refresh"><i class="fa fa-refresh"></i></button>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each []}}
+									<tr class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
+										<td class="view-message hidden-xs"> {{FromUserText}} </td>
+										<td class="view-message "> {{Body}} </td>
+										<td class="view-message text-right" title="{{extractTime SendDate}} {{extractDate SendDate}}"> {{extractDate SendDate}} </td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!--	<div class="modal" id="notifications-detail-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog container" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">اعلان</h4>
+				</div>
+				<div class="modal-body"></div>
+			</div> /.modal-content 
+		</div> /.modal-dialog 
+	</div> /.modal -->
+</div>
