@@ -541,15 +541,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , attachDatepickers: function () {
             var self = this;
             var $datePickers = $(".datepicker");
-            var datepickerConf = {
-                onSelect: function () {
-                    self.load();
-                    $datePickers.blur();
-                }
-            };
             $.each($datePickers, function () {
-                if ($(this).data('datepicker') == undefined)
-                    $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {
+                            if ($this.parents("#toolbar").length)
+                                self.load();
+                            $datePickers.blur();
+                        }
+                    }));
+                }
             });
         }
         , renderStatusbar: function () {
