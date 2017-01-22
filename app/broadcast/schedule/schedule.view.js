@@ -539,6 +539,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //            this.flags.toolbarRendered = true;
         }
         , attachDatepickers: function () {
+            var self = this;
             var $datePickers = $(".datepicker");
             var datepickerConf = {
                 onSelect: function () {
