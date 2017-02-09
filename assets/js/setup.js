@@ -100,6 +100,7 @@ require.config({
         , "resources.review.view": ["../../app/resources/review/review.view"]
         , "resources.returnees.view": ["../../app/resources/returnees/returnees.view"]
         , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
+        , "resources.live.view": ["../../app/resources/live/live.view"]
         , "user.messages.view": ["../../app/user/messages/inbox.view"]
         , "user.notifications.view": ["../../app/user/notifications/notifications.view"]
         , "users.view": ["../../app/users/users.view"]

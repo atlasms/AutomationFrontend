@@ -42,6 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
             , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
+            , "resources/live": {"private": true, "access": null, "action": "LiveView", "file": "app/resources/live/live.view"}
             , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
             , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
             , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
