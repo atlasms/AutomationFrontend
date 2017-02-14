@@ -33,18 +33,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                     var Callees = {
                         destroy: function (node) {
                             var params = {method: 'delete', id: node.toString()};
-                            if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
-                                bootbox.confirm({
-                                    message: "آیا مطمئن هستید مورد انتخاب شده پاک شود؟"
-                                    , buttons: {
-                                        confirm: {className: 'btn-success'}
-                                        , cancel: {className: 'btn-danger'}
-                                    }
-                                    , callback: function (results) {
+                            bootbox.confirm({
+                                message: "آیا مطمئن هستید مورد انتخاب شده پاک شود؟"
+                                , buttons: {
+                                    confirm: {className: 'btn-success'}
+                                    , cancel: {className: 'btn-danger'}
+                                }
+                                , callback: function (results) {
+                                    if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
                                         if (results)
                                             $this.callback['handleTreeCallbacks'](params, $($this.$el));
-                                    }
-                                });
+                                }
+                            });
                         }
                     };
                     var contextItems = {
@@ -91,7 +91,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             }
         }
 
-        this.options = $.extend({}, this.defaults, options);
+        this.options = $.extend({}
+        , this.defaults, options);
     };
     _.extend(Tree.prototype, {
         render: function () {
