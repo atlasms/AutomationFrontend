@@ -10,7 +10,7 @@
 						<th class="col-xs-1">نام کاربری</th>
 						<th class="col-xs-2">ایمیل</th>
 						<th class="col-xs-1">شماره تلفن</th>
-						<th class="col-xs-1">نقش[ها]</th>
+						<th class="col-xs-1">دسترسی[ها]</th>
 						<th class="col-xs-2">آخرین ورود</th>
 						<th class="col-xs-2">آخرین IP</th>
 					</tr>
@@ -38,6 +38,9 @@
 						</td>
 						<td class="">
 							{{Roles}}
+							<a href="/user/acl/{{Id}}">
+								<i class="fa fa-cog"></i> تعیین دسترسی‌ها
+							</a>
 						</td>
 						<td class="text-right">
 							{{extractTime LoginDate}} {{extractDate LoginDate}}
