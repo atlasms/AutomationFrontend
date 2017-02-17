@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'backbone', 'config'
-], function ($, _, Backbone, Config) {
+define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
+], function ($, _, Backbone, Config, authorization) {
     var UserHelper = {
+        // Simple public or restricted pages access check
         authorize: function (actions, map) {
             if (typeof map[actions] !== "undefined" && map[actions].private === false)
                 return true;
@@ -12,8 +13,13 @@ define(['jquery', 'underscore', 'backbone', 'config'
                     }
                 }
             }
-            this.redirect();
+            this.redirect();            
             return false;
+        }
+        // Method to check user access based on Authorization class and server-side data
+        , Authorize: function (type, action) {
+            var user = UserHelper.getUser();
+            return authorization(user.Access, type, action);
         }
         , storageKey: Config.storageKey
         , redirect: function (post, data) {
