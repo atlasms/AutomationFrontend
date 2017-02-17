@@ -47,6 +47,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
             , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
             , "user/notifications": {"private": true, "access": null, "action": "NotificationsView", "file": "app/user/notifications/notifications.view"}
+            , "user/acl": {"private": true, "access": null, "action": "UserACLView", "file": "app/user/acl/acl.view"}
         },
         "positions": {
             "wrapper": "body"
@@ -68,6 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "definitions": "dfn"
             , "comments": "comments"
             , "users": "accounts"
+            , "acl": "accounts/access"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
