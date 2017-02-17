@@ -81,6 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
 
         return 0;
     };
+
     var Global = {
         trimChar: function (string, charToRemove) {
             while (string.charAt(0) === charToRemove)
@@ -216,6 +217,30 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             if (mm < 10)
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
+        }
+        // TEMP
+        // TODO: Wee need a useful localStorage helper class
+        , Cache: {
+            getStorage: function () {
+                return JSON.parse(STORAGE.getItem(CONFIG.storageKey));
+            }
+            , setStorage: function (obj) {
+                var data = JSON.stringify(obj);
+                STORAGE.setItem(CONFIG.storageKey, data);
+            }
+            , getMenu: function () {
+                var storage = Global.Cache.getStorage();
+                if (typeof storage.cache !== "undefined" && typeof storage.cache.menu !== "undefined")
+                    return Global.Cache.getStorage().cache.menu;
+                return {};
+            }
+            , saveMenu: function(data) {
+                var storage = Global.Cache.getStorage();
+                if (typeof storage.cache === "undefined")
+                    storage.cache = {};
+                storage.cache.menu = data;
+                Global.Cache.setStorage(storage);
+            }
         }
     };
     return Global;
