@@ -1,0 +1,24 @@
+<div class="page-sidebar navbar-collapse collapse">
+	<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu navbar-collapse collapse" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+		<li class="nav-item start active open">
+			<a href="/" class="nav-link nav-toggle">
+				<span class="title">داشبورد</span>
+				<i class="fa fa-home"></i>
+			</a>
+		</li>
+		{{#each []}}
+		<li class="heading">
+			<h3 class="uppercase">{{title}}</h3>
+		</li>
+		{{#each items}}
+		<li class="nav-item">
+			<a href="{{link}}" class="nav-link ">
+				<span class="title">{{title}}</span>
+				<span class="arrow"></span>
+				<i class="fa fa-{{icon}}"></i>
+			</a>
+		</li>
+		{{/each}}
+		{{/each}}
+	</ul>
+</div>
