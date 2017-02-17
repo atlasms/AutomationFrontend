@@ -17,6 +17,9 @@
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, #main, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
 .label { font-family: 'Vazir', Tahoma; direction: ltr; }
+#user-acl-page {
+    ul, li { list-style: none; }
+}
 
 // Header
 .breadcrumbs { 
