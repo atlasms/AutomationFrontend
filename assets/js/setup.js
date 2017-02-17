@@ -60,6 +60,9 @@ require.config({
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
+        
+        // Static files
+        , "menu": ["json!../../app/menu"]
 
                 // Application Dependencies
 //        , "app": ["app/app"]
@@ -103,6 +106,7 @@ require.config({
         , "resources.live.view": ["../../app/resources/live/live.view"]
         , "user.messages.view": ["../../app/user/messages/inbox.view"]
         , "user.notifications.view": ["../../app/user/notifications/notifications.view"]
+        , "user.acl.view": ["../../app/user/acl/acl.view"]
         , "users.view": ["../../app/users/users.view"]
         , "users.manage.view": ["../../app/users/manage/manage.view"]
         , "toolbar": ["helpers/toolbar"]
@@ -124,6 +128,7 @@ require.config({
         , "tree.helper": ["helpers/tree"]
         , "player.helper": ["helpers/player"]
         , "editable.helper": ["helpers/editable"]
+        , "authorization": ["helpers/authorization"]
     }
 });
 
