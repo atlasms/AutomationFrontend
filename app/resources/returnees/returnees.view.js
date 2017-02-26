@@ -1,13 +1,12 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker'
 ], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker) {
     var ReturneesView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
         playerInstance: null
         , model: 'ReviewModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: persianDate().format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: persianDate().subtract('days', 7).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate().format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: Global.jalaliToGregorian(persianDate().subtract('days', 7)).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
@@ -38,10 +37,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return params;
         }
         , render: function (params) {
-//            if (!this.flags.toolbarRendered)
-//            this.renderToolbar();
-            if (typeof params === "undefined")
-                var params = this.getToolbarParams();
+            var params = (typeof params !== "undefined") ? params : this.getToolbarParams();
             var template = Template.template.load('resources/returnees', 'returnees');
             var $container = $(Config.positions.main);
             var model = new ReviewModel(params);
@@ -67,23 +63,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-            var self = this;
             if ($("#review-table").length)
                 $("#review-table").attr('id', 'returnees-table');
         }
         , renderToolbar: function () {
             var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
             var toolbar = new Toolbar();
-//            var definedItems = toolbar.getDefinedToolbar("resources.review");
             var elements = $.merge(self.toolbar, {});
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
-//            self.flags.toolbarRendered = true;
             $(document).on('change', "#toolbar select", function () {
                 self.load();
             });
@@ -95,17 +86,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             };
             $.each($datePickers, function () {
-                // TODO: Set default value to datepicker
-//                var val = $(this).val();
-//                console.log(val);
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
-//                if (val !== "") {
-//                    try {
-//                        $(this).pDatepicker("setDate", val);
-//                    } catch (e) {
-//                        console.warn(e)
-//                    }
-//                }
             });
         }
         , prepareItems: function (items, params) {
