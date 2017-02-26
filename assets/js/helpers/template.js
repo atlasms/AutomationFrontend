@@ -139,6 +139,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('time', function (timestamp, options) {
                 return Global.createTime(timestamp);
             });
+            Handlebars.registerHelper('seconds', function (time, options) {
+                return Global.processTime(time);
+            });
             Handlebars.registerHelper('config', function (value, options) {
                 return Config[value];
             });
