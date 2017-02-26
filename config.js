@@ -28,6 +28,22 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                         , "btnPrevText": "<"
                     }
                 }
+            },
+            "bootstrapTable": {
+                icons: {
+                    paginationSwitchDown: 'fa fa-arrow-down',
+                    paginationSwitchUp: 'fa fa-arrow-up',
+                    refresh: 'fa fa-refresh',
+                    toggle: 'fa fa-list',
+                    columns: 'fa fa-th',
+                    detailOpen: 'fa fa-plus',
+                    detailClose: 'fa fa-minus'
+                }
+                , pagination: true
+                , pageSize: 50
+                , search: true
+                , showPaginationSwitch: true
+                , locale: 'fa-IR'
             }
         },
         "routes": {
@@ -48,6 +64,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
             , "user/notifications": {"private": true, "access": null, "action": "NotificationsView", "file": "app/user/notifications/notifications.view"}
             , "user/acl": {"private": true, "access": null, "action": "UserACLView", "file": "app/user/acl/acl.view"}
+            , "pr": {"private": true, "access": null, "action": "PRView", "file": "app/pr/pr.view"}
+            , "pr/sms": {"private": true, "access": null, "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
+            , "pr/recordings": {"private": true, "access": null, "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
         },
         "positions": {
             "wrapper": "body"
@@ -70,6 +89,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "comments": "comments"
             , "users": "accounts"
             , "acl": "accounts/access"
+            , "sms": "pr/sms"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
