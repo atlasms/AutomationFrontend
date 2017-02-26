@@ -4,6 +4,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'MediaitemModel'
+        , playerInstance: {}
+        , player: null
         , modal_storage: '#storage-modal'
         , modal_tree: '#tree-modal'
         , treeInstance: {}
@@ -21,8 +23,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=select-folder]': 'setCategory'
             , 'click [data-task=return-item]': 'returnItem'
             , 'click .item-forms .nav-tabs li a': 'loadTab'
+            , 'click [data-seek]': 'seekPlayer'
             , 'submit .chat-form': 'insertComment'
             , 'click .open-item': 'openItem'
+        }
+        , seekPlayer: function(e) {
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
         , openItem: function (e) {
             var $el = $(e.currentTarget);
@@ -304,7 +312,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
             });
-//            self.renderToolbar();
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');

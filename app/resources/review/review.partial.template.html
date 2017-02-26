@@ -17,7 +17,7 @@
 									<span class="label label-danger label-sm label-type">{{TypeText}}</span>
 									{{/if}}
 									{{#if Data.start}}
-									<span class="datetime label">
+									<span class="datetime label" data-seek="{{seconds Data.start}}">
 										<span class="label label-default label-sm">{{Data.start}} - {{Data.end}}</span>
 									</span>
 									{{/if}}

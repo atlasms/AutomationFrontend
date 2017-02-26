@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper'
 ], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player) {
     var ReviewView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
         playerInstance: null
+        , player: null
         , model: 'ReviewModel'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1'}} // accept
@@ -18,13 +18,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=load_review]': 'load'
             , 'submit .chat-form': 'insertComment'
             , 'click #review-table tbody tr td': 'collapseRow'
-            , 'click #review-table tbody tr td a': function(e) {
+            , 'click [data-seek]': 'seekPlayer'
+            , 'click #review-table tbody tr td a': function (e) {
                 e.stopPropagation();
             }
         }
+        , seekPlayer: function (e) {
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            this.player.seek($el.attr('data-seek'), this.playerInstance);
+        }
         , collapseRow: function (e) {
-//            if ($(e.currentTarget).find('a[target="_blank"]'))
-//                return false;
             var self = this;
             var $el = $(e.target);
             var $row = ($(e.target).is("tr")) ? $(e.target) : $(e.target).parents("tr:first");
@@ -39,20 +43,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $el.parents("tbody").find("tr").removeClass('active');
             $row.addClass('active');
             var id = $row.attr('data-id');
-            if ($(document).find(".preview-pane").length)
-                $(document).find(".preview-pane").fadeOut(200, function () {
-                    var $target = $(this);
-                    self.player.remove();
-                    window.setTimeout(function () {
-                        $target.remove();
-                    }, 50);
-                });
+            if ($(document).find(".preview-pane").length) {
+                self.player.remove();
+                $(".preview-pane").remove();
+            }
             // Loading review partial template
             var template = Template.template.load('resources/review', 'review.partial');
-            var params = {
-                query: 'externalid=' + id + '&kind=1'
-                , overrideUrl: Config.api.comments
-            };
+            var params = {query: 'externalid=' + id + '&kind=1', overrideUrl: Config.api.comments};
             new ReviewModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
@@ -78,7 +75,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                                             , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
                                         ]
                                     }]
-                            }, self.handlePlayerCallbacks);
+                            });
                             player.render();
                             self.player = player;
                             self.playerInstance = player.instance;
@@ -149,8 +146,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return params;
         }
         , render: function (params) {
-//            if (!this.flags.toolbarRendered)
-//                this.renderToolbar();
             if (typeof params === "undefined")
                 var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');
@@ -178,30 +173,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-            /*
-            $(document).mouseup(function (e) {
-                var container = $("#review-table tbody, #toolbar");
-                if (!container.is(e.target) // if the target of the click isn't the container...
-                        && container.has(e.target).length === 0) // ... nor a descendant of the container
-                {
-                    if ($(document).find(".preview-pane").length) {
-                        $("#toolbar .submit").addClass('hidden').removeClass('in');
-                        container.find("tr.active").removeClass('active');
-                        $(document).find(".preview-pane").fadeOut(200, function () {
-                            var $target = $(this);
-                            self.player.remove();
-                            window.setTimeout(function () {
-                                $target.remove();
-                            }, 200);
-                        });
-                    }
-                }
-            });
-            */
             var self = this;
             ReviewHelper.mask("time");
-        }
-        , handlePlayerCallbacks: function (instance, type, value) {
         }
         , renderToolbar: function () {
             var self = this;
