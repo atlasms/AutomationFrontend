@@ -145,7 +145,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 });
             }
             if ($this.options.template.controls.keys) {
-                $(document).on('click', 'a[data-type="controls"]', function (e) {
+                $('a[data-type="controls"]').on('click', function (e) {
                     e.preventDefault();
                     var task = $(this).attr('data-task');
                     switch (task) {
