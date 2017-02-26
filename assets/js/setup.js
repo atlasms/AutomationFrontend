@@ -22,6 +22,7 @@ require.config({
         , "bootstrap/tooltip": {deps: ["jquery"], exports: "$.fn.tooltip"}
         , "bootstrap/popover": {deps: ["jquery", "bootstrap/tooltip"], exports: "$.fn.popover"}
         , "bootstrap/transition": {deps: ["jquery"], exports: "$.fn.transition"}
+        , "bootstrap-table": {deps: ["jquery"], exports: "$.fn.bootstrapTable"}
         , "x-editable": {deps: ["jquery", "bootstrap/tooltip", "bootstrap/popover"], exports: "jQuery"}
         , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
         , "jwplayer": {exports: "jwplayer"}
@@ -57,6 +58,7 @@ require.config({
         , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
         , "select2": ["vendor/select2.full.min"]
         , "notifications": ["helpers/notifications"]
+        , "bootstrap-table": ["vendor/bootstrap-table.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -86,6 +88,7 @@ require.config({
         , "users.model": ["../../app/users/users.model"]
         , "users.manage.model": ["../../app/users/manage/manage.model"]
         , "inbox.model": ["../../app/user/messages/inbox.model"]
+        , "pr.model": ["../../app/pr/pr.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -111,6 +114,9 @@ require.config({
         , "users.manage.view": ["../../app/users/manage/manage.view"]
         , "toolbar": ["helpers/toolbar"]
         , "statusbar": ["helpers/statusbar"]
+        , "pr.view": ["../../app/pr/pr.view"]
+        , "pr.sms.view": ["../../app/pr/sms/sms.view"]
+        , "pr.recordings.view": ["../../app/pr/recordings/recordings.view"]
 
                 // Helpers
         , "layout": ["app/layout"]
