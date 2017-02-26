@@ -1,12 +1,12 @@
 // TODO: Colors for crawl items
 // TODO: Using real data services
 // TODO: Make editor as an standalone helper
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'player.helper', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui, Player) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
         model: 'CrawlModel'
+        , playerInstance: {}
         , toolbar: [
             {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
             , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
