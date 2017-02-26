@@ -172,11 +172,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             output = yyyy + '-' + mm + '-' + dd;
             return output;
         }
+        , persianToLatinDigits: function (s) {
+            var a = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+            var p = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+            for (var i = 0; i < 10; i++) {
+                s = s.replace(new RegExp(a[i], 'g'), i).replace(new RegExp(p[i], 'g'), i);
+            }
+            return s;
+        }
         , jalaliToGregorian: function (datetime, splitter) {
             splitter = (typeof splitter !== "undefined") ? splitter : '-';
             if (typeof datetime === "undefined")
                 return false;
-            var datetime = datetime.split(' ');
+            var datetime = Global.persianToLatinDigits(datetime).split(' ');
             var date = datetime[0].split(splitter);
             var JDate = require('jdate');
             var gdate = JDate.to_gregorian(parseInt(date[0]), parseInt(date[1]), parseInt(date[2]));
@@ -234,7 +242,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                     return Global.Cache.getStorage().cache.menu;
                 return {};
             }
-            , saveMenu: function(data) {
+            , saveMenu: function (data) {
                 var storage = Global.Cache.getStorage();
                 if (typeof storage.cache === "undefined")
                     storage.cache = {};
