@@ -44,7 +44,7 @@
         "alias": "pr",
         "items": [
             { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "#" },
-            { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "#" },
+            { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" },
             { "title": "بولتن‌ها", "alias": "pr_bulletin", "icon": "book", "link": "#" }
         ]
     }, 
