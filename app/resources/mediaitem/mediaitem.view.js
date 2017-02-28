@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'submit .chat-form': 'insertComment'
             , 'click .open-item': 'openItem'
         }
-        , seekPlayer: function(e) {
+        , seekPlayer: function (e) {
             e.preventDefault();
             var $el = $(e.currentTarget);
             this.player.seek($el.attr('data-seek'), this.playerInstance);

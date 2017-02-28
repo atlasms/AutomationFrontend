@@ -32,6 +32,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend({}, this.defaults, options);
+        if (this.options.playlist.length > 0) // Using playlist, thus adding VTT
+            this.options.playlist[0].tracks = [{file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails"}];
         this.callback = (typeof callback !== "undefined") ? callback : null;
 
         this.instance = null;
@@ -202,7 +204,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     $('[data-type="controls"][data-task="play-pause"]').attr('data-state', 'play');
                     $("ul.speed li").removeClass('active');
                     $("ul.speed").find('li[data-value="1"]').addClass('active');
-                     $("#seekbar .seeker .inner:first").slider('option', 'value', 0);
+                    $("#seekbar .seeker .inner:first").slider('option', 'value', 0);
                 }, 50);
             });
         }
