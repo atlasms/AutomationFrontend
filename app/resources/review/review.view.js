@@ -68,6 +68,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                                 });
                             var player = new Player('#player-container', {
                                 duration: media.duration
+                                , file: media.video
                                 , playlist: [{
                                         image: media.thumbnail
                                         , sources: [
