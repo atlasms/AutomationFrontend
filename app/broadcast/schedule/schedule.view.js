@@ -556,15 +556,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , renderStatusbar: function () {
 //            var self = this;
-            if (this.flags.statusbarRendered)
-                return;
+//            if (this.flags.statusbarRendered)
+//                return;
             var elements = this.statusbar;
             var statusbar = new Statusbar();
             $.each(elements, function () {
                 statusbar.addItem(this);
             });
             statusbar.render();
-            this.flags.statusbarRendered = true;
+//            this.flags.statusbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
