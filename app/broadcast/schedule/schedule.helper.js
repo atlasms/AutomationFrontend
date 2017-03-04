@@ -182,7 +182,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }, {
                 display: 'value'
                 , items: 100
-                , limit: 100
+                , limit: 10000
                 , source: suggestionsAdapter
                 , templates: {
                     suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}</div>')
