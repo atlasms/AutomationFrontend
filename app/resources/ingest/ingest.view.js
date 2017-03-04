@@ -1,19 +1,19 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
     var IngestView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-//            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات <span class="index"></span>', type: 'button', task: 'add'}}
-            {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
+            {'button': {cssClass: 'btn purple-studio pull-right', text: '<i class="fa fa-refresh"></i>', type: 'button', task: 'refresh'}}
+            , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=add]': 'openAddForm'
+            , 'click [data-task=refresh]': 'loadStorageFiles'
             , 'click #storagefiles tbody tr': 'selectRow'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
@@ -43,8 +43,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , selectRow: function (e) {
             var $el = $(e.target);
             var $row = $el.parents("tr:first");
-            $el.parents("tbody").find("tr").removeClass('active');
-            $row.addClass('active');
+            $el.parents("tbody").find("tr").removeClass('active success');
+            $row.addClass('active success');
             $row.find("[data-prop]").each(function () {
                 if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
                     $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
@@ -62,19 +62,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.render(params);
         }
         , render: function (params) {
+            var self = this;
             var template = Template.template.load('resources/ingest', 'ingest');
             var $container = $(Config.positions.main);
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function () {
+                    self.afterRender();
+                });
+            });
+        }
+        , loadStorageFiles: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
+            var template = Template.template.load('resources/ingest', 'storagefiles.partial');
+            var $container = $("#storagefiles-place");
+            var params = {};
             var model = new IngestModel(params);
             var self = this;
+            $container.fadeOut();
             model.fetch({
-                data: (typeof params !== "undefined") ? $.param(params) : null
+                data: $.param(params)
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            self.afterRender();
+                            $container.stop().fadeIn();
                         });
                     });
                 }
@@ -84,10 +99,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-            if (typeof this.flags.treeLoaded === "undefined") {
-                $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
-                this.flags.treeLoaded = true;
-            }
+            this.loadStorageFiles();
+//            console.log(this.flags.treeLoaded)
+//            if (typeof this.flags.treeLoaded === "undefined") {
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+//                this.flags.treeLoaded = true;
+//            }
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
@@ -159,7 +176,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            self.afterRender();
+//                            self.afterRender();
                         });
                     });
                 }
