@@ -5,7 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '<i class="fa fa-refresh"></i>', type: 'button', task: 'refresh'}}
+            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
         ]
         , statusbar: []
