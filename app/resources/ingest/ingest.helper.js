@@ -14,7 +14,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 return false;
             switch (type) {
                 case 'time':
-//                    $("input.time").unmask();
                     $("input.time").mask('H0:M0:S0', {
                         placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
                     });
@@ -24,8 +23,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , validate: function () {
             this.beforeSave = function () {
                 var rquiredError = false;
+                if ($("#path").val() === "") {
+                    toastr.warning('مسیر برنامه مشخص نشده است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    rquiredError = true;
+                }
                 $("input, select, textarea").each(function() {
-//                    console.log($(this).attr("required"))
                     if ($(this).attr("required") && $(this).val() === "") {
                         $(this).parents(".form-group:first").addClass('has-error');
                         rquiredError = true;
