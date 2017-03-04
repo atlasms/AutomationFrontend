@@ -6,12 +6,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
+            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
+            , 'click [data-task=refresh]': 'reLoad'
         }
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
@@ -21,11 +23,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
             return;
         }
-        , reLoad: function () {
+        , reLoad: function (e) {
+            if (typeof e !== "undefined")
+                e.preventDefault();
             this.load();
         }
         , load: function (e, extend) {
-            e.preventDefault();
+            if (typeof e !== "undefined")
+                e.preventDefault();
             console.info('Loading items');
             var params = {};
             params.q = $("[name=q]").val();
