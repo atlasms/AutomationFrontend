@@ -82,7 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
         return 0;
     };
 
-    var Global = {
+    window.Global = {
         trimChar: function (string, charToRemove) {
             while (string.charAt(0) === charToRemove)
                 string = string.substring(1);
