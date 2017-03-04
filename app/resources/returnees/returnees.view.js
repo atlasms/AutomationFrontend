@@ -5,8 +5,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , model: 'ReviewModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate().format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: Global.jalaliToGregorian(persianDate().subtract('days', 7)).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate().format('YYYY-MM-DD'))}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate().subtract('days', 7).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
