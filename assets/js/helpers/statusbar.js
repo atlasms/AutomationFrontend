@@ -3,7 +3,6 @@ define(['jquery', 'underscore', 'backbone', 'config'
     var StatusHelper = Backbone.View.extend({
         el: $(Config.positions.status)
         , statusbar: ''
-
         , initialize: function () {
 //            var $statusbar = this.$el;
         }
