@@ -14,6 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
             , 'click [data-task=refresh]': 'reLoad'
+            , 'click [data-task=refresh-view]': 'reLoad'
         }
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
@@ -61,21 +62,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-//            MetadataHelper.mask("time");
-//            $("#tree").length && new Tree($("#tree"), Config.api.tree).render();
+            this.renderStatusbar();
         }
         , renderToolbar: function () {
-            var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
-            var elements = self.toolbar;
+            var elements = this.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
-//            self.flags.toolbarRendered = true;
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

@@ -20,6 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , flags: {toolbarRendered: false}
         , events: {
             'click [type=submit]': 'submit'
+            , 'click [data-task=refresh-view]': 'reLoad'
             , 'keyup input.time': 'processTime'
             , 'click [data-task=load]': 'load'
             , 'click [data-task=file]': 'loadFile'

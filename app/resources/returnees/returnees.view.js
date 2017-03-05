@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker'
-], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, Statusbar) {
     var ReturneesView = Backbone.View.extend({
         playerInstance: null
         , model: 'ReviewModel'
@@ -14,6 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , flags: {toolbarRendered: false}
         , events: {
             'click #returnees-table tbody tr': 'openItem'
+            , 'click [data-task=refresh-view]': 'reLoad'
         }
         , openItem: function (e) {
             e.preventDefault();
@@ -67,6 +68,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , afterRender: function () {
             if ($("#review-table").length)
                 $("#review-table").attr('id', 'returnees-table');
+            this.renderStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
@@ -90,6 +92,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $.each($datePickers, function () {
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

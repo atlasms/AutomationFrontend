@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
+            , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=add]': 'openAddForm'
             , 'click [data-task=refresh]': 'loadStorageFiles'
             , 'click #storagefiles tbody tr': 'selectRow'
@@ -111,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 this.flags.helperLoaded = true;
             } else
                 IngestHelper.init(true);
+            this.renderStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
@@ -184,6 +186,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
 //                }
             });
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
     });
     return IngestView;

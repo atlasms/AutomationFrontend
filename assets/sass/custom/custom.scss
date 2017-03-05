@@ -176,6 +176,10 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .page-footer-inner { width: 100% }
 #status-items { float: left; }
 #server-time { float: right; color: #000 }
+.refresh-view {
+    float: right; margin-left: 20px; cursor: pointer; opacity: 0.5; transition: 0.2s all;
+    &:hover { opacity: 1; }
+}
 .scroll-to-top { bottom: 40px; }
 
 // Fixed Toolbar

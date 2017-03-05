@@ -6,7 +6,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , toolbar: []
         , statusbar: []
         , flags: {}
-        , events: {}
+        , events: {
+            'click [data-task=refresh-view]': 'reLoad'
+        }
         , reLoad: function () {
             this.load();
         }
@@ -29,8 +31,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , afterRender: function () {
-            var $this = this;
-            $("#tree").length && new Tree($("#tree"), Config.api.tree, $this).render();
+            var self = this;
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+            this.renderStatusbar();
         }
         , handleTreeCallbacks: function (params, $tree, node) {
             if (typeof params === "undefined")
@@ -87,6 +90,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
             toolbar.render();
             self.flags.toolbarRendered = true;
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

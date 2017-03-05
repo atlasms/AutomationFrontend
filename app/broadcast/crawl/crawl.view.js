@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , {'button': {cssClass: 'btn red-flamingo', text: "ارسال زیرنویس", type: 'button', task: 'show-export-form'}}
         ]
         , statusbar: [
-            {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
+            
         ]
         , flags: {}
         , events: {
@@ -232,15 +232,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             toolbar.render();
         }
         , renderStatusbar: function () {
-            if (this.flags.statusbarRendered)
-                return;
             var elements = this.statusbar;
             var statusbar = new Statusbar();
             $.each(elements, function () {
                 statusbar.addItem(this);
             });
             statusbar.render();
-            this.flags.statusbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

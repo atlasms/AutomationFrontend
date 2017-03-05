@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper'
-], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , events: {
             'click .submit': 'submit'
             , 'click [data-task=load_review]': 'load'
+            , 'click [data-task=refresh-view]': 'reLoad'
             , 'submit .chat-form': 'insertComment'
             , 'click #review-table tbody tr td': 'collapseRow'
             , 'click [data-seek]': 'seekPlayer'
@@ -174,7 +175,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-            var self = this;
+            this.renderStatusbar();
             ReviewHelper.mask("time");
         }
         , renderToolbar: function () {
@@ -201,6 +202,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 // TODO: Set default value to datepicker
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

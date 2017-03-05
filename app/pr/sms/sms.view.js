@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'toastr', 'bootstrap/modal', 'pdatepicker', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, PRModel, Toolbar, toastr) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'toastr', 'statusbar', 'bootstrap/modal', 'pdatepicker', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, PRModel, Toolbar, toastr, Statusbar) {
     var PRSMSView = Backbone.View.extend({
         modal_register: '#register-modal'
         , toolbar: [
@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
         ]
         , events: {
             'click [data-task=filter_rows]': 'filter'
+            , 'click [data-task=refresh-view]': 'reLoad'
         }
         , defatulFilter: {
             start: Global.jalaliToGregorian(persianDate().subtract('days', 1).format('YYYY-MM-DD')) + 'T00:00:00'
@@ -53,6 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
         }
         , afterRender: function () {
             $("#pr-sms-page table").bootstrapTable(Config.settings.bootstrapTable);
+            this.renderStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
@@ -71,19 +73,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
                 }
             };
             $.each($datePickers, function () {
-                // TODO: Set default value to datepicker
-//                var val = $(this).val();
-//                console.log(val);
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
-//                if (val !== "") {
-//                    try {
-//                        $(this).pDatepicker("setDate", val);
-//                    } catch (e) {
-//                        console.warn(e)
-//                    }
-//                }
             });
-            self.flags.toolbarRendered = true;
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
