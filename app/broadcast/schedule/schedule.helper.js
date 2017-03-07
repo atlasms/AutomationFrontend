@@ -118,10 +118,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             clone.addClass('error new');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
+            clone.find('textarea').val('');
             clone.find('input[type="hidden"]').val('');
             clone.find('input[type="text"]').val('');
             clone.find('input[data-suggestion="true"]').parent().find("label").text('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
+            clone.find('.item-link, .remove-meta').remove();
             clone.insertAfter(row);
             ScheduleHelper.rebuildTable();
             row.next().find("input:first").trigger('click');
@@ -212,11 +214,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
                             $parent.find('[name="ConductorMediaId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
+                            $row.find('.idx').after('<a class="item-link" href="/resources/mediaitem/' + data.externalId + '#review" target="_blank"><i class="fa fa-info-circle"></i></a>');
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
                         } else {
                             $parent.find("label").html('');
-                            $parent.find(".remove-meta").remove();
+                            $parent.find(".remove-meta, .item-link").remove();
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
                             $parent.find('[name="ConductorMediaId"]').val('');

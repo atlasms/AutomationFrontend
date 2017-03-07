@@ -48,6 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $this.remove();
             $parent.find("label").empty();
             $parent.find('input[type="hidden"]').val('');
+            $parent.parents("tr:first").find('.item-link').remove();
         }
         , deleteTitle: function (e) {
             e.preventDefault();

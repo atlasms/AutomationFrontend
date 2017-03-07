@@ -123,7 +123,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 }
 .box.portlet { direction: ltr; text-align: left; }
 .editable-input textarea { min-width: 350px; }
-.form-group.form-md-line-input .form-control { font-size: 16px; }
+.form-group.form-md-line-input .form-control:not(select):not(textarea) { font-size: 16px; }
 // Typeahead
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important }
@@ -200,6 +200,7 @@ body.fixed-toolbar {
 #schedule-page {
     .table {
         p { margin-bottom: 0; }
+        .idx ~ a { display: block; margin-top: 25px; }
         &:not(.titles) {
             th {
                 &.small { min-width: 40px; max-width: 50px; }
