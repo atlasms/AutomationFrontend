@@ -70,11 +70,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , success: function (model, response) {
                     toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    self.loadTab(null, true);
+                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
             e.preventDefault();
             return false;
+        }
+        , loadComments: function (params) {
+            var self = this;
+            new ReviewModel(params).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/review', 'comments.partial');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $("#comments-container").html(output);
+                        // After render
+                        if ($("table").find(".scroller").length)
+                            $("table").find(".scroller").slimScroll({
+                                height: $("table").find(".scroller").height()
+                                , start: 'bottom'
+                            });
+                        if ($("input.time").length)
+                            $("input.time").mask('H0:M0:S0', {
+                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                            });
+                    });
+                }
+            });
         }
         , setVideo: function (e) {
             e.preventDefault();
@@ -247,7 +271,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , overrideUrl: Config.api.comments
                     };
                     tmpl = ['resources/review', 'review.partial'];
-                    model = new ReviewModel(params);
+                    model = 'sequential-comments';
                     break;
                 case 'versions':
                     var params = {
@@ -260,26 +284,37 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }
             if (tmpl && model) {
                 var template = Template.template.load(tmpl[0], tmpl[1]);
-                model.fetch({
-                    success: function (items) {
-                        items = self.prepareItems(items.toJSON(), params);
-                        template.done(function (data) {
-                            var handlebarsTemplate = Template.handlebars.compile(data);
-                            var output = handlebarsTemplate(items);
-                            $container.html(output).promise().done(function () {
-                                if ($container.find(".scroller").length)
-                                    $container.find(".scroller").slimScroll({
-                                        height: $container.find(".scroller").height()
-                                        , start: 'bottom'
-                                    });
-                                if ($("input.time").length)
-                                    $("input.time").mask('H0:M0:S0', {
-                                        placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                                    });
+                if (model.indexOf('sequential') === -1) {
+                    model.fetch({
+                        success: function (items) {
+                            items = self.prepareItems(items.toJSON(), params);
+                            template.done(function (data) {
+                                var handlebarsTemplate = Template.handlebars.compile(data);
+                                var output = handlebarsTemplate(items);
+                                $container.html(output).promise().done(function () {
+                                    if ($container.find(".scroller").length)
+                                        $container.find(".scroller").slimScroll({
+                                            height: $container.find(".scroller").height()
+                                            , start: 'bottom'
+                                        });
+                                    if ($("input.time").length)
+                                        $("input.time").mask('H0:M0:S0', {
+                                            placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                        });
+                                });
                             });
+                        }
+                    });
+                } else {
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate({});
+                        $container.html(output).promise().done(function () {
+                            if (model.split('-')[1] === "comments")
+                                self.loadComments(params);
                         });
-                    }
-                });
+                    });
+                }
             }
 
         }

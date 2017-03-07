@@ -51,39 +51,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // Loading review partial template
             var template = Template.template.load('resources/review', 'review.partial');
             var params = {query: 'externalid=' + id + '&kind=1', overrideUrl: Config.api.comments};
-            new ReviewModel(params).fetch({
-                success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $row.after('<tr class="preview-pane"><td colspan="100%">' + output + '</td></tr>').promise().done(function () {
-                            if ($("table").find(".scroller").length)
-                                $("table").find(".scroller").slimScroll({
-                                    height: $("table").find(".scroller").height()
-                                    , start: 'bottom'
-                                });
-                            if ($("input.time").length)
-                                $("input.time").mask('H0:M0:S0', {
-                                    placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                                });
-                            var player = new Player('#player-container', {
-                                duration: media.duration
-                                , file: media.video
-                                , playlist: [{
-                                        image: media.thumbnail
-                                        , sources: [
-                                            {file: media.video, label: 'LQ', default: true}
-                                            , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-                                        ]
-                                    }]
-                            });
-                            player.render();
-                            self.player = player;
-                            self.playerInstance = player.instance;
-                        });
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $row.after('<tr class="preview-pane"><td colspan="100%">' + output + '</td></tr>').promise().done(function () {
+                    var player = new Player('#player-container', {
+                        duration: media.duration
+                        , file: media.video
+                        , playlist: [{
+                                image: media.thumbnail
+                                , sources: [
+                                    {file: media.video, label: 'LQ', default: true}
+                                    , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                                ]
+                            }]
                     });
-                }
+                    player.render();
+                    self.player = player;
+                    self.playerInstance = player.instance;
+                    self.loadComments(params);
+                });
             });
         }
         , insertComment: function (e) {
@@ -107,10 +94,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , success: function (model, response) {
                     toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     // TODO: reload comments
-                    //  self.loadTab(null, true);
+                    var params = {query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments};
+                    self.loadComments(params);
                 }
             });
             return false;
+        }
+        , loadComments: function (params) {
+            var self = this;
+            new ReviewModel(params).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/review', 'comments.partial');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $("#comments-container").html(output);
+                        // After render
+                        if ($("table").find(".scroller").length)
+                            $("table").find(".scroller").slimScroll({
+                                height: $("table").find(".scroller").height()
+                                , start: 'bottom'
+                            });
+                        if ($("input.time").length)
+                            $("input.time").mask('H0:M0:S0', {
+                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                            });
+                    });
+                }
+            });
         }
         , submit: function (e) {
             e.preventDefault();
