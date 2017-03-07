@@ -82,7 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
         return 0;
     };
 
-    window.Global = {
+    var Global = {
         trimChar: function (string, charToRemove) {
             while (string.charAt(0) === charToRemove)
                 string = string.substring(1);
@@ -225,6 +225,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             if (mm < 10)
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
+        }
+        , getServerDate: function (jalali, datetime) {
+            var jalali = (typeof jalali !== "undefined") ? jalali : false;
+            var datetime = (typeof datetime !== "undefined") ? datetime : false;
+            var d = SERVERDATE;
+            var output = d.getFullYear() + '-' + Global.zeroFill(d.getMonth() + 1) + '-' + Global.zeroFill(d.getDate());
+            if (jalali)
+                output = Global.gregorianToJalali(output);
+            if (datetime)
+                output += ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
+            return output;
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class

@@ -7,6 +7,8 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             window.STORAGEKEY = Config.storageKey;
             window.STORAGE = localStorage;
             window.SESSION = sessionStorage;
+            window.SERVERDATE = '';
+            window.GLOBAL = Global;
             window.$$ = function (element) {
                 return document.querySelectorAll(element);
             };
@@ -83,6 +85,7 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             , success: function (data, textStatus, request) {
                 var serverDate = request.getResponseHeader('Date');
                 var d = new Date(serverDate);
+                window.SERVERDATE = d;
                 d.setSeconds(d.getSeconds() + 1);
                 window.setInterval(function () {
                     d.setSeconds(d.getSeconds() + 1);
