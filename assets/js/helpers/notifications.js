@@ -1,11 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inbox.model'
-], function ($, _, Backbone, Config, Template, Global, InboxModel) {
+define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inbox.model', "user.helper"
+], function ($, _, Backbone, Config, Template, Global, InboxModel, UserHelper) {
     var Notifications = Backbone.View.extend({
         initialize: function () {
             var self = this;
             self.checkNotifications();
             this.interval = window.setInterval(function () {
-                self.checkNotifications();
+                if (typeof UserHelper.getUser().Id !== "undefined")
+                    self.checkNotifications();
             }, Config.notificationsInterval);
             $(document).on('click', ".notifications-list li a.seen-status", function (e) {
                 e.preventDefault();
