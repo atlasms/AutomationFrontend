@@ -81,7 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "schedule": "conductor"
             , "crawl": "conductor"
             , "tree": "metacategories"
-            , "storagefiles": "storagefiles"
+            , "ingest": "ingest"
             , "metadata": "metadata"
             , "mediaversions": "metadata/history"
 //            , "review": "metadata?categoryid=11"
@@ -90,6 +90,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "users": "accounts"
             , "acl": "accounts/access"
             , "sms": "pr/sms"
+            , "lantv": "share/lantv/"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
