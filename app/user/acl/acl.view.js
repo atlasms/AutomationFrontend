@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global', 'toolbar', 'toastr'
-], function ($, _, Backbone, Template, Config, UserModel, Global, Toolbar, toastr) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global', 'toolbar', 'toastr', 'resources.ingest.model', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, UserModel, Global, Toolbar, toastr, IngestModel) {
 
     var UserACLView = Backbone.View.extend({
         data: {}
@@ -8,6 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         ]
         , events: {
             'click [data-task="save"]': 'submit'
+            , 'click [data-task=refresh-view]': 'reLoad'
             , 'change input[type=checkbox]': 'handleParentCheckboxes'
         }
         , el: $(Config.positions.wrapper)
@@ -18,11 +19,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
-                , success: function(d) {
+                , success: function (d) {
                     toastr.success('با موفقیت انجام شد', 'ذخیره دسترسی‌ها', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
-            
+        }
+        , reLoad: function () {
+            this.load();
+        }
+        , load: function (e, extend) {
+            console.info('Loading data');
+            var params = {};
+            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            this.render(params);
         }
         , handleParentCheckboxes: function (e) {
             var checkbox = e.target;
@@ -33,24 +42,42 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 if (!checkbox.checked)
                     $(checkbox).parents("li:first").find("input[type=checkbox]").prop('checked', false);
         }
-        , render: function () {
+        , render: function (parameters) {
             var template = Template.template.load('user/acl', 'acl');
             var $container = $(Config.positions.main);
             var self = this;
 //            var params = {overrideUrl: Config.api.acl, id: this.getId()};
             var params = {overrideUrl: Config.api.acl};
             var model = new UserModel(params);
-            var data = {menu: {}, permissions: {}};
+            var data = {menu: {}, permissions: {}, directories: {}, lantv: {}};
+            // User ACL
             model.fetch({
                 success: function (d) {
                     data.permissions = self.prepareItems(d.toJSON(), params);
                     data.menu = Global.Cache.getMenu();
-                    template.done(function (tmpl) {
-                        var handlebarsTemplate = Template.handlebars.compile(tmpl);
-                        var output = handlebarsTemplate(data);
-                        $container.html(output).promise().done(function () {
-                            self.afterRender();
-                        });
+                    var folderParams = {overrideUrl: Config.api.ingest + '/directories'};
+                    var model = new IngestModel(folderParams);
+                    // User Directories
+                    model.fetch({
+                        success: function (f) {
+                            data.directories = self.prepareItems(f.toJSON(), folderParams);
+                            var lantvParams = {overrideUrl: Config.api.lantv + 'list'};
+                            var model = new UserModel(lantvParams);
+                            // User LanTVs
+                            model.fetch({
+                                success: function (l) {
+                                    data.lantv = self.prepareItems(l.toJSON(), lantvParams);
+                                    // Render template
+                                    template.done(function (tmpl) {
+                                        var handlebarsTemplate = Template.handlebars.compile(tmpl);
+                                        var output = handlebarsTemplate(data);
+                                        $container.html(output).promise().done(function () {
+                                            self.afterRender();
+                                        });
+                                    });
+                                }
+                            });
+                        }
                     });
                 }
             });
@@ -67,7 +94,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 success: function (d) {
                     var permissions = self.prepareItems(d.toJSON(), params);
                     $.each(permissions, function () {
-                        $('input[type=checkbox][value=' + this.Value + ']').prop('checked', true);
+                        $('ul[data-type=' + this.Key + '] input[type=checkbox][value=' + this.Value + ']').prop('checked', true);
                     });
                 }
             });
@@ -106,13 +133,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         }
         , prepareSave: function () {
             var data = [];
-            $('[data-type="menu"] input[type=checkbox]').each(function () {
-                if (this.checked)
-                    data.push({Key: 'menu', Value: $(this).val()});
-            });
-            $('[data-type="access"] input[type=checkbox]').each(function () {
-                if (this.checked)
-                    data.push({Key: 'access', Value: $(this).val()});
+            $('ul[data-type]').each(function () {
+                $(this).find('input[type=checkbox]').each(function () {
+                    if (this.checked)
+                        data.push({Key: $(this).parents("ul[data-type]").attr('data-type'), Value: $(this).val()});
+                });
             });
             return data;
         }

@@ -4,41 +4,78 @@
 			<div class="portlet light">
 				<div class="portlet-body">
 					<div class="row">
-						<div class="col-md-4">
-							<ul data-type="menu">
-								{{#each menu}}
-								<li>
-									<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
-										<input name="force" data-validation="digit" id="checkbox_m{{alias}}" value="{{alias}}" type="checkbox">
-										<label for="checkbox_m{{alias}}">{{title}}</label>
-									</div>
-									{{#if items}}
-									<ul>
-										{{#each items}}
+						<div class="col-xs-3">
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs tabs-left" role="tablist">
+								<li role="presentation" class="active"><a href="#tab_menu" aria-controls="home" role="tab" data-toggle="tab">دسترسی به صفحات</a></li>
+								<li role="presentation"><a href="#tab_permissions" aria-controls="profile" role="tab" data-toggle="tab">جزئیات دسترسی</a></li>
+								<li role="presentation"><a href="#tab_directories" aria-controls="messages" role="tab" data-toggle="tab">مسیرهای ورود اطلاعات</a></li>
+								<li role="presentation"><a href="#tab_lantv" aria-controls="settings" role="tab" data-toggle="tab">پخش زنده</a></li>
+							</ul>
+						</div>
+						<div class="col-xs-9">
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane fade in active" id="tab_menu">
+									<ul data-type="menu">
+										{{#each menu}}
 										<li>
 											<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
 												<input name="force" data-validation="digit" id="checkbox_m{{alias}}" value="{{alias}}" type="checkbox">
 												<label for="checkbox_m{{alias}}">{{title}}</label>
 											</div>
+											{{#if items}}
+											<ul>
+												{{#each items}}
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="force" data-validation="digit" id="checkbox_m{{alias}}" value="{{alias}}" type="checkbox">
+														<label for="checkbox_m{{alias}}">{{title}}</label>
+													</div>
+												</li>
+												{{/each}}
+											</ul>
+											{{/if}}
 										</li>
 										{{/each}}
 									</ul>
-									{{/if}}
-								</li>
-								{{/each}}
-							</ul>
-						</div>
-						<div class="col-md-8">
-							<ul class="row" data-type="access">
-								{{#each permissions}}
-								<li class="col-xs-4">
-									<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
-										<input name="force" data-validation="digit" id="checkbox_p{{Value}}" value="{{Value}}" type="checkbox">
-										<label for="checkbox_m{{Value}}">{{Key}}</label>
-									</div>
-								</li>
-								{{/each}}
-							</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_permissions">
+									<ul class="row" data-type="access">
+										{{#each permissions}}
+										<li class="col-xs-3">
+											<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+												<input name="force" data-validation="digit" id="checkbox_p{{Value}}" value="{{Value}}" type="checkbox">
+												<label for="checkbox_p{{Value}}">{{Key}}</label>
+											</div>
+										</li>
+										{{/each}}
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_directories">
+									<ul class="row" data-type="ingest_directory">
+										{{#each directories}}
+										<li class="ltr">
+											<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+												<input name="force" data-validation="digit" id="checkbox_f{{Value}}" value="{{Value}}" type="checkbox">
+												<label for="checkbox_f{{Value}}">{{Key}}</label>
+											</div>
+										</li>
+										{{/each}}
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_lantv">
+									<ul class="row" data-type="lantv">
+										{{#each lantv}}
+										<li>
+											<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+												<input name="force" data-validation="digit" id="checkbox_l{{Value}}" value="{{Value}}" type="checkbox">
+												<label for="checkbox_l{{Value}}">{{Key}}</label>
+											</div>
+										</li>
+										{{/each}}
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
