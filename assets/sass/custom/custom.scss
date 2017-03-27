@@ -349,6 +349,9 @@ body.fixed-toolbar {
 #metadata-place { max-height: 450px; overflow: hidden; overflow-y: scroll; } 
 
 // User Manage Page
+#users-manage-page {
+    table > tbody > tr > td { vertical-align: middle; }
+}
 
 // User Messages
 .user-select { max-width: 70%; }
