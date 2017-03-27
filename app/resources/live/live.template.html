@@ -2,8 +2,17 @@
 	<div class="portlet-body">
 		<div class="mainbody">
 			<div class="row">
-				<div class="col-xs-12">
-					<div id="player-container"><!-- Player Container --></div>
+				<div class="col-xs-3">
+					<div class="list-group">
+						{{#each []}}
+						<button type="button" class="list-group-item" data-url="{{Url}}" data-id="{{Id}}">{{Title}}</button>
+						{{/each}}
+					</div>
+				</div>
+				<div class="col-xs-9">
+					<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" codebase="http://download.videolan.org/pub/videolan/vlc/last/win32/axvlc.cab" id="vlc">
+						<embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" name="vlc" width="800" height="450" />
+					</object>
 				</div>
 			</div>
 		</div>

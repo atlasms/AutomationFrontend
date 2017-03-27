@@ -89,6 +89,7 @@ require.config({
         , "users.manage.model": ["../../app/users/manage/manage.model"]
         , "inbox.model": ["../../app/user/messages/inbox.model"]
         , "pr.model": ["../../app/pr/pr.model"]
+        , "live.model": ["../../app/resources/live/live.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]

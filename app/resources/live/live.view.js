@@ -1,8 +1,7 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'player.helper'
-], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, Player) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'live.model'
+], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, LiveModel) {
     var LiveView = Backbone.View.extend({
         playerInstance: null
-        , model: 'ReviewModel'
         , toolbar: []
         , statusbar: []
         , flags: {toolbarRendered: false}
@@ -21,6 +20,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
             var template = Template.template.load('resources/live', 'live');
             var $container = $(Config.positions.main);
             var self = this;
+//            var params = typeof params !== "undefined" ? params : {};
+            var model = new LiveModel({});
+            model.fetch({
+                success: function(d) {
+                    var items = self.prepareItems(d.toJSON(), {});
+                    console.log(items);
+                }
+            });
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
@@ -29,22 +36,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
                 });
             });
         }
-        , error: function (e, data) {
-            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-            if ($("#returnees-table tbody tr").length)
-                $("#returnees-table tbody").empty();
-        }
         , afterRender: function () {
             var self = this;
-            var media = {
-                video: 'http://192.168.100.65:9002/bysid/7333'
-            };
-            var player = new Player('#player-container', {
-                file: media.video
-            });
-            player.render();
-            self.player = player;
-            self.playerInstance = player.instance;
         }
         , renderToolbar: function () {
             var self = this;
