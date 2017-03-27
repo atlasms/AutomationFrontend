@@ -13,7 +13,7 @@ define(["jquery", "underscore", "backbone", "config"
             if (this.overrideUrl !== "")
                 return this.overrideUrl + this.path + this.query;
             else
-                return Config.api.storagefiles + this.path + this.query;
+                return Config.api.ingest + this.path + this.query;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);
