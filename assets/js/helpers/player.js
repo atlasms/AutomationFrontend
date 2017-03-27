@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend({}, this.defaults, options);
-        if (this.options.playlist.length > 0) // Using playlist, thus adding VTT
+        if (typeof this.options.playlist !== "undefined" && this.options.playlist.length > 0) // Using playlist, thus adding VTT
             this.options.playlist[0].tracks = [{file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails"}];
         this.callback = (typeof callback !== "undefined") ? callback : null;
 
