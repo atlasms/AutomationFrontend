@@ -133,6 +133,7 @@ require.config({
 //        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/categories.helper"]
         , "tree.helper": ["helpers/tree"]
+        , "storage.helper": ["helpers/storage"]
         , "player.helper": ["helpers/player"]
         , "editable.helper": ["helpers/editable"]
         , "authorization": ["helpers/authorization"]
