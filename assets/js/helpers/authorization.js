@@ -3,7 +3,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'user.helper'], function (
         var permit = false;
         var key = (typeof action === "undefined") ? 'access' : action;
         $.each(permissions, function() {
-            if (this.Key === key && this.Value === alias)
+            if (this.Key == key && this.Value == alias)
                 permit = true;
         });
         return permit;
