@@ -1,4 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox'], function ($, _, Backbone, Config, jstree, modal, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox', 'storage.helper', 'authorization'
+], function ($, _, Backbone, Config, jstree, modal, bootbox, Storage, Authorize) {
     bootbox.setLocale('fa');
     var Tree = function ($el, api, callback, options) {
         var $this = this;
@@ -27,7 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                 , "file": {"icon": "fa fa-file file icon-state-warning icon-lg"}
             }
             , "state": {"key": "tree"}
-            , "plugins": ["contextmenu", "dnd", "state", "types"]
+            , "plugins": ["contextmenu", "state", "types"]
             , contextmenu: {
                 items: function (node) {
                     var Callees = {
@@ -47,8 +48,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             });
                         }
                     };
-                    var contextItems = {
-                        "Create": {
+                    var contextItems = {};
+                    if (Authorize(Storage('Access'), 'access', 8)) {
+                        contextItems.Create = {
                             "label": "مورد جدید"
                             , icon: 'fa fa-plus'
                             , "action": function (data) {
@@ -61,8 +63,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                                 if (sel)
                                     ref.edit(sel);
                             }
-                        }
-                        , "Rename": {
+                        };
+                    }
+                    if (Authorize(Storage('Access'), 'access', 16)) {
+                        contextItems.Rename = {
                             "label": "تغییر نام"
                             , icon: 'fa fa-pencil'
                             , "action": function (data) {
@@ -70,8 +74,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                                 obj = inst.get_node(data.reference);
                                 inst.edit(obj);
                             }
-                        }
-                        , "Delete": {
+                        };
+                    }
+                    if (Authorize(Storage('Access'), 'access', 32)) {
+                        contextItems.Delete = {
                             "label": "حذف"
                             , icon: 'fa fa-trash'
                             , "action": function (data) {
@@ -79,17 +85,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                                         sel = ref.get_selected();
                                 if (!sel.length || ref.is_closed(sel) || node.children.length)
                                     return false;
-//                                    if (confirm('Delete node?')) {
                                 Callees.destroy(sel);
-//                                        ref.delete_node(sel);
-//                                    }
                             }
-                        }
-                    };
+                        };
+                    }
                     return contextItems;
                 }
             }
-        }
+        };
+        
+        if (Authorize(Storage('Access'), 'access', 64))
+            this.defaults.plugins.push("dnd");
 
         this.options = $.extend({}
         , this.defaults, options);
