@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar, Statusbar) {
     var UsersManageView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         modal_register: '#register-modal'
@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , flags: {}
         , events: {
             'click [data-task=add-user]': 'loadRegisterForm'
+            , 'click [data-task=refresh-view]': 'reLoad'
             , 'submit #user-register': 'register'
         }
         , loadRegisterForm: function (e) {
@@ -37,7 +38,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    console.log(d);
+                    toastr['success']('کاربر جدید با موفقیت ایجاد شد.', 'ایجاد کاربر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , error: function (z, x, c) {
                     console.log(z, x, c);
@@ -57,7 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                             var val = $(this).val();
                             $('[data-validation=confirm-pass]').each(function () {
                                 if ($(this).val() !== val) {
-                                    error = {msg: 'رمزهای عبور با هم یکسان نیستند.', type: 'warning'};;
+                                    error = {msg: 'رمزهای عبور با هم یکسان نیستند.', type: 'warning'};
                                 }
                             });
                             break;
@@ -111,7 +112,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            self.flags.toolbarRendered = true;
+//            self.flags.toolbarRendered = true;
+            this.renderStatusbar();
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -129,6 +131,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , prepareSave: function () {
             data = null;
             return data;
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
         }
     });
     return UsersManageView;
