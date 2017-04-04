@@ -11,6 +11,7 @@
 								<li role="presentation"><a href="#tab_permissions" aria-controls="profile" role="tab" data-toggle="tab">جزئیات دسترسی</a></li>
 								<li role="presentation"><a href="#tab_directories" aria-controls="messages" role="tab" data-toggle="tab">مسیرهای ورود اطلاعات</a></li>
 								<li role="presentation"><a href="#tab_lantv" aria-controls="settings" role="tab" data-toggle="tab">پخش زنده</a></li>
+								<li role="presentation"><a href="#tab_groups" aria-controls="groups" role="tab" data-toggle="tab">گروه‌های کاربری</a></li>
 							</ul>
 						</div>
 						<div class="col-xs-9">
@@ -73,6 +74,11 @@
 											</div>
 										</li>
 										{{/each}}
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_groups">
+									<ul class="row" data-type="groups">
+									{{{getDefinitionCheckboxes 14 'checkbox' 'li'}}}
 									</ul>
 								</div>
 							</div>
