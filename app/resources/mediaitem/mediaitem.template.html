@@ -5,77 +5,79 @@
 				<div class="portlet-body">
 					<div class="row">
 						<div class="col-md-7">
-							<strong>اطلاعات پایه</strong>
-							<table class="table table-bordered table-hover hidden-header">
-								<thead>
-									<tr>
-										<th class="col-xs-3"></th>
-										<th class="col-xs-9"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>شناسه</td>
-										<td>{{Id}}</td>
-									</tr>
-									<tr>
-										<td>عنوان</td>
-										<td>
-											<a href="#" class="x-editable" id="title-field" data-type="text" data-pk="{{Id}}" data-field="Title" data-original-title="عنوان">{{Title}}</a>
-										</td>
-									</tr>
-									<tr>
-										<td>برنامه</td>
-										<td>
-											<span data-type="category">{{MetaCategoryName}}</span>
-											<a href="#" data-task="change-category" data-id="{{MetaCategoryId}}"> <i class="fa fa-pencil"></i></a>
-										</td>
-									</tr>
-									<tr>
-										<td>وضعیت</td>
-										<td>
-											<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
-											{{#ifCond State '==' 2}}
-											<button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}">
-												<i class="fa fa-reply"></i> بازگشت به بازبینی
-											</button>
-											{{/ifCond}}
-										</td>
-									</tr>
-									<tr>
-										<td>خلاصه</td>
-										<td>
-											<a href="#" class="x-editable" id="desc-field" data-type="textarea" data-pk="{{Id}}" data-field="Description" data-original-title="توضیحات">{{Description}}</a>
-										</td>
-									</tr>
-									<tr>
-										<td>مدت</td>
-										<td>{{time Duration}}</td>
-									</tr>
-									<tr>
-										<td>شماره قسمت</td>
-										<td>
-											<a href="#" class="x-editable" id="episode-field" data-type="number" data-pk="{{Id}}" data-field="EpisodeNumber" data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
-										</td>
-									</tr>
-									<tr>
-										<td>تاریخ ایجاد</td>
-										<td>{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}})</td>
-									</tr>
-									<tr>
-										<td>تاریخ ویرایش</td>
-										<td>{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}})</td>
-									</tr>
-									<tr>
-										<td>تاریخ بازبینی</td>
-										<td>{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}})</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="basic-details" data-editable="{{#authorize 2048}}true{{/authorize}}">
+								<strong>اطلاعات پایه</strong>
+								<table class="table table-bordered table-hover hidden-header">
+									<thead>
+										<tr>
+											<th class="col-xs-3"></th>
+											<th class="col-xs-9"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>شناسه</td>
+											<td>{{Id}}</td>
+										</tr>
+										<tr>
+											<td>عنوان</td>
+											<td>
+												<a href="#" class="x-editable" id="title-field" data-type="text" data-pk="{{Id}}" data-field="Title" data-original-title="عنوان">{{Title}}</a>
+											</td>
+										</tr>
+										<tr>
+											<td>برنامه</td>
+											<td>
+												<span data-type="category">{{MetaCategoryName}}</span>
+												<a href="#" data-task="change-category" data-id="{{MetaCategoryId}}"> <i class="fa fa-pencil"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td>وضعیت</td>
+											<td>
+												<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
+												{{#ifCond State '==' 2}}
+												<button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}" {{#authorize 32768}}{{else}}disabled{{/authorize}}>
+													<i class="fa fa-reply"></i> بازگشت به بازبینی
+												</button>
+												{{/ifCond}}
+											</td>
+										</tr>
+										<tr>
+											<td>خلاصه</td>
+											<td>
+												<a href="#" class="x-editable" id="desc-field" data-type="textarea" data-pk="{{Id}}" data-field="Description" data-original-title="توضیحات">{{Description}}</a>
+											</td>
+										</tr>
+										<tr>
+											<td>مدت</td>
+											<td>{{time Duration}}</td>
+										</tr>
+										<tr>
+											<td>شماره قسمت</td>
+											<td>
+												<a href="#" class="x-editable" id="episode-field" data-type="number" data-pk="{{Id}}" data-field="EpisodeNumber" data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
+											</td>
+										</tr>
+										<tr>
+											<td>تاریخ ایجاد</td>
+											<td>{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}})</td>
+										</tr>
+										<tr>
+											<td>تاریخ ویرایش</td>
+											<td>{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}})</td>
+										</tr>
+										<tr>
+											<td>تاریخ بازبینی</td>
+											<td>{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}})</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<div class="col-md-5">
 							{{#ifCond State '!=' 1}}
-							<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>
+							{{#authorize 1024}}<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>{{/authorize}}
 							{{/ifCond}}
 							<div id="player-container"><!-- Player Container --></div>
 						</div>

@@ -49,7 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                         }
                     };
                     var contextItems = {};
-                    if (Authorize(Storage('Access'), 'access', 8)) {
+                    if (Authorize.access(8)) {
                         contextItems.Create = {
                             "label": "مورد جدید"
                             , icon: 'fa fa-plus'
@@ -65,7 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             }
                         };
                     }
-                    if (Authorize(Storage('Access'), 'access', 16)) {
+                    if (Authorize.access(16)) {
                         contextItems.Rename = {
                             "label": "تغییر نام"
                             , icon: 'fa fa-pencil'
@@ -76,7 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             }
                         };
                     }
-                    if (Authorize(Storage('Access'), 'access', 32)) {
+                    if (Authorize.access(32)) {
                         contextItems.Delete = {
                             "label": "حذف"
                             , icon: 'fa fa-trash'
@@ -94,7 +94,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             }
         };
         
-        if (Authorize(Storage('Access'), 'access', 64))
+        if (Authorize.access(64))
             this.defaults.plugins.push("dnd");
 
         this.options = $.extend({}
