@@ -17,20 +17,22 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
             window.setTimeout(function () {
                 $(".x-editable").each(function () {
                     var $this = $(this);
-                    $this.editable({
-                        type: 'text'
-                        , name: $this.attr('data-field')
-                        , title: $this.attr('data-original-title')
-                        , pk: $this.attr('data-pk')
-                        , placement: options.rtl ? 'left' : 'right'
-                        , rtl: options.rtl
-                        , showbuttons: options.showbuttons
-                        , validate: function (value) {
-                            if ($.trim(value) === '')
-                                return 'This field is required';
-                        }
-                    });
-                    self.setEventListeners($this, options);
+                    if ($this.parents("[data-editable]").length && $this.parents("[data-editable]").attr('data-editabled') == true) {
+                        $this.editable({
+                            type: 'text'
+                            , name: $this.attr('data-field')
+                            , title: $this.attr('data-original-title')
+                            , pk: $this.attr('data-pk')
+                            , placement: options.rtl ? 'left' : 'right'
+                            , rtl: options.rtl
+                            , showbuttons: options.showbuttons
+                            , validate: function (value) {
+                                if ($.trim(value) === '')
+                                    return 'This field is required';
+                            }
+                        });
+                        self.setEventListeners($this, options);
+                    }
                 });
             }, 1000);
         }
