@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover'
 ], function ($, _, Backbone, Template, Config, Global, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
@@ -134,7 +134,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , changeVideo: function (e) {
             e.preventDefault();
             var self = this;
-            var params = {};
+            var params = {path: '/files'};
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
             var $modal = $(self.modal_storage);
             var model = new IngestModel(params);
