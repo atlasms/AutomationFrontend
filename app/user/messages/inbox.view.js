@@ -11,6 +11,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             , 'click .mail-to .inbox-cc': 'handleCCInput'
             , 'submit form.inbox-compose': 'sendMessage'
             , 'click .view-message': 'viewMessage'
+            , 'click input[data-activate]': 'toggleReceiptType'
+        }
+        , toggleReceiptType: function (e) {
+//            e.preventDefault();
+            var self = this;
+            var $this = $(e.currentTarget);
+            $(".mail-to").find("select").prop('disabled', true);
+            $('select[name=' + $this.attr("data-activate") + ']').removeAttr('disabled');
         }
         , viewMessage: function (e) {
             e.preventDefault();
@@ -84,10 +92,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 }
             });
         }
+        , getFormData: function() {
+            var $form = $("form.inbox-compose");
+            var data = $form.serializeObject();
+            data.ToType = data["to-type"];
+            data.ToUserId = (typeof data.ToGroupId !== "undefined") ? data.ToGroupId : data.ToUserId;
+            delete data.ToGroupId;
+            delete data.cc;
+            delete data["to-type"];
+            return [data];
+        }
         , sendMessage: function (e) {
             e.preventDefault();
-            var $form = $("form.inbox-compose");
-            var data = [$form.serializeObject()];
+            var data = this.getFormData();
+//            console.log(data); return false;
             new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'

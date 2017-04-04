@@ -9,10 +9,15 @@
 	<div class="inbox-form-group mail-to">
 		<label class="control-label">گیرنده:</label>
 		<div class="controls controls-to">
-			<select class="form-control input-xlarge" name="ToUserId"></select>
-			<span class="inbox-cc-bcc">
-				<span class="inbox-cc"> رونوشت </span>
-			</span>
+			<dl class="dl-horizontal">
+				<dt><label><input type="radio" name="to-type" data-activate="ToUserId" value="0" checked> کاربر</label></dt>
+				<dd><select class="form-control input-xlarge" name="ToUserId"></select></dd>
+				<dt><label><input type="radio" name="to-type" data-activate="ToGroupId" value="1"> گروه</label></dt>
+				<dd><select class="form-control input-xlarge" name="ToGroupId" disabled>{{{getDefinitionOptions 14}}}</select></dd>
+			</dl>
+			<!--			<span class="inbox-cc-bcc">
+							<span class="inbox-cc"> رونوشت </span>
+						</span>-->
 		</div>
 	</div>
 	<div class="inbox-form-group input-cc display-hide">
@@ -29,9 +34,9 @@
 	<div class="inbox-form-group">
 		<textarea class="inbox-editor inbox-wysihtml5 form-control" name="Body" rows="15"></textarea>
 	</div>
-<!--	
-	<div class="inbox-compose-btn">
-		<button class="btn green"><i class="fa fa-check"></i>ارسال</button>
-		<a href="#inbox" class="btn default inbox-discard-btn">لغو</a>
-	</div>-->
+	<!--	
+		<div class="inbox-compose-btn">
+			<button class="btn green"><i class="fa fa-check"></i>ارسال</button>
+			<a href="#inbox" class="btn default inbox-discard-btn">لغو</a>
+		</div>-->
 </form>
