@@ -132,7 +132,7 @@
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
 								{{#if ConductorMetaCategoryId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required {{#authorize 512}}{{else}}readonly{{/authorize}}>								
+								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required />
 								<label for="program_{{@index}}">
 									{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}
 								</label>
