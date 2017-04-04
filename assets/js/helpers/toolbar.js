@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config'
-], function ($, _, Backbone, Config) {
+define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
+], function ($, _, Backbone, Config, Authorize) {
     var ToolbarHelper = Backbone.View.extend({
         el: Config.positions.toolbar
         , toolbar: ''
@@ -48,13 +48,18 @@ define(['jquery', 'underscore', 'backbone', 'config'
                 this.$el.html(this.toolbar + '<div class="clearfix"></div>').slideDown(Config.transitionSpedd);
         }
         , button: function (args) {
+//            console.log(Authorize.access(args.access));
             var cssClass = (typeof args.cssClass !== "undefined") ? args.cssClass : 'btn';
             var text = (typeof args.text !== "undefined") ? args.text : 'Submit';
             var type = (typeof args.type !== "undefined") ? args.type : 'submit';
             var task = (typeof args.task !== "undefined") ? args.task : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i> ' : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
-            var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + icon + text + '</button>';
+
+            if (!args.access || Authorize.access(args.access))
+                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + icon + text + '</button>';
+            else
+                var output = '<button type="' + type + '" class="' + cssClass + '" disabled>' + icon + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {

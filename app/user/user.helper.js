@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
         // Method to check user access based on Authorization class and server-side data
         , Authorize: function (type, action) {
             var user = UserHelper.getUser();
-            return authorization(user.Access, type, action);
+            return authorization[type](action, user.Access);
         }
         , storageKey: Config.storageKey
         , redirect: function (post, data) {

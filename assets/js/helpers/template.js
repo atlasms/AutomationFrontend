@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri'
-], function ($, _, Backbone, Handlebars, Config, Global, moment) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri', 'authorization'
+], function ($, _, Backbone, Handlebars, Config, Global, moment, Authorize) {
     var template = {
         handlebarHelpers: function () {
             if (typeof Handlebars === "undefined")
@@ -205,6 +205,11 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                             items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
                 });
                 return items;
+            });
+            Handlebars.registerHelper('authorize', function (action, options) {
+                if (Authorize.access(action))
+                    return options.fn(this);
+                return options.inverse(this);
             });
         }
         , handlebarPartials: function () {
