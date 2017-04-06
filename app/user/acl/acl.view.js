@@ -1,8 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global', 'toolbar', 'toastr', 'resources.ingest.model', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, UserModel, Global, Toolbar, toastr, IngestModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global', 'toolbar', 'toastr', 'resources.ingest.model', 'tree.helper', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, UserModel, Global, Toolbar, toastr, IngestModel, Tree) {
 
     var UserACLView = Backbone.View.extend({
         data: {}
+        , tree: {}
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
@@ -96,8 +97,38 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                     $.each(permissions, function () {
                         $('ul[data-type=' + this.Key + '] input[type=checkbox][value=' + this.Value + ']').prop('checked', true);
                     });
+
+                    // Tree
+                    if (STORAGE.getItem('tree')) {
+                        var storage = JSON.parse(STORAGE.getItem('tree'));
+                        storage.state.checkbox && delete storage.state.checkbox;
+                        storage.state.core.selected && delete storage.state.core.selected;
+                        STORAGE.setItem('tree', JSON.stringify(storage));
+                    }
+                    if ($("#tree").length) {
+                        var $tree = $("#tree");
+                        $tree.bind("loaded.jstree", function (e, data) {
+                            var instance = $tree.jstree(true);
+                            self.treeInstance = data.instance;
+                            instance.open_all();
+                        });
+                        $tree.bind("open_all.jstree", function (e, data) {
+                            $tree.jstree(true).uncheck_all();
+                            $tree.jstree(true).deselect_all();
+                            $.each(permissions, function () {
+                                if (this.Key === "categories") {
+                                    var node = data.instance.get_node($('#' + parseInt(this.Value)));
+                                    $tree.jstree(true).check_node(node);
+                                }
+                            });
+
+                        });
+                        self.tree = new Tree($("#tree"), Config.api.tree, null, {hasCheckboxes: true});
+                        self.tree.render();
+                    }
                 }
             });
+
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -139,6 +170,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                         data.push({Key: $(this).parents("ul[data-type]").attr('data-type'), Value: $(this).val()});
                 });
             });
+            var treeItems = this.treeInstance.get_checked();
+            for (var i = 0; i < treeItems.length; i++)
+                data.push({Key: 'categories', 'Value': treeItems[i]});
             return data;
         }
     });

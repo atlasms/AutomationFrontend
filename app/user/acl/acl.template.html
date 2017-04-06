@@ -7,11 +7,12 @@
 						<div class="col-xs-3">
 							<!-- Nav tabs -->
 							<ul class="nav nav-tabs tabs-left" role="tablist">
-								<li role="presentation" class="active"><a href="#tab_menu" aria-controls="home" role="tab" data-toggle="tab">دسترسی به صفحات</a></li>
-								<li role="presentation"><a href="#tab_permissions" aria-controls="profile" role="tab" data-toggle="tab">جزئیات دسترسی</a></li>
-								<li role="presentation"><a href="#tab_directories" aria-controls="messages" role="tab" data-toggle="tab">مسیرهای ورود اطلاعات</a></li>
-								<li role="presentation"><a href="#tab_lantv" aria-controls="settings" role="tab" data-toggle="tab">پخش زنده</a></li>
-								<li role="presentation"><a href="#tab_groups" aria-controls="groups" role="tab" data-toggle="tab">گروه‌های کاربری</a></li>
+								<li role="presentation" class="active"><a href="#tab_menu" aria-controls="دسترسی به صفحات" role="tab" data-toggle="tab">دسترسی به صفحات</a></li>
+								<li role="presentation"><a href="#tab_permissions" aria-controls="جزئیات دسترسی" role="tab" data-toggle="tab">جزئیات دسترسی</a></li>
+								<li role="presentation"><a href="#tab_directories" aria-controls="مسیرهای ورود اطلاعات" role="tab" data-toggle="tab">مسیرهای ورود اطلاعات</a></li>
+								<li role="presentation"><a href="#tab_categories" aria-controls="برنامه‌ها" role="tab" data-toggle="tab">برنامه‌ها</a></li>
+								<li role="presentation"><a href="#tab_lantv" aria-controls="پخش زنده" role="tab" data-toggle="tab">پخش زنده</a></li>
+								<li role="presentation"><a href="#tab_groups" aria-controls="گروه‌های کاربری" role="tab" data-toggle="tab">گروه‌های کاربری</a></li>
 							</ul>
 						</div>
 						<div class="col-xs-9">
@@ -63,6 +64,9 @@
 										</li>
 										{{/each}}
 									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_categories">
+									<div id="tree"></div>
 								</div>
 								<div role="tabpanel" class="tab-pane fade" id="tab_lantv">
 									<ul class="row" data-type="lantv">
