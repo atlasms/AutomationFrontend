@@ -77,6 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         },
         "api": {
             "url": "http://au.iktv.ir:8080/api/"
+//            "url": "http://188.209.144.171:8080/api/"
             , "login": "login"
             , "schedule": "conductor"
             , "crawl": "conductor"
