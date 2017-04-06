@@ -17,7 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
             window.setTimeout(function () {
                 $(".x-editable").each(function () {
                     var $this = $(this);
-                    if ($this.parents("[data-editable]").length && $this.parents("[data-editable]").attr('data-editabled') == true) {
+                    if ($this.parents("[data-editable]").length && $this.parents("[data-editable]").attr('data-editable')) {
                         $this.editable({
                             type: 'text'
                             , name: $this.attr('data-field')
