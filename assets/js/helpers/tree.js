@@ -29,6 +29,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             }
             , "state": {"key": "tree"}
             , "plugins": ["contextmenu", "state", "types"]
+            , "checkbox": {
+                "tie_selection": false
+            }
             , contextmenu: {
                 items: function (node) {
                     var Callees = {
@@ -96,6 +99,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
         
         if (Authorize.access(64))
             this.defaults.plugins.push("dnd");
+        if (options && typeof options.hasCheckboxes !== "undefined" && options.hasCheckboxes)
+            this.defaults.plugins.push("checkbox");
 
         this.options = $.extend({}
         , this.defaults, options);
