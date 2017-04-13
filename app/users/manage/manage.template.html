@@ -6,13 +6,13 @@
 					<tr>
 						<th class="">شناسه</th>
 						<th class="col-xs-1"></th>
-						<th class="col-xs-2">نام</th>
-						<th class="col-xs-1">نام کاربری</th>
-						<th class="col-xs-2">ایمیل</th>
-						<th class="col-xs-1">شماره تلفن</th>
-						<th class="col-xs-1">دسترسی[ها]</th>
+						<th class="col-xs-4">نام</th>
+						<th class="col-xs-2">نام کاربری</th>
+<!--						<th class="col-xs-2">ایمیل</th>
+						<th class="col-xs-1">شماره تلفن</th>-->
 						<th class="col-xs-2">آخرین ورود</th>
 						<th class="col-xs-2">آخرین IP</th>
+						<th class="col-xs-1">دسترسی[ها]</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -30,23 +30,23 @@
 						<td class=" text-right">
 							<span class="ltr">{{UserName}}</span>
 						</td>
-						<td class="text-right">
+<!--						<td class="text-right">
 							<span class="">{{Email}}</span>
 						</td>
 						<td class="text-right">
 							<span class="">{{Phone}}</span>
-						</td>
-						<td class="">
-							{{Roles}}
-							<a href="/user/acl/{{Id}}">
-								<i class="fa fa-cog"></i> تعیین دسترسی‌ها
-							</a>
-						</td>
+						</td>-->
 						<td class="text-right">
 							{{extractTime LoginDate}} {{extractDate LoginDate}}
 						</td>
 						<td class="ltr text-center">
 							{{LoginIp}}
+						</td>
+						<td class="">
+							{{Roles}}
+							<a target="_blank" href="/user/acl/{{Id}}" class="btn btn-default">
+								<i class="fa fa-cog"></i>
+							</a>
 						</td>
 					</tr>
 					{{/each}}

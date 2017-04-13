@@ -86,7 +86,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         , getId: function () {
             return Backbone.history.getFragment().split("/").pop().split("?")[0];
         }
+        , getUserDetails: function () {
+            var id = this.getId();
+            var $container = $("#user-details");
+            var self = this;
+            var params = {id: id};
+            var model = new UserModel(params);
+            model.fetch({
+                success: function (d) {
+                    var details = self.prepareItems(d.toJSON(), params);
+                    var template = Template.template.load('user', 'user.details.partial');
+                    template.done(function (tmpl) {
+                        var handlebarsTemplate = Template.handlebars.compile(tmpl);
+                        var output = handlebarsTemplate(details);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender();
+                        });
+                    });
+                }
+            });
+        }
         , afterRender: function () {
+            // Load user details
+            this.getUserDetails();
             // Load user permissions
             var self = this;
             var params = {overrideUrl: Config.api.acl, id: this.getId()};
