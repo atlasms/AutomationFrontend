@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars) {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars', 'user.helper'
+], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars, UserHelper) {
     var ScheduleHelper = {
         flags: {}
         , init: function (reinit) {
@@ -162,9 +162,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     wildcard: '%QUERY'
                     , cache: false
                     , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE'
-                    , replace: function (url, uriEncodedQuery) {
-                        return url.replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
+                    , prepare: function (query, settings) {
+                        settings.url = settings.url.replace('%QUERY', query).replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type"));
+                        settings.headers = {"Authorization": UserHelper.getToken()};
+                        return settings;
                     }
+//                    , replace: function (url, uriEncodedQuery) {
+//                        return url.replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
+//                    }
                     , transform: function (response) {
                         // Map the remote source JSON array to a JavaScript object array
                         return $.map(response, function (item) {
@@ -187,7 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 , limit: 10000
                 , source: suggestionsAdapter
                 , templates: {
-                    suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}</div>')
+                    suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}{{#if data.episode}} ({{data.episode}}){{/if}}</div>')
                 }
             });
             $('input[data-suggestion="true"]').bind('typeahead:select', function (e, suggestion) {
@@ -210,13 +215,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         break;
                     case 'media':
                         if (parseInt(data.kind) !== 3) {
-                            $parent.find("label").html(data.text);
+                            $parent.find("label").html(data.text + ' (' + data.episode + ')');
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
                             $parent.find('[name="ConductorMediaId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
+                            if ($row.find(".item-link").length)
+                                $row.find(".item-link").remove();
                             $row.find('.idx').after('<a class="item-link" href="/resources/mediaitem/' + data.externalId + '#review" target="_blank"><i class="fa fa-info-circle"></i></a>');
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
+//                            if (!$row.find('[name="ConductorMetaCategoryId"]').val()) {
+                                $row.find('[name="ConductorCategoryTitle"]').val(data.metaCategoryTitle);
+                                $row.find('[name="ConductorMetaCategoryId"]').parent().find(".remove-meta").remove();
+                                $row.find('[name="ConductorMetaCategoryId"]').val(data.metaCategoryId).after('<a href="#" class="remove-meta">&times;</a>');
+                                $row.find('[name="ConductorMetaCategoryId"]').parent().find("label").text(data.metaCategoryTitle);
+//                            }
                         } else {
                             $parent.find("label").html('');
                             $parent.find(".remove-meta, .item-link").remove();
