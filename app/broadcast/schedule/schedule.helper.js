@@ -223,7 +223,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $parent.find('[name="ConductorMediaId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
                             if ($row.find(".item-link").length)
                                 $row.find(".item-link").remove();
-                            $row.find('.idx').after('<a class="item-link" href="/resources/mediaitem/' + data.externalId + '#review" target="_blank"><i class="fa fa-info-circle"></i></a>');
+                            $row.find('.idx').after('<a class="item-link" href="/resources/mediaitem/' + data.externalId + '" target="_blank"><i class="fa fa-info-circle"></i></a>');
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
 //                            if (!$row.find('[name="ConductorMetaCategoryId"]').val()) {

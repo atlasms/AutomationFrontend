@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id + '#review');
+            window.open('/resources/mediaitem/' + id);
             return false;
         }
         , reLoad: function () {
