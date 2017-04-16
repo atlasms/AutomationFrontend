@@ -524,7 +524,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 dateParts[i] = parseInt(dateParts[i]);
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
             ScheduleHelper.generateTimeArray(this);
-
+            
+            $("#schedule-page tr").each(function () {
+                var readonly = $(this).attr('data-readonly');
+                if (readonly === "true")
+                    $(this).find("input, textarea, select").attr('disabled', 'disabled');
+            });
         }
         , renderToolbar: function () {
             var self = this;

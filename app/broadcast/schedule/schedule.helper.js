@@ -78,6 +78,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
             $(document).on('keydown', null, 'insert', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
+                if (activeRow.attr('data-readonly') === "true")
+                    return false;
                 ScheduleHelper.duplicateRow(activeRow);
                 e.preventDefault();
             });
@@ -225,10 +227,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
 //                            if (!$row.find('[name="ConductorMetaCategoryId"]').val()) {
-                                $row.find('[name="ConductorCategoryTitle"]').val(data.metaCategoryTitle);
-                                $row.find('[name="ConductorMetaCategoryId"]').parent().find(".remove-meta").remove();
-                                $row.find('[name="ConductorMetaCategoryId"]').val(data.metaCategoryId).after('<a href="#" class="remove-meta">&times;</a>');
-                                $row.find('[name="ConductorMetaCategoryId"]').parent().find("label").text(data.metaCategoryTitle);
+                            $row.find('[name="ConductorCategoryTitle"]').val(data.metaCategoryTitle);
+                            $row.find('[name="ConductorMetaCategoryId"]').parent().find(".remove-meta").remove();
+                            $row.find('[name="ConductorMetaCategoryId"]').val(data.metaCategoryId).after('<a href="#" class="remove-meta">&times;</a>');
+                            $row.find('[name="ConductorMetaCategoryId"]').parent().find("label").text(data.metaCategoryTitle);
 //                            }
                         } else {
                             $parent.find("label").html('');

@@ -94,14 +94,16 @@
 				</thead>
 				<tbody>
 					{{#each []}}
-					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="">
+					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="" data-readonly="{{#authorize 2}}false{{else}}true{{/authorize}}">
 						<td class="text-center">
 							<input type="hidden" name="titles" value="" />
 							<input type="hidden" name="subtitles" value="" />
 							<input type="text" class="focus-helper" />
 							<span class="idx">{{math @index "+" 1}}</span>
 							{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}#review" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
+							{{#authorize 2}}
 							{{> scheduleRowTools}}
+							{{/authorize}}
 						</td>
 						<td class="text-center">
 							<figure>
