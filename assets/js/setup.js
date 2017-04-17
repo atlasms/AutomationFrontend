@@ -111,6 +111,7 @@ require.config({
         , "user.messages.view": ["../../app/user/messages/inbox.view"]
         , "user.notifications.view": ["../../app/user/notifications/notifications.view"]
         , "user.acl.view": ["../../app/user/acl/acl.view"]
+        , "user.profile.view": ["../../app/user/profile/profile.view"]
         , "users.view": ["../../app/users/users.view"]
         , "users.manage.view": ["../../app/users/manage/manage.view"]
         , "toolbar": ["helpers/toolbar"]
