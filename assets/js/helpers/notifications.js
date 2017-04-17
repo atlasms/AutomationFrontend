@@ -5,7 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inb
             var self = this;
             self.checkNotifications();
             this.interval = window.setInterval(function () {
-                if (typeof UserHelper.getUser().Id !== "undefined")
+                if (typeof UserHelper.getUser() !== "undefined" && typeof UserHelper.getUser().Id !== "undefined")
                     self.checkNotifications();
             }, Config.notificationsInterval);
             $(document).on('click', ".notifications-list li a.seen-status", function (e) {
