@@ -163,9 +163,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 , remote: {
                     wildcard: '%QUERY'
                     , cache: false
-                    , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE'
+                    , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE&category='
                     , prepare: function (query, settings) {
-                        settings.url = settings.url.replace('%QUERY', query).replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type"));
+                        var $currentInput = $('[data-suggestion]:focus');
+                        settings.url = settings.url.replace('%QUERY', query).replace('%TYPE', $currentInput.attr("data-suggestion-type"));
+                        if ($currentInput.attr("data-suggestion-type") !== "cat" && parseInt($currentInput.parents("tr:first").find("[name=ConductorMetaCategoryId]").val()) > 0)
+                            settings.url += parseInt($currentInput.parents("tr:first").find("[name=ConductorMetaCategoryId]").val());
                         settings.headers = {"Authorization": UserHelper.getToken()};
                         return settings;
                     }
