@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'bootbox', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar, Statusbar, bootbox) {
     var UsersManageView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         modal_register: '#register-modal'
@@ -12,7 +12,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , events: {
             'click [data-task=add-user]': 'loadRegisterForm'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'click [data-task=reset-password]': 'resetPassword'
             , 'submit #user-register': 'register'
+        }
+        , resetPassword: function(e) {
+            e.preventDefault();
+            var self = this;
+            var $button = $(e.currentTarget);
+            var id = $(this).parents("tr:first").attr('data-id');
+            bootbox.confirm({
+                message: "رمز عبور کاربر "
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        
+                    }
+                }
+            });
         }
         , loadRegisterForm: function (e) {
             e.preventDefault();
