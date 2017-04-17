@@ -13,6 +13,7 @@
 @import "loading";
 @import "bootstrap-table";
 // @import "../global/plugins/select2";
+@import "../global/components/elements/cards/_card-1";
 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
@@ -27,7 +28,12 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 .audioplayer {
     position: fixed; background: #242828; bottom: 33px; height: 80px; width: 100%; right: 0; z-index: 10; padding-top: 20px;
 }
-
+.mt-element-card {
+    .mt-card-item .mt-card-content {
+        h3, p { text-align: center !important; }
+    }
+    &.mt-card-round .mt-card-item .mt-card-avatar img { display: block; width: 100%; height: auto; }
+}
 
 // Header
 .breadcrumbs { 
