@@ -1,0 +1,86 @@
+<div id="user-profile-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<table class="table table-bordered table-striped flip-content table-hover">
+						<tbody>
+							<tr>
+								<th class="col-xs-4">نام</th>
+								<td class="col-xs-8">{{Name}}</td>
+							</tr>
+							<tr>
+								<th>نام خانوادگی</th>
+								<td>{{Family}}</td>
+							</tr>
+							<tr>
+								<th>نام کاربری</th>
+								<td>{{UserName}}</td>
+							</tr>
+							<tr>
+								<th>شناسه</th>
+								<td>{{Id}}</td>
+							</tr>
+							<tr>
+								<th>آخرین ورود</th>
+								<td>{{extractTime LoginDate}} {{extractDate LoginDate}}</td>
+							</tr>
+							<tr>
+								<th>آخرین IP</th>
+								<td>{{LoginIp}}</td>
+							</tr>
+							<tr>
+								<th>رمز عبور</th>
+								<td>
+									<button class="btn btn-info" data-task="change-password">تغییر</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-xs-12 col-sm-4">
+					<div class="mt-element-card mt-card-round mt-element-overlay">
+						<div class="mt-card-item">
+							<div class="mt-card-avatar mt-overlay-1">
+								<img src="/assets/data/avatar.png">
+								<div class="mt-overlay">
+								</div>
+							</div>
+							<div class="mt-card-content">
+								<h3 class="mt-card-name">{{Name}} {{Family}}</h3>
+								<p class="mt-card-desc font-grey-mint">{{UserName}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="change-pass-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<form class="form-horizontal modal-content" id="change-pass-form">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">تغییر رمز عبور</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="Password" class="col-sm-3 control-label">رمز جدید</label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control ltr" id="Password" placeholder="Password" name="Password" required="required">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="Password" class="col-sm-3 control-label">تکرار رمز</label>
+						<div class="col-sm-9">
+							<input type="password" class="form-control ltr" id="Password" placeholder="Password" name="Verify" required="required">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" data-task="save-password" class="btn btn-primary">تغییر</button>
+				</div>
+			</form><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
