@@ -62,7 +62,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, {search: false, showPaginationSwitch: false}));
+            var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
+            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
             this.renderStatusbar();
         }
         , renderToolbar: function () {
