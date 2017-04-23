@@ -252,6 +252,14 @@ body.fixed-toolbar {
     }
 } 
 
+/// Ingest
+#storagefiles {
+    tr {
+        cursor: pointer;
+        &.disabled { background: #eee; color: #aaa; cursor: default; }
+    }
+}
+
 /// Reviews
 #returnees-table, #review-table {
     tbody tr {

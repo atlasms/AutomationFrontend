@@ -35,6 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $($this.$modal).find("form").trigger('reset');
                     $($this.$modal).modal('hide');
+                    $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
                 }
             });
         }
@@ -44,6 +45,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , selectRow: function (e) {
             var $el = $(e.target);
             var $row = $el.parents("tr:first");
+            if ($row.hasClass("disabled"))
+                return false;
             $el.parents("tbody").find("tr").removeClass('active success');
             $row.addClass('active success');
             $row.find("[data-prop]").each(function () {
