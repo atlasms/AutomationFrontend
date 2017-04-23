@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
     var MetadataView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
@@ -62,6 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
+            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, {search: false, showPaginationSwitch: false}));
             this.renderStatusbar();
         }
         , renderToolbar: function () {
