@@ -79,22 +79,22 @@
 					<tr>
 						<th>#</th>
 						<th class="col-xs-1"></th>
-						<th class="hide">فیکس</th>
+						<th class="">فیکس</th>
 						<th class="col-xs-1">شروع</th>
 						<th class="col-xs-1">مدت</th>
 						<th class="col-xs-2">برنامه</th>
 						<th class="col-xs-2">عنوان قسمت</th>
 						<th>قسمت</th>
-						<th class="col-xs-1">نوع برنامه</th>
+						<th class="col-xs-1 hide">نوع برنامه</th>
 						<th class="col-xs-3">توضیحات</th>
-						<th class="text-center small"><i class="fa fa-text-width"></i></th>
+						<th class="text-center small hide"><i class="fa fa-text-width"></i></th>
 						<th>تکرار</th>
 						<th>منتخب</th>
 					</tr>
 				</thead>
 				<tbody>
 					{{#each []}}
-					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="" data-readonly="{{#authorize 2}}false{{else}}true{{/authorize}}">
+					<tr data-id="{{ConductorId}}" data-thumbnail="" data-media="" data-readonly="{{#authorize 2}}false{{else}}true{{/authorize}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
 						<td class="text-center">
 							<input type="hidden" name="titles" value="" />
 							<input type="hidden" name="subtitles" value="" />
@@ -107,12 +107,12 @@
 						</td>
 						<td class="text-center">
 							<figure>
-								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt=""  onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 							</figure>
 						</td>
-						<td class="text-center hide">
+						<td class="text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
+								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
 									   <label for="checkbox_1_{{@index}}"></label>
 							</div>
 						</td>
@@ -145,19 +145,19 @@
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
 								{{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
+								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}" >
 								<label for="episode_{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
 								<span class="help-block">عنوان قسمت برنامه</span>
 							</div>
 						</td>
 						<td>
 							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control text-center" id="form_control_{{@index}}" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
+								<input type="text" class="form-control text-center" id="form_control_{{@index}}" data-type="episode-number"  name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
 								<label></label>
 								<span class="help-block">شماره قسمت برنامه</span>
 							</div>
 						</td>
-						<td>
+						<td class="hide">
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<select class="form-control" name="ConductorType">
 									{{#select ConductorType}}
@@ -172,13 +172,13 @@
 								<label></label>
 							</div>
 						</td>
-						<td>
+						<td class="">
 							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
 								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
 								<label></label>
 							</div>
 						</td>
-						<td>
+						<td class="hide">
 							<div class="form-group form-md-line-input form-md-floating-label">
 								<button type="button" data-task="show-titlerow" class="btn btn-block btn-link">{{ConductorEpisodeNumber}}</button>
 								<label></label>

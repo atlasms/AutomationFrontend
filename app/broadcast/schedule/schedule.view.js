@@ -10,7 +10,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , {'button': {cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
+                    , value: Global.getVar("date") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
+                }
+            }
         ]
         , statusbar: [
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
@@ -30,6 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=export]': 'exportPlaylist'
             , 'click [data-task=refresh]': 'refreshList'
             , 'change [name=force]': 'warnForceDuplicate'
+            , 'change [name=CondcutorIsFixed]': 'fixRow'
             , 'focus input.time': 'selectInput'
             , 'click [data-task=show-titlerow]': 'showTitlesRow'
             , 'change [data-task=update-title-rows]': 'handleTitleRows'
@@ -40,6 +44,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=delete-title]': 'deleteTitle'
             , 'click [data-task=delete-subtitle]': 'deleteSubtitle'
             , 'click .remove-meta': 'removeMetaId'
+        }
+        , fixRow: function (e) {
+            var $row = $(e.currentTarget).parents("tr:first");
+            if (e.currentTarget.checked)
+                $row.addClass('fixed');
+            else
+                $row.removeClass('fixed');
         }
         , removeMetaId: function (e) {
             e.preventDefault();
@@ -472,12 +483,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , load: function (e, extend) {
             console.info('Loading items');
+            var params = this.getParams();
+            this.render(params);
+        }
+        , getParams: function() {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
             };
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
-            this.render(params);
+            return params;
         }
         , render: function (params) {
             var template = Template.template.load('broadcast/schedule', 'schedule');
@@ -485,7 +500,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var model = new ScheduleModel(params);
             var self = this;
             model.fetch({
-                data: (typeof params !== "undefined") ? $.param(params) : null
+                data: (typeof params !== "undefined") ? $.param(params) : $.param(self.getParams())
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     template.done(function (data) {
@@ -524,7 +539,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 dateParts[i] = parseInt(dateParts[i]);
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
             ScheduleHelper.generateTimeArray(this);
-            
+
             $("#schedule-page tr").each(function () {
                 var readonly = $(this).attr('data-readonly');
                 if (readonly === "true")
@@ -581,6 +596,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     delete items[prop];
                 }
             }
+            $.each(items, function() {
+                if (this.ConductorCategoryTitle === "" && this.ConductorTitle === "" && this.ConductorEpisodeNumber < 1)
+                    this.gap = true;
+            });
             return items;
         }
         , prepareContent: function () {
