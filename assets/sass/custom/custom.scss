@@ -102,7 +102,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 .table {
     figure {
         width: 120px;
-        img { display: block; width: 100%; height: auto; }
+        img { display: block; width: 100%; height: auto; max-height: 68px; }
     }
     .form-group.form-md-line-input { margin-bottom: 0; }
     thead tr th { font-size: 16px; }
@@ -203,10 +203,16 @@ body.fixed-toolbar {
 .login-content h1 { margin-bottom: 60px; } 
 
 /// Schedules
+@-webkit-keyframes border_blink {    
+    from, to { border-color: red; }
+    50% { border-color: #fff; }
+} 
+
 #schedule-page {
     .table {
         p { margin-bottom: 0; }
         .idx ~ a { display: block; margin-top: 25px; }
+        textarea { height: 70px; }
         &:not(.titles) {
             th {
                 &.small { min-width: 40px; max-width: 50px; }
@@ -228,6 +234,10 @@ body.fixed-toolbar {
                 &.new { border-left-color: lightgreen; }
                 &.error { border-left-color: red !important; }
                 &.edited { border-left-color: #6C9EE0; }
+                &.fixed { border-left-color: #1BA39C }
+                &.gap { border-left-color: #333 }
+                &.selected { background-color: #E5E5E5 !important; }
+                &.overlap { animation: border_blink 1s step-end infinite; }
             }
             .table {
                 margin-bottom: 0;
