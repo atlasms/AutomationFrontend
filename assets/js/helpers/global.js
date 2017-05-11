@@ -132,7 +132,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             }
             return seconds;
         }
-        , createTime2: function (timestamp, showSign) {
+        , createTime2: function (timestamp) {
             if (typeof timestamp !== 'undefined') {
                 var hours = Global.zeroFill(parseInt(timestamp / 3600));
                 var minutes = Global.zeroFill(parseInt(timestamp / 60) % 60);
