@@ -35,9 +35,30 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 else
                     $(this).attr('value', 0);
             });
-            $(document).on('keyup change', "#schedule-page [data-type=duration], #schedule-page [data-type=start]", function () {
+            $(document).on('keyup', "#schedule-page [data-type=duration], #schedule-page [data-type=start]", function (e) {
+                var $this = $(this);
+                if (!(e.which >= 37 && e.which <= 47) && !(e.which >= 16 && e.which <= 19)) {
+//                    console.log('Key', e.which);
+                    var $row = $(this).parents("tr:first");
+
+//                    var validate = new ScheduleHelper.validate();
+//                    validate.time($(this));
+
+                    if (!moment($row.find("[data-type=duration]").val(), 'HH:mm:SS', true).isValid() || !moment($row.find("[data-type=start]").val(), 'HH:mm:SS', true).isValid())
+                        $row.addClass("error");
+                    else
+                        $row.removeClass("error");
+
+                    ScheduleHelper.updateTimes($row);
+
+                }
+            });
+            $(document).on('input', "#schedule-page [data-type=title], #schedule-page [data-type=episode-title]", function (e) {
+                var $this = $(this);
                 var $row = $(this).parents("tr:first");
-                ScheduleHelper.updateTimes($row);
+                if ($this.val() !== "")
+                    if ($row.hasClass('gap'))
+                        $row.removeClass('gap')
             });
 //            $(document).on('activated', '#schedule-page tbody tr', function() {
 //                console.log($(this).find("[data-suggestion=true]").data());
@@ -49,13 +70,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 //            });
             $(document).on('click', '[data-type="episode-title"]', function (e) {
                 var $cell = $(this).parents("td:first");
-                if ($(this).val() === "" && $cell.find('[name=ConductorMediaId]').val() === "") {
+                var suggestionCreated = $cell.attr('data-filled');
+                var currentTime = (new Date()).getTime();
+                var timeDiff = currentTime - suggestionCreated;
+                if ($(this).val() === "" && $cell.find('[name=ConductorMediaId]').val() === "" && timeDiff > 1000) {
                     $('input[data-suggestion="true"]').typeahead("destroy");
                     var clone = $cell.find("> div").clone();
                     $cell.empty();
-                    clone.appendTo($cell);
-                    ScheduleHelper.suggestion();
-                    $cell.find("input[type=text][id]").focus();
+                    clone.appendTo($cell).promise().done(function () {
+                        ScheduleHelper.suggestion();
+                        $cell.find("input[type=text][id]").focusin();
+                        console.warn($cell.find("input[type=text][id]"));
+                    });
                 }
             });
         }
@@ -96,7 +122,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
             $(document).on('keydown', null, 'up', function (e) {
                 var activeRow = $("#schedule-page tbody").find("tr.active");
-                // BUG: TODO
                 if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
                     if (activeRow.prev('tr').length) {
                         activeRow.removeClass('active').trigger('deactivated').prev('tr').addClass('active').trigger('activated');
@@ -136,19 +161,26 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 e.preventDefault();
             });
         }
-        , deleteRow: function () {
-            var $rows = $("#schedule-page tbody").find("tr");
-            if ($rows.length < 2)
-                return false;
-            var $row = $("#schedule-page tbody").find("tr.active");
+        , deleteRow: function ($row, skipUpdate) {
+            if (typeof $row === "undefined") {
+                var $rows = $("#schedule-page tbody").find("tr");
+                if ($rows.length < 2)
+                    return false;
+            }
+            var $row = (typeof $row !== "undefined") ? $row : $("#schedule-page tbody").find("tr.active");
             var $next = $row.next();
-            $row.remove().promise().done(function () {
-                if ($next.length && $next.hasClass('fixed'))
-                    ScheduleHelper.insertGap($next.prev());
-//                ScheduleHelper.rebuildTable();
-                ScheduleHelper.updateTimes();
-                ScheduleHelper.updateIndexes();
-            });
+            var $prev = $row.prev();
+            $row.remove();
+//            $row.remove().promise().done(function () {
+            if ($next.length && $next.hasClass('fixed'))
+                ScheduleHelper.insertGap($next.prev());
+//                ScheduleHelper.updateTimes($prev);
+
+            ScheduleHelper.updateIndexes();
+//            });
+            if (typeof skipUpdate !== "undefined" && skipUpdate === true)
+                return true;
+            ScheduleHelper.updateTimes($prev);
         }
         , insertGap: function ($next) {
             var $gap = ScheduleHelper.duplicateRow($next, true);
@@ -164,7 +196,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
             $('input[data-suggestion="true"]').typeahead("destroy");
             var clone = row.clone();
-            clone.addClass('error new');
+            clone.addClass('error new').removeClass('gap fixed overlap');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
             clone.find('textarea').val('');
@@ -183,6 +215,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
             clone.insertAfter(row);
 //            ScheduleHelper.rebuildTable();
+            ScheduleHelper.updateTimes(row);
             ScheduleHelper.updateIndexes();
             row.next().find("input:first").trigger('click');
             ScheduleHelper.mask("time");
@@ -204,24 +237,45 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             // If a fixed item is found, return
             var $rows = $row.nextAll().addBack();
             var stack = 0;
+            var fixedTime = 0;
             var error = false;
+            if ($rows.length < 2)
+                return
+            // Look table for any overlaps or gaps [error]
             $rows.each(function (i) {
                 var $this = $(this);
-                // Look table for any overlaps or gaps [error]
-                if (i === 0)
+                // Found a gap => mark it as gap!
+                if ($this.find('[data-type="title"]').val() === "" && $this.find('[name=ConductorMetaCategoryId]').val() === ""
+                        && $this.find('[data-type="episode-title"]').val() === "" && $this.find('[name=ConductorMediaId]').val() === ""
+                        && +$this.find('[data-type="episode-number"]').val() <= 0 && $this.next().length) {
+                    $this.addClass('gap');
+                }
+                if (i === 0) // First items: use start value as stack
                     stack = Global.processTime($this.find("[data-type=start]").val());
-                if (!$this.hasClass('fixed'))
+                if (!$this.hasClass('fixed')) // Not a fixed item: collect duration in stack
                     stack += Global.processTime($this.find("[data-type=duration]").val());
-
+                // Next is fixed
                 if ($this.next().length && $this.next().is('.fixed')) {
-                    var fixedTime = Global.processTime($this.next().find("[data-type=start]").val());
-
-                    if (fixedTime < stack) {
-                        // Overlap
-                        error = 'overlap';
+                    var $fixed = $this.next();
+                    fixedTime = Global.processTime($fixed.find("[data-type=start]").val());
+                    if (fixedTime < stack) { // Overlap
+                        var overlapTime = fixedTime - stack;
+                        if ($this.is(".gap")) { // There's a gap right before fixed
+                            var gapSpace = $this.find("[data-type=duration]").val();
+                            if (gapSpace <= overlapTime) {
+                                if (gapSpace < overlapTime)
+                                    $this.find("[data-type=duration]").val(Global.createTime(gapSpace - overlapTime));
+                                if (gapSpace === overlapTime)
+                                    ScheduleHelper.deleteRow($this);
+                            } else {
+                                ScheduleHelper.deleteRow($this);
+                                error = 'overlap';
+                            }
+                        } else {
+                            error = 'overlap';
+                        }
                     }
-                    if (fixedTime > stack) {
-                        // Gap
+                    if (fixedTime > stack) { // Need to create a gap
                         ScheduleHelper.duplicateRow($this, true);
                     }
                 }
@@ -230,8 +284,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 $row.addClass('error').addClass(error);
                 return false;
             } else {
+                if ($rows.length < 2) {
+                    var rowStart = Global.createTime(Global.processTime($row.prev().find("[data-type=start]").val()) + Global.processTime($row.prev().find("[data-type=duration]").val()));
+                    $row.find("[data-type=start]").val(rowStart);
+                }
                 $rows.each(function () {
                     var $this = $(this);
+
+                    // TODO: Time is not correct (maybe tomorrow?)
+                    if ($this.prev().length && Global.processTime($this.find("[data-type=start]").val()) < Global.processTime($this.prev().find("[data-type=start]").val()))
+                        $this.addClass('error');
+
                     var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
                     if (!(/^\d+$/.test(nextStart)))
                         $this.addClass("error");
@@ -247,11 +310,55 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
             ScheduleHelper.processGaps();
         }
+        , checkForOverlaps: function () {
+            var $rows = $("#schedule-page tbody").find("tr");
+            $rows.each(function () {
+                var $this = $(this);
+                var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
+                if ($this.next().length) {
+                    if (Global.processTime($this.next().find("[data-type=start]").val()) < nextStart)
+                        !$this.hasClass('fixed') && $this.addClass('error overlap');
+                    if (Global.processTime($this.next().find("[data-type=start]").val()) > nextStart)
+                        ScheduleHelper.duplicateRow($this, true);
+                }
+            });
+        }
+        , handleOverlap: function ($row, diff) {
+            var diff = diff;
+            var $items = $row.nextAll().addBack();
+            console.log('processing overlap: ' + diff);
+            $items.each(function () {
+                var $this = $(this);
+                var $next = $this.next();
+                if ($next.is('.fixed'))
+                    return false;
+                if ($next.is('.gap')) {
+                    var availableSpace = Global.processTime($next.find("[data-type=duration]").val());
+                    if (availableSpace > diff) { // Gap is larger than diff
+                        $next.find('[data-type=duration]').val(Global.createTime(availableSpace - diff));
+                        diff = 0;
+//                        return false;
+                    } else { // Gap is smaller than diff, remove it and continue loop to next gap
+                        diff = availableSpace - diff;
+                        if (ScheduleHelper.deleteRow($next, true)) {
+                            ScheduleHelper.handleOverlap($row, diff);
+                        }
+                    }
+                }
+                if (diff === 0) {
+                    ScheduleHelper.updateTimes($row);
+                    return false;
+                }
+            });
+            if (diff > 0)
+                return false; // Overlap still remains: Show error
+            return true; // Fixed overlap by decreasing gaps: remove error
+        }
         , processGaps: function () {
             var $rows = $("#schedule-page tbody tr");
             $rows.each(function () {
                 var $this = $(this);
-                if ($this.hasClass("gap")) {
+                if ($this.hasClass("gap") && !$this.hasClass('new')) {
                     if (Global.processTime($this.find("[data-type=duration]").val()) < 1) {
                         $this.remove().promise().done(function () {
                             ScheduleHelper.updateIndexes();
@@ -274,46 +381,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 //                    $(this).find(".idx").text('خ');
             });
         }
-        /*
-         , rebuildTable: function () {
-         var $rows = $("#schedule-page tbody tr");
-         var start = 0;
-         var error = false;
-         $rows.each(function (i) {
-         var $this = $(this);
-         //                $this.find(".idx").text(i + 1);
-         //                if ($this.find("[data-type=title][id]").val() === "" && $this.find("[data-type=episode-title][id]").val() === "" && $this.find("[data-type=episode-number]").val() === "0")
-         //                    $this.addClass('gap');
-         start = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
-         var preStart = Global.processTime($this.find("[data-type=start]").val());
-         if (!(/^\d+$/.test(start)) || error)
-         $this.addClass("error");
-         else
-         $this.removeClass("error");
-         if ($this.next().length) {
-         if ($this.hasClass('gap')) {
-         if ($this.next().hasClass('gap'))
-         ScheduleHelper.mergeRows($this, $this.next());
-         if ($this.next().hasClass('fixed'))
-         $this.find("[data-type=duration]").val(Global.createTime(Global.processTime($this.next().find("[data-type=start]").val()) - Global.processTime($this.find("[data-type=start]").val())));
-         }
-         // Skip if next is fixed
-         if ($this.next().hasClass('fixed')) {
-         var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
-         if (nextStart !== Global.processTime($this.next().find("[data-type=start]").val())) {
-         ScheduleHelper.duplicateRow($this, true);
-         return false;
-         }
-         return true;
-         }
-         $this.next().find("[data-type=start]").val(Global.createTime(start));
-         if (Global.processTime(Global.createTime(start)) < preStart)
-         error = true;
-         }
-         });
-         ScheduleHelper.setStates();
-         }
-         */
         , mergeRows: function ($row1, $row2) {
             var extraDuration = Global.processTime($row2.next().find("[data-type=start]").val()) - Global.processTime($row1.find("[data-type=start]").val());
             $row1.find("[data-type=duration]").val(Global.createTime(extraDuration));
@@ -328,7 +395,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 return false;
             }
             var $obj = (typeof $obj !== "undefined") ? $obj : $('input[data-suggestion="true"]');
-//            return false;
             // Instantiate the Bloodhound suggestion engine
             var suggestionsAdapter = new Bloodhound({
                 datumTokenizer: function (datum) {
@@ -349,9 +415,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         settings.headers = {"Authorization": UserHelper.getToken()};
                         return settings;
                     }
-//                    , replace: function (url, uriEncodedQuery) {
-//                        return url.replace('%TYPE', $('[data-suggestion]:focus').attr("data-suggestion-type")).replace('%QUERY', uriEncodedQuery);
-//                    }
                     , transform: function (response) {
                         // Map the remote source JSON array to a JavaScript object array
                         return $.map(response, function (item) {
@@ -367,8 +430,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 minLength: 0
                 , highlight: true
                 , hint: true
-                , ttl_ms: 1
-                , ttl: 1
                 , name: 'input_' + (new Date()).getTime()
             }, {
                 display: 'value'
@@ -378,14 +439,16 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 , templates: {
                     suggestion: Handlebars.compile('<div><span class="fa suggestion-{{data.kind}}"></span> {{data.text}}{{#if data.episode}} ({{data.episode}}){{/if}}</div>')
                 }
-                , ttl_ms: 1
-                , ttl: 1
+            });
+            $('input[data-suggestion="true"]').bind('typeahead:render', function (e) {
+                $(this).parents("td").attr('data-filled', (new Date()).getTime());
             });
             $('input[data-suggestion="true"]').bind('typeahead:select', function (e, suggestion) {
                 var data = suggestion.data;
                 var $target = $(e.target);
                 var $parent = $target.parents(".form-group:first");
                 var $row = $target.parents("tr:first");
+                $row.hasClass('gap') && $row.removeClass('gap'); // Remove gap class if item has one
                 switch ($target.attr('data-suggestion-type')) {
                     case 'cat':
                         if (parseInt(data.kind) !== 3) {
@@ -393,6 +456,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
                             if (!$parent.find(".remove-meta").length)
                                 $parent.find('[name="ConductorMetaCategoryId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
+                            $row.find('[name="ConductorMediaId"]').parent().find(".remove-meta").trigger('click');
                         } else {
                             $parent.find("label").text('');
                             $parent.find(".remove-meta").remove();
@@ -426,7 +490,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $parent.find('[name="ConductorTitle"]').val(data.text);
                             $parent.find('[name="ConductorMediaId"]').val('');
                         }
-                        $row.find("input").trigger('change');
+                        $row.find("input[data-type=duration]").trigger('keyup');
                         break;
                 }
             });
