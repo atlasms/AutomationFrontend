@@ -540,6 +540,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
             ScheduleHelper.generateTimeArray(this);
 
+            ScheduleHelper.checkForOverlaps();
+
             $("#schedule-page tr").each(function () {
                 var readonly = $(this).attr('data-readonly');
                 if (readonly === "true")
