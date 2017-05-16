@@ -211,7 +211,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var container = (typeof container !== "undefined") ? container : null;
                 var items = '';
                 $.each(Config.definitions, function () {
-                    if (this.Id === id) 
+                    if (this.Id === id)
                         for (i = 0; i < this.Children.length; i++)
                             items += (container ? '<' + container + '>' : '') + '<div class="checkbox checkbox-primary checkbox-circle col-xs-12"><input name="force" data-validation="digit" id="checkbox_df' + this.Children[i].Value + '" value="' + this.Children[i].Value + '" type="' + type + '"><label for="checkbox_df' + this.Children[i].Value + '">' + this.Children[i].Key + '</label></div>' + (container ? '</' + container + '>' : '');
 //                            items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
@@ -222,6 +222,17 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 if (Authorize.access(action))
                     return options.fn(this);
                 return options.inverse(this);
+            });
+            Handlebars.registerHelper('shortenPath', function (path, parts, options) {
+                var pathArray = path.split('\\');
+                var outputArray = [];
+                for (var i = 0; i < (pathArray.length - parts); i++) {
+                    delete pathArray[i];
+                }
+                pathArray = $.grep(pathArray, function (n) {
+                    return n == 0 || n;
+                });
+                return pathArray.join('\\');
             });
         }
         , handlebarPartials: function () {

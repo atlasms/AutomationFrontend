@@ -1,0 +1,53 @@
+<div id="monitoring-page" class="">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				{{#each []}}
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading-{{math @index "+" 1}}">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{math @index "+" 1}}">
+								{{@key}}
+							</a>
+						</h4>
+					</div>
+					<div id="collapse-{{math @index "+" 1}}" class="panel-collapse collapse" role="tabpanel">
+						<div class="panel-body">
+							<table class="table table-condensed table-bordered table-striped">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th class="col-xs-7">فایل</th>
+										<th class="col-xs-1">تلاش</th>
+										<th class="col-xs-2">زمان ارسال</th>
+										<th class="col-xs-2">زمان انجام</th>
+										<th>وضعیت</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each []}}
+									<tr>
+										<td>{{math @index "+" 1}}</td>
+										<td class="ltr">
+											<code data-toggle="tooltip" title="{{File2}}">{{shortenPath File2 2}}</code>
+										</td>
+										<td>{{Retry}}</td>
+										<td>{{extractTime Created}} {{extractDate Created}}</td>
+										<td>{{#if Done}}{{extractTime Done}} {{extractDate Done}}{{/if}}</td>
+										<td class="text-center">
+											<div class="label label-{{#if State}}success{{else}}danger{{/if}}" data-value="{{State}}">
+												<i class="fa fa-{{#if State}}check{{else}}ban{{/if}}"></i>
+											</div>
+										</td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+</div>

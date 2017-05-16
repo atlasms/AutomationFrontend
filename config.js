@@ -68,6 +68,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "pr": {"private": true, "access": null, "action": "PRView", "file": "app/pr/pr.view"}
             , "pr/sms": {"private": true, "access": null, "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
             , "pr/recordings": {"private": true, "access": null, "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
+            , "monitoring/schedule": {"private": true, "access": null, "action": "MonitoringScheduleView", "file": "app/monitoring/schedule/schedule.view"}
+            , "monitoring/schedulepdf": {"private": true, "access": null, "action": "MonitoringSchedulePDFView", "file": "app/monitoring/schedulepdf/schedulepdf.view"}
+            , "monitoring/ingest": {"private": true, "access": null, "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
+            , "monitoring/playlist": {"private": true, "access": null, "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}
         },
         "positions": {
             "wrapper": "body"
@@ -93,6 +97,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "acl": "accounts/access"
             , "sms": "pr/sms"
             , "lantv": "share/lantv/"
+            , "hsm": "hsm"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [

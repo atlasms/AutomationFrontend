@@ -1,0 +1,36 @@
+<div id="monitoring-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<table class="table table-condensed table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th class="col-xs-7">فایل</th>
+						<th class="col-xs-1">تلاش</th>
+						<th class="col-xs-2">زمان ارسال</th>
+						<th class="col-xs-2">زمان انجام</th>
+						<th>وضعیت</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					<tr>
+						<td>{{math @index "+" 1}}</td>
+						<td class="ltr">
+							<code data-toggle="tooltip" title="{{File2}}">{{shortenPath File2 1}}</code>
+						</td>
+						<td>{{Retry}}</td>
+						<td>{{extractTime Created}} {{extractDate Created}}</td>
+						<td>{{#if Done}}{{extractTime Done}} {{extractDate Done}}{{/if}}</td>
+						<td class="text-center">
+							<div class="label label-{{#if State}}success{{else}}danger{{/if}}" data-value="{{State}}">
+								<i class="fa fa-{{#if State}}check{{else}}ban{{/if}}"></i>
+							</div>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

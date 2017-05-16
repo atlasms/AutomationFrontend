@@ -1,0 +1,35 @@
+<div id="pr-recordings-page" class="">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<div class="row">
+				{{#each []}}
+				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+					<div class="mt-widget-3">
+						<div class="mt-head bg-green-meadow"><!-- blue-sharp -->
+							<div class="mt-head-icon">
+								<i class="fa fa-microphone"></i>
+							</div>
+							<div class="mt-head-desc">{{extractTime Received}} {{extractDate Received}}</div>
+							<span class="mt-head-date">{{From}}</span>
+							<div class="mt-head-button">
+								<button type="button" class="btn btn-circle btn-outline white btn-sm">
+									<i class="fa fa-play"></i> پخش
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="audioplayer">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="aplayer"></div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -90,6 +90,7 @@ require.config({
         , "inbox.model": ["../../app/user/messages/inbox.model"]
         , "pr.model": ["../../app/pr/pr.model"]
         , "live.model": ["../../app/resources/live/live.model"]
+        , "monitoring.model": ["../../app/monitoring/monitoring.model"]
 
                 // Views
 //        , "app.master": ["../../app/a"]
@@ -119,6 +120,10 @@ require.config({
         , "pr.view": ["../../app/pr/pr.view"]
         , "pr.sms.view": ["../../app/pr/sms/sms.view"]
         , "pr.recordings.view": ["../../app/pr/recordings/recordings.view"]
+        , "monitoring.schedule.view": ["../../app/monitoring/schedule/schedule.view"]
+        , "monitoring.schedulepdf.view": ["../../app/monitoring/schedulepdf/schedulepdf.view"]
+        , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
+        , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

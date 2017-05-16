@@ -23,6 +23,16 @@
         ]
     },
     {
+        "title": "مانیتورینگ",
+        "alias": "monitoring",
+        "items": [
+            { "title": "کنداکتور", "alias": "monitoring_schedule", "icon": "thermometer-half", "link": "/monitoring/schedule" },
+            { "title": "PDF کنداکتور", "alias": "monitoring_schedulepdf", "icon": "thermometer-half", "link": "/monitoring/schedulepdf" },
+            { "title": "اینجست", "alias": "monitoring_ingest", "icon": "thermometer-half", "link": "/monitoring/ingest" },
+            { "title": "پلی‌لیست", "alias": "monitoring_playlist", "icon": "thermometer-half", "link": "/monitoring/playlist" }
+        ]
+    },
+    {
         "title": "آرشیو",
         "alias": "archive",
         "items": [
