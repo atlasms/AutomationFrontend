@@ -570,6 +570,36 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 $this.flags.updatedContent = true;
             });
         }
+        , fillDuplicateSelects: function (items, source) {
+            var source = typeof source !== "undefined" && source === true ? true : false;
+            var starts = [];
+            $.each(items, function () {
+                starts.push({
+                    time: this.CondcutorStartTime.split('T')[1]
+                    , title: this.ConductorCategoryTitle + ' » ' + this.ConductorTitle
+                });
+            });
+            var last = {
+                time: Global.createTime(Global.processTime(items[items.length - 1].CondcutorStartTime.split('T')[1]) + Global.processTime(items[items.length - 1].CondcutorStartTime.split('T')[1]))
+                , title: ''
+            };
+            var ends = $.extend([], starts);
+            ends.push(last);
+            ends.shift();
+            
+            if (source) { // Filling source fields, not destinations
+                $(".source[name=startdate], .source[name=enddate]").empty();
+                for (var i = 0; i < starts.length; i++)
+                    $(".source[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                for (var i = 0; i < ends.length; i++)
+                    $(".source[name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                $(".source[name=enddate]").find("option:last").attr('selected', 'selected');
+            } else {
+                $(".destination[name=startdate]").empty();
+                for (var i = 0; i < starts.length; i++)
+                    $(".destination[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+            }
+        }
         , generateTimeArray: function (callback) {
             Config.env === "dev" && console.log('Generating Time Arrays');
             /*
@@ -580,7 +610,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $.each($rows, function () {
                 starts.push({
                     time: $(this).find('[data-type="start"]').val()
-                    , title: $(this).find('[name="ConductorCategoryTitle"]').val() + ' ' + $(this).find('[name="ConductorTitle"]').val()
+                    , title: $(this).find('[name="ConductorCategoryTitle"]').val() + ' » ' + $(this).find('[name="ConductorTitle"]').val()
                 });
             });
             var last = {
@@ -592,15 +622,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ends.shift();
             if (typeof callback === "object")
                 callback.timeArrays = {starts: starts, ends: ends};
-            if ($(".export-schedule select[name=startdate]").length) {
-                $(".export-schedule select[name=startdate]").empty();
+            if ($("select[data-type=itemlist][name=startdate]").length) {
+                $("select[data-type=itemlist][name=startdate]").empty();
                 for (var i = 0; i < starts.length; i++)
-                    $(".export-schedule select[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                    $("select[data-type=itemlist][name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
             }
-            if ($(".export-schedule select[name=enddate]").length) {
-                $(".export-schedule select[name=enddate]").empty();
+            if ($("select[data-type=itemlist][name=enddate]").length) {
+                $("select[data-type=itemlist][name=enddate]").empty();
                 for (var i = 0; i < ends.length; i++)
-                    $(".export-schedule select[name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                    $("select[data-type=itemlist][name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                if (typeof $("select[data-type=itemlist][name=enddate]").attr('data-selected') !== "undefined")
+                    $("select[data-type=itemlist][name=enddate]").find("option:last").attr('selected', 'selected');
             }
         }
     };

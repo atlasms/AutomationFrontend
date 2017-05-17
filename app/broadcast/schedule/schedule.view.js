@@ -19,6 +19,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
             , {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
         ]
+        , $toolbarPortlets: "#sub-toolbar .portlet"
+        , $duplicatePortlet: "#sub-toolbar .duplicate-schedule"
+        , $exportPortlet: "#sub-toolbar .export-schedule"
         , timeArrays: {}
         , flags: {toolbarRendered: false}
         , events: {
@@ -446,21 +449,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 $("#schedule-overwrite-alert").removeClass('in');
         }
         , showDuplicateToolbar: function () {
-            if ($("#sub-toolbar").find(".portlet").not(".duplicate-schedule").is(":visible"))
-                $("#sub-toolbar").find(".portlet").not(".duplicate-schedule").removeClass("in").addClass("hidden");
-            if ($("#sub-toolbar .duplicate-schedule").is(":hidden"))
-                $("#sub-toolbar .duplicate-schedule").removeClass('hidden').addClass("in");
+            if ($(this.$toolbarPortlets).not(".duplicate-schedule").is(":visible"))
+                $(this.$toolbarPortlets).not(".duplicate-schedule").removeClass("in").addClass("hidden");
+            if ($(this.$duplicatePortlet).is(":hidden"))
+                $(this.$duplicatePortlet).removeClass('hidden').addClass("in");
             else
-                $("#sub-toolbar .duplicate-schedule").removeClass("in").addClass("hidden");
+                $(this.$duplicatePortlet).removeClass("in").addClass("hidden");
             $("html, body").animate({'scrollTop': 0});
         }
         , showExportToolbar: function () {
-            if ($("#sub-toolbar").find(".portlet").not(".export-schedule").is(":visible"))
-                $("#sub-toolbar").find(".portlet").not(".export-schedule").removeClass("in").addClass("hidden");
-            if ($("#sub-toolbar .export-schedule").is(":hidden"))
-                $("#sub-toolbar .export-schedule").removeClass('hidden').addClass("in");
+            if ($(this.$toolbarPortlets).not(".export-schedule").is(":visible"))
+                $(this.$toolbarPortlets).not(".export-schedule").removeClass("in").addClass("hidden");
+            if ($(this.$exportPortlet).is(":hidden"))
+                $(this.$exportPortlet).removeClass('hidden').addClass("in");
             else
-                $("#sub-toolbar .export-schedule").removeClass("in").addClass("hidden");
+                $(this.$exportPortlet).removeClass("in").addClass("hidden");
             $("html, body").animate({'scrollTop': 0});
         }
         , loadFile: function (e) {
@@ -486,7 +489,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var params = this.getParams();
             this.render(params);
         }
-        , getParams: function() {
+        , getParams: function () {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
@@ -562,6 +565,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             self.attachDatepickers();
 //            this.flags.toolbarRendered = true;
         }
+        , loadScheduleItem: function ($this) {
+            var self = this;
+            var params = {
+                startdate: Global.jalaliToGregorian($this.val()) + 'T00:00:00'
+                , enddate: Global.jalaliToGregorian($this.val()) + 'T23:59:59'
+            };
+            new ScheduleModel({}).fetch({
+                data: params
+                , success: function (items) {
+                    var items = self.prepareItems(items.toJSON(), params);
+                    ScheduleHelper.fillDuplicateSelects(_.values(items), $this.hasClass('source'));
+//                    console.log(items, $this.hasClass('source'));
+                }
+            })
+        }
         , attachDatepickers: function () {
             var self = this;
             var $datePickers = $(".datepicker");
@@ -573,6 +591,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             if ($this.parents("#toolbar").length)
                                 self.load();
                             $datePickers.blur();
+                            if ($this.parents("#duplicate-schedule").length) {
+                                self.loadScheduleItem($this);
+                            }
                         }
                     }));
                 }
@@ -598,7 +619,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     delete items[prop];
                 }
             }
-            $.each(items, function() {
+            $.each(items, function () {
                 if (this.ConductorCategoryTitle === "" && this.ConductorTitle === "" && this.ConductorEpisodeNumber < 1)
                     this.gap = true;
             });

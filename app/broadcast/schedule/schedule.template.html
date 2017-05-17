@@ -7,29 +7,69 @@
 			</div>
 			<form class="" id="duplicate-schedule">
 				<div class="row">
-					<div class="col-xs-12 col-sm-3">
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon">تاریخ مبدا</span>
-								<input type="text" name="startdate" class="form-control datepicker" />
+					<div class="col-xs-12 col-sm-9">
+						<div class="row">
+							<div class="col-xs-12 col-sm-8">
+								<div class="row">
+									<div class="col-xs-6">
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon">تاریخ مبدا</span>
+												<input type="text" name="startdate" class="form-control datepicker source" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon">زمان شروع</span>
+												<select class="form-control source" name="startdate" data-type="itemlist"></select>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-6">
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon">زمان پایان</span>
+												<select class="form-control source" name="enddate" data-type="itemlist" data-selected="last"></select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-4">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon">تاریخ مقصد</span>
+												<input type="text" name="destinationdate" class="form-control datepicker destination" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon">زمان شروع</span>
+												<select class="form-control destination" name="startdate" data-type="itemlist"></select>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-3">
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon">تاریخ مقصد</span>
-								<input type="text" name="destinationdate" class="form-control datepicker" />
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-3">
+					<div class="col-xs-12 col-sm-2">
 						<div class="checkbox checkbox-danger checkbox-circle col-xs-12">
 							<input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
 							<label for="checkbox_2_0">جایگزین کردن در مقصد</label>
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-3">
+					<div class="col-xs-12 col-sm-1">
 						<button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
 					</div>
 				</div>
@@ -48,7 +88,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon">زمان شروع</span>
-								<select class="form-control" name="startdate"></select>
+								<select class="form-control" name="startdate" data-type="itemlist"></select>
 							</div>
 						</div>
 					</div>
@@ -56,7 +96,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon">زمان پایان</span>
-								<select class="form-control" name="enddate"></select>
+								<select class="form-control" name="enddate" data-type="itemlist"></select>
 							</div>
 						</div>
 					</div>

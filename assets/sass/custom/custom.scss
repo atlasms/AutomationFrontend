@@ -161,10 +161,13 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
     .bootbox-body { direction: ltr; text-align: left; }
     button[data-bb-handler="confirm"] { float: left; }
 }
+// Accordoins
 .panel-default>.panel-heading {
     padding: 0;
     h4 a { padding: 10px 15px; display: block; }
 }
+// Datepicker
+.datepicker-plot-area { z-index: 1000; }
  
 // Mainbody
 #main { padding-bottom: 100px; }
