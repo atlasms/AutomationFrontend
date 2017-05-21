@@ -66,6 +66,9 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                     404: function () {
                         toastr.error('سرویس پیدا نشد! [404]', 'خطا');
                     },
+                    409: function () {
+                        toastr.error('کاربر تکراری!', 'خطا');
+                    },
                     500: function () {
                         toastr.error('خطا در سرور. [500]', 'خطا');
                     },

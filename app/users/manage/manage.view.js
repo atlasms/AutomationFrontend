@@ -1,12 +1,13 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'bootbox', 'bootstrap/modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'bootbox', 'bootstrap/modal', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, UsersManageModel, toastr, Toolbar, Statusbar, bootbox) {
     var UsersManageView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         modal_register: '#register-modal'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_users'}}
-            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
-            , {'button': {cssClass: 'btn btn-primary pull-right', text: 'کاربر جدید', type: 'button', task: 'add-user', icon: 'fa fa-plus'}}
+//            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_users'}}
+//            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
+            {'button': {cssClass: 'btn btn-primary', text: 'کاربر جدید', type: 'button', task: 'add-user', icon: 'fa fa-plus'}}
+            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}}
         ]
         , flags: {}
         , events: {
@@ -15,11 +16,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click [data-task=reset-password]': 'resetPassword'
             , 'submit #user-register': 'register'
         }
-        , resetPassword: function(e) {
+        , resetPassword: function (e) {
             e.preventDefault();
             var self = this;
             var $button = $(e.currentTarget);
-            var id = $(this).parents("tr:first").attr('data-id');
+            var id = $button.parents("tr:first").attr('data-id');
             bootbox.confirm({
                 message: "رمز عبور کاربر "
                 , buttons: {
@@ -28,7 +29,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
                 , callback: function (results) {
                     if (results) {
-                        
+                        new UsersManageModel({id: 'resetpassword/' + id}).save(null, {
+                            data: JSON.stringify({key: 'Password', Value: 123456})
+                            , contentType: 'application/json'
+                            , success: function (d) {
+                                toastr['success']('با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            }
+                            , error: function (z, x, c) {
+                                console.log(z, x, c);
+                            }
+                        });
                     }
                 }
             });
@@ -119,6 +129,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             });
         }
         , afterRender: function () {
+            $("#users-manage-table").bootstrapTable(Config.settings.bootstrapTable);
         }
         , renderToolbar: function () {
             var self = this;

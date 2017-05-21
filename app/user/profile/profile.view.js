@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toastr', 'toolbar', 'user.helper', 'user', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, InboxModel, toastr, Toolbar, UserHelper, UserModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toastr', 'toolbar', 'user.helper', 'user', 'users.manage.model', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, InboxModel, toastr, Toolbar, UserHelper, UserModel, UsersManageModel) {
     var ProfileView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         modal_details: '#notifications-detail-modal'
@@ -14,14 +14,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             var self = this;
             var data = $("#change-pass-form").serializeObject();
             if (typeof data.Verify !== "undefined" && typeof data.Password !== "undefined" && data.Password === data.Verify && data.Password) {
-                var params = {Password: data.Password};
-                new UserModel({id: this.getId()}).save(params, {
-                    patch: true
-                    , error: function (e, data) {
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                new UsersManageModel({id: 'resetpassword/' + self.getId()}).save(null, {
+                    data: JSON.stringify({key: 'Password', Value: data.Password})
+                    , contentType: 'application/json'
+                    , success: function (d) {
+                        toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     }
-                    , success: function (model, response) {
-                        toastr.success('عملیات با موفقیت انجام شد', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    , error: function (z, x, c) {
+                        console.log(z, x, c);
                     }
                 });
             } else
@@ -31,7 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
         , showChangePassModal: function () {
             $("#change-pass-modal").modal('show');
         }
-        , getId: function() {
+        , getId: function () {
             return UserHelper.getUser().Id;
         }
         , reLoad: function (e) {
