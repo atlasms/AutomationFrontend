@@ -124,6 +124,7 @@ require.config({
         , "monitoring.schedulepdf.view": ["../../app/monitoring/schedulepdf/schedulepdf.view"]
         , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
         , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]
+        , "monitoring.ualogs.view": ["../../app/monitoring/ualogs/ualogs.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

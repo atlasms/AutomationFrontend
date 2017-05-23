@@ -1,45 +1,19 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toastr', 'toolbar', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, InboxModel, toastr, Toolbar) {
-    var NotificationsView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
-        modal_details: '#notifications-detail-modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inbox.model', 'toolbar', 'toastr', 'pdatepicker', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, InboxModel, Toolbar, toastr) {
+    var UserActivityLogsView = Backbone.View.extend({
+        playerInstance: null
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}}
         ]
-        , flags: {}
         , events: {
-            'click .notifications tr': 'loadDetails'
-            , 'click [data-task="refresh-view"]': 'reLoad'
+            'click [data-task=filter_rows]': 'filter'
+            , 'click [data-task=refresh-view]': 'reLoad'
         }
-        , loadDetails: function (e) {
-            e.preventDefault();
-            var self = this;
-            var params = {id: $(e.currentTarget).attr("data-messageid")};
-            var model = new InboxModel(params);
-//            var template = Template.template.load('shared', 'notification.partial');
-            var $container = $(this.modal_details);
-            model.fetch({
-                success: function (items) {
-                    items = items.toJSON();
-                    $(e.currentTarget).removeClass("unread").addClass("read");
-//                    template.done(function (data) {
-//                        var handlebarsTemplate = Template.handlebars.compile(data);
-//                        var output = handlebarsTemplate(items);
-//                        $container.find('.modal-body').html(output).promise().done(function () {
-//                            $container.modal();
-//                        });
-//                    });
-                }
-            });
-            return false;
-        }
-        , reLoad: function (e) {
-            if (typeof e !== "undefined")
-                e.preventDefault();
+        , flags: {}
+        , reLoad: function () {
             this.load();
-            return false;
         }
-        , load: function (e, extend) {
+        , load: function (extend) {
             var params = {query: 'externalid=0&kind=3&provider=inbox'};
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
@@ -48,7 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             var self = this;
             var template = Template.template.load('user/notifications', 'notifications');
             var $container = $(Config.positions.main);
-            var params = {query: 'externalid=0&kind=3&provider=inbox'};
+            var params = {query: 'externalid=0&kind=3&provider=log'};
             new InboxModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
@@ -61,9 +35,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                     });
                 }
             });
-
         }
         , afterRender: function () {
+            $("#main table").bootstrapTable(Config.settings.bootstrapTable);
+            var $this = this;
         }
         , renderToolbar: function () {
             var self = this;
@@ -74,9 +49,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 toolbar[method](this[method]);
             });
             toolbar.render();
+            var $datePickers = $(".datepicker");
+            var datepickerConf = {
+                onSelect: function () {
+                    self.load();
+                    $datePickers.blur();
+                }
+            };
+            $.each($datePickers, function () {
+                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+            });
             self.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
+            var $this = this;
             if (typeof items.query !== "undefined")
                 delete items.query;
             if (typeof params !== "undefined") {
@@ -84,15 +70,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                     delete items[prop];
                 }
             }
+//            var data = {};
+//            $.each(items, function () {
+//                if (typeof data[this[$this.group]] === "undefined")
+//                    data[this[$this.group]] = [];
+//                data[this[$this.group]].push(this);
+//            });
             return items;
         }
         , prepareContent: function () {
             this.renderToolbar();
         }
-        , prepareSave: function () {
-            data = null;
-            return data;
-        }
     });
-    return NotificationsView;
+    return UserActivityLogsView;
 });
