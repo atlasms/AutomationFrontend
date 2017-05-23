@@ -34,13 +34,13 @@
 							<span class="">{{MetaCategoryName}}</span>
 						</td>
 						<td class="text-right">
-							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+							<span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
 						</td>
 						<td class="text-left">
 							<span class="">{{CreatedByText}}</span>
 						</td>
 						<td class="text-right">
-							<span class="">{{extractTime Modified}} {{extractDate Modified}}</span>
+							<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
 						</td>
 						<td class="text-left">
 							<span class="">{{ModifiedByText}}</span>

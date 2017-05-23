@@ -37,10 +37,10 @@
 									{{PublishedByText}}
 								</td>
 								<td class="text-right">
-									<span class="">{{extractTime Published}} {{extractDate Published}}</span>
+									<span class="">{{#if Published}}{{extractTime Published}} {{extractDate Published}}{{/if}}</span>
 								</td>
 								<td class="text-right">
-									<span class="">{{extractTime Modified}} {{extractDate Created}}</span>
+									<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
 								</td>
 								<td class="text-center">
 									{{EpisodeNumber}}

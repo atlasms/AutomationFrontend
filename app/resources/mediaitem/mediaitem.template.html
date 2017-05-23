@@ -61,15 +61,15 @@
 										</tr>
 										<tr>
 											<td>تاریخ ایجاد</td>
-											<td>{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}})</td>
+											<td>{{#if Created}}{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}}){{/if}}</td>
 										</tr>
 										<tr>
 											<td>تاریخ ویرایش</td>
-											<td>{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}})</td>
+											<td>{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}}){{/if}}</td>
 										</tr>
 										<tr>
 											<td>تاریخ بازبینی</td>
-											<td>{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}})</td>
+											<td>{{#if Published}}{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}}){{/if}}</td>
 										</tr>
 									</tbody>
 								</table>
