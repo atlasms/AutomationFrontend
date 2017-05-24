@@ -130,6 +130,7 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .box.portlet { direction: ltr; text-align: left; }
 .editable-input textarea { min-width: 350px; }
 .form-group.form-md-line-input .form-control:not(select):not(textarea) { font-size: 16px; }
+.rtl-date { direction: rtl; display: inline-block; }
 // Typeahead
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important }
@@ -258,6 +259,7 @@ body.fixed-toolbar {
         }
     }
 } 
+#schedule-log-modal .modal-body { max-height: 65vh; overflow: hidden; overflow-y: auto; }
 
 /// Ingest
 #storagefiles {

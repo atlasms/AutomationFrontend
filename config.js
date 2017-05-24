@@ -69,6 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "pr/sms": {"private": true, "access": null, "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
             , "pr/recordings": {"private": true, "access": null, "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
             , "monitoring/schedule": {"private": true, "access": null, "action": "MonitoringScheduleView", "file": "app/monitoring/schedule/schedule.view"}
+            , "monitoring/schedulefiles": {"private": true, "access": null, "action": "MonitoringScheduleFilesView", "file": "app/monitoring/schedulefiles/schedulefiles.view"}
             , "monitoring/schedulepdf": {"private": true, "access": null, "action": "MonitoringSchedulePDFView", "file": "app/monitoring/schedulepdf/schedulepdf.view"}
             , "monitoring/ingest": {"private": true, "access": null, "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
             , "monitoring/playlist": {"private": true, "access": null, "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}

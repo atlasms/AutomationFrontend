@@ -121,6 +121,7 @@ require.config({
         , "pr.sms.view": ["../../app/pr/sms/sms.view"]
         , "pr.recordings.view": ["../../app/pr/recordings/recordings.view"]
         , "monitoring.schedule.view": ["../../app/monitoring/schedule/schedule.view"]
+        , "monitoring.schedulefiles.view": ["../../app/monitoring/schedulefiles/schedulefiles.view"]
         , "monitoring.schedulepdf.view": ["../../app/monitoring/schedulepdf/schedulepdf.view"]
         , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
         , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]

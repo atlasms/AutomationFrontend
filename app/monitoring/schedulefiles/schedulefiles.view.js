@@ -1,34 +1,28 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'toolbar', 'toastr', 'pdatepicker', 'bootstrap-table', 'bootstrap/modal', 'bootstrap/tooltip'
-], function ($, _, Backbone, Template, Config, Global, ScheduleModel, Toolbar, toastr) {
-    var MonitoringScheduleView = Backbone.View.extend({
-        $modal: "#schedule-log-modal"
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'monitoring.model', 'toolbar', 'toastr', 'pdatepicker', 'bootstrap-table', 'bootstrap/collapse', 'bootstrap/tooltip'
+], function ($, _, Backbone, Template, Config, Global, MonitoringModel, Toolbar, toastr) {
+    var MonitoringScheduleFilesView = Backbone.View.extend({
+        playerInstance: null
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}}
         ]
         , events: {
             'click [data-task=filter_rows]': 'filter'
             , 'click [data-task=refresh-view]': 'reLoad'
-            , 'click [data-task=open-details]': 'openDetails'
+            , 'click [data-toggle=collapse]': 'cachePane'
         }
         , flags: {}
         , reLoad: function () {
             this.load();
         }
-        , openDetails: function (e) {
-            var self = this;
-            var $this = $(e.target);
-            if (!$this.next().is("textarea") || $this.next().val() === "")
-                return false;
-            var cachedData = $this.next().val().replace(/\\/g, "");
-            var items = JSON.parse(cachedData);
-            var template = Template.template.load('broadcast/schedule', 'scheduledetail.partial');
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate(items);
-                $(self.$modal).find(".modal-body").html(output).promise().done(function () {
-                    $(self.$modal).modal('toggle');
-                });
-            });
+        , group: 'CmdGroup'
+        , cachePane: function (e) {
+            var $this = this;
+            window.setTimeout(function () {
+                if ($(e.target).attr('class').indexOf('collapsed') === -1)
+                    $this.flags.activePane = $(e.target).attr('href');
+                else
+                    $this.flags.activePane = '';
+            }, 500);
         }
         , load: function (extend) {
             console.info('Loading items');
@@ -38,14 +32,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , render: function (params) {
             var self = this;
-            var params = {path: '/log'};
-            var model = new ScheduleModel(params);
-            var template = Template.template.load('monitoring/schedule', 'schedule');
+            var params = {path: '/CopyHighPlayout'};
+            var model = new MonitoringModel(params);
+            var template = Template.template.load('monitoring', 'groups');
             var $container = $(Config.positions.main);
             model.fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
-                    console.log(items);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
@@ -58,6 +51,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , afterRender: function () {
             var $this = this;
+            if (typeof $this.flags.activePane !== "undefined" && $this.flags.activePane !== "")
+                $("#accordion > .panel").find('a[href="' + $this.flags.activePane + '"]').click();
+            else
+                $("#accordion > .panel:first").find(".panel-title a").click();
             $('[data-toggle="tooltip"]').tooltip();
         }
         , renderToolbar: function () {
@@ -90,7 +87,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     delete items[prop];
                 }
             }
-            return items;
+            var data = {};
+            $.each(items, function () {
+                if (typeof data[this[$this.group]] === "undefined")
+                    data[this[$this.group]] = [];
+                data[this[$this.group]].push(this);
+            });
+            return data;
         }
         , prepareContent: function () {
             this.renderToolbar();
@@ -100,5 +103,5 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             return data;
         }
     });
-    return MonitoringScheduleView;
+    return MonitoringScheduleFilesView;
 });

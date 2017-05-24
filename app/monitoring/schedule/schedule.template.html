@@ -1,0 +1,50 @@
+<div id="monitoring-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<table class="table table-condensed table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th class="col-xs-2">شروع کنداکتور</th>
+						<th class="col-xs-2">پایان کنداکتور</th>
+						<th class="col-xs-3">کاربر</th>
+						<th class="col-xs-2">زمان ثبت</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					<tr data-id="conductorLogId">
+						<td>{{math @index "+" 1}}</td>
+						<td>{{extractTime dataDateTimeStart}} {{extractDate dataDateTimeStart}}</td>
+						<td>{{extractTime dataDateTimeEnd}} {{extractDate dataDateTimeEnd}}</td>
+						<td class="">{{userFullName}}</td>
+						<td>{{extractTime logDatetime}} {{extractDate logDatetime}}</td>
+						<td>
+							<button class="btn btn-default btn-sm" data-task="open-details"><i class="fa fa-eye"></i> مشاهده</button>
+							<textarea class="hide">{{logData}}</textarea>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal fade zoom-out" id="schedule-log-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog container" role="document">
+			<form class="modal-content"  role="form" class="">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">مشاهده جزئیات کنداکتور</h4>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<!--<span class="help-inline hidden">پیش از ثبت اطلاعات می‌بایست فولدر را انتخاب نمایید</span>-->
+					<!--<button type="submit" class="btn btn-success">ذخیره اطلاعات</button>-->
+				</div>
+			</form><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
