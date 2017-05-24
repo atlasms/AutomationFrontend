@@ -576,7 +576,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $.each(items, function () {
                 starts.push({
                     time: this.CondcutorStartTime.split('T')[1]
-                    , title: this.ConductorCategoryTitle + ' » ' + this.ConductorTitle
+                    , title: (this.ConductorCategoryTitle ? this.ConductorCategoryTitle + ' » ' : '') + (this.ConductorTitle ? this.ConductorTitle : '')
                 });
             });
             var last = {
@@ -586,18 +586,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var ends = $.extend([], starts);
             ends.push(last);
             ends.shift();
-            
+
             if (source) { // Filling source fields, not destinations
-                $(".source[name=startdate], .source[name=enddate]").empty();
+                $(".source[name=starttime], .source[name=endtime]").empty();
                 for (var i = 0; i < starts.length; i++)
-                    $(".source[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                    $(".source[name=starttime]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
                 for (var i = 0; i < ends.length; i++)
-                    $(".source[name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
-                $(".source[name=enddate]").find("option:last").attr('selected', 'selected');
+                    $(".source[name=endtime]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                $(".source[name=endtime]").find("option:last").attr('selected', 'selected');
             } else {
-                $(".destination[name=startdate]").empty();
+                $(".destination[name=starttime]").empty();
                 for (var i = 0; i < starts.length; i++)
-                    $(".destination[name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                    $(".destination[name=starttime]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
             }
         }
         , generateTimeArray: function (callback) {
@@ -605,6 +605,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             /*
              * Method to generate two arrays containing all start times and all end times
              */
+            var $startSelect = $("select[data-type=itemlist][name=startdate], .source[name=starttime]");
+            var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime], .destination[name=starttime]");
             var $rows = $("#schedule-page table tbody tr");
             var starts = [];
             $.each($rows, function () {
@@ -619,20 +621,25 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             };
             var ends = $.extend([], starts);
             ends.push(last);
-            ends.shift();
             if (typeof callback === "object")
                 callback.timeArrays = {starts: starts, ends: ends};
-            if ($("select[data-type=itemlist][name=startdate]").length) {
-                $("select[data-type=itemlist][name=startdate]").empty();
+            if ($startSelect.length) {
+                $startSelect.empty();
                 for (var i = 0; i < starts.length; i++)
-                    $("select[data-type=itemlist][name=startdate]").append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                    $startSelect.append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
             }
-            if ($("select[data-type=itemlist][name=enddate]").length) {
-                $("select[data-type=itemlist][name=enddate]").empty();
-                for (var i = 0; i < ends.length; i++)
-                    $("select[data-type=itemlist][name=enddate]").append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
-                if (typeof $("select[data-type=itemlist][name=enddate]").attr('data-selected') !== "undefined")
-                    $("select[data-type=itemlist][name=enddate]").find("option:last").attr('selected', 'selected');
+            if ($endSelect.length) {
+                $endSelect.each(function () {
+                    var $this = $(this);
+//                        ends.shift();
+                    $this.empty();
+                    for (var i = 0; i < ends.length; i++)
+                        $this.append('<option value="' + ends[i].time + '">[' + ends[i].time + '] ' + ends[i].title + '</option>');
+                    if (typeof $this.attr('data-selected') !== "undefined")
+                        $this.find("option:last").attr('selected', 'selected');
+                    if (!$this.hasClass('destination'))
+                        $this.find("option:first").remove();
+                });
             }
         }
     };

@@ -380,9 +380,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , duplicate: function (e) {
             e.preventDefault();
             var params = {
-                startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00'
-                , enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
-                , destinationdate: Global.jalaliToGregorian($("#duplicate-schedule [name=destinationdate]").val()) + 'T00:00:00'
+                startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T' + $("#duplicate-schedule .source[name=starttime]").val()
+                , enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T' + $("#duplicate-schedule .source[name=endtime]").val()
+                , destinationdate: Global.jalaliToGregorian($("#duplicate-schedule [name=destinationdate]").val()) + 'T' + $("#duplicate-schedule .destination[name=starttime]").val()
                 , force: +$("#duplicate-schedule [name=force]").val()
             };
             new ScheduleModel({path: '/copy'}).save(null, {
@@ -550,6 +550,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if (readonly === "true")
                     $(this).find("input, textarea, select").attr('disabled', 'disabled');
             });
+            
+            $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
         }
         , renderToolbar: function () {
             var self = this;
@@ -588,8 +590,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if ($this.data('datepicker') == undefined) {
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
                         onSelect: function () {
-                            if ($this.parents("#toolbar").length)
+                            if ($this.parents("#toolbar").length) {
                                 self.load();
+//                                $('.datepicker.source').val($this.val());
+                            }
                             $datePickers.blur();
                             if ($this.parents("#duplicate-schedule").length) {
                                 self.loadScheduleItem($this);
