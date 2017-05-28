@@ -23,7 +23,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
             e.preventDefault();
             var key = STORAGEKEY;
             var form = $(".login-content").find("form:first").serializeObject();
-            new User({path: '/login'}).save(null, {
+            var userModel = new User({path: '/login'});
+            console.log(userModel);
+            userModel.save(null, {
                 data: JSON.stringify(form)
                 , contentType: 'application/json'
                 , success: function (d) {

@@ -6,8 +6,8 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             , '*actions': 'app' // Other routes
         }
         , Login: function () {
-            var loginView = new Login();
-            loginView.render();
+            this.view && this.view.close();
+            new Login().render();
         }
         , map: Config.routes
         , current: function () {
