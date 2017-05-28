@@ -5,7 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //        el: $(Config.positions.wrapper)
         model: 'ScheduleModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256'}}
+            {'button': {cssClass: 'btn red-mint pull-right', text: 'حذف آیتم‌ها', type: 'button', task: 'truncate-table', icon: 'fa fa-trash', access: '131072'}}
+            , {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256'}}
             , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save', access: '2'}}
             , {'button': {cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
@@ -46,7 +47,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=edit-title]': 'editTitle'
             , 'click [data-task=delete-title]': 'deleteTitle'
             , 'click [data-task=delete-subtitle]': 'deleteSubtitle'
+            , 'click [data-task=truncate-table]': 'truncateTable'
             , 'click .remove-meta': 'removeMetaId'
+        }
+        , truncateTable: function (e) {
+            e.preventDefault();
+            var $this = this;
+            bootbox.confirm({
+                message: "تمامی موارد کنداکتور روز انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var params = {
+                            startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00'
+                            , enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
+                            , id: 0
+                            , path: '/?startdate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
+                        };
+                        new ScheduleModel(params).destroy({
+                            data: params
+                            , error: function (e, data) {
+                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            }
+                            , success: function () {
+                                $this.reLoad();
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            }
+                        });
+                    }
+                }
+            });
         }
         , fixRow: function (e) {
             var $row = $(e.currentTarget).parents("tr:first");
@@ -550,7 +583,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if (readonly === "true")
                     $(this).find("input, textarea, select").attr('disabled', 'disabled');
             });
-            
+
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
         }
         , renderToolbar: function () {
