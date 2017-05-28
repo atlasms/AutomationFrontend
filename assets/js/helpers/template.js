@@ -223,6 +223,12 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     return options.fn(this);
                 return options.inverse(this);
             });
+            Handlebars.registerHelper('zeroFill', function (number, size, options) {
+                return Global.zeroFill(number, size);
+            });
+            Handlebars.registerHelper('zeroFillIndex', function (number, size, options) {
+                return Global.zeroFill(number + 1, size);
+            });
             Handlebars.registerHelper('shortenPath', function (path, parts, options) {
                 var pathArray = path.split('\\');
                 var outputArray = [];

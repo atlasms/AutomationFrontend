@@ -46,6 +46,7 @@
 	.date { font-size: 12px; text-align: left; }
 	.date.number-only { font-size: 14px; text-align: center; font-weight: bold }
 	.date.number-only span { display: inline-block; padding: 0 8px; }
+	code{border:1px solid #e1e1e1;}
 </style>
 <div class="wrapper">
 	<table class="metadata" cellspacing="0" cellpadding="0" style="">
@@ -77,7 +78,7 @@
 				<th style="width: 70px; text-align: center;">مدت</th>
 				<th style="width: 300px;">نام برنامه</th>
 				<th style="width: 40px; text-align: center;">قسمت</th>
-				<th style="width: 80px; text-align: center;">نوع برنامه</th>
+				<th style="width: 150px; text-align: center;">نام فایل</th>
 				<th>توضیحات</th>
 				<th style="width: 40px; text-align: center;">تکرار</th>
 				<th style="width: 40px; text-align: center;">منتخب</th>
@@ -111,8 +112,8 @@
 				<td style="text-align: center;">
 					<span>{{ConductorEpisodeNumber}}</span>
 				</td>
-				<td style="text-align: center;">
-					<span>{{ConductorType}}</span>
+				<td style="text-align: left; font-family: Tahoma; direction: ltr;">
+					<code>{{zeroFillIndex @index 3}}_{{ConductorMediaId}}.mp4</code>
 				</td>
 				<td>
 					{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
