@@ -281,10 +281,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     tmpl = ['resources/mediaitem', 'versions.partial'];
                     model = new MediaitemModel(params);
                     break;
+                case 'broadcast':
+                    var params = {
+                        overrideUrl: Config.api.schedule + '/mediausecount?id=' + self.getId()
+                    };
+                    tmpl = ['resources/mediaitem', 'broadcast.partial'];
+                    model = new MediaitemModel(params);
+                    break;
             }
             if (tmpl && model) {
                 var template = Template.template.load(tmpl[0], tmpl[1]);
-                if (model.indexOf('sequential') === -1) {
+                if (typeof model !== "string" || model.indexOf('sequential') === -1) {
                     model.fetch({
                         success: function (items) {
                             items = self.prepareItems(items.toJSON(), params);
