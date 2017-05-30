@@ -268,6 +268,7 @@ body.fixed-toolbar {
         &.disabled { background: #eee; color: #aaa; cursor: default; }
     }
 }
+.stat-holder { line-height: 34px; }
 
 /// Reviews
 #returnees-table, #review-table {
@@ -380,6 +381,7 @@ body.fixed-toolbar {
 
 }
 #metadata-place { max-height: 450px; overflow: hidden; overflow-y: scroll; } 
+#stats-page #metadata-place { max-height: none; overflow-y: auto; }
 
 // User Manage Page
 #users-manage-page {

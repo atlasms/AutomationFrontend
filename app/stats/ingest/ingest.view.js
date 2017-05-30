@@ -14,6 +14,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=refresh]': 'reLoad'
+            , 'change [data-type=state]': 'filterStates'
+        }
+        , filterStates: function (e) {
+            var value = $(e.target).val();
+            
+            var $printButton = $(".print-btn");
+            $printButton.attr('href', $printButton.attr('href').split('state=')[0] + 'state=' + value);
+            
+            var $rows = $("#items-table tbody").find("tr");
+            if (value == -1)
+                $rows.show();
+            else {
+                $rows.hide();
+                $rows.each(function () {
+                    if ($(this).data('state') == value)
+                        $(this).show();
+                });
+            }
+            this.updateStats($rows);
         }
         , reLoad: function () {
             this.load();
@@ -83,13 +102,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
             return data;
         }
-        , processSum: function(items) {
-            var data = {items: items, duration: 0, count: 0};
-            $.each(items, function() {
+        , updateStats: function($rows) {
+            var stats = {duration: 0, count: 0};
+            $rows.each(function() {
+                if ($(this).is(":visible")) {
+                    stats.count++;
+                    stats.duration += $(this).data('duration');
+                    $(this).find("td:first").html(stats.count);
+                }
+            });
+            $("[data-type=duration]").html(Global.createTime(stats.duration));
+            $("[data-type=count]").html(stats.count);
+        }
+        , processSum: function (items) {
+            var data = {items: items, duration: 0, count: 0, header: true};
+            $.each(items, function () {
                 data.duration += this.Duration;
                 data.count++;
             });
-            console.log(data);
             return data;
         }
         , handleTreeCalls: function (routes, path) {

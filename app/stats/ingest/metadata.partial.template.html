@@ -1,29 +1,54 @@
 <table class="table table-bordered table-striped flip-content">
-	<tr>
-		<td class="col-xs-6">
-			مجموع تایم
-			<span class="label label-default">{{time duration}}</span>
+	<tr class="active">
+		<td class="col-xs-4">
+			<div class="stat-holder">
+				مجموع تایم
+				<span data-type="duration" class="label label-info label-sm">{{time duration}}</span>
+			</div>
 		</td>
-		<td class="col-xs-6">
-			تعداد آیتم‌ها
-			<span class="label label-default">{{count}}</span>
+		<td class="col-xs-4">
+			<div class="stat-holder">
+				تعداد آیتم‌ها
+				<span data-type="count" class="label label-info label-sm">{{count}}</span>
+			</div>
 		</td>
+		<td class="col-xs-3">
+			<select data-type="state" class="form-control" name="state">
+				<option value="-1">همه</option>
+				{{#getDefinitionOptions 2}}{{/getDefinitionOptions}}
+			</select>
+		</td>
+		{{#if header}}
+		<td>
+			<a href="/stats/ingestprint?category={{#each items}}{{#if @first}}{{MetaCategoryId}}{{/if}}{{/each}}&state=-1" target="_blank" class="btn btn-default print-btn">
+				<i class="fa fa-print"></i> چاپ
+			</a>
+		</td>
+		{{else}}
+		<td>
+			<div class="stat-holder">
+				<span class="label label-info label-sm">{{#each items}}{{#if @first}}{{MetaCategoryName}}{{/if}}{{/each}}</span>
+			</div>
+		</td>
+		{{/if}}
 	</tr>
 </table>
-<table class="table table-bordered table-striped table-condensed flip-content">
+<table class="table table-bordered table-striped table-condensed flip-content" id="items-table">
 	<thead>
 		<tr>
 			<th class=""></th>
-			<th class="col-xs-5">نام برنامه</th>
+			<th class="col-xs-4">نام برنامه</th>
 			<th class="col-xs-2 text-center">زمان ثبت</th>
+			<th class="col-xs-2 text-center">اولین پخش</th>
+			<th class="col-xs-1 text-center">تعداد پخش</th>
 			<th class="col-xs-1 text-center">قسمت</th>
 			<th class="col-xs-1 text-center">مدت</th>
-			<th class="col-xs-2 text-center">وضعیت</th>
+			<th class="col-xs-1 text-center">وضعیت</th>
 		</tr>
 	</thead>
 	<tbody>
 		{{#each items}}
-		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-state="{{State}}" data-duration="{{Duration}}">
 			<td class="text-center">
 				{{math @index "+" 1}}
 			</td>
@@ -33,6 +58,14 @@
 			</td>
 			<td class="text-right">
 				<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+			</td>
+			<td class="text-right">
+				{{#each LastCondcutorUse}}
+				{{#if @first}}<span class="">{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}</span>{{/if}}
+				{{/each}}
+			</td>
+			<td class="text-center">
+				{{ConductorUseCount}}
 			</td>
 			<td class="text-center">
 				{{EpisodeNumber}}
