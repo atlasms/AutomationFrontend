@@ -8,6 +8,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , flags: {}
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
+            , 'click #tree .jstree-anchor': 'loadData'
+        }
+        , loadData: function(e) {
+            var target = $(e.target).parent().attr('id');
+            alert(target);
         }
         , reLoad: function () {
             this.load();
