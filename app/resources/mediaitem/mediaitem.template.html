@@ -71,6 +71,36 @@
 											<td>تاریخ بازبینی</td>
 											<td>{{#if Published}}{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}}){{/if}}</td>
 										</tr>
+										<tr>
+											<td>تعداد پخش</td>
+											<td>
+												<span class="label label-info label-sm">{{ConductorUseCount}}</span>
+											</td>
+										</tr>
+										<tr>
+											<td>اولین پخش</td>
+											<td>
+												{{#if FirstCondcutorUse}}
+													{{#each FirstCondcutorUse}}
+														{{#if @first}}
+															{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
+														{{/if}}
+													{{/each}}
+												{{/if}}
+											</td>
+										</tr>
+										<tr>
+											<td>آخرین پخش</td>
+											<td>
+												{{#if LastCondcutorUse}}
+													{{#each LastCondcutorUse}}
+														{{#if @first}}
+															{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
+														{{/if}}
+													{{/each}}
+												{{/if}}
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -94,6 +124,7 @@
 								<li data-service="review" class="active"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
 								<li data-service=""><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
 								<li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
+								<li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
 								<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>
 							</ul>
 						</div>
@@ -102,6 +133,7 @@
 								<div class="tab-pane fade in active" id="tab-review"></div>
 								<div class="tab-pane fade" id="tab-metadata"></div>
 								<div class="tab-pane fade" id="tab-versions"></div>
+								<div class="tab-pane fade" id="tab-schedule"></div>
 								<div class="tab-pane fade" id="tab-publicdata"></div>
 							</div>
 						</div>
