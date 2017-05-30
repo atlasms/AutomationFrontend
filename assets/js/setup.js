@@ -126,6 +126,7 @@ require.config({
         , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
         , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]
         , "monitoring.ualogs.view": ["../../app/monitoring/ualogs/ualogs.view"]
+        , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

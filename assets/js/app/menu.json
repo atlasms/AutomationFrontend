@@ -64,6 +64,7 @@
         "title": "آمار",
         "alias": "stats",
         "items": [
+            { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "pie-chart", "link": "/stats/ingest" },
             { "title": "آمار پخش", "alias": "broadcast_stats", "icon": "fa-pie-chart", "link": "#" },
             { "title": "آمار منابع", "alias": "resources_stats", "icon": "fa-bar-chart", "link": "#" },
             { "title": "آمار آرشیو", "alias": "archive_stats", "icon": "file-video-o", "link": "#" },
