@@ -64,9 +64,9 @@
         "title": "آمار",
         "alias": "stats",
         "items": [
-            { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "pie-chart", "link": "/stats/ingest" },
-            { "title": "آمار پخش", "alias": "broadcast_stats", "icon": "fa-pie-chart", "link": "#" },
-            { "title": "آمار منابع", "alias": "resources_stats", "icon": "fa-bar-chart", "link": "#" },
+            { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
+            { "title": "آمار پخش", "alias": "broadcast_stats", "icon": "pie-chart", "link": "#" },
+            { "title": "آمار منابع", "alias": "resources_stats", "icon": "bar-chart", "link": "#" },
             { "title": "آمار آرشیو", "alias": "archive_stats", "icon": "file-video-o", "link": "#" },
             { "title": "آمار وب‌سایت", "alias": "website_stats", "icon": "line-chart", "link": "#" },
             { "title": "آمار روابط عمومی", "alias": "pr_stats", "icon": "bar-chart-o", "link": "#" }
