@@ -38,10 +38,10 @@
 		<tr>
 			<th class=""></th>
 			<th class="col-xs-4">نام برنامه</th>
+			<th class="col-xs-1 text-center">قسمت</th>
 			<th class="col-xs-2 text-center">زمان ثبت</th>
 			<th class="col-xs-2 text-center">اولین پخش</th>
 			<th class="col-xs-1 text-center">تعداد پخش</th>
-			<th class="col-xs-1 text-center">قسمت</th>
 			<th class="col-xs-1 text-center">مدت</th>
 			<th class="col-xs-1 text-center">وضعیت</th>
 		</tr>
@@ -56,6 +56,9 @@
 				{{Title}}
 				<small class="help-block text-muted clip-line">{{Description}}</small>
 			</td>
+			<td class="text-center">
+				{{EpisodeNumber}}
+			</td>
 			<td class="text-right">
 				<span class="">{{extractTime Created}} {{extractDate Created}}</span>
 			</td>
@@ -66,9 +69,6 @@
 			</td>
 			<td class="text-center">
 				{{ConductorUseCount}}
-			</td>
-			<td class="text-center">
-				{{EpisodeNumber}}
 			</td>
 			<td class="text-center">
 				<span class="time">{{time Duration}}</span>
