@@ -38,6 +38,7 @@
 		<tr>
 			<th class=""></th>
 			<th class="col-xs-4">نام برنامه</th>
+			<th class="text-center">#</th>
 			<th class="col-xs-1 text-center">قسمت</th>
 			<th class="col-xs-2 text-center">زمان ثبت</th>
 			<th class="col-xs-2 text-center">اولین پخش</th>
@@ -50,12 +51,14 @@
 		{{#each items}}
 		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-state="{{State}}" data-duration="{{Duration}}">
 			<td class="text-center">
-				{{math @index "+" 1}}
+				<span class="idx">{{math @index "+" 1}}</span>
+				<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
 			</td>
 			<td>
 				{{Title}}
 				<small class="help-block text-muted clip-line">{{Description}}</small>
 			</td>
+			<td><code class="text-muted pull-right">{{Id}}</code></td>
 			<td class="text-center">
 				{{EpisodeNumber}}
 			</td>
