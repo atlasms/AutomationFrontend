@@ -1,5 +1,5 @@
 <div class="page-sidebar navbar-collapse collapse">
-	<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu navbar-collapse collapse page-sidebar-menu-closed" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+	<ul class="page-sidebar-menu" data-keep-expanded="true" data-auto-scroll="false" data-slide-speed="200">
 		<li class="nav-item start active open">
 			<a href="/" class="nav-link nav-toggle">
 				<span class="title">داشبورد</span>
@@ -7,18 +7,24 @@
 			</a>
 		</li>
 		{{#each []}}
-		<li class="heading">
-			<h3 class="uppercase">{{title}}</h3>
-		</li>
-		{{#each items}}
 		<li class="nav-item">
-			<a href="{{link}}" class="nav-link ">
+			<a href="javascript:;" class="nav-link nav-toggle">
 				<span class="title">{{title}}</span>
-				<span class="arrow"></span>
 				<i class="fa fa-{{icon}}"></i>
+				<span class="arrow"></span>
 			</a>
+			<ul class="sub-menu">
+				{{#each items}}
+				<li class="nav-item">
+					<a href="{{link}}" class="nav-link ">
+						<span class="title">{{title}}</span>
+						<i class="fa fa-{{icon}}"></i>
+						<!--<span class="arrow"></span>-->
+					</a>
+				</li>
+				{{/each}}
+			</ul>
 		</li>
-		{{/each}}
 		{{/each}}
 	</ul>
 </div>

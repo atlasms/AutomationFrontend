@@ -2,6 +2,7 @@
     {
         "title": "پخش",
         "alias": "broadcast",
+        "icon": "youtube-play",
         "items": [
             { "title": "کنداکتور", "alias": "broadcast_schedule", "icon": "table", "link": "/broadcast/schedule" },
             { "title": "EPG", "alias": "broadcast_epg", "icon": "align-right", "link": "#" },
@@ -13,9 +14,10 @@
     {
         "title": "منابع",
         "alias": "resources",
+        "icon": "server",
         "items": [
             { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
-            { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "tasks", "link": "/resources/categories" },
+            { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
             { "title": "متادیتا", "alias": "resources_metadata", "icon": "database", "link": "/resources/metadata" },
             { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
             { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/returnees" },
@@ -25,18 +27,20 @@
     {
         "title": "مانیتورینگ",
         "alias": "monitoring",
+        "icon": "desktop",
         "items": [
-            { "title": "لاگ کنداکتور", "alias": "monitoring_schedule", "icon": "table", "link": "/monitoring/schedule" },
-            { "title": "فایل‌های کنداکتور", "alias": "monitoring_schedulefiles", "icon": "thermometer-half", "link": "/monitoring/schedulefiles" },
-            { "title": "PDF کنداکتور", "alias": "monitoring_schedulepdf", "icon": "thermometer-half", "link": "/monitoring/schedulepdf" },
-            { "title": "اینجست", "alias": "monitoring_ingest", "icon": "thermometer-half", "link": "/monitoring/ingest" },
-            { "title": "پلی‌لیست", "alias": "monitoring_playlist", "icon": "thermometer-half", "link": "/monitoring/playlist" },
-            { "title": "لاگ فعالیت‌ها", "alias": "monitoring_ualogs", "icon": "list", "link": "/monitoring/ualogs" }
+            { "title": "لاگ کنداکتور", "alias": "monitoring_schedule", "icon": "file-text-o", "link": "/monitoring/schedule" },
+            { "title": "فایل‌های کنداکتور", "alias": "monitoring_schedulefiles", "icon": "file-video-o", "link": "/monitoring/schedulefiles" },
+            { "title": "PDF کنداکتور", "alias": "monitoring_schedulepdf", "icon": "file-pdf-o", "link": "/monitoring/schedulepdf" },
+            { "title": "اینجست", "alias": "monitoring_ingest", "icon": "arrow-circle-up", "link": "/monitoring/ingest" },
+            { "title": "پلی‌لیست", "alias": "monitoring_playlist", "icon": "list-alt", "link": "/monitoring/playlist" },
+            { "title": "لاگ فعالیت‌ها", "alias": "monitoring_ualogs", "icon": "wpforms", "link": "/monitoring/ualogs" }
         ]
     },
     {
         "title": "آرشیو",
         "alias": "archive",
+        "icon": "archive",
         "items": [
             { "title": "ذخیره", "alias": "archive_store", "icon": "hdd-o", "link": "#" },
             { "title": "بازیابی", "alias": "archive_retrieve", "icon": "upload", "link": "#" }
@@ -45,6 +49,7 @@
     {
         "title": "وب‌سایت",
         "alias": "website",
+        "icon": "link",
         "items": [
             { "title": "مدیریت محتوا", "alias": "website_content", "icon": "file-text", "link": "#" },
             { "title": "مدیریت کلیدواژه‌ها", "alias": "website_tags", "icon": "tags", "link": "#" },
@@ -54,6 +59,7 @@
     {
         "title": "روابط عمومی",
         "alias": "pr",
+        "icon": "volume-control-phone",
         "items": [
             { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "#" },
             { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" },
@@ -63,6 +69,7 @@
     {
         "title": "آمار",
         "alias": "stats",
+        "icon": "area-chart",
         "items": [
             { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
             { "title": "آمار پخش", "alias": "broadcast_stats", "icon": "pie-chart", "link": "#" },
@@ -75,6 +82,7 @@
     {
         "title": "کاربران",
         "alias": "users",
+        "icon": "user-circle-o",
         "items": [
             { "title": "مدیریت کاربران", "alias": "users_manage", "icon": "users", "link": "/users/manage" },
             { "title": "دسترسی‌ها", "alias": "users_acl", "icon": "user-plus", "link": "#" }

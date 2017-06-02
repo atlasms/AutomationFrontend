@@ -1,4 +1,4 @@
-define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
+define(['jquery', 'cookie', 'bootstrap/dropdown', "bootstrap/collapse"], function ($, Cookies) {
 
     /*! Copyright (c) 2011 Piotr Rochala (http://rocha.la)
     * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
@@ -17,7 +17,7 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
     var App = function () {
 
 // IE mode
-        var isRTL = false;
+        var isRTL = true;
         var isIE8 = false;
         var isIE9 = false;
         var isIE10 = false;
@@ -880,9 +880,9 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
                 return isRTL;
             },
             // check IE8 mode
-            isAngularJsApp: function () {
-                return (typeof angular == 'undefined') ? false : true;
-            },
+//            isAngularJsApp: function () {
+//                return (typeof angular == 'undefined') ? false : true;
+//            },
             getAssetsPath: function () {
                 return assetsPath;
             },
@@ -934,6 +934,7 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
         var layoutCssPath = '/assets/css/';
         var resBreakpointMd = App.getResponsiveBreakpoint('md');
         var ajaxContentSuccessCallbacks = [];
+        
         var ajaxContentErrorCallbacks = [];
         //* BEGIN:CORE HANDLERS *//
         // this function handles responsive layout on screen size resize or mobile device rotate.
@@ -1068,7 +1069,7 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
         };
         // Handle sidebar menu
         var handleSidebarMenu = function () {
-            $('.page-sidebar').on('click', 'li > a', function (e) {
+            $('.page-sidebar').off('click', 'li > a').on('click', 'li > a', function (e) {
 
                 if (App.getViewPort().width >= resBreakpointMd && $(this).parents('.page-sidebar-menu-hover-submenu').length === 1) { // exit of hover sidebar menu
                     return;
@@ -1209,44 +1210,44 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
             });
             handleFixedSidebarHoverEffect();
             // handle the search bar close
-            $('.page-sidebar').on('click', '.sidebar-search .remove', function (e) {
-                e.preventDefault();
-                $('.sidebar-search').removeClass("open");
-            });
+//            $('.page-sidebar').on('click', '.sidebar-search .remove', function (e) {
+//                e.preventDefault();
+//                $('.sidebar-search').removeClass("open");
+//            });
             // handle the search query submit on enter press
-            $('.page-sidebar .sidebar-search').on('keypress', 'input.form-control', function (e) {
-                if (e.which == 13) {
-                    $('.sidebar-search').submit();
-                    return false; //<---- Add this line
-                }
-            });
+//            $('.page-sidebar .sidebar-search').on('keypress', 'input.form-control', function (e) {
+//                if (e.which == 13) {
+//                    $('.sidebar-search').submit();
+//                    return false; //<---- Add this line
+//                }
+//            });
             // handle the search submit(for sidebar search and responsive mode of the header search)
-            $('.sidebar-search .submit').on('click', function (e) {
-                e.preventDefault();
-                if ($('body').hasClass("page-sidebar-closed")) {
-                    if ($('.sidebar-search').hasClass('open') === false) {
-                        if ($('.page-sidebar-fixed').length === 1) {
-                            $('.page-sidebar .sidebar-toggler').click(); //trigger sidebar toggle button
-                        }
-                        $('.sidebar-search').addClass("open");
-                    } else {
-                        $('.sidebar-search').submit();
-                    }
-                } else {
-                    $('.sidebar-search').submit();
-                }
-            });
+//            $('.sidebar-search .submit').on('click', function (e) {
+//                e.preventDefault();
+//                if ($('body').hasClass("page-sidebar-closed")) {
+//                    if ($('.sidebar-search').hasClass('open') === false) {
+//                        if ($('.page-sidebar-fixed').length === 1) {
+//                            $('.page-sidebar .sidebar-toggler').click(); //trigger sidebar toggle button
+//                        }
+//                        $('.sidebar-search').addClass("open");
+//                    } else {
+//                        $('.sidebar-search').submit();
+//                    }
+//                } else {
+//                    $('.sidebar-search').submit();
+//                }
+//            });
             // handle close on body click
-            if ($('.sidebar-search').length !== 0) {
-                $('.sidebar-search .input-group').on('click', function (e) {
-                    e.stopPropagation();
-                });
-                $('body').on('click', function () {
-                    if ($('.sidebar-search').hasClass('open')) {
-                        $('.sidebar-search').removeClass("open");
-                    }
-                });
-            }
+//            if ($('.sidebar-search').length !== 0) {
+//                $('.sidebar-search .input-group').on('click', function (e) {
+//                    e.stopPropagation();
+//                });
+//                $('body').on('click', function () {
+//                    if ($('.sidebar-search').hasClass('open')) {
+//                        $('.sidebar-search').removeClass("open");
+//                    }
+//                });
+//            }
         };
         // Handles the horizontal menu
         var handleHeader = function () {
@@ -1315,9 +1316,9 @@ define(['jquery', 'cookie', 'bootstrap/dropdown'], function ($, Cookies) {
             setSidebarMenuActiveLink: function (mode, el) {
                 handleSidebarMenuActiveLink(mode, el, null);
             },
-            setAngularJsSidebarMenuActiveLink: function (mode, el, $state) {
-                handleSidebarMenuActiveLink(mode, el, $state);
-            },
+//            setAngularJsSidebarMenuActiveLink: function (mode, el, $state) {
+//                handleSidebarMenuActiveLink(mode, el, $state);
+//            },
             initSidebar: function ($state) {
                 //layout handlers
                 handleFixedSidebar(); // handles fixed sidebar menu
