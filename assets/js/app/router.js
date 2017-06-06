@@ -84,7 +84,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 Layout.init();
                 return;
             }
-            $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-header-fixed-mobile");
+            $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-header-fixed-mobile page-sidebar-closed");
             var template = Template.template.load('', 'app');
             var user = UserHelper.getUser();
             this.getMenu().done(function (rawMenu) {
