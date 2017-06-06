@@ -18,10 +18,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , filterStates: function (e) {
             var value = $(e.target).val();
-            
+
             var $printButton = $(".print-btn");
             $printButton.attr('href', $printButton.attr('href').split('state=')[0] + 'state=' + value);
-            
+
             var $rows = $("#items-table tbody").find("tr");
             if (value == -1)
                 $rows.show();
@@ -58,6 +58,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , afterRender: function () {
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             this.renderStatusbar();
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {
+                            if ($this.parents("#toolbar").length) {
+//                                self.load();
+                            }
+                        }
+                    }));
+                }
+            });
         }
         , renderToolbar: function () {
             var self = this;
@@ -102,9 +118,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
             return data;
         }
-        , updateStats: function($rows) {
+        , updateStats: function ($rows) {
             var stats = {duration: 0, count: 0};
-            $rows.each(function() {
+            $rows.each(function () {
                 if ($(this).is(":visible")) {
                     stats.count++;
                     stats.duration += $(this).data('duration');
@@ -140,6 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            self.attachDatepickers();
                         });
                     });
                 }

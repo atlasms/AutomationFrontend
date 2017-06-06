@@ -1,15 +1,27 @@
 <table class="table table-bordered table-striped flip-content">
 	<tr class="active">
-		<td class="col-xs-4">
+		<td class="col-xs-2">
 			<div class="stat-holder">
 				مجموع تایم
 				<span data-type="duration" class="label label-info label-sm">{{time duration}}</span>
 			</div>
 		</td>
-		<td class="col-xs-4">
+		<td class="col-xs-2">
 			<div class="stat-holder">
 				تعداد آیتم‌ها
 				<span data-type="count" class="label label-info label-sm">{{count}}</span>
+			</div>
+		</td>
+		<td class="col-xs-3">
+			<div class="input-group">
+				<span class="input-group-addon">از</span>
+				<input type="text" class="form-control datepicker" name="startdate" placeholder="" value="">
+			</div>
+		</td>
+		<td class="col-xs-3">
+			<div class="input-group">
+				<span class="input-group-addon">تا</span>
+				<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
 			</div>
 		</td>
 		<td class="col-xs-3">
