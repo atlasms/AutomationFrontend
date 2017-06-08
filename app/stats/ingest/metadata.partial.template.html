@@ -13,16 +13,22 @@
 			</div>
 		</td>
 		<td class="col-xs-3">
-			<div class="input-group">
+<!--			<div class="input-group">
 				<span class="input-group-addon">از</span>
 				<input type="text" class="form-control datepicker" name="startdate" placeholder="" value="">
-			</div>
+			</div>-->
+			{{#if header}}{{else}}
+				{{$_get 'startdate' 1}}
+			{{/if}}
 		</td>
 		<td class="col-xs-3">
-			<div class="input-group">
+<!--			<div class="input-group">
 				<span class="input-group-addon">تا</span>
 				<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
-			</div>
+			</div>-->
+			{{#if header}}{{else}}
+				{{$_get 'enddate' 1}}
+			{{/if}}
 		</td>
 		<td class="col-xs-3">
 			<select data-type="state" class="form-control" name="state">
@@ -45,11 +51,11 @@
 		{{/if}}
 	</tr>
 </table>
-<table class="table table-bordered table-striped table-condensed flip-content" id="items-table">
+<table class="table table-bordered table-striped table-condensed flip-content" id="items-table" data-catid="{{#each items}}{{#if @first}}{{MetaCategoryId}}{{/if}}{{/each}}">
 	<thead>
 		<tr>
 			<th class=""></th>
-			<th class="col-xs-4">نام برنامه</th>
+			<th class="col-xs-4 title">نام برنامه</th>
 			<th class="text-center">#</th>
 			<th class="col-xs-1 text-center">قسمت</th>
 			<th class="col-xs-2 text-center">زمان ثبت</th>

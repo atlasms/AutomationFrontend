@@ -20,9 +20,12 @@
 			url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.woff) format('woff'),
 			url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.ttf) format('truetype');
 	}
-	html,body{font-family:'Vazir2'; margin: 0; padding: 0;}
-	@page { size: landscape; orientation: landscape; writing-mode: tb-rl; }
+	html,body{font-family:'Vazir', 'Vazir2'; margin: 0; padding: 0;}
 	body { margin: 0; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
+	@page { size: landscape; orientation: landscape; writing-mode: tb-rl; }
+	@media print {
+		html, body { font-size: 12px; }
+	}
 	.wrapper { width: 94%; margin: auto; }
 	table { page-break-inside:auto; border-spacing: 0; border-collapse: collapse; }
 	h1 { text-align: center; margin-bottom: 0; }
@@ -30,7 +33,8 @@
 	tr.highlight td { background: #eee; }
 	table { width: 100%; border-bottom: 1px solid #555; }
 	table + table { margin-top: 20px; }
-	table td { border: 0 none; }
+/*	table th { border: 0 none; width: 7%; }
+	table th.title { width: 35% }*/
 	table { border-bottom: 0 none; border-top: 0 none; }
 	table tr { border-bottom: 1px solid #555; }
 	table thead { border-top: 0 none; }
@@ -52,7 +56,7 @@
 	small:before { content: ' (' }
 	small:after { content: ' )' }
 	small:empty { display: none; }
-	[data-type="state"] { visibility: hidden; }
+	[data-type="state"] { font-family: 'Vazir', 'Vazir2'; pointer-events: none; border: 0 none; }
 </style>
 <div class="wrapper">
 	<div id="ingest-page" class="portlet box">

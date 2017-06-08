@@ -186,6 +186,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 return false;
             var datetime = Global.persianToLatinDigits(datetime).split(' ');
             var date = datetime[0].split(splitter);
+            if (+date[0] > 1600)
+                return datetime;
             var JDate = require('jdate');
             var gdate = JDate.to_gregorian(parseInt(date[0]), parseInt(date[1]), parseInt(date[2]));
             return greg_date = gdate.getFullYear() + '-' + Global.zeroFill(gdate.getMonth() + 1) + '-' + Global.zeroFill(gdate.getDate());

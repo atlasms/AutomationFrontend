@@ -40,7 +40,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var params = {overrideUrl: Config.api.metadata};
                     var model = new IngestModel(params);
                     model.fetch({
-                        data: $.param({categoryId: $_GET['category']})
+                        data: $.param({categoryId: $_GET['category'], startdate: $_GET['startdate'], enddate: $_GET['enddate']})
                         , success: function (data) {
                             items = self.processSum(self.prepareItems(data.toJSON(), params));
                             template.done(function (data) {

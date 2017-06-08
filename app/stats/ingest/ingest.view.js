@@ -6,22 +6,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , model: 'IngestModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-//            , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 30).format('YYYY-MM-DD'))}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'click [data-task=show]': 'load'
             , 'click [data-task=refresh]': 'reLoad'
             , 'change [data-type=state]': 'filterStates'
         }
         , filterStates: function (e) {
-            var value = $(e.target).val();
+            var value = typeof e === "object" ? $(e.target).val() : e;
 
             var $printButton = $(".print-btn");
-            $printButton.attr('href', $printButton.attr('href').split('state=')[0] + 'state=' + value);
-
+//            $printButton.attr('href', $printButton.attr('href').split('state=')[0] + 'state=' + value);
+            var href  = '/stats/ingestprint?category=' + $("#items-table").attr('data-catid') + '&state=' + value;
+                href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            $printButton.attr('href', href);
+            
             var $rows = $("#items-table tbody").find("tr");
             if (value == -1)
                 $rows.show();
@@ -58,6 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , afterRender: function () {
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             this.renderStatusbar();
+            this.attachDatepickers();
         }
         , attachDatepickers: function () {
             var self = this;
@@ -67,13 +74,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 if ($this.data('datepicker') == undefined) {
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
                         onSelect: function () {
-                            if ($this.parents("#toolbar").length) {
-//                                self.load();
-                            }
+//                            self.render();
                         }
                     }));
                 }
             });
+            window.setTimeout(function() {
+                self.filterStates($("[name=state]").val());
+            }, 500);
         }
         , renderToolbar: function () {
             var self = this;
@@ -141,22 +149,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , handleTreeCalls: function (routes, path) {
             var self = this;
             var pathId = routes.pop().toString();
-            var params = {overrideUrl: Config.api.metadata};
+            var params = {
+                overrideUrl: Config.api.metadata
+                
+            };
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
 
             var template = Template.template.load('stats/ingest', 'metadata.partial');
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
+            var modelData = {
+                categoryId: pathId
+                , startdate: (typeof $("[name=startdate]").val() !== "undefined" && $("[name=startdate]").val()) ? Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' : Global.createDate('-30') + 'T00:00:00'
+                , enddate: (typeof $("[name=enddate]").val() !== "undefined" && $("[name=enddate]").val()) ? Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59' : Global.today() + 'T23:59:59'
+            };
             model.fetch({
-                data: $.param({categoryId: pathId})
+                data: $.param(modelData)
                 , success: function (data) {
                     items = self.processSum(self.prepareItems(data.toJSON(), params));
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            self.attachDatepickers();
+                            
                         });
                     });
                 }

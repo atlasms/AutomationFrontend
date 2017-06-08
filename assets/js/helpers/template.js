@@ -240,6 +240,16 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 });
                 return pathArray.join('\\');
             });
+            Handlebars.registerHelper('$_get', function (property, date, options) {
+                var date = typeof date !== "undefined" ? date : false;
+                var output = '';
+                if (typeof $_GET[property] !== "undefined") {
+                    output = $_GET[property];
+                    if (date !== false)
+                        output = Global.gregorianToJalali(output.split('T')[0]);
+                }
+                return output;
+            });
         }
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {
