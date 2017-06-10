@@ -22,7 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=change-category]': 'changeCatgory'
             , 'click [data-task=select-folder]': 'setCategory'
             , 'click [data-task=return-item]': 'returnItem'
-            , 'click .item-forms .nav-tabs li a': 'loadTab'
+            , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
             , 'click [data-seek]': 'seekPlayer'
             , 'submit .chat-form': 'insertComment'
             , 'click .open-item': 'openItem'
@@ -286,6 +286,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         overrideUrl: Config.api.schedule + '/mediausecount?id=' + self.getId()
                     };
                     tmpl = ['resources/mediaitem', 'broadcast.partial'];
+                    model = new MediaitemModel(params);
+                    break;
+                case 'metadata':
+                    var params = {
+                        id: self.getId()
+                    };
+                    tmpl = ['resources/categories', 'category.metadata.partial'];
                     model = new MediaitemModel(params);
                     break;
             }

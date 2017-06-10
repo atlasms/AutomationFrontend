@@ -128,15 +128,24 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                 if ($this.callback && typeof $this.callback['handleTreeCalls'] !== "undefined")
                     $this.callback['handleTreeCalls'](r, file_data);
             });
-//            $($this.$el).on('loaded.jstree', function (e, data) {
-//
-//            });
+            $($this.$el).on('after.jstree', function (e, data) {
+            });
+            $($this.$el).on('loaded.jstree', function (e, data) {
+//                console.log(e, data);
+            });
 //            $($this.$el).on('before.jstree', function (e, data) {
 //                
 //            });
-//            $($this.$el).on('ready.jstree', function (e, data) {
-//            
-//            });
+            $($this.$el).on('ready.jstree', function (e, data) {
+                console.log($this.selected);
+//                $this.selected.id = data.instance.get_node(data.selected[0]).id;
+//                $this.selected.text = data.instance.get_node(data.selected[0]).text;
+//                console.log($this.selected);
+//                console.log($this.selected);
+                var params = {method: 'ready', id: $this.selected.id, task: '', text: $this.selected.text, parent: null};
+                if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
+                    $this.callback['handleTreeCallbacks'](params, $($this.$el), data.node);
+            });
             $($this.$el).on('create_node.jstree', function (node, parent, position) {
                 // Do nothing! 
             });

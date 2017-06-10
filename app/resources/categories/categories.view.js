@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'tus'
-], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, tus) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var CategoriesView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'CategoriesModel'
@@ -11,8 +11,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click #tree .jstree-anchor': 'loadData'
         }
         , loadData: function(e) {
-            var target = $(e.target).parent().attr('id');
-            alert(target);
+            var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
+            var self = this;
+            var template = Template.template.load('resources/categories', 'category.metadata.partial');
+            var $container = $(".metadata.portlet-body");
+             template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function () {
+//                    self.afterRender();
+                });
+            });
         }
         , reLoad: function () {
             this.load();
@@ -41,6 +50,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.renderStatusbar();
         }
         , handleTreeCallbacks: function (params, $tree, node) {
+//            console.log(params, $tree, node);
+            var self = this;
             if (typeof params === "undefined")
                 return false;
             switch (params.method) {
@@ -80,6 +91,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //                            node.attr('deleted', 'true');
                         }
                     });
+                    break;
+                case 'ready':
+                    self.loadData(params.id);
                     break;
             }
         }

@@ -376,9 +376,16 @@ body.fixed-toolbar {
     }
 }
 
+/// Categories page
+.categories-metadata-form {
+    .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] { position: static; margin-left: 0; }
+}
+
 /// Media Item page
 #mediaitem-page {
-
+    .item-forms {
+        .portlet { min-height: 460px; }
+    }
 }
 #metadata-place { max-height: 450px; overflow: hidden; overflow-y: scroll; } 
 #stats-page #metadata-place { max-height: none; overflow-y: auto; }

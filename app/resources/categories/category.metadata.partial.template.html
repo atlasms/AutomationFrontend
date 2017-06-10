@@ -1,0 +1,163 @@
+<form class="categories-metadata-form form-horizontal">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
+		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
+		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
+		<li><a href="#tab-media" data-toggle="tab">مدیاها</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane fade in active" id="tab-info">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">عنوان</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">نوع برنامه</label>
+				<div class="col-sm-6">
+					<select class="form-control">
+						{{{getDefinitionOptions 36}}}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">خلاصه</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="2"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">توضیحات</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="3"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">تاریخ تولید</label>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">کارگردان</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control">
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="tab-broadcast">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">عنوان</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">توضیح EPG</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="3"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="tab-website">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">وضعیت نمایش</label>
+				<div class="col-sm-5">
+					<select class="form-control">
+						<option value="0">منتشر نشده</option>
+						<option value="1">منتشر شده</option>
+						<option value="-1">حذف شده</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">شروع انتشار</label>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+					</div>
+				</div>
+				<label class="col-sm-3 control-label">پابان انتشار</label>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">دسته‌بندی</label>
+				<div class="col-sm-6">
+					<select class="form-control">
+						{{{getDefinitionOptions 31}}}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">عنوان</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">خلاصه</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="2"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">توضیح سایت</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="3"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">منتخب</label>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="featured" id="r_01" value="1" type="radio">
+						<label for="r_01">بلی</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="featured" id="r_02" value="0" type="radio" checked>
+						<label for="r_02">خبر</label>
+					</div>
+				</div>
+			</div>
+			<hr />
+			<div class="form-group">
+				<label class="col-sm-3 control-label">نمایش در کنداکتور سایت</label>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="store" id="r_11" value="permanently" type="radio" checked>
+						<label for="r_11">بلی</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="store" id="r_12" value="temporary" type="radio">
+						<label for="r_12">خبر</label>
+					</div>
+				</div>
+			</div>
+			<hr />
+			<div class="form-group">
+				<label class="col-sm-3 control-label">توضیح تلگرام</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" rows="3"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="tab-media">
+			<div class="form-group">
+			</div>
+		</div>
+	</div>
+</form>
