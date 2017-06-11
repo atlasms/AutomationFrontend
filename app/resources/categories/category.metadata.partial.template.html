@@ -4,6 +4,7 @@
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
 		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
 		<li><a href="#tab-media" data-toggle="tab">مدیاها</a></li>
+		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="tab-info">
@@ -22,6 +23,14 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-sm-3 control-label">ژانر</label>
+				<div class="col-sm-6">
+					<select class="form-control" multiple="">
+						{{{getDefinitionOptions 36}}}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label">خلاصه</label>
 				<div class="col-sm-9">
 					<textarea class="form-control" rows="2"></textarea>
@@ -34,7 +43,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">تاریخ تولید</label>
+				<label class="col-sm-3 control-label">تاریخ شروع تولید</label>
 				<div class="col-sm-3">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -43,13 +52,28 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">کارگردان</label>
+				<label class="col-sm-3 control-label">تهیه کننده</label>
 				<div class="col-sm-6">
 					<input type="text" class="form-control">
 				</div>
 			</div>
 		</div>
 		<div class="tab-pane fade" id="tab-broadcast">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">نمایش در EPG</label>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="epg" id="r_e1" value="1" type="radio" checked>
+						<label for="r_e1">بلی</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="epg" id="r_e2" value="0" type="radio">
+						<label for="r_e2">خیر</label>
+					</div>
+				</div>
+			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">عنوان</label>
 				<div class="col-sm-9">
@@ -127,7 +151,7 @@
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
 						<input name="featured" id="r_02" value="0" type="radio" checked>
-						<label for="r_02">خبر</label>
+						<label for="r_02">خیر</label>
 					</div>
 				</div>
 			</div>
@@ -143,11 +167,26 @@
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
 						<input name="store" id="r_12" value="temporary" type="radio">
-						<label for="r_12">خبر</label>
+						<label for="r_12">خیر</label>
 					</div>
 				</div>
 			</div>
 			<hr />
+			<div class="form-group">
+				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="telegram" id="r_11" value="1" type="radio" >
+						<label for="r_t1">بلی</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="telegram" id="r_12" value="0" type="radio" checked>
+						<label for="r_t2">خیر</label>
+					</div>
+				</div>
+			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">توضیح تلگرام</label>
 				<div class="col-sm-9">
@@ -156,8 +195,60 @@
 			</div>
 		</div>
 		<div class="tab-pane fade" id="tab-media">
-			<div class="form-group">
-			</div>
+			<table class="table table-bordered table-striped table-condensed flip-content">
+				<thead>
+					<tr>
+						<th class=""></th>
+						<th class="">#</th>
+						<th class="col-xs-1"></th>
+						<th class="col-xs-5">نام برنامه</th>
+						<th class="col-xs-2 text-center">زمان ثبت</th>
+						<th class="col-xs-1 text-center">قسمت</th>
+						<th class="col-xs-1 text-center">مدت</th>
+						<th class="col-xs-2 text-center">وضعیت</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+						<td>
+							<div class="checkbox checkbox-success checkbox-circle">
+								<input name="default_video" id="r_v{{@index}}" value="0" type="radio" {{#if @first}}checked{{/if}} />
+									   <label for="r_v{{@index}}"></label>
+							</div>
+						</td>
+						<td>
+							<span class="idx">{{math @index "+" 1}}</span>
+							<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+						</td>
+						<td class="text-center">
+							{{config placeholderImage}}
+							<figure>
+								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+							</figure>
+						</td>
+						<td>
+							{{Title}}
+							<small class="help-block text-muted clip-line">{{Description}}</small>
+						</td>
+						<td class="text-right">
+							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+						</td>
+						<td class="text-center">
+							{{EpisodeNumber}}
+						</td>
+						<td class="text-center">
+							<span class="time">{{time Duration}}</span>
+						</td>
+						<td class="text-center">
+							<span class="">{{StateText}}</span>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane fade" id="tab-photos">
 		</div>
 	</div>
 </form>

@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var CategoriesView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'CategoriesModel'
@@ -10,18 +10,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             'click [data-task=refresh-view]': 'reLoad'
             , 'click #tree .jstree-anchor': 'loadData'
         }
-        , loadData: function(e) {
+        , loadData: function (e) {
             var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
-            var self = this;
-            var template = Template.template.load('resources/categories', 'category.metadata.partial');
-            var $container = $(".metadata.portlet-body");
-             template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-//                    self.afterRender();
+            if (typeof id !== "undefined" && id) {
+                var self = this;
+                var params = {query: 'categoryId=' + id};
+                var model = new MetadataModel(params);
+                model.fetch({
+                    success: function (items) {
+                        items = self.prepareItems(items.toJSON(), params);
+                        var template = Template.template.load('resources/categories', 'category.metadata.partial');
+                        var $container = $(".metadata.portlet-body");
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(items);
+                            $container.html(output).promise().done(function () {
+                                // After Render
+                            });
+                        });
+                    }
                 });
-            });
+            }
         }
         , reLoad: function () {
             this.load();
@@ -93,6 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                     break;
                 case 'ready':
+                    console.info(params, params.id);
                     self.loadData(params.id);
                     break;
             }

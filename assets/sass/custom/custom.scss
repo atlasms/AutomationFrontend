@@ -379,6 +379,9 @@ body.fixed-toolbar {
 /// Categories page
 .categories-metadata-form {
     .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] { position: static; margin-left: 0; }
+    .table {
+        .radio label, .checkbox label { margin-left: 22px; }
+    }
 }
 
 /// Media Item page

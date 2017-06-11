@@ -96,7 +96,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                 }
             }
         };
-        
+
         if (Authorize.access(64))
             this.defaults.plugins.push("dnd");
         if (options && typeof options.hasCheckboxes !== "undefined" && options.hasCheckboxes)
@@ -137,14 +137,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
 //                
 //            });
             $($this.$el).on('ready.jstree', function (e, data) {
-                console.log($this.selected);
-//                $this.selected.id = data.instance.get_node(data.selected[0]).id;
-//                $this.selected.text = data.instance.get_node(data.selected[0]).text;
-//                console.log($this.selected);
-//                console.log($this.selected);
-                var params = {method: 'ready', id: $this.selected.id, task: '', text: $this.selected.text, parent: null};
-                if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
-                    $this.callback['handleTreeCallbacks'](params, $($this.$el), data.node);
+                console.log(data.instance)
+                window.setTimeout(function () {
+//                    console.info(JSON.stringify($this.selected));
+                    var params = {method: 'ready', id: $this.selected.id, task: '', text: $this.selected.text, parent: null};
+                    if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
+                        $this.callback['handleTreeCallbacks'](params, $($this.$el));
+                }, 500);
             });
             $($this.$el).on('create_node.jstree', function (node, parent, position) {
                 // Do nothing! 
