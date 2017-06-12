@@ -44,6 +44,25 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 , search: true
                 , showPaginationSwitch: true
                 , locale: 'fa-IR'
+            },
+            "cropper": {
+                aspectRatio: 16 / 9
+                , movable: false
+                , rotatable: false
+                , scalable: false
+                , zoomable: false
+                , data: {
+                    width: 1024
+                    , height: 576
+                    , x: 0
+                    , y: 0
+                }
+                , crop: function (e) {
+                    console.log(e.x);
+                    console.log(e.y);
+                    console.log(e.width);
+                    console.log(e.height);
+                }
             }
         },
         "routes": {
@@ -53,6 +72,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
+            , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
             , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}

@@ -2,15 +2,15 @@ require.config({
     waitSeconds: 300,
     shim: {
         enforceDefine: true
-        , underscore: {exports: "_"}
-        , backbone: {deps: ["underscore", "jquery", "handlebars"], exports: "Backbone"}
-        , moment: {deps: ["jquery"], exports: "moment"}
+        , "underscore": {exports: "_"}
+        , "backbone": {deps: ["underscore", "jquery", "handlebars"], exports: "Backbone"}
+        , "moment": {deps: ["jquery"], exports: "moment"}
         , "moment-hijri": {deps: ["jquery", "moment", "moment-with-locales"], exports: "moment"}
-        , cookie: {deps: ["jquery"], exports: "Cookies"}
-        , mask: {deps: ["jquery"], exports: "mask"}
-        , toastr: {deps: ["jquery"], exports: "toastr"}
-        , pdate: {deps: ["jquery"], exports: "pdate"}
-        , pdatepicker: {deps: ["jquery", "pdate"], exports: "pdatepicker"}
+        , "cookie": {deps: ["jquery"], exports: "Cookies"}
+        , "mask": {deps: ["jquery"], exports: "mask"}
+        , "toastr": {deps: ["jquery"], exports: "toastr"}
+        , "pdate": {deps: ["jquery"], exports: "pdate"}
+        , "pdatepicker": {deps: ["jquery", "pdate"], exports: "pdatepicker"}
         , "bootstrap/affix": {deps: ["jquery"], exports: "$.fn.affix"}
         , "bootstrap/alert": {deps: ["jquery"], exports: "$.fn.alert"}
         , "bootstrap/button": {deps: ["jquery"], exports: "$.fn.button"}
@@ -28,6 +28,7 @@ require.config({
         , "jwplayer": {exports: "jwplayer"}
         , "ladda": {deps: ["spin"]}
         , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
+        , "cropper": {deps: ["jquery"]}
 //        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
@@ -57,13 +58,14 @@ require.config({
         , "x-editable": ["vendor/bootstrap-editable.min"]
         , "wysihtml5": ["vendor/bootstrap-wysihtml5"]
         , "select2": ["vendor/select2.full.min"]
+        , "cropper": ["vendor/cropper.min"]
         , "notifications": ["helpers/notifications"]
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
-        
-        // Static files
+
+                // Static files
         , "menu": ["json!../../app/menu"]
 
                 // Application Dependencies
@@ -93,7 +95,6 @@ require.config({
         , "monitoring.model": ["../../app/monitoring/monitoring.model"]
 
                 // Views
-//        , "app.master": ["../../app/a"]
         , "app.view": ["../../app/app.view"]
         , "login.view": ["../../app/user/login.view"]
         , "user.helper": ["../../app/user/user.helper"]
@@ -103,6 +104,7 @@ require.config({
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
         , "broadcast.crawl.view": ["../../app/broadcast/crawl/crawl.view"]
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
+        , "resources.photos.view": ["../../app/resources/photos/photos.view"]
         , "resources.metadata.view": ["../../app/resources/metadata/metadata.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
         , "resources.review.view": ["../../app/resources/review/review.view"]
@@ -139,6 +141,7 @@ require.config({
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
         , "crawlHelper": ["../../app/broadcast/crawl/crawl.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
+        , "photosHelper": ["../../app/resources/photos/photos.helper"]
         , "reviewHelper": ["../../app/resources/review/review.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/metadata.helper"]
 //        , "metadataHelper": ["../../app/resources/ingest/categories.helper"]

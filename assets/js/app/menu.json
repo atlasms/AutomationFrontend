@@ -17,6 +17,7 @@
         "icon": "server",
         "items": [
             { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
+            { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
             { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
             { "title": "متادیتا", "alias": "resources_metadata", "icon": "database", "link": "/resources/metadata" },
             { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
