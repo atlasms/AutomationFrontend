@@ -92,6 +92,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             }
                         };
                     }
+
+                    if ($(node).get(0).li_attr.deleted == true) {
+                        delete contextItems.Create;
+                        delete contextItems.Delete;
+                        contextItems.Acticate = {
+                            "label": "un-delete"
+                            , icon: "fa fa-check"
+                        }
+                    } else {
+                        delete contextItems.Acticate;
+                    }
+//                    console.log($(node).get(0).li_attr.deleted);
                     return contextItems;
                 }
             }
@@ -137,9 +149,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
 //                
 //            });
             $($this.$el).on('ready.jstree', function (e, data) {
-                console.log(data.instance)
                 window.setTimeout(function () {
-//                    console.info(JSON.stringify($this.selected));
                     var params = {method: 'ready', id: $this.selected.id, task: '', text: $this.selected.text, parent: null};
                     if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
                         $this.callback['handleTreeCallbacks'](params, $($this.$el));
