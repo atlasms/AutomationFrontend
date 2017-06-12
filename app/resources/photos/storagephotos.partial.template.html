@@ -1,0 +1,64 @@
+<div class="alert alert-info" id="path"></div>
+<table id="storagefiles" class="table table-bordered table-striped table-hover flip-content">
+	<thead class=" ">
+		<tr>
+			<th class=""></th>
+			<th class="col-xs-1 text-center"></th>
+			<th class="col-xs-3 text-center"></th>
+			<th class="col-xs-5 text-center"></th>
+			<th class="text-center"></th>
+			<th colspan="2" class="col-xs-3 text-center"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each []}}
+		{{#ifCond Type '==' "image"}}
+		<tr data-filename="{{FileName}}" data-duration="{{Duration}}" data-url="/assets/data/sample.jpg">
+			<td rowspan="2">
+				<div class="checkbox checkbox-success checkbox-circle">
+					<input name="selected" id="c_p{{@index}}" value="1" type="checkbox" />
+					<label for="c_p{{@index}}"></label>
+				</div>
+			</td>
+			<td rowspan="2" data-prop="Thumbnail" class="">
+				<figure>
+					<img src="{{Url}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+					<!--<img src="/assets/data/sample.jpg" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />-->
+				</figure>
+			</td>
+			<td rowspan="2">نام</td>
+			<td rowspan="2">توضیحات</td>
+			<td rowspan="2">
+				<button class="btn grey" data-task="crop">
+					<i class="fa fa-crop"></i>
+				</button>
+			</td>
+			<td colspan="2">
+				<div class="ltr text-right">
+					<span data-prop="FileName"><code>{{FileName}}</code></span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="ltr">
+					<small>{{Size}}</small>
+				</div>
+			</td>
+			<td>
+				<div class="text-right">
+					<small>{{extractTime DateTime}} {{extractDate DateTime}}</small>
+				</div>
+			</td>
+		</tr>
+		{{/ifCond}}
+		{{/each}}
+	</tbody>
+</table>
+<div class="modal fade" id="crop-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog container" role="document">
+		<div class="modal-content">
+			<div id="cropper"></div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
