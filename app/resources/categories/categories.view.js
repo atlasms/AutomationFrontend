@@ -1,7 +1,6 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab'
 ], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var CategoriesView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
         model: 'CategoriesModel'
         , toolbar: []
         , statusbar: []
@@ -95,22 +94,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , error: function (e, data) {
                             toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                         }
-                        , success: function (d) {
-//                            $tree.jstree(true).set_id(node, d);
-//                            node.attr('deleted', 'true');
-                        }
+                        , success: function (d) {}
                     });
                     break;
                 case 'ready':
-                    console.info(params, params.id);
                     self.loadData(params.id);
                     break;
             }
         }
         , renderToolbar: function () {
             var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
