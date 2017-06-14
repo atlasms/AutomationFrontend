@@ -28,14 +28,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                 if (this.Id === id) {
                     var $this = this;
                     var item = {};
-                    item[$this.Description] = {
+                    var key = (typeof $this.Description !== "undefined" && $this.Description !== "") ? $this.Description : 'select';
+                    item[key] = {
                         name: name
                         , options: []
                         , addon: true
                         , icon: 'fa fa-filter'
                     };
                     for (i = 0; i < $this.Children.length; i++)
-                        item[$this.Description].options.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
+                        item[key].options.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
                     items.push(item);
                 }
             });
