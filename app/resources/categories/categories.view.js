@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var CategoriesView = Backbone.View.extend({
         model: 'CategoriesModel'
@@ -25,6 +25,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             var output = handlebarsTemplate(items);
                             $container.html(output).promise().done(function () {
                                 // After Render
+                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
                             });
                         });
                     }
