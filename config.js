@@ -51,6 +51,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 , rotatable: false
                 , scalable: false
                 , zoomable: false
+                , checkCrossOrigin: false
                 , data: {
                     width: 1024
                     , height: 576
@@ -58,10 +59,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     , y: 0
                 }
                 , crop: function (e) {
-                    console.log(e.x);
-                    console.log(e.y);
-                    console.log(e.width);
-                    console.log(e.height);
+                    $("#crop-x").length && $("#crop-x").val(Math.round(e.x));
+                    $("#crop-y").length && $("#crop-y").val(Math.round(e.y));
+                    $("#crop-width").length && $("#crop-width").val(Math.round(e.width));
+                    $("#crop-height").length && $("#crop-height").val(Math.round(e.height));
                 }
             }
         },
