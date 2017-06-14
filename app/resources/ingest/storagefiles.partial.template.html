@@ -10,6 +10,7 @@
 	</thead>
 	<tbody>
 		{{#each []}}
+		{{#ifCond Type '!=' "image"}}
 		<tr data-filename="{{FileName}}" data-duration="{{Duration}}">
 			<td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
 			<td>
@@ -34,6 +35,7 @@
 				{{math @index "+" 1}}
 			</td>
 		</tr>
+		{{/ifCond}}
 		{{/each}}
 	</tbody>
 </table>
