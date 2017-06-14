@@ -1,11 +1,14 @@
-<div class="alert alert-info" id="path"></div>
-<table id="storagefiles" class="table table-bordered table-striped table-hover flip-content">
+<div class="alert alert-info" id="path">
+	مسیر انتخاب شده: <strong data-type="path"></strong>
+</div>
+<table id="storagefiles" class="table table-bordered table-striped flip-content">
 	<thead class=" ">
 		<tr>
 			<th class=""></th>
 			<th class="col-xs-1 text-center"></th>
 			<th class="col-xs-3 text-center"></th>
-			<th class="col-xs-5 text-center"></th>
+			<th class="col-xs-4 text-center"></th>
+			<th class="col-xs-1 text-center"></th>
 			<th class="text-center"></th>
 			<th colspan="2" class="col-xs-3 text-center"></th>
 		</tr>
@@ -13,10 +16,17 @@
 	<tbody>
 		{{#each []}}
 		{{#ifCond Type '==' "image"}}
-		<tr data-filename="{{FileName}}" data-duration="{{Duration}}" data-url="/assets/data/sample.jpg">
+		<tr data-filename="{{FileName}}" data-duration="{{Duration}}" data-url="{{Url}}">
 			<td rowspan="2">
+				<input type="hidden" name="Type" value="1" />
+				<input type="hidden" name="CropX" value="" />
+				<input type="hidden" name="CropY" value="" />
+				<input type="hidden" name="CropW" value="" />
+				<input type="hidden" name="CropH" value="" />
+				<input type="hidden" name="MetaCategoryId" data-type="path-id" value="" />
+				<input type="hidden" name="FileName" value="{{FileName}}" />
 				<div class="checkbox checkbox-success checkbox-circle">
-					<input name="selected" id="c_p{{@index}}" value="1" type="checkbox" />
+					<input id="c_p{{@index}}" type="checkbox" />
 					<label for="c_p{{@index}}"></label>
 				</div>
 			</td>
@@ -26,10 +36,28 @@
 					<!--<img src="/assets/data/sample.jpg" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />-->
 				</figure>
 			</td>
-			<td rowspan="2">نام</td>
-			<td rowspan="2">توضیحات</td>
 			<td rowspan="2">
-				<button class="btn grey" data-task="crop">
+				<div class="form-group form-md-line-input fixed-label">
+					<input type="text" class="form-control" id="Title_{{@index}}" name="Title" placeholder="عنوان" required>
+					<label for="Title_{{@index}}"></label>
+					<span class="help-block">نام تصویر</span>
+				</div>
+			</td>
+			<td rowspan="2">
+				<div class="form-group form-md-line-input form-md-floating-label text-area-container">
+					<textarea class="form-control" id="note_{{@index}}" name="Description" rows="3" placeholder="توضیحات"></textarea>
+					<label></label>
+				</div>
+			</td>
+			<td rowspan="2">
+				<div class="form-group form-md-line-input fixed-label">
+					<input type="text" class="form-control" id="EpisodeNumber_{{@index}}" name="EpisodeNumber" placeholder="قسمت" required>
+					<label for="EpisodeNumber_{{@index}}"></label>
+					<span class="help-block">شماره قسمت</span>
+				</div>
+			</td>
+			<td rowspan="2">
+				<button class="btn grey" data-task="open-cropper">
 					<i class="fa fa-crop"></i>
 				</button>
 			</td>
@@ -59,6 +87,27 @@
 	<div class="modal-dialog container" role="document">
 		<div class="modal-content">
 			<div id="cropper"></div>
+			<form class="form-inline crop-info">
+				<input type="hidden" data-type="row-idx" value="">
+				<div class="form-group">
+					<label for="crop-x">مختصات افقی</label>
+					<input type="text" class="form-control" id="crop-x" placeholder="x" name="CropX">
+				</div>
+				<div class="form-group">
+					<label for="crop-x">مختصات عمودی</label>
+					<input type="text" class="form-control" id="crop-y" placeholder="y" name="CropY">
+				</div>
+				<div class="form-group">
+					<label for="crop-width">طول</label>
+					<input type="text" class="form-control" id="crop-width" placeholder="width" name="CropW">
+				</div>
+				<div class="form-group">
+					<label for="crop-height">عرض</label>
+					<input type="text" class="form-control" id="crop-height" placeholder="height" name="CropH">
+				</div>
+				<button type="button" data-task="crop-image" class="btn btn-success"><i class="fa fa-check"></i> برش تصویر</button>
+				<button type="button" data-dismiss="modal" class="btn btn-warning"><strong>&times;</strong></button>
+			</form>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
