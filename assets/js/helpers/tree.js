@@ -99,6 +99,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                         contextItems.Acticate = {
                             "label": "un-delete"
                             , icon: "fa fa-check"
+                            , "action": function(data) {
+                                alert('UNDELETE!')
+                            }
                         }
                     } else {
                         delete contextItems.Acticate;
