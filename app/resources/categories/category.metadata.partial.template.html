@@ -3,7 +3,7 @@
 		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
 		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
-		<li><a href="#tab-media" data-toggle="tab">مدیاها</a></li>
+		<li><a href="#tab-videos" data-toggle="tab">ویدیوها</a></li>
 		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
 	</ul>
 	<div class="tab-content">
@@ -194,7 +194,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane fade" id="tab-media">
+		<div class="tab-pane fade" id="tab-videos">
 			<table class="table table-bordered table-striped table-condensed flip-content">
 				<thead>
 					<tr>
@@ -210,11 +210,12 @@
 				</thead>
 				<tbody>
 					{{#each []}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
+					{{#ifCond Type '==' 0}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="default_video" id="r_v{{@index}}" value="0" type="radio" {{#if @first}}checked{{/if}} />
-									   <label for="r_v{{@index}}"></label>
+								<input name="default_video" id="r_v{{@index}}" value="0" type="radio" />
+								<label for="r_v{{@index}}"></label>
 							</div>
 						</td>
 						<td>
@@ -244,6 +245,63 @@
 							<span class="">{{StateText}}</span>
 						</td>
 					</tr>
+					{{/ifCond}}
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane fade" id="tab-photos">
+			<table class="table table-bordered table-striped table-condensed flip-content">
+				<thead>
+					<tr>
+						<th class=""></th>
+						<th class="">#</th>
+						<th class="col-xs-1"></th>
+						<th class="col-xs-5">نام برنامه</th>
+						<th class="col-xs-2 text-center">زمان ثبت</th>
+						<th class="col-xs-1 text-center">قسمت</th>
+						<th class="col-xs-1 text-center">مدت</th>
+						<th class="col-xs-2 text-center">وضعیت</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each []}}
+					{{#ifCond Type '==' 1}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
+						<td>
+							<div class="checkbox checkbox-success checkbox-circle">
+								<input name="default_photo" id="r_p{{@index}}" value="0" type="radio" />
+								<label for="r_p{{@index}}"></label>
+							</div>
+						</td>
+						<td>
+							<span class="idx">{{math @index "+" 1}}</span>
+							<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+						</td>
+						<td class="text-center">
+							{{config placeholderImage}}
+							<figure>
+								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+							</figure>
+						</td>
+						<td>
+							{{Title}}
+							<small class="help-block text-muted clip-line">{{Description}}</small>
+						</td>
+						<td class="text-right">
+							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
+						</td>
+						<td class="text-center">
+							{{EpisodeNumber}}
+						</td>
+						<td class="text-center">
+							<span class="time">{{time Duration}}</span>
+						</td>
+						<td class="text-center">
+							<span class="">{{StateText}}</span>
+						</td>
+					</tr>
+					{{/ifCond}}
 					{{/each}}
 				</tbody>
 			</table>
