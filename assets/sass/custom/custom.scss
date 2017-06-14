@@ -171,9 +171,15 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 // Datepicker
 .datepicker-plot-area { z-index: 1000; }
 
-// Datepicker
+// Cropper
 #cropper {
     img { display: block; max-width: 100%; height: auto; }
+}
+.crop-info { margin: 15px; }
+
+// Tootltip
+div.tooltip-inner {
+    max-width: 400px;
 }
  
 // Mainbody
@@ -206,6 +212,20 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 body.fixed-toolbar {
     #toolbar { position: fixed; top: 0; z-index: 800; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
     #main { margin-top: 25px; }
+}
+// Handling item types
+.table {
+    tr[data-type] {
+        figure {
+            position: relative; 
+            &:before {
+                display: block; font-family: 'FontAwesome'; font-size: 10px; background: rgba(0, 0, 0, 0.4); position: absolute; top: 0; right: 0; color: #fff; text-align: center;
+                width: 20px; height: 20px; line-height: 20px;
+            }
+        }
+        &[data-type="0"] figure:before { content: '\f008' } // Video
+        &[data-type="1"] figure:before { content: '\f03e' } // Photo
+    }
 }
 
 // Pages
@@ -273,6 +293,7 @@ body.fixed-toolbar {
         cursor: pointer;
         &.disabled { background: #eee; color: #aaa; cursor: default; }
     }
+    .form-group.form-md-line-input { padding-top: 0; }
 }
 .stat-holder { line-height: 34px; }
 
@@ -395,6 +416,7 @@ body.fixed-toolbar {
     .item-forms {
         .portlet { min-height: 460px; }
     }
+    figure img { display: block; width: 100%; height: auto; }
 }
 #metadata-place { max-height: 450px; overflow: hidden; overflow-y: scroll; } 
 #stats-page #metadata-place { max-height: none; overflow-y: auto; }
@@ -416,7 +438,13 @@ body.fixed-toolbar {
 }
 
 
-#player-container { background: #3C3E3F }
+#player-container {
+    background: #3C3E3F;
+    figure {
+        width: 100%;
+        img { display: block; width: 100%; height: auto; max-height: none; }
+    }
+}
 
 /*.interval-minor {  white-space: nowrap; padding: 0; height: 6px; }*/
 #seekbar {
