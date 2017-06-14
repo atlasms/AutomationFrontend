@@ -1,8 +1,8 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, MetadataModel, toastr, Toolbar, pDatepicker, Statusbar) {
     var ReturneesView = Backbone.View.extend({
         playerInstance: null
-        , model: 'ReviewModel'
+        , model: 'MetadataModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
@@ -34,6 +34,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , getToolbarParams: function () {
             var params = {
                 state: 2
+                , type: $("#toolbar [name=type]").val()
                 , startdate: Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("#toolbar [name=enddate]").val()) + 'T23:59:59'
             };
@@ -43,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = (typeof params !== "undefined") ? params : this.getToolbarParams();
             var template = Template.template.load('resources/returnees', 'returnees');
             var $container = $(Config.positions.main);
-            var model = new ReviewModel(params);
+            var model = new MetadataModel(params);
             var self = this;
             model.fetch({
                 data: (typeof params !== "undefined") ? $.param(params) : null
@@ -73,7 +74,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , renderToolbar: function () {
             var self = this;
             var toolbar = new Toolbar();
-            var elements = $.merge(self.toolbar, {});
+            var typeSelect = toolbar.getDefinedToolbar(47, 'type');
+            var elements = $.merge($.merge([], self.toolbar), typeSelect);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);

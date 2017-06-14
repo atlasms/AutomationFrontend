@@ -1,9 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.review.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, ReviewModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, MetadataModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
-        , model: 'ReviewModel'
+        , model: 'MetadataModel'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1', access: '4'}} // accept
             , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: '4'}} // reject
@@ -55,20 +55,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
                 $row.after('<tr class="preview-pane"><td colspan="100%">' + output + '</td></tr>').promise().done(function () {
-                    var player = new Player('#player-container', {
-                        duration: media.duration
-                        , file: media.video
-                        , playlist: [{
-                                image: media.thumbnail
-                                , sources: [
-                                    {file: media.video, label: 'LQ', default: true}
-                                    , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-                                ]
-                            }]
-                    });
-                    player.render();
-                    self.player = player;
-                    self.playerInstance = player.instance;
+                    if ($row.data('type') === 0) {
+                        var player = new Player('#player-container', {
+                            duration: media.duration
+                            , file: media.video
+                            , playlist: [{
+                                    image: media.thumbnail
+                                    , sources: [
+                                        {file: media.video, label: 'LQ', default: true}
+                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                                    ]
+                                }]
+                        });
+                        player.render();
+                        self.player = player;
+                        self.playerInstance = player.instance;
+                    } else {
+                        $('#player-container').empty().append('<figure><img src="' + media.thumbnail.replace('_lq', '_hq') + '" /></figure>');
+                    }
                     self.loadComments(params);
                 });
             });
@@ -84,7 +88,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 start: $form.find('[data-type="clip-start"]').val()
                 , end: $form.find('[data-type="clip-end"]').val()
             });
-            new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
+            new MetadataModel({overrideUrl: Config.api.comments}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -102,7 +106,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadComments: function (params) {
             var self = this;
-            new ReviewModel(params).fetch({
+            new MetadataModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     var template = Template.template.load('resources/review', 'comments.partial');
@@ -127,7 +131,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var self = this;
-            var task = new ReviewModel({id: $("tr.active").attr('data-id')}).save({
+            var task = new MetadataModel({id: $("tr.active").attr('data-id')}).save({
                 key: 'State'
                 , value: $(e.currentTarget).attr('data-task')
             }, {
@@ -154,6 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , getToolbarParams: function () {
             var params = {
                 state: $("#toolbar [name=state]").val()
+                , type: $("#toolbar [name=type]").val()
                 , startdate: Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("#toolbar [name=enddate]").val()) + 'T23:59:59'
             };
@@ -164,7 +169,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');
             var $container = $(Config.positions.main);
-            var model = new ReviewModel(params);
+            var model = new MetadataModel(params);
             var self = this;
             model.fetch({
                 data: (typeof params !== "undefined") ? $.param(params) : null
@@ -193,8 +198,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , renderToolbar: function () {
             var self = this;
             var toolbar = new Toolbar();
-            var definedItems = toolbar.getDefinedToolbar(2, 'state');
-            var elements = $.merge($.merge([], self.toolbar), definedItems);
+            var stateSelect = toolbar.getDefinedToolbar(2, 'state');
+            var typeSelect = toolbar.getDefinedToolbar(47, 'type');
+            var elements = $.merge($.merge($.merge([], self.toolbar), stateSelect), typeSelect);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
