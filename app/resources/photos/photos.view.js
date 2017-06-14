@@ -1,30 +1,38 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'photosHelper', 'tree.helper', 'bootstrap/modal', 'cropper'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, pDatepicker, PhotosHelper, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/modal', 'cropper'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var PhotosView = Backbone.View.extend({
         $modal: "#crop-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
+            , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'submit', task: 'add'}}
         ]
         , statusbar: []
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
-            , 'click [data-task=add]': 'openAddForm'
             , 'click [data-task=refresh]': 'loadStorageFiles'
-            , 'click [data-task=crop]': 'openCropper'
-            , 'click #storagefiles .checkbox': 'handleSaveButton'
+            , 'click [data-task=open-cropper]': 'openCropper'
+            , 'click [data-task=crop-image]': 'setCoordinates'
+            , 'click #storagefiles .checkbox': 'handleCheckboxes'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
         }
-        , handleSaveButton: function () {
+        , handleCheckboxes: function (e) {
             var $checkboxes = $("#storagefiles [type=checkbox]");
+            var $parent = $(e.target).parents("tr:first");
             var selectedFound = false;
-            $checkboxes.each(function (){
+            if ($(e.target).is(":checked")) {
+                !$parent.hasClass('active') && $parent.addClass('active');
+                !$parent.next().hasClass('active') && $parent.next().addClass('active');
+            } else {
+                $parent.removeClass('active');
+                $parent.next().removeClass('active');
+            }
+            $checkboxes.each(function () {
                 if (this.checked === true)
                     selectedFound = true;
             });
@@ -33,53 +41,48 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             else
                 $("[data-task=add]").addClass('disabled');
         }
+        , setCoordinates: function (e) {
+            var $cropForm = $(e.target).parents("form.crop-info");
+            var $row = $("#storagefiles").find("tbody tr").eq(+$cropForm.find('[data-type="row-idx"]').val());
+            $cropForm.find("input, textarea, select").each(function () {
+                var $input = $(this);
+                $row.find("[name=" + $input.attr('name') + "]").val($input.val());
+            });
+            toastr.info('اطلاعات برش تصویر ثبت شد.', 'برش تصویر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+            $(this.$modal).modal('hide');
+        }
         , openCropper: function (e) {
             var self = this;
             var $row = $(e.target).parents("tr:first");
             var img = $row.data('url');
             $("#cropper").empty().append('<img src="' + img + '" />').promise().done(function () {
                 $(self.$modal).on('shown.bs.modal', function () {
+                    $(self.$modal).find("[data-type=row-idx]").val($row.index());
                     $("#cropper img:first").cropper(Config.settings.cropper);
                 });
-                $(self.$modal).modal('show');
+                $(self.$modal).modal({backdrop: 'static'});
             });
         }
         , submit: function (e) {
             e.preventDefault();
-            var $this = this;
-            var helper = new PhotosHelper.validate();
-            if (!helper.beforeSave())
-                return;
+            var self = this;
+            if ($(e.target).hasClass('disabled'))
+                return false;
+            if (!$("[name=MetaCategoryId]").val())
+                $("#path").removeClass('alert-info').addClass('alert-danger');
             var data = this.prepareSave();
+            if (data.length < 1)
+                return false;
             new IngestModel({overrideUrl: Config.api.metadata}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $($this.$modal).find("form").trigger('reset');
-                    $($this.$modal).modal('hide');
-                    $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $("#storagefiles tr.active [type=checkbox]").prop('disabled', true).parents("tr:first").removeClass('active').addClass('disabled');
+//                    self.loadStorageFiles();
                 }
             });
-        }
-        , openAddForm: function (e) {
-//            $(this.$modal).modal('toggle');
-            alert();
-        }
-        , selectRow: function (e) {
-            var $el = $(e.target);
-            var $row = $el.parents("tr:first");
-            if ($row.hasClass("disabled"))
-                return false;
-            $el.parents("tbody").find("tr").removeClass('active success');
-            $row.addClass('active success');
-            $row.find("[data-prop]").each(function () {
-                if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
-                    $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
-            });
-//            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
-            $('button[data-task=add]').removeClass('disabled');
         }
         , reLoad: function () {
             this.load();
@@ -92,7 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , render: function (params) {
             var self = this;
-            var template = Template.template.load('resources/ingest', 'ingest');
+            var template = Template.template.load('resources/photos', 'photos');
             var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
@@ -119,6 +122,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $container.stop().fadeIn();
+                            $('[type="submit"]').addClass('disabled');
                         });
                     });
                 }
@@ -129,23 +133,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , afterRender: function () {
             this.loadStorageFiles();
-//            console.log(this.flags.treeLoaded)
-//            if (typeof this.flags.treeLoaded === "undefined") {
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
-//                this.flags.treeLoaded = true;
-//            }
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
-            if (typeof this.flags.helperLoaded === "undefined") {
-                PhotosHelper.init();
-                this.flags.helperLoaded = true;
-            } else
-                PhotosHelper.init(true);
             this.renderStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -153,7 +146,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toolbar[method](this[method]);
             });
             toolbar.render();
-//            self.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -169,22 +161,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.renderToolbar();
         }
         , prepareSave: function () {
-            var data = [{}];
-            $(this.$modal).find("input, textarea, select").each(function () {
-                var $input = $(this);
-                if (typeof $input.attr("name") !== "undefined") {
-                    data[0][$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
-                    if (typeof $input.attr('data-before-save') !== "undefined") {
-                        switch ($input.attr('data-before-save')) {
-                            case 'prepend-date':
-                                data[0][$input.attr("name")] = Global.jalaliToGregorian($(this).parent().find("label").text()) + 'T' + $input.val();
-                                break;
-                            case 'timestamp':
-                                data[0][$input.attr("name")] = Global.processTime($input.val());
-                                break;
-                        }
+            var data = [];
+            var i = 0;
+            $("#storagefiles").find("tbody tr.active").each(function () {
+                var $row = $(this);
+                if (!$row.find("input, textarea, select").length)
+                    return true;
+                data[i] = {};
+                $row.find("input, textarea, select").each(function () {
+                    var $input = $(this);
+                    if (typeof $input.attr("name") !== "undefined") {
+                        var value = typeof $input.val() === "undefined" || $input.val() === "" ? null : $input.val();
+                        data[i][$input.attr("name")] = value;
                     }
-                }
+                });
+                i++;
             });
             return data;
         }
@@ -192,12 +183,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var pathId = routes.pop().toString();
             var params = {overrideUrl: Config.api.metadata};
-            $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
+            $("#path").removeClass('alert-danger').addClass('alert-info');
+            $("[data-type=path]").length && $("[data-type=path]").text(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
 
-            $("#path").html(path.toString());
-
-            var template = Template.template.load('resources/ingest', 'metadata.partial');
+            var template = Template.template.load('resources/photos', 'metadata.partial');
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
             model.fetch({
