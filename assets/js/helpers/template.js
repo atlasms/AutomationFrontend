@@ -169,6 +169,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('getMedia', function (value, options) {
                 return value.replace('.jpg', '_lq.mp4');
             });
+            Handlebars.registerHelper('replace', function (haystack, needle, replace, options) {
+                return haystack.replace(needle, replace);
+            });
             Handlebars.registerHelper('resolveLabel', function (value, options) {
                 var value = +value;
                 switch (value) {
