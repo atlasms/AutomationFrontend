@@ -20,6 +20,13 @@
 											<td>{{Id}}</td>
 										</tr>
 										<tr>
+											<td>نوع</td>
+											<td>
+												{{#ifCond Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
+												{{#ifCond Type '==' 1}}<i class="fa fa-picture-o"></i> تصویر{{/ifCond}}
+											</td>
+										</tr>
+										<tr>
 											<td>عنوان</td>
 											<td>
 												<a href="#" class="x-editable" id="title-field" data-type="text" data-pk="{{Id}}" data-field="Title" data-original-title="عنوان">{{Title}}</a>
@@ -109,7 +116,14 @@
 							{{#ifCond State '!=' 1}}
 							{{#authorize 1024}}<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>{{/authorize}}
 							{{/ifCond}}
+							{{#ifCond Type '==' 0}}
 							<div id="player-container"><!-- Player Container --></div>
+							{{/ifCond}}
+							{{#ifCond Type '==' 1}}
+							<figure>
+								<img src="{{replace Thumbnail '.jpg' '_hq.jpg'}}" alt="{{Title}}" />
+							</figure>
+							{{/ifCond}}
 						</div>
 					</div>
 				</div>
