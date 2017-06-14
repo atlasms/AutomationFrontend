@@ -7,13 +7,14 @@ define(["jquery", "underscore", "backbone", "config"
             this.path = (options && options.path) ? '/' + options.path : '';
             this.path = (options && options.id) ? '/' + options.id : this.path;
             this.overrideUrl = (options && options.overrideUrl) ? options.overrideUrl : '';
+            this.type = (options && options.type) ? options.type : -1;
             options = {};
         }
         , url: function () {
             if (this.overrideUrl !== "")
-                return this.overrideUrl + this.path + this.query;
+                return this.overrideUrl + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
             else
-                return Config.api.metadata + this.path + this.query;
+                return Config.api.metadata + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);

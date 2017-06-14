@@ -20,8 +20,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
             window.open('/resources/mediaitem/' + id);
-//            !Backbone.History.started && Backbone.history.start({pushState: true});
-//            new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
             return;
         }
         , reLoad: function (e) {
@@ -33,8 +31,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (typeof e !== "undefined")
                 e.preventDefault();
             console.info('Loading items');
-            var params = {};
-            params.q = $("[name=q]").val();
+            var params = {
+                q: $.trim($("[name=q]").val())
+                , type: $("[name=type]").val()
+            };
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
             return false;
@@ -43,12 +43,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var template = Template.template.load('resources/metadata', 'metadata');
             var $container = $(Config.positions.main);
+            var params = (typeof params !== "undefined") ? params : {q: '', type: -1};
             var model = new MetadataModel(params);
             var self = this;
-            params = (typeof params !== "undefined") ? params : {q: ' '};
-            var data = (typeof params !== "undefined") ? $.param(params) : null;
+            var data = typeof params !== "undefined" ? $.param({q: params.q}) : null;
             model.fetch({
-                data: (typeof params !== "undefined") ? $.param(params) : null
+                data: data
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     template.done(function (data) {
@@ -67,13 +67,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.renderStatusbar();
         }
         , renderToolbar: function () {
-            var elements = this.toolbar;
+            var self = this;
+//            var elements = this.toolbar;
             var toolbar = new Toolbar();
+            var definedItems = toolbar.getDefinedToolbar(47, 'type');
+            console.log(definedItems)
+            var elements = $.merge($.merge([], self.toolbar), definedItems);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
+            $(document).on('change', "#toolbar select", function () {
+                self.load();
+            });
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;
