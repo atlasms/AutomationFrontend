@@ -1,9 +1,10 @@
 <form class="categories-metadata-form form-horizontal">
+	<button type="submit" data-task="submit-form" class="btn btn-primary pull-right">ثبت اطلاعات</button>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
 		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
-		<li><a href="#tab-videos" data-toggle="tab">ویدیوها</a></li>
+		<li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
 		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
 	</ul>
 	<div class="tab-content">
@@ -270,7 +271,7 @@
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="default_photo" id="r_p{{@index}}" value="0" type="radio" />
+								<input name="{{Id}}" id="r_p{{@index}}" value="1" type="checkbox" />
 								<label for="r_p{{@index}}"></label>
 							</div>
 						</td>

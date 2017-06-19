@@ -25,6 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             var output = handlebarsTemplate(items);
                             $container.html(output).promise().done(function () {
                                 // After Render
+                                self.attachDatepickers();
                                 var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
                                 $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
                             });
@@ -32,6 +33,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     }
                 });
             }
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {}
+                    }));
+                }
+            });
         }
         , reLoad: function () {
             this.load();
