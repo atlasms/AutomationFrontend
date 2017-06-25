@@ -1,8 +1,8 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, MetadataModel, toastr, Toolbar, pDatepicker, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, Statusbar) {
     var ReturneesView = Backbone.View.extend({
         playerInstance: null
-        , model: 'MetadataModel'
+        , model: 'MediaModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
@@ -44,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = (typeof params !== "undefined") ? params : this.getToolbarParams();
             var template = Template.template.load('resources/returnees', 'returnees');
             var $container = $(Config.positions.main);
-            var model = new MetadataModel(params);
+            var model = new MediaModel(params);
             var self = this;
             model.fetch({
                 data: (typeof params !== "undefined") ? $.param(params) : null

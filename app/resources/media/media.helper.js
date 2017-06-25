@@ -1,6 +1,6 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
 ], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
-    var MetadataHelper = {
+    var MediaHelper = {
         flags: {}
         , init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
@@ -28,5 +28,5 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             };
         }
     };
-    return MetadataHelper;
+    return MediaHelper;
 });

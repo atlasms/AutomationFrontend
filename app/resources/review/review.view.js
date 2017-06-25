@@ -1,9 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, MetadataModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
-        , model: 'MetadataModel'
+        , model: 'MediaModel'
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1', access: '4'}} // accept
             , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: '4'}} // reject
@@ -88,7 +88,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 start: $form.find('[data-type="clip-start"]').val()
                 , end: $form.find('[data-type="clip-end"]').val()
             });
-            new MetadataModel({overrideUrl: Config.api.comments}).save(null, {
+            new MediaModel({overrideUrl: Config.api.comments}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -106,7 +106,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadComments: function (params) {
             var self = this;
-            new MetadataModel(params).fetch({
+            new MediaModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     var template = Template.template.load('resources/review', 'comments.partial');
@@ -131,7 +131,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var self = this;
-            var task = new MetadataModel({id: $("tr.active").attr('data-id')}).save({
+            var task = new MediaModel({id: $("tr.active").attr('data-id')}).save({
                 key: 'State'
                 , value: $(e.currentTarget).attr('data-task')
             }, {
@@ -169,7 +169,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');
             var $container = $(Config.positions.main);
-            var model = new MetadataModel(params);
+            var model = new MediaModel(params);
             var self = this;
             model.fetch({
                 data: (typeof params !== "undefined") ? $.param(params) : null

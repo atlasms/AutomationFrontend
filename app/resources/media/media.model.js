@@ -1,6 +1,6 @@
 define(["jquery", "underscore", "backbone", "config"
 ], function ($, _, Backbone, Config) {
-    var MetadataModel = Backbone.Model.extend({
+    var MediaModel = Backbone.Model.extend({
         defaults: {}
         , initialize: function (options) {
             this.query = (options && options.query) ? '?' + options.query : '';
@@ -14,7 +14,7 @@ define(["jquery", "underscore", "backbone", "config"
             if (this.overrideUrl !== "")
                 return this.overrideUrl + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
             else
-                return Config.api.metadata + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
+                return Config.api.media + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);
@@ -28,5 +28,5 @@ define(["jquery", "underscore", "backbone", "config"
             return Backbone.Model.prototype.save.call(this, key, val, options);
         }
     });
-    return MetadataModel;
+    return MediaModel;
 });

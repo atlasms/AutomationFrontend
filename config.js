@@ -74,7 +74,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
-            , "resources/metadata": {"private": true, "access": null, "action": "MetadataView", "file": "app/resources/metadata/metadata.view"}
+            , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
             , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
@@ -113,8 +113,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "crawl": "conductor"
             , "tree": "metacategories"
             , "ingest": "ingest"
-            , "metadata": "metadata"
-            , "mediaversions": "metadata/history"
+            , "media": "media"
+            , "mediaversions": "media/history"
 //            , "review": "metadata?categoryid=11"
             , "definitions": "dfn"
             , "comments": "comments"

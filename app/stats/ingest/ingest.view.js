@@ -150,8 +150,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var pathId = routes.pop().toString();
             var params = {
-                overrideUrl: Config.api.metadata
-                
+                overrideUrl: Config.api.media
             };
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());

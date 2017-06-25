@@ -1,8 +1,8 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
-    var MetadataView = Backbone.View.extend({
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
+    var MediaView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
-        model: 'MetadataModel'
+        model: 'MediaModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
@@ -41,10 +41,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , render: function (params) {
             var self = this;
-            var template = Template.template.load('resources/metadata', 'metadata');
+            var template = Template.template.load('resources/media', 'media');
             var $container = $(Config.positions.main);
             var params = (typeof params !== "undefined") ? params : {q: '', type: -1};
-            var model = new MetadataModel(params);
+            var model = new MediaModel(params);
             var self = this;
             var data = typeof params !== "undefined" ? $.param({q: params.q}) : null;
             model.fetch({
@@ -108,5 +108,5 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return data;
         }
     });
-    return MetadataView;
+    return MediaView;
 });
