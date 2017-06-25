@@ -29,6 +29,7 @@ require.config({
         , "ladda": {deps: ["spin"]}
         , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
         , "cropper": {deps: ["jquery"]}
+        , "pace": {deps: ["jquery"]}
 //        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
     , urlArgs: "bust=" + (new Date()).getTime()
@@ -61,6 +62,7 @@ require.config({
         , "cropper": ["vendor/cropper.min"]
         , "notifications": ["helpers/notifications"]
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
+        , "pace": ["vendor/pace.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -153,6 +155,6 @@ require.config({
     }
 });
 
-require(["jquery", "underscore", "backbone", 'defines', 'router'], function ($, _, Backbone, Defines, Router) {
-    Defines.initialize() && new Router();
+require(["jquery", "underscore", "backbone", 'defines', 'router', 'pace'], function ($, _, Backbone, Defines, Router, pace) {
+    Defines.initialize(pace) && new Router();
 });

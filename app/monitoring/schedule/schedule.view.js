@@ -45,7 +45,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             model.fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
-                    console.log(items);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);

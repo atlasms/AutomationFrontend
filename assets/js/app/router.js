@@ -162,6 +162,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
         }
         , loadContents: function (view, content, actionArray) {
             // Render view
+            $(Config.positions.main).empty();
             view.render(content, actionArray);
             return this;
         }

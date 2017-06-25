@@ -20,6 +20,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                     else
                         $("body").hasClass('fixed-toolbar') && $("body").removeClass("fixed-toolbar").find("#toolbar").width('inherit');
                 }
+                if ($(this).scrollTop() !== 0)
+                    $("body").addClass('scrolled');
+                else
+                    $("body").removeClass('scrolled');
             });
         }
         , getDefinedToolbar: function (id, name) {

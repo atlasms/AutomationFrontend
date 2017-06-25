@@ -1,6 +1,8 @@
 define(["config", "jquery", "underscore", "backbone", "router", "template", "global", 'user.helper', 'toastr'
 ], function (Config, $, _, Backbone, Router, Template, Global, UserHelper, toastr) {
-    var initialize = function () {
+    var initialize = function (pace) {
+        pace.options = {restartOnRequestAfter: false, ajax: false};
+        pace.start();
         (function () {
             window.CONFIG = Config;
             window.DEBUG = (Config.env === "dev") ? true : false;
@@ -15,6 +17,9 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
 
             var backboneSync = Backbone.sync;
             Backbone.sync = function (method, model, options) {
+                if (method === "read")
+                    if (typeof model.query !== "undefined" && model.query.indexOf('externalid=0&kind=3') === -1)
+                        pace.restart();
                 /*
                  * Change the `url` property of options to begin
                  * with the URL from settings

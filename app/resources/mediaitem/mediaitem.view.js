@@ -22,10 +22,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=change-category]': 'changeCatgory'
             , 'click [data-task=select-folder]': 'setCategory'
             , 'click [data-task=return-item]': 'returnItem'
-            , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
             , 'click [data-seek]': 'seekPlayer'
             , 'submit .chat-form': 'insertComment'
             , 'click .open-item': 'openItem'
+            , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
         }
         , seekPlayer: function (e) {
             e.preventDefault();
@@ -257,7 +257,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var el = $(e.currentTarget).parent();
             } else
                 var el = $(".item-forms .nav-tabs li.active");
-            if ((typeof force !== "undefined" && force !== true) && (!$(el.find("a").attr('href')).length || $(el.find("a").attr('href')).html() !== ""))
+            if (typeof force !== "undefined" && force !== true)
+//            if ((typeof force !== "undefined" && force !== true) && (!$(el.find("a").attr('href')).length || $(el.find("a").attr('href')).html() !== ""))
                 return;
             var tmpl, model, data;
             var $container = $(el.find("a").attr('href'));
