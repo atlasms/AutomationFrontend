@@ -86,6 +86,7 @@ require.config({
         , "broadcast.crawl.model": ["../../app/broadcast/crawl/crawl.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
         , "resources.media.model": ["../../app/resources/media/media.model"]
+        , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
         , "resources.review.model": ["../../app/resources/review/review.model"]
         , "resources.mediaitem.model": ["../../app/resources/mediaitem/mediaitem.model"]
