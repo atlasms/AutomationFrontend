@@ -113,6 +113,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "crawl": "conductor"
             , "tree": "metacategories"
             , "ingest": "ingest"
+            , "metadata": "metadata"
             , "media": "media"
             , "mediaversions": "media/history"
 //            , "review": "metadata?categoryid=11"
