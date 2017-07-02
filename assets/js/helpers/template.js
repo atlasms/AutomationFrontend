@@ -26,10 +26,19 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 console.log(value);
             });
             Handlebars.registerHelper('extractTime', function (value, options) {
-                return (value && value.indexOf("T") !== -1) ? value.split('T')[1] : value;
+                if (value && value.indexOf('T') !== "-1" && +value.split('-')[0] === 1900)
+                    return '';
+                return time = (value && value.indexOf("T") !== -1) ? value.split('T')[1] : value;
+//                return (parseInt(time) !== 0) ? time : '';
             });
-            Handlebars.registerHelper('extractDate', function (value, options) {
-                return (value && value.indexOf("T") !== -1) ? Global.gregorianToJalali(value.split('T')[0]) : Global.gregorianToJalali(value);
+            Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
+                if (value && +value.split('-')[0] === 1900)
+                    return '';
+                var convert = typeof bypassConvert !== "undefined" && bypassConvert == true ? false : true;
+                if (value && value.indexOf("T") !== -1)
+                    return (convert) ? Global.gregorianToJalali(value.split('T')[0]) : value.split('T')[0];
+                else
+                    return (convert) ? Global.gregorianToJalali(value) : value;
             });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';
@@ -117,9 +126,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 }
                 return output;
             });
-            Handlebars.registerHelper('isChecked', function (val, options) {
+            Handlebars.registerHelper('isChecked', function (defaultValue, givenValue) {
                 var output = '';
-                if (val === true || val === 1) {
+                if (defaultValue == givenValue) {
                     output = 'checked';
                 }
                 return output;
@@ -130,7 +139,15 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             });
             Handlebars.registerHelper('select', function (value, options) {
                 var $el = $('<select />').html(options.fn(this));
-                $el.find('[value=' + value + ']').attr({'selected': 'selected'});
+                if (typeof value === "undefined" || !value || value === "")
+                    return $el.html();
+                if (typeof value === "string" && value.indexOf(',') !== -1) {
+                    var values = value.split(',');
+                    $.each(values, function () {
+                        $el.find('[value=' + this + ']').attr({'selected': 'selected'});
+                    });
+                } else
+                    $el.find('[value=' + value + ']').attr({'selected': 'selected'});
                 return $el.html();
             });
             Handlebars.registerHelper('createDate', function (offset, options) {
@@ -171,6 +188,21 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             });
             Handlebars.registerHelper('replace', function (haystack, needle, replace, options) {
                 return haystack.replace(needle, replace);
+            });
+            Handlebars.registerHelper('find', function (needle, haystack, options) {
+                if (typeof haystack === "undefined" || !haystack)
+                    return false;
+                if (typeof haystack === "string" && haystack.indexOf(',') !== -1)
+                    haystack = haystack.split(',');
+                else
+                    haystack = !(haystack instanceof Array) ? [haystack] : haystack;
+                var found = false;
+                if (haystack.length) {
+                    for (var i in haystack)
+                        if (needle == haystack[i])
+                            found = true;
+                }
+                return (found) ? options.fn(this) : options.inverse(this);
             });
             Handlebars.registerHelper('resolveLabel', function (value, options) {
                 var value = +value;
