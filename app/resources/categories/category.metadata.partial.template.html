@@ -1,5 +1,7 @@
 <form class="categories-metadata-form form-horizontal">
 	<button type="submit" data-task="submit-form" class="btn btn-primary pull-right">ثبت اطلاعات</button>
+	<input type="hidden" name="MasterId" value="{{MasterId}}" />
+	<input type="hidden" name="Type" value="{{Type}}" />
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
@@ -12,35 +14,39 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">عنوان</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" name="PublicTitle" value="{{PublicTitle}}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">نوع برنامه</label>
 				<div class="col-sm-6">
-					<select class="form-control">
+					<select class="form-control" name="Kind">
+						{{#select Kind}}
 						{{{getDefinitionOptions 36}}}
+						{{/select}}
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">ژانر</label>
 				<div class="col-sm-6">
-					<select class="form-control" multiple="">
+					<select class="form-control" multiple="" name="Genre" data-validation="multiple">
+						{{#select Genre}}
 						{{{getDefinitionOptions 36}}}
+						{{/select}}
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">خلاصه</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="2"></textarea>
+					<textarea class="form-control" rows="2" name="Summary">{{Summary}}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">توضیحات</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="3"></textarea>
+					<textarea class="form-control" rows="3" name="PublicDescr">{{PublicDescr}}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
@@ -48,14 +54,14 @@
 				<div class="col-sm-3">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+						<input type="text" class="form-control datepicker" data-validation="date" name="ProductionDate" placeholder="" value="{{ProductionDate}}">
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">تهیه کننده</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" name="Producer" value="{{Producer}}">
 				</div>
 			</div>
 		</div>
@@ -64,13 +70,13 @@
 				<label class="col-sm-3 control-label">نمایش در EPG</label>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="epg" id="r_e1" value="1" type="radio" checked>
+						<input name="EpgShow" id="r_e1" value="1" type="radio" {{isChecked 1 EpgShow}}>
 						<label for="r_e1">بلی</label>
 					</div>
 				</div>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="epg" id="r_e2" value="0" type="radio">
+						<input name="EpgShow" id="r_e2" value="0" type="radio" {{isChecked 0 EpgShow}}>
 						<label for="r_e2">خیر</label>
 					</div>
 				</div>
@@ -78,13 +84,13 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">عنوان</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" name="EpgTitle" value="{{EpgTitle}}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">توضیح EPG</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="3"></textarea>
+					<textarea class="form-control" rows="3" name="EpgDescr">{{EpgDescr}}</textarea>
 				</div>
 			</div>
 		</div>
@@ -92,10 +98,12 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">وضعیت نمایش</label>
 				<div class="col-sm-5">
-					<select class="form-control">
+					<select class="form-control" name="SiteState">
+						{{#select SiteState}}
 						<option value="0">منتشر نشده</option>
 						<option value="1">منتشر شده</option>
 						<option value="-1">حذف شده</option>
+						{{/select}}
 					</select>
 				</div>
 			</div>
@@ -104,54 +112,56 @@
 				<div class="col-sm-3">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+						<input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishStart" placeholder="" data-default="0000-00-00 00:00:00" value="{{extractDate SitePublishStart 1}} {{extractTime SitePublishStart}}">
 					</div>
 				</div>
 				<label class="col-sm-3 control-label">پابان انتشار</label>
 				<div class="col-sm-3">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
+						<input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishEnd" placeholder="" data-default="0000-00-00 00:00:00" value="{{extractDate SitePublishEnd 1}} {{extractTime SitePublishEnd}}">
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">دسته‌بندی</label>
 				<div class="col-sm-6">
-					<select class="form-control">
+					<select class="form-control" name="SiteKind">
+						{{#select SiteKind}}
 						{{{getDefinitionOptions 31}}}
+						{{/select}}
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">عنوان</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" name="SiteTitle" value="{{SiteTitle}}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">خلاصه</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="2"></textarea>
+					<textarea class="form-control" rows="2" name="SiteSummary">{{SiteSummary}}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">توضیح سایت</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="3"></textarea>
+					<textarea class="form-control" rows="3" name="SiteDescr">{{SiteDescr}}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">منتخب</label>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="featured" id="r_01" value="1" type="radio">
+						<input name="SiteFeatured" id="r_01" value="1" type="radio" {{isChecked 1 SiteFeatured}} />
 						<label for="r_01">بلی</label>
 					</div>
 				</div>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="featured" id="r_02" value="0" type="radio" checked>
+						<input name="SiteFeatured" id="r_02" value="0" type="radio" {{isChecked 0 SiteFeatured}} />
 						<label for="r_02">خیر</label>
 					</div>
 				</div>
@@ -161,13 +171,13 @@
 				<label class="col-sm-3 control-label">نمایش در کنداکتور سایت</label>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="store" id="r_11" value="permanently" type="radio" checked>
+						<input name="SiteShowConductor" id="r_11" value="1" type="radio" {{isChecked 1 SiteShowConductor}} />
 						<label for="r_11">بلی</label>
 					</div>
 				</div>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="store" id="r_12" value="temporary" type="radio">
+						<input name="SiteShowConductor" id="r_12" value="0" type="radio" {{isChecked 0 SiteShowConductor}} />
 						<label for="r_12">خیر</label>
 					</div>
 				</div>
@@ -177,13 +187,13 @@
 				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="telegram" id="r_11" value="1" type="radio" >
+						<input name="TelegramState" id="r_t1" value="1" type="radio" {{isChecked 1 TelegramState}} />
 						<label for="r_t1">بلی</label>
 					</div>
 				</div>
 				<div class="col-sm-2">
 					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="telegram" id="r_12" value="0" type="radio" checked>
+						<input name="TelegramState" id="r_t2" value="0" type="radio" {{isChecked 0 TelegramState}} />
 						<label for="r_t2">خیر</label>
 					</div>
 				</div>
@@ -191,7 +201,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">توضیح تلگرام</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="3"></textarea>
+					<textarea class="form-control" rows="3" name="TelegramDescr">{{TelegramDescr}}</textarea>
 				</div>
 			</div>
 		</div>
@@ -210,12 +220,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					{{#each []}}
+					{{#each media}}
 					{{#ifCond Type '==' 0}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="default_video" id="r_v{{@index}}" value="0" type="radio" />
+								<input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true"{{/find}} />
 								<label for="r_v{{@index}}"></label>
 							</div>
 						</td>
@@ -266,12 +276,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					{{#each []}}
+					{{#each media}}
 					{{#ifCond Type '==' 1}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="{{Id}}" id="r_p{{@index}}" value="1" type="checkbox" />
+								<input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true"{{/find}} />
 								<label for="r_p{{@index}}"></label>
 							</div>
 						</td>

@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var CategoriesView = Backbone.View.extend({
         model: 'CategoriesModel'
         , toolbar: []
@@ -8,27 +8,83 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
             , 'click #tree .jstree-anchor': 'loadData'
+            , 'submit .categories-metadata-form': 'saveMetadata'
+        }
+        , saveMetadata: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $(e.target).serializeObject();
+            var $form = $(".categories-metadata-form");
+            for (var key in data) {
+                var type = $("[name=" + key + "]").attr('data-validation');
+                data[key] = self.handleData(key, data[key], type);
+            }
+            new MetadataModel().save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+        }
+        , handleData: function (key, value, type) {
+            if (typeof type === "undefined")
+                return value;
+            switch (type) {
+                case 'date':
+                    return Global.jalaliToGregorian(value) + 'T00:00:00';
+                case 'date-time':
+                    return Global.jalaliToGregorian(value.split(' ')[0]) + 'T' + value.split(' ')[1];
+                case 'multiple':
+                    var items = $("[name=" + key + "]").val();
+                    if (typeof items === "object")
+                        return items.join(',');
+                    else
+                        return value;
+                case 'checkbox':
+                    var items = [];
+                    $("[name=" + key + "]:checkbox:checked").each(function(i) {
+                        items[i] = $(this).val();
+                    });
+                    if (typeof items === "object")
+                        return items.join(',');
+                    else
+                        return value;
+            }
+            return value;
         }
         , loadData: function (e) {
             var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
+            id = parseInt(id);
             if (typeof id !== "undefined" && id) {
                 var self = this;
-                var params = {query: 'categoryId=' + id};
-                var model = new MediaModel(params);
-                model.fetch({
-                    success: function (items) {
-                        items = self.prepareItems(items.toJSON(), params);
-                        var template = Template.template.load('resources/categories', 'category.metadata.partial');
-                        var $container = $(".metadata.portlet-body");
-                        template.done(function (data) {
-                            var handlebarsTemplate = Template.handlebars.compile(data);
-                            var output = handlebarsTemplate(items);
-                            $container.html(output).promise().done(function () {
-                                // After Render
-                                self.attachDatepickers();
-                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
-                                $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
-                            });
+                var mediaItemsParams = {query: 'categoryId=' + id};
+                var itemsModel = new MediaModel(mediaItemsParams);
+                // Loading folder media
+                itemsModel.fetch({
+                    success: function (mediaItems) {
+                        mediaItems = self.prepareItems(mediaItems.toJSON(), mediaItemsParams);
+                        // Loading metadata
+                        var params = {query: 'MasterId=' + id};
+                        var model = new MetadataModel(params);
+                        model.fetch({
+                            success: function (item) {
+                                item = self.prepareItems(item.toJSON(), params);
+                                item.media = mediaItems;
+                                var template = Template.template.load('resources/categories', 'category.metadata.partial');
+                                var $container = $(".metadata.portlet-body");
+                                template.done(function (data) {
+                                    var handlebarsTemplate = Template.handlebars.compile(data);
+                                    var output = handlebarsTemplate(item);
+                                    $container.html(output).promise().done(function () {
+                                        // After Render
+                                        self.attachDatepickers();
+                                        var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                        $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+                                    });
+                                });
+                            }
                         });
                     }
                 });
@@ -44,6 +100,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         onSelect: function () {}
                     }));
                 }
+            });
+            var $dateTimePickers = $(".datetimepicker");
+            $.each($dateTimePickers, function () {
+                var $this = $(this);
+                var reset = ($.trim($this.val()) == "") ? true : false;
+                if ($this.data('datepicker') == undefined) {
+                    var dateTimePickerSettings = {
+                        format: 'YYYY-MM-DD HH:mm:ss'
+                        , timePicker: {enabled: true}
+                    };
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
+                        onSelect: function () {}
+                    }));
+                }
+                if (reset)
+                    $this.val($this.attr('data-default'));
             });
         }
         , reLoad: function () {
