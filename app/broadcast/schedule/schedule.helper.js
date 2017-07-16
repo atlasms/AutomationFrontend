@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars', 'user.helper'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars, UserHelper) {
-    window.ScheduleHelper = {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars', 'user.helper'
+], function ($, _, Backbone, Config, Global, moment, jDate, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars, UserHelper) {
+    'use strict';
+    var ScheduleHelper = {
         flags: {}
         , init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
@@ -99,9 +100,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , hotkeys: function () {
             $.hotkeys.options.filterInputAcceptingElements = false;
             $.hotkeys.options.filterTextInputs = false;
-            $(document).on('keydown', null, 'f2', function () {
-                alert('Hi');
-            });
+//            $(document).on('keydown', null, 'f2', function () {
+//                alert('Hi');
+//            });
             $(document).on('click', "#schedule-page tbody tr", function (e) {
                 if (e.shiftKey) {
                     $(this).toggleClass("selected");
@@ -170,7 +171,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var $row = (typeof $row !== "undefined") ? $row : $("#schedule-page tbody").find("tr.active");
             var $next = $row.next();
             var $prev = $row.prev();
-            $row.remove();
+            $row.remove().promise().done(function() {
+                $next.addClass('active');
+            });
 //            $row.remove().promise().done(function () {
             if ($next.length && $next.hasClass('fixed'))
                 ScheduleHelper.insertGap($next.prev());
@@ -309,6 +312,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 });
             }
             ScheduleHelper.processGaps();
+            ScheduleHelper.setStates();
         }
         , checkForOverlaps: function () {
             var $rows = $("#schedule-page tbody").find("tr");
@@ -497,6 +501,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , validate: function () {
             this.time = function ($element) {
+//                if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/.test($element.val()))
                 if (!moment($element.val(), 'HH:mm:SS', true).isValid())
                     $element.parent().addClass("has-error");
                 else
@@ -551,8 +556,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , handleEdits: function () {
             var $this = this;
-            $(document).on('input', "#schedule-page tbody", function (e) {
-                ScheduleHelper.generateTimeArray();
+            $(document).one('input', "#schedule-page tbody", function (e) {
+//                ScheduleHelper.generateTimeArray();
                 var $target = $(e.target).closest("tr");
                 if (!$target.hasClass("new"))
                     $target.addClass('edited');
