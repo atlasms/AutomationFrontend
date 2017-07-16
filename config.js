@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "env": "dev",
         "placeholderImage": "/assets/img/placeholder.png",
         "transitionSpedd": 200,
-        "notificationsInterval": 10000,
+        "notificationsInterval": 30000,
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
