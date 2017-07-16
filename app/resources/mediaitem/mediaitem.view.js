@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.categories.model', 'editable.helper', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, CategoriesModel, Editable, Tree, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, Tree, bootbox, $tab, $modal, $popover, Editable) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -26,6 +26,51 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'submit .chat-form': 'insertComment'
             , 'click .open-item': 'openItem'
             , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
+            , 'submit .categories-metadata-form': 'saveMetadata'
+        }
+        , saveMetadata: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $(e.target).serializeObject();
+            var $form = $(".categories-metadata-form");
+            for (var key in data) {
+                var type = $("[name=" + key + "]").attr('data-validation');
+                data[key] = self.handleData(key, data[key], type);
+            }
+            new MetadataModel().save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+        }
+        , handleData: function (key, value, type) {
+            if (typeof type === "undefined")
+                return value;
+            switch (type) {
+                case 'date':
+                    return Global.jalaliToGregorian(value) + 'T00:00:00';
+                case 'date-time':
+                    return Global.jalaliToGregorian(value.split(' ')[0]) + 'T' + value.split(' ')[1];
+                case 'multiple':
+                    var items = $("[name=" + key + "]").val();
+                    if (typeof items === "object")
+                        return items.join(',');
+                    else
+                        return value;
+                case 'checkbox':
+                    var items = [];
+                    $("[name=" + key + "]:checkbox:checked").each(function (i) {
+                        items[i] = $(this).val();
+                    });
+                    if (typeof items === "object")
+                        return items.join(',');
+                    else
+                        return value;
+            }
+            return value;
         }
         , seekPlayer: function (e) {
             e.preventDefault();
@@ -262,7 +307,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 return;
             var tmpl, model, data;
             var $container = $(el.find("a").attr('href'));
-            switch (el.attr('data-service')) {
+            var service = el.attr('data-service');
+            switch (service) {
                 default:
                     return false;
                     break;
@@ -290,11 +336,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     model = new MediaitemModel(params);
                     break;
                 case 'metadata':
-                    var params = {
-                        id: self.getId()
-                    };
+                    var catid = $('[data-task="change-category"]').attr('data-id');
+                    var params = {query: 'MasterId=' + catid, type: 1};
                     tmpl = ['resources/categories', 'category.metadata.partial'];
-                    model = new MediaitemModel(params);
+                    model = new MetadataModel(params);
                     break;
             }
             if (tmpl && model) {
@@ -304,19 +349,38 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         success: function (items) {
                             items = self.prepareItems(items.toJSON(), params);
                             template.done(function (data) {
-                                var handlebarsTemplate = Template.handlebars.compile(data);
-                                var output = handlebarsTemplate(items);
-                                $container.html(output).promise().done(function () {
-                                    if ($container.find(".scroller").length)
-                                        $container.find(".scroller").slimScroll({
-                                            height: $container.find(".scroller").height()
-                                            , start: 'bottom'
-                                        });
-                                    if ($("input.time").length)
-                                        $("input.time").mask('H0:M0:S0', {
-                                            placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                                        });
-                                });
+                                if (service === "metadata") {
+                                    var mediaItemsParams = {query: 'categoryId=' + catid};
+                                    var itemsModel = new MediaModel(mediaItemsParams);
+                                    itemsModel.fetch({
+                                        success: function (mediaItems) {
+                                            mediaItems = self.prepareItems(mediaItems.toJSON(), mediaItemsParams);
+                                            items.media = mediaItems;
+                                            var handlebarsTemplate = Template.handlebars.compile(data);
+                                            var output = handlebarsTemplate(items);
+                                            $container.html(output).promise().done(function () {
+                                                // After metadata form loaded
+                                                self.attachDatepickers();
+                                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                                $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    var handlebarsTemplate = Template.handlebars.compile(data);
+                                    var output = handlebarsTemplate(items);
+                                    $container.html(output).promise().done(function () {
+                                        if ($container.find(".scroller").length)
+                                            $container.find(".scroller").slimScroll({
+                                                height: $container.find(".scroller").height()
+                                                , start: 'bottom'
+                                            });
+                                        if ($("input.time").length)
+                                            $("input.time").mask('H0:M0:S0', {
+                                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                            });
+                                    });
+                                }
                             });
                         }
                     });
@@ -331,7 +395,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
             }
-
         }
         , getId: function () {
             return Backbone.history.getFragment().split("/").pop().split("?")[0];
@@ -429,6 +492,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , prepareSave: function () {
             data = null;
             return data;
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {}
+                    }));
+                }
+            });
+            var $dateTimePickers = $(".datetimepicker");
+            $.each($dateTimePickers, function () {
+                var $this = $(this);
+                var reset = ($.trim($this.val()) == "") ? true : false;
+                if ($this.data('datepicker') == undefined) {
+                    var dateTimePickerSettings = {
+                        format: 'YYYY-MM-DD HH:mm:ss'
+                        , timePicker: {enabled: true}
+                    };
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
+                        onSelect: function () {}
+                    }));
+                }
+                if (reset)
+                    $this.val($this.attr('data-default'));
+            });
         }
     });
     return MediaitemView;
