@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             $(window).on('scroll', function () {
                 if ($("body").hasClass("_md") || $("body").hasClass("_lg")) {
                     if ($(this).scrollTop() > gap)
-                        !$("body").hasClass('fixed-toolbar') && $("body").addClass("fixed-toolbar").find("#toolbar").width(width);
+                        !$("body").hasClass('fixed-toolbar') && $("body").addClass("fixed-toolbar").find("#toolbar").width(width - 17);
                     else
                         $("body").hasClass('fixed-toolbar') && $("body").removeClass("fixed-toolbar").find("#toolbar").width('inherit');
                 }
