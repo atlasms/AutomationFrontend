@@ -244,7 +244,9 @@ body.fixed-toolbar {
 } 
 
 #schedule-page {
+    .fixed-table-body { overflow-x: visible; overflow-y: visible; }
     .table {
+        table-layout: fixed; transform: rotateX(0deg);
         p { margin-bottom: 0; }
         .idx ~ a { display: block; margin-top: 25px; }
         textarea { height: 70px; }
@@ -256,7 +258,8 @@ body.fixed-toolbar {
                 border-left: 5px solid #ddd;
                 td:first-child { position: relative; }
                 .tools {
-                    position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; transition: 0.2s all; height: 100%;
+                    position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; height: 100%;
+                    // transition: 0.2s all;
                     .btn {
                         height: 50%; transition: 0.2s all;
                         &:hover { background: #c9c9c9; }
@@ -286,6 +289,70 @@ body.fixed-toolbar {
         }
     }
 } 
+div#schedule-table {
+    font-size: 16px;
+    margin-bottom: 0;
+    .id, .r { width: 3.33333%; padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
+    input, textarea, .form-group.form-md-line-input .form-control ~ label:after, .form-group.form-md-line-input .form-control ~ .form-control-focus:after { transition: none; }
+    
+    .table-header {
+        font-weight: bold; border-left: 5px solid transparent;
+        clear: both;
+        > div {
+            // padding: 0 15px;
+            padding: 0 8px;
+            float: left; position: relative; box-sizing: border-box;
+            outline: 1px solid #e7ecf1;
+            }
+        span {
+            display: block; padding: 5px 0;
+            // border-right: 1px solid #e7ecf1;
+            // &:last-child { border-left: 1px solid #e7ecf1; }
+        }
+        // .th { font-weight: bold; }
+        
+    }
+    .table-body {
+        // @include clearfix;
+        list-style: none; padding: 0; margin: 0;
+        .table-row {
+            @include clearfix;
+            border-left: 5px solid #ddd;  padding: 0; margin: 0;
+            &.active { background: #eef1f5; }
+            .td { height: 80px; outline: 1px solid #e7ecf1; padding: 8px 8px 0; }
+            .id, .r { text-align: center; }
+            textarea { height: 70px; }
+
+            .tools {
+                position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; height: 100%;
+                .btn {
+                    height: 50%;
+                    &:hover { background: #c9c9c9; }
+                }
+            } 
+
+            &.active {
+                border-left-color: #cbcbcb;
+                .tools { left: -42px; opacity: 1; visibility: visible; }
+            }
+            &.new { border-left-color: lightgreen; }
+            &.error { border-left-color: red !important; }
+            &.edited { border-left-color: #6C9EE0; }
+            &.fixed { border-left-color: #1BA39C }
+            &.gap { border-left-color: #333 }
+            &.selected { background-color: #E5E5E5 !important; }
+            &.overlap { animation: border_blink 1s step-end infinite; }
+        }
+    }
+    .tools {
+        position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; height: 100%;
+        // transition: 0.2s all;
+        .btn {
+            height: 50%; transition: 0.2s all;
+            &:hover { background: #c9c9c9; }
+        }
+    } 
+}
 #schedule-log-modal .modal-body { max-height: 65vh; overflow: hidden; overflow-y: auto; }
 
 /// Ingest
