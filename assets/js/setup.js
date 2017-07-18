@@ -63,6 +63,7 @@ require.config({
         , "notifications": ["helpers/notifications"]
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
         , "pace": ["vendor/pace.min"]
+        , "clusterize": ["vendor/clusterize.min"]
 
         , "typeahead": ["vendor/typeahead.jquery.min"]
         , "bloodhound": ["vendor/bloodhound.min"]
@@ -104,6 +105,7 @@ require.config({
         , "dashboard.view": ["../../app/dashboard/dashboard.view"]
         , "broadcast.view": ["../../app/broadcast/broadcast.view"]
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
+        , "broadcast.schedule2.view": ["../../app/broadcast/schedule/schedule2.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
         , "broadcast.crawl.view": ["../../app/broadcast/crawl/crawl.view"]
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
@@ -142,6 +144,7 @@ require.config({
         , "global": ["helpers/global"]
         , "mask": ["vendor/jquery.mask.min"]
         , "scheduleHelper": ["../../app/broadcast/schedule/schedule.helper"]
+        , "scheduleHelper2": ["../../app/broadcast/schedule/schedule2.helper"]
         , "crawlHelper": ["../../app/broadcast/crawl/crawl.helper"]
         , "ingestHelper": ["../../app/resources/ingest/ingest.helper"]
         , "photosHelper": ["../../app/resources/photos/photos.helper"]
