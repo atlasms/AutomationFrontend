@@ -59,15 +59,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         }
         , register: function (e) {
             e.preventDefault();
+            var self = this;
             var data = $(e.currentTarget).serializeObject();
             if (!this.validateRegisterForm($(e.currentTarget), data))
                 return;
             var params = {path: '/register'};
+            var $modal = $(self.modal_register);
             new UsersManageModel(params).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
                     toastr['success']('کاربر جدید با موفقیت ایجاد شد.', 'ایجاد کاربر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $modal.modal('hide');
+                    self.reLoad();
                 }
                 , error: function (z, x, c) {
                     console.log(z, x, c);
