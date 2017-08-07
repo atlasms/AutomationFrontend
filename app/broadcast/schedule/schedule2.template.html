@@ -61,6 +61,9 @@
 									</div>
 								</div>
 							</div>
+							<div class="col-xs-12 col-sm-1">
+								<button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export" style="margin-top: 50px"><i class="fa fa-refresh"></i></button>
+							</div>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-2">
@@ -114,23 +117,26 @@
 <div id="schedule-page" class="portlet box">
 	<div class="portlet-body">
 		<div class="mainbody">
+			<div class="text-right">
+				<ul class="pagination"></ul>
+			</div>
 			<div id="schedule-table" class="table table-bordered table-striped table-condensed flip-content">
-				<nav class="table-header">
-					<div class="id th"><span>#</span></div>
-					<div class="col-xs-1"><span>Image</span></div>
+				<nav class="table-header clearfix">
+					<div class="id"><span>#</span></div>
+					<div class="c1"><span>تصویر</span></div>
 					<div class="r"><span>فیکس</span></div>
-					<div class="col-xs-1"><span>شروع</span></div>
-					<div class="col-xs-1"><span>مدت</span></div>
-					<div class="col-xs-2"><span>برنامه</span></div>
-					<div class="col-xs-2"><span>عنوان قسمت</span></div>
+					<div class="c1"><span>شروع</span></div>
+					<div class="c1"><span>مدت</span></div>
+					<div class="c2"><span>برنامه</span></div>
+					<div class="c2"><span>عنوان قسمت</span></div>
 					<div class="id"><span>قسمت</span></div>
-					<div class="col-xs-3"><span>توضیحات</span></div>
+					<div class="c3"><span>توضیحات</span></div>
 					<div class="r"><span>تکرار</span></div>
 					<div class="r"><span>منتخب</span></div>
 				</nav>
 				<ul class="table-body">
 					{{#each []}}
-					<li class="table-row" data-id="{{ConductorId}}" data-thumbnail="" data-media="" data-readonly="{{#authorize 2}}false{{else}}true{{/authorize}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
+					<li class="table-row" data-id="{{ConductorId}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}{{#ifCond 200 '>' @index}} hide{{/ifCond}}">
 						<div class="td id">
 							<input type="hidden" name="titles" value="" />
 							<input type="hidden" name="subtitles" value="" />
@@ -141,74 +147,73 @@
 							{{> scheduleRowTools}}
 							{{/authorize}}
 						</div>
-						<div class="img td col-xs-1">
+						<div class="img td c1">
 							<figure>
 								<!--<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />-->
 							</figure>
 						</div>
 						<div class="td r text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="checkbox_1_{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
-									   <label for="checkbox_1_{{@index}}"></label>
+								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="fx{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
+									   <label for="fx{{@index}}"></label>
 							</div>
 						</div>
-						<div class="col-xs-1 td text-center">
+						<div class="c1 td text-center">
 							<div class="form-group form-md-line-input fixed-label">
-								<input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="CondcutorStartTime_{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
-								<label for="CondcutorStartTime_{{@index}}">{{extractDate CondcutorStartTime}}</label>
+								<input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="st{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
+								<label for="st{{@index}}">{{extractDate CondcutorStartTime}}</label>
 							</div>
 						</div>
-						<div class="col-xs-1 td text-center">
+						<div class="c1 td text-center">
 							<div class="form-group form-md-line-input">
 								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
 								<label></label>
 							</div>
 						</div>
-						<div class="col-xs-2 td">
+						<div class="c2 td">
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
 								{{#if ConductorMetaCategoryId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="program_{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required />
-								<label for="program_{{@index}}">
+								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="pr{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required />
+								<label for="pr{{@index}}">
 									{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}
 								</label>
 							</div>
 						</div>
-						<div class="col-xs-2 td">
+						<div class="c2 td">
 							<div class="form-group form-md-line-input fixed-label">
 								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
 								{{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="episode_{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}" >
-								<label for="episode_{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
+								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="ep{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}" >
+								<label for="ep{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
 							</div>
 						</div>
 						<div class="id td">
-							<div class="form-group form-md-line-input form-md-floating-label">
-								<input type="text" class="form-control text-center" id="form_control_{{@index}}" data-type="episode-number"  name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
-								<label></label>
+							<div class="">
+								<input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
 							</div>
 						</div>
-						<div class="col-xs-3 td">
-							<div class="form-group form-md-line-input form-md-floating-label text-area-container">
-								<textarea class="form-control" id="note_{{@index}}" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
-								<label></label>
-							</div>
+						<div class="c3 td">
+							<textarea class="form-control" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
 						</div>
 						<div class="r td text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="ConductorRepeat" data-validation="digit" id="checkbox_2_{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="checkbox_2_{{@index}}"></label>
+								<input name="ConductorRepeat" data-validation="digit" id="rp{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+									   <label for="rp{{@index}}"></label>
 							</div>
 						</div>
 						<div class="r td text-center">
 							<div class="checkbox checkbox-primary checkbox-circle">
-								<input name="CondcutorFeatured" data-validation="digit" id="checkbox_3_{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="checkbox_3_{{@index}}"></label>
+								<input name="CondcutorFeatured" data-validation="digit" id="ft{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+									   <label for="ft{{@index}}"></label>
 							</div>
 						</div>
 					</li>
 					{{/each}}
 				</ul>
+			</div>
+			<div class="text-right">
+				<ul class="pagination"></ul>
 			</div>
 		</div>
 	</div>

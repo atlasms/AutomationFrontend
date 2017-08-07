@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'bootstrap-table', 'bootstrap/modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox) {
     'use strict';
     bootbox.setLocale('fa');
@@ -579,7 +579,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             for (var i = 0; i < dateParts.length; i++)
                 dateParts[i] = parseInt(dateParts[i]);
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
-            ScheduleHelper.generateTimeArray(this);
+//            ScheduleHelper.generateTimeArray(this);
 
             ScheduleHelper.checkForOverlaps();
 
@@ -589,13 +589,51 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     $(this).find("input, textarea, select").attr('disabled', 'disabled');
             });
 
+            var $items = $("#schedule-table .table-body li");
+            var itemsCount = $items.length;
+            if (itemsCount > Config.schedulePageLimit) {
+                var itemsPerPage = Config.schedulePageLimit;
+                var pagesCount = (Math.floor(itemsCount / itemsPerPage) !== (itemsCount / itemsPerPage)) ? (Math.floor(itemsCount / itemsPerPage) + 1) : Math.floor(itemsCount / itemsPerPage);
+                var pages = [];
+                console.log('-------------- Pagination ---------------');
+                console.time('generating-pagination-links');
+                for (var i = 0; i < pagesCount; i++)
+                    pages.push('<li data-page="' + (i + 1) + '" ' + ((i === 0) ? ' class="active"' : '') + '><a href="#">' + (i + 1) + '</a></li>');
+                $("#schedule-page .pagination").html(pages.join(''));
+                console.timeEnd('generating-pagination-links');
+                console.time('assigning-page-numbers-to-rows');
+                $items.each(function () {
+                    $(this).attr('data-page', Math.floor($(this).index() / itemsPerPage) + 1);
+                });
+                console.timeEnd('assigning-page-numbers-to-rows');
+                console.time('hiding-other-pages');
+                $items.slice(itemsPerPage).addClass('hide');
+                console.timeEnd('hiding-other-pages');
+                $(document).on('click', "#schedule-page .pagination a", function (e) {
+                    console.log('-------------- Pagination: Page Change ---------------');
+                    console.time('handling-active-page-classes');
+                    var page = $(this).text();
+                    $("#schedule-page .pagination").find("li").removeClass('active');
+                    $("#schedule-page .pagination").find("li[data-page=" + page + "]").addClass('active');
+                    console.timeEnd('handling-active-page-classes');
+                    console.time('hiding-all-items');
+                    var $items = $(".table-body li");
+                    $items.addClass('hide');
+                    console.timeEnd('hiding-all-items');
+                    console.time('showing-requested-page-items');
+                    $items.parent().find("[data-page=" + page + "]").removeClass('hide').promise().done(function() {
+                        console.timeEnd('showing-requested-page-items');
+                    });
+                    e.preventDefault();
+                    $items = {};
+                });
+                $items = {};
+            }
+
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
-//            $("#schedule-page table").bootstrapTable(Config.settings.bootstrapTable);
         }
         , renderToolbar: function () {
             var self = this;
-//            if (this.flags.toolbarRendered)
-//                return;
             var elements = this.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -604,7 +642,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             });
             toolbar.render();
             self.attachDatepickers();
-//            this.flags.toolbarRendered = true;
         }
         , loadScheduleItem: function ($this) {
             var self = this;

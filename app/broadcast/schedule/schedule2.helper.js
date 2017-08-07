@@ -104,7 +104,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 //            $(document).on('keydown', null, 'f2', function () {
 //                alert('Hi');
 //            });
-            $(document).on('click', "#schedule-table li", function (e) {
+            $(document).on('click', "#schedule-table .table-body li", function (e) {
                 if (e.shiftKey) {
                     $(this).toggleClass("selected");
                     e.preventDefault();
@@ -112,7 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 }
             }); //
             $(document).on('keydown', null, 'down', function (e) {
-                var activeRow = $("#schedule-table").find("li.active");
+                var activeRow = $("#schedule-table .table-body li.active");
                 if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus")))
                     if (activeRow.find("+ li").length) {
                         activeRow.removeClass('active').trigger('deactivated').next('li').addClass('active').trigger('activated');
@@ -123,7 +123,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
             });
             $(document).on('keydown', null, 'up', function (e) {
-                var activeRow = $("#schedule-table").find("li.active");
+                var activeRow = $("#schedule-table .table-body li.active");
                 if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
                     if (activeRow.prev('li').length) {
                         activeRow.removeClass('active').trigger('deactivated').prev('li').addClass('active').trigger('activated');
@@ -135,7 +135,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 }
             });
             $(document).on('keydown', null, 'insert', function (e) {
-                var activeRow = $("#schedule-table").find("li.active");
+                var activeRow = $("#schedule-table .table-body li.active");
                 if (activeRow.attr('data-readonly') === "true")
                     return false;
                 ScheduleHelper.duplicateRow(activeRow);
@@ -144,13 +144,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $(document).on('keydown', null, 'space', function (e) {
                 if ($(e.target).is("input, textarea, select"))
                     return;
-                var activeRow = $("#schedule-table").find("li.active");
+                var activeRow = $("#schedule-table .table-body li.active");
                 if (activeRow.length) {
                     activeRow.find("input.time:first").focus();
                 }
             });
             $(document).on('click', ".tools [data-task=add]", function (e) {
-                var row = $("#schedule-table").find("li.active");
+                var row = $(this).parents("li:first");
                 ScheduleHelper.duplicateRow(row);
                 e.preventDefault();
             });
@@ -165,11 +165,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , deleteRow: function ($row, skipUpdate) {
             if (typeof $row === "undefined") {
-                var $rows = $("#schedule-table").find("li");
+                var $rows = $("#schedule-table .table-body li");
                 if ($rows.length < 2)
                     return false;
             }
-            var $row = (typeof $row !== "undefined") ? $row : $("#schedule-table").find("li.active");
+            var $row = (typeof $row !== "undefined") ? $row : $("#schedule-table .table-body li.active");
             var $next = $row.next();
             var $prev = $row.prev();
             $row.remove().promise().done(function() {
@@ -190,15 +190,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var $gap = ScheduleHelper.duplicateRow($next, true);
         }
         , duplicateRow: function (row, isGap) {
+            console.log('------------------- ROW DUPLICATION -------------------');
             var isGap = (typeof isGap !== "undefined" && isGap === true) ? true : false;
-            var rows = $("#schedule-table").find("li");
+            var rows = $("#schedule-table .table-body li");
             if (rows.length > 1) {
                 if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
                     row.addClass("error");
                     return;
                 }
             }
-            $('input[data-suggestion="true"]').typeahead("destroy");
+//            row.find('input[data-suggestion="true"]').typeahead("destroy");
+            ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'), true);
+            console.time('cloning-row');
             var clone = row.clone();
             clone.addClass('error new').removeClass('gap fixed overlap');
             clone.find('[id]').removeAttr('id');
@@ -218,17 +221,31 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 // Set gap duration
             }
             clone.insertAfter(row);
+            console.timeEnd('cloning-row');
+            console.time('ROW-duplication-method-calls');
 //            ScheduleHelper.rebuildTable();
+            console.time('updating-times');
             ScheduleHelper.updateTimes(row);
+            console.timeEnd('updating-times');
+            console.time('updating-indexes');
             ScheduleHelper.updateIndexes();
+            console.timeEnd('updating-indexes');
+            console.time('trigger-click');
             row.next().find("input:first").trigger('click');
+            console.timeEnd('trigger-click');
+            console.time('mask-times');
             ScheduleHelper.mask("time");
-            ScheduleHelper.suggestion();
+            console.timeEnd('mask-times');
+            console.time('suggestions');
+            ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'));
+            ScheduleHelper.suggestion(row.next().find('input[data-suggestion="true"]'));
+            console.timeEnd('suggestions');
+            console.timeEnd('ROW-duplication-method-calls');
             return row.next();
         }
         , checkTable: function () {
             // Check table for errors
-            var $rows = $("#schedule-table li");
+            var $rows = $("#schedule-table .table-body li");
             $rows.each(function () {
                 var $this = $(this);
                 // Mark all gaps
@@ -316,7 +333,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ScheduleHelper.setStates();
         }
         , checkForOverlaps: function () {
-            var $rows = $("#schedule-table").find("li");
+            var $rows = $("#schedule-table .table-body").find("li");
             $rows.each(function () {
                 var $this = $(this);
                 var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
@@ -360,7 +377,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             return true; // Fixed overlap by decreasing gaps: remove error
         }
         , processGaps: function () {
-            var $rows = $("#schedule-table li");
+            var $rows = $("#schedule-table .table-body li");
             $rows.each(function () {
                 var $this = $(this);
                 if ($this.hasClass("gap") && !$this.hasClass('new')) {
@@ -376,7 +393,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , updateIndexes: function () {
             // Update table row indexes
-            var $rows = $("#schedule-table li");
+            var $rows = $("#schedule-table .table-body li");
             var i = 1;
             $rows.each(function () {
 //                if (!$(this).hasClass('gap')) {
@@ -385,6 +402,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 //                } else
 //                    $(this).find(".idx").text('خ');
             });
+            $rows = {};
         }
         , mergeRows: function ($row1, $row2) {
             var extraDuration = Global.processTime($row2.next().find("[data-type=start]").val()) - Global.processTime($row1.find("[data-type=start]").val());
@@ -408,8 +426,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 , queryTokenizer: Bloodhound.tokenizers.whitespace
                 , remote: {
                     wildcard: '%QUERY'
-                    , cache: false
-                    , ttl: 1
+                    , cache: true
+//                    , ttl: 1
                     , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE&category='
                     , prepare: function (query, settings) {
                         var $currentInput = $('[data-suggestion]:focus');
@@ -509,8 +527,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $element.parent().removeClass("has-error");
             };
             this.beforeSave = function () {
-                if ($("#schedule-table li.error").length) {
-                    var idx = $("#schedule-table li.error:first .idx").text();
+                if ($("#schedule-table .table-body li.error").length) {
+                    var idx = $("#schedule-table .table-body li.error:first .idx").text();
                     var msg = 'Please fix the error in row [' + idx + ']';
                     toastr.error(msg, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     return false;
@@ -522,14 +540,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , setStates: function () {
             var getRowsCount = function () {
                 return function () {
-                    if ($("#schedule-table li").length)
-                        return $("#schedule-table li").length;
+                    if ($("#schedule-table .table-body li").length)
+                        return $("#schedule-table .table-body li").length;
                     return 0;
                 };
             };
             var getTotalTime = function () {
                 return function () {
-                    var $rows = $("#schedule-table li");
+                    var $rows = $("#schedule-table .table-body li");
                     if ($rows.length > 1) {
                         var duration = 0;
                         $.each($rows, function () {
@@ -557,7 +575,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , handleEdits: function () {
             var $this = this;
-            $(document).one('input', "#schedule-table", function (e) {
+            $(document).one('input', "#schedule-table .table-body", function (e) {
 //                ScheduleHelper.generateTimeArray();
                 var $target = $(e.target).closest("li");
                 if (!$target.hasClass("new"))
@@ -607,13 +625,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
         }
         , generateTimeArray: function (callback) {
-            Config.env === "dev" && console.log('Generating Time Arrays');
+            Config.env === "dev" && console.warn('Generating Time Arrays');
             /*
              * Method to generate two arrays containing all start times and all end times
              */
             var $startSelect = $("select[data-type=itemlist][name=startdate], .source[name=starttime]");
             var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime], .destination[name=starttime]");
-            var $rows = $("#schedule-table li");
+            var $rows = $("#schedule-table .table-body li");
             var starts = [];
             $.each($rows, function () {
                 starts.push({
