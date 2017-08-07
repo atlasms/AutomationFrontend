@@ -64,8 +64,7 @@ require.config({
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
         , "pace": ["vendor/pace.min"]
         , "clusterize": ["vendor/clusterize.min"]
-
-        , "typeahead": ["vendor/typeahead.jquery.min"]
+        , "typeahead": ["vendor/typeahead.jquery"]
         , "bloodhound": ["vendor/bloodhound.min"]
 
                 // Static files

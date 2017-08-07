@@ -1482,21 +1482,21 @@
         }
         function buildHintFromInput($input, www) {
             return $input.clone().addClass(www.classes.hint).removeData().css(www.css.hint).css(getBackgroundStyles($input)).prop("readonly", true).removeAttr("id name placeholder required").attr({
-                autocomplete: "off",
-                spellcheck: "false",
-                tabindex: -1
+                autocomplete: "off"
+//                spellcheck: "false",
+//                tabindex: -1
             });
         }
         function prepInput($input, www) {
             $input.data(keys.attrs, {
                 dir: $input.attr("dir"),
                 autocomplete: $input.attr("autocomplete"),
-                spellcheck: $input.attr("spellcheck"),
+//                spellcheck: $input.attr("spellcheck"),
                 style: $input.attr("style")
             });
             $input.addClass(www.classes.input).attr({
-                autocomplete: "off",
-                spellcheck: false
+                autocomplete: "off"
+//                spellcheck: false
             });
             try {
                 !$input.attr("dir") && $input.attr("dir", "auto");
