@@ -28,7 +28,9 @@
 							<div class="input-group">
 								<span class="input-group-addon">گروه</span>
 								<select class="form-control">
-									<option>گنج سخن</option>
+									{{#select Genre}}
+									{{{getDefinitionOptions 36}}}
+									{{/select}}
 								</select>
 							</div>
 						</div>
@@ -46,7 +48,9 @@
 							<div class="input-group">
 								<span class="input-group-addon">گروه</span>
 								<select class="form-control">
-									<option>گنج سخن</option>
+									{{#select Genre}}
+									{{{getDefinitionOptions 36}}}
+									{{/select}}
 								</select>
 							</div>
 						</div>
@@ -81,7 +85,9 @@
 							<div class="input-group">
 								<span class="input-group-addon">گروه</span>
 								<select class="form-control">
-									<option>گنج سخن</option>
+									{{#select Genre}}
+									{{{getDefinitionOptions 36}}}
+									{{/select}}
 								</select>
 							</div>
 						</div>
@@ -94,125 +100,172 @@
 		</div>
 	</div>
 </div>
-<div id="crawl-page" class="row">
-	<div class="col-md-6">
-		<button type="button" class="btn btn-default btn-lg" data-task="add-crawls"><i class="fa fa-arrow-right"></i></button>
-		<div class="portlet light box">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="fa fa-database"></i>
-					<span class="caption-subject font-dark bold uppercase">انبار زیرنویس‌ها</span>
-				</div>
-				<div class="actions">
-					<div class="form-group">
-						<div class="input-group">
-							<span class="input-group-addon">انتخاب نوع</span>
-							<select class="form-control" data-type="type-select">
-								<option>گنج سخن</option>
-							</select>
-						</div>
+<div id="crawl-page">
+	<div class="row ">
+		<div class="col-md-5">
+			<div class="portlet light box">
+				<!--<div class="portlet-caret" style="position: absolute; width: 0; height: 0; border-bottom: 20px solid #fff; border-left: 20px solid transparent; border-right: 20px solid transparent; top: -20px; right: 75px;"></div>-->
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-database"></i>
+						<span class="caption-subject font-dark bold uppercase">انبار زیرنویس‌ها</span>
+					</div>
+					<div class="actions">
+
 					</div>
 				</div>
-			</div>
-			<div class="portlet-body">
-				<div class="mainbody">
-					<div class="editor-toolbar">
-						<ul class="list-inline list-unstyled">
-							<li><a href="#" class="btn btn-xs btn-default" data-task="bold" title="پررنگ"><i class="fa fa-bold"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="italic" title="پررنگ"><i class="fa fa-italic"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red" title="قرمز"><i class="fa fa-circle" style="color: red"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="lightgreen" title="سبز"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue" title="آبی"><i class="fa fa-circle" style="color: blue"></i></a></li>
-							<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="violet" title="بنفش"><i class="fa fa-circle" style="color: violet"></i></a></li>
-						</ul>
-					</div>
-					<div class="row">
-						<div class="col-xs-11">
-							<div class="crawl-input form-group">
-								<div class="editable-input" contenteditable="true"></div>
+				<div class="portlet-body">
+					<div class="mainbody">
+						<div class="editor-toolbar row">
+							<div class="col-xs-6">
+								<ul class="list-inline list-unstyled">
+									<li><a href="#" class="btn btn-xs btn-default" data-task="bold" title="پررنگ"><i class="fa fa-bold"></i></a></li>
+									<li><a href="#" class="btn btn-xs btn-default" data-task="italic" title="پررنگ"><i class="fa fa-italic"></i></a></li>
+									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red" title="قرمز"><i class="fa fa-circle" style="color: red"></i></a></li>
+									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="lightgreen" title="سبز"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
+									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue" title="آبی"><i class="fa fa-circle" style="color: blue"></i></a></li>
+									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="violet" title="بنفش"><i class="fa fa-circle" style="color: violet"></i></a></li>
+								</ul>
+							</div>
+							<div class="col-xs-5">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">انتخاب نوع</span>
+										<select class="form-control" data-type="type-select">
+											{{#select Genre}}
+											{{{getDefinitionOptions 36}}}
+											{{/select}}
+										</select>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="col-xs-1">
-							<a href="#" class="btn btn-primary btn-block" data-task="add-repository"><i class="fa fa-plus"></i></a>
-							<a href="#" class="btn btn-primary btn-block" data-task="add-crawl"><i class="fa fa-arrow-right"></i></a>
+						<div class="row">
+							<div class="col-xs-11">
+								<div class="crawl-input form-group">
+									<div class="editable-input" contenteditable="true"></div>
+								</div>
+							</div>
+							<div class="col-xs-1">
+								<a href="#" class="btn btn-primary btn-block" data-task="add-repository"><i class="fa fa-plus"></i></a>
+								<a href="#" class="btn btn-primary btn-block" data-task="add-crawl"><i class="fa fa-arrow-right"></i></a>
+							</div>
 						</div>
-					</div>
-					<div class="crawl-items-select">
-						<table class="table table-condensed table-bordered table-hover table-striped">
-							<thead class="hide fade">
-								<tr>
-									<th></th>
-									<th class="col-xs-12"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-id="">
-									<td class="">
-										<div class="checkbox checkbox-success checkbox-circle">
-											<input type="checkbox" />
-											<label></label>
-										</div>
-									</td>
-									<td><span class="text">برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span></td>
-								</tr>
-							</tbody>
-						</table>
+						<div class="row">
+							<div class="col-xs-11">
+								<div class="crawl-items-select repository-items">
+									<table class="table table-condensed table-bordered table-hover table-striped">
+										<thead class="hide fade">
+											<tr>
+												<th></th>
+												<th class="col-xs-12"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr data-id="">
+												<td class="">
+													<div class="checkbox checkbox-success checkbox-circle">
+														<input type="checkbox" />
+														<label></label>
+													</div>
+												</td>
+												<td>
+													<span class="text">برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span>
+													<button data-task="review"><i class="fa fa-edit"></i></button>
+													<button data-task="delete"><i class="fa fa-trash"></i></button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="col-xs-1">
+								<button type="button" class="btn btn-default btn-lg" data-task="add-crawls"><i class="fa fa-arrow-right"></i></button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="portlet light box">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="fa fa-font"></i>
-					<span class="caption-subject font-dark bold uppercase">زیرنویس پخش</span>
-				</div>
-				<div class="actions form-inline">
-					<div class="form-group pull-right">
-						<div class="input-group">
-							<span class="input-group-addon">گروه</span>
-							<select class="form-control" data-type="group-select">
-								<option>گنج سخن</option>
-							</select>
+		<div class="col-md-7">
+			<div class="portlet light box">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-font"></i>
+						<span class="caption-subject font-dark bold uppercase">زیرنویس پخش</span>
+					</div>
+					<div class="actions form-inline">
+						<div class="form-group pull-right">
+							<button type="submit" class="btn green-jungle pull-right fade in" data-task="save">ذخیره</button>
+						</div>
+						<div class="form-group pull-right">
+							<div class="input-group">
+								<span class="input-group-addon">گروه</span>
+								<select class="form-control" data-type="group-select">
+									{{#select Genre}}
+									{{{getDefinitionOptions 36}}}
+									{{/select}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group pull-right">
+							<div class="input-group">
+								<span class="input-group-addon">بخش</span>
+								<select class="form-control" data-type="group-select">
+									{{#select Genre}}
+									{{{getDefinitionOptions 36}}}
+									{{/select}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group pull-right">
+							<div class="input-group">
+								<span class="input-group-addon">تاریخ</span>
+								<input type="text" class="form-control datepicker" />
+							</div>
 						</div>
 					</div>
-					<div class="form-group pull-right">
-						<div class="input-group">
-							<span class="input-group-addon">تاریخ</span>
-							<input type="text" class="form-control datepicker" />
-						</div>
-					</div>
 				</div>
-			</div>
-			<div class="portlet-body">
-				<div class="mainbody">
-					<div class="form-group">
-						<textarea class="form-control" placeholder="توضیحات" rows="2"></textarea>
-					</div>
-					<div class="crawl-items">
-						<table class="table table-condensed table-bordered table-hover table-striped">
-							<thead class="">
-								<tr>
-									<th class="col-xs-12"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="">
-										<span class="label label-sm bg-green-turquoise bg-font-green-turquoise">هواشناسی</span><span class="text"> خانه دكورين تلويزيوني با همراهي مجريان وكارشناسان گردد</span></td>
-								</tr>
-								<tr>
-									<td class="">
-										<span class="label label-sm bg-red-sunglo bg-font-red-sunglo">بورس</span><span class="text"> برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span></td>
-								</tr>
-								<tr>
-									<td class="">
-										<span class="label label-sm bg-yellow-gold bg-font-yellow-gold">گنج سخن</span><span class="text"> يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي  واستوديي است يك برنامه تركيبي زنده واستوديي است يك برنامه تركيبي زنده واستوديي است </span></td>
-								</tr>
-							</tbody>
-						</table>
+				<div class="portlet-body">
+					<div class="mainbody">
+						<div class="form-group">
+							<textarea class="form-control" placeholder="توضیحات" rows="2"></textarea>
+						</div>
+						<div class="crawl-items">
+							<table class="table table-condensed table-bordered table-hover table-striped">
+								<thead class="">
+									<tr>
+										<th class="col-xs-12"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="">
+											<!--<span class="label label-sm bg-green-turquoise bg-font-green-turquoise">هواشناسی</span>-->
+											<span class="text"> خانه دكورين تلويزيوني با همراهي مجريان وكارشناسان گردد</span>
+											<button data-task="review"><i class="fa fa-edit"></i></button>
+											<button data-task="delete"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									<tr>
+										<td class="">
+											<!--<span class="label label-sm bg-red-sunglo bg-font-red-sunglo">بورس</span>-->
+											<span class="text"> برنامه به خانه بر مي گرديم يك برنامه تركيبي زنده واستوديي است كه در ي</span>
+											<button data-task="review"><i class="fa fa-edit"></i></button>
+											<button data-task="delete"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+									<tr>
+										<td class="">
+											<!--<span class="label label-sm bg-yellow-gold bg-font-yellow-gold">گنج سخن</span>-->
+											<span class="text"> يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي است  يك برنامه تركيبي زنده واستوديي  واستوديي است يك برنامه تركيبي زنده واستوديي است يك برنامه تركيبي زنده واستوديي است </span>
+											<button data-task="review"><i class="fa fa-edit"></i></button>
+											<button data-task="delete"><i class="fa fa-trash"></i></button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>

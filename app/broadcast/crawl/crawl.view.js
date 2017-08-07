@@ -1,7 +1,7 @@
 // TODO: Colors for crawl items
 // TODO: Using real data services
 // TODO: Make editor as an standalone helper
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'player.helper', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'player.helper', 'bootstrap/modal', 'bootstrap/transition', 'bootstrap/tab', 'bootstrap/collapse'
 ], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui, Player) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
@@ -9,11 +9,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , playerInstance: {}
         , toolbar: [
             {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
-            , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save'}}
-            , {'button': {cssClass: 'btn red-flamingo', text: "ارسال زیرنویس", type: 'button', task: 'show-export-form'}}
+            , {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال زیرنویس", type: 'button', task: 'show-export-form'}}
+            , {'button': {cssClass: 'hide', text: '', type: 'button', task: 'null'}}
         ]
         , statusbar: [
-            
+
         ]
         , flags: {}
         , events: {
@@ -26,11 +26,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
             , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
             , 'click [data-task=show-export-form]': 'showExportToolbar'
+            , 'click [data-task=show-repository]': 'toggleRepositoryForm'
             , 'change [name=force]': 'warnForceDuplicate'
+            , 'click [data-task="review"]': 'reviewItem'
+            , 'click .crawl-items [data-task="delete"]': 'deleteItem'
+//            , 'click .repository-items [data-task="review"]': 'reviewRepoItem'
+            , 'click .repository-items [data-task="delete"]': 'deleteRepoItem'
             , 'click .editor-toolbar .btn': function (e) {
                 e.preventDefault();
                 var button = $(e.currentTarget);
-                $editor = $(".editable-input");
                 switch (button.attr('data-task')) {
                     case 'bold':
                         document.execCommand("bold");
@@ -49,6 +53,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var text = e.originalEvent.clipboardData.getData("text/plain");
                 document.execCommand("insertHTML", false, text);
             }
+        }
+        , reviewItem: function(e) {
+            var text = $(e.target).parents('tr').find('.text').html();
+            $(".editable-input").html(text);
+            e.preventDefault();
+        }
+        , deleteItem: function(e) {
+            alert('delete item');
+            e.preventDefault();
+        }
+//        , reviewRepoItem: function(e) {
+//            var text = $(e.target).parent().find('.text').text();
+//            e.preventDefault();
+//        }
+        , deleteRepoItem: function(e) {
+            alert('delete item');
+            e.preventDefault();
+        }
+        , toggleRepositoryForm: function (e) {
+            var $target = $(".repository-pane");
+            if ($target.is(":visible"))
+                $target.slideUp(300);
+            else
+                $target.slideDown(300);
         }
         , warnForceDuplicate: function (e) {
             var $checkbox = $(e.target);
