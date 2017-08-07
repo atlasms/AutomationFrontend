@@ -2,11 +2,6 @@
 Portlets
 ***/
 
-/* Full Screen portlet mode */
-
-.page-portlet-fullscreen {
-    overflow: hidden;
-}
 
 /* Basic portlet */
 
@@ -16,29 +11,6 @@ Portlets
     padding: 0px; 
     
     @include border-radius($general-border-radius);
-
-    &.portlet-fullscreen {
-        z-index: $zindex-modal + 10;
-        margin: 0;
-        position: fixed;
-        top:0;
-        left:0;    
-        bottom:0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: #fff;
-
-        > .portlet-body {
-            overflow-y: auto; 
-            overflow-x: hidden;
-            padding: 0 10px; 
-        }
-
-        > .portlet-title {
-            padding: 0 10px;  
-        }
-    }
 
     > .portlet-title {  
         border-bottom: 1px solid #eee;
@@ -726,9 +698,10 @@ Portlets
 /***
 Custom colored portlets 
 ***/
-
+/*
 @each $name, $colors in $component-colors {
     @include porlet-background($name, map-get($colors, base));
     @include porlet-solid($name, map-get($colors, font));
     @include porlet-box($name, map-get($colors, base), map-get($colors, font));
 }
+*/

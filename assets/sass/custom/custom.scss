@@ -1,20 +1,22 @@
 // Imports
 @import "../bootstrap/_variables";
 @import "../bootstrap/_mixins";
+/*
 @import "awesome-bootstrap-checkbox";
-@import "font";
-@import "bootstrap-wysisyg";
-@import "login";
-@import "jstree";
-@import "modal-transitions";
-@import "ladda.min";
-@import "x-editable";
-@import "select2";
-@import "cropper";
-@import "loading";
 @import "bootstrap-table";
+@import "bootstrap-wysisyg";
+@import "cropper";
+@import "font";
+@import "jstree";
+@import "ladda.min";
+@import "loading";
+@import "login";
+@import "modal-transitions";
+@import "select2";
+@import "x-editable";
+*/
 // @import "../global/plugins/select2";
-@import "../global/components/elements/cards/_card-1";
+// @import "../global/components/elements/cards/_card-1";
 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
@@ -289,11 +291,17 @@ body.fixed-toolbar {
         }
     }
 } 
+
+.c1 { width: 8.33333%; float: left; }
+.c2 { width: 16.66666%; float: left; }
+.c3 { width: 25%; float: left; }
 div#schedule-table {
+    transform: translateZ(0); backface-visibility: hidden; transform: translate3d(0, 0, 0);
     font-size: 16px;
     margin-bottom: 0;
     .id, .r { width: 3.33333%; padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
-    input, textarea, .form-group.form-md-line-input .form-control ~ label:after, .form-group.form-md-line-input .form-control ~ .form-control-focus:after { transition: none; }
+    input, textarea { transition: none; }
+    .form-group.form-md-line-input .form-control ~ label:after { transition: none; }
     
     .table-header {
         font-weight: bold; border-left: 5px solid transparent;
@@ -310,7 +318,10 @@ div#schedule-table {
             // &:last-child { border-left: 1px solid #e7ecf1; }
         }
         // .th { font-weight: bold; }
-        
+    }
+    [data-type="episode-number"] {
+        margin-top: 20px; border: 0 none; background: transparent; box-shadow: none; border-bottom: 2px solid transparent; font-size: 16px;
+        &:focus { border-bottom: 2px solid #36c6d3; }
     }
     .table-body {
         // @include clearfix;
@@ -321,7 +332,10 @@ div#schedule-table {
             &.active { background: #eef1f5; }
             .td { height: 80px; outline: 1px solid #e7ecf1; padding: 8px 8px 0; }
             .id, .r { text-align: center; }
-            textarea { height: 70px; }
+            textarea {
+                height: 55px; background: transparent; border: 0 none; box-shadow: none; border-bottom: 1px solid #c2cad8;
+                // &:focus { border-bottom: 2px solid #36c6d3; }
+            }
 
             .tools {
                 position: absolute; top: 0; left: 0; width: 37px; background: #cbcbcb; opacity: 0; visibility: hidden; height: 100%;
@@ -416,13 +430,35 @@ div#schedule-table {
 
 /// Crawl Page
 #crawl-page {
+    font-size: 16px;
     & > div { position: relative; }
-    [data-task="add-crawls"] { position: absolute; top: 50%; right: -17px; z-index: 90; padding-left: 10px; padding-right: 10px; }
+    [data-task="add-crawls"] { position: absolute; top: 0; right: -33px; z-index: 90; padding-left: 10px; padding-right: 10px; }
+    [data-task="review"], [data-task="delete"] {
+        border: 0 none; padding: 0; margin: 0; background: transparent; width: 25px; height: 25px; text-align: center; line-height: 25px; position: absolute; top: 6px; right: 6px; z-index: 500;
+        transition: 0.2s all; background: rgba(255, 255, 255, 0.7); visibility: hidden; opacity: 0;
+        // &:hover { color:  }
+    }
+    [data-task="review"] {
+        &:hover { color: #8E44AD; background: #fff; }
+    }
+    [data-task="delete"] { 
+        right: 32px;
+        &:hover { color: red; background: #fff; }
+    }
+    .repository-pane { display: none; }
+    tr:hover {
+        [data-task="review"], [data-task="delete"] { visibility: visible; opacity: 1; }
+    }
+    td { position: relative; }
+    // .text { margin-left:  }
+    .editor-toolbar {
+        ul { padding-top: 10px; }
+    }
     .portlet {
         .portlet-title {
             padding: 12px 20px 0; border-bottom: 1px solid #e7ecf1 !important; margin-bottom: 12px;
             .actions {
-                max-width: 65%;
+                max-width:95%;
                 .form-group {
                     margin-bottom: 0;
                     &:first-child { margin-right: 0; }
@@ -517,7 +553,7 @@ div#schedule-table {
 /*.interval-minor {  white-space: nowrap; padding: 0; height: 6px; }*/
 #seekbar {
     padding: 0 10px;
-    a { transition: none 0s; }
+    a { transition: none; }
     .current, .duration { color: #717778; }
     .seeker {
         width: 100%; height: 10px; margin-bottom: 10px;
