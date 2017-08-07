@@ -18,8 +18,10 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             var backboneSync = Backbone.sync;
             Backbone.sync = function (method, model, options) {
                 if (method === "read")
-                    if (typeof model.query !== "undefined" && model.query.indexOf('externalid=0&kind=3') === -1)
+                    if (typeof model.query !== "undefined" && model.query.indexOf('externalid=0&kind=3') === -1) {
+//                        console.log('started pace for: ' + model.query);
                         pace.restart();
+                    }
                 /*
                  * Change the `url` property of options to begin
                  * with the URL from settings
