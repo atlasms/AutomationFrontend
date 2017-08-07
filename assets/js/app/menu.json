@@ -5,6 +5,7 @@
         "icon": "youtube-play",
         "items": [
             { "title": "کنداکتور", "alias": "broadcast_schedule", "icon": "table", "link": "/broadcast/schedule" },
+            { "title": "کنداکتور 2 - تست", "alias": "broadcast_schedule2", "icon": "table", "link": "/broadcast/schedule2" },
             { "title": "EPG", "alias": "broadcast_epg", "icon": "align-right", "link": "#" },
             { "title": "بازبینی پخش", "alias": "broadcast_review", "icon": "play-circle", "link": "#" },
             { "title": "فایل‌های به‌روزشونده", "alias": "broadcast_updatables", "icon": "refresh", "link": "#" },
