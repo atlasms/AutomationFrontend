@@ -1335,7 +1335,7 @@ define(['jquery', 'cookie', 'bootstrap/dropdown', "bootstrap/collapse"], functio
                 return;
             },
             initFooter: function () {
-                handleGoTop(); //handles scroll to top functionality in the footer
+//                handleGoTop(); //handles scroll to top functionality in the footer
             },
             init: function () {
                 this.initHeader();
