@@ -575,7 +575,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             for (var i = 0; i < dateParts.length; i++)
                 dateParts[i] = parseInt(dateParts[i]);
             $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
-            ScheduleHelper.generateTimeArray(this);
+//            ScheduleHelper.generateTimeArray(this);
 
             ScheduleHelper.checkForOverlaps();
 

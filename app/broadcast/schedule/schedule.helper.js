@@ -606,7 +606,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
         }
         , generateTimeArray: function (callback) {
-            Config.env === "dev" && console.log('Generating Time Arrays');
+            Config.env === "dev" && console.time('TimeArrays');
             /*
              * Method to generate two arrays containing all start times and all end times
              */
@@ -646,6 +646,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $this.find("option:first").remove();
                 });
             }
+            Config.env === "dev" && console.timeEnd('TimeArrays');
         }
     };
     return ScheduleHelper;
