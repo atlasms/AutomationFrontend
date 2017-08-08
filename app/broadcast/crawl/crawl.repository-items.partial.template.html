@@ -1,0 +1,15 @@
+{{#each []}}
+<tr data-id="{{Id}}" title="{{extractDate DateTime}} {{extractTime DateTime}} -- {{UserFullName}}" data-tooltip>
+	<td class="">
+		<div class="checkbox checkbox-success checkbox-circle">
+			<input type="checkbox" id="repo-check{{@index}}" />
+			<label for="repo-check{{@index}}"></label>
+		</div>
+	</td>
+	<td>
+		<span class="text">{{{Text}}}</span>
+		<button data-task="review"><i class="fa fa-edit"></i></button>
+		<button data-task="delete"><i class="fa fa-trash"></i></button>
+	</td>
+</tr>
+{{/each}}
