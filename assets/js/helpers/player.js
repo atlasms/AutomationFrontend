@@ -22,6 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     current: true
                     , seeker: true
                     , duration: true
+                    , range: false
                 }
                 , controls: {
                     speed: true
@@ -31,7 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             }
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
-        this.options = $.extend({}, this.defaults, options);
+        this.options = $.extend(true, {}, this.defaults, options);
         if (typeof this.options.playlist !== "undefined" && this.options.playlist.length > 0) // Using playlist, thus adding VTT
             this.options.playlist[0].tracks = [{file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails"}];
         this.callback = (typeof callback !== "undefined") ? callback : null;
@@ -40,6 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         this.duration = 0;
         this.isPlaying = false;
         this.position = 0;
+        this.rangeValues = [0, 0];
     };
 
     _.extend(Player.prototype, {
@@ -112,6 +114,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             var playPosition = instance.getPosition();
             return playPosition;
         }
+        , setRange: function (positions, instance, setSlider) {
+            instance = this.getInstance(instance);
+            var setSlider = (typeof setSlider !== "undefined") ? setSlider : false;
+            if (positions[0] !== this.rangeValues[0])
+                this.seek(positions[0]);
+            if (positions[1] !== this.rangeValues[1])
+                this.seek(positions[1]);
+            $('[data-type="clip-start"]').length && $('[data-type="clip-start"]').val(Global.createTime(positions[0]));
+            $('[data-type="clip-end"]').length && $('[data-type="clip-end"]').val(Global.createTime(positions[1]));
+            this.rangeValues = positions;
+//            $("#seekbar .range .inner:first").slider({values: []})
+            if (setSlider) {
+                $("#seekbar .range .inner:first").slider({values: positions});
+            }
+        }
         , setUI: function ($this, instance) {
             if ($this.options.template.controlbar === "fixed")
                 $('.jw-controlbar.jw-background-color.jw-reset:first').css({'display': 'block'});
@@ -143,6 +160,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     , max: typeof $this.options.duration !== "undefined" ? $this.options.duration : $this.duration
                     , slide: function (e, ui) {
                         $this.seek(ui.value);
+                    }
+                });
+            }
+            if ($this.options.template.seekbar.range) {
+                $("#seekbar .range .inner:first").slider({
+                    range: true
+                    , values: [0, typeof $this.options.duration !== "undefined" ? $this.options.duration : $this.duration]
+                    , min: 0
+                    , max: typeof $this.options.duration !== "undefined" ? $this.options.duration : $this.duration
+                    , slide: function (e, ui) {
+                        $this.setRange(ui.values);
                     }
                 });
             }
