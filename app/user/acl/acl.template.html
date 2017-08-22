@@ -14,6 +14,7 @@
 								<li role="presentation"><a href="#tab_categories" aria-controls="برنامه‌ها" role="tab" data-toggle="tab">برنامه‌ها</a></li>
 								<li role="presentation"><a href="#tab_lantv" aria-controls="پخش زنده" role="tab" data-toggle="tab">پخش زنده</a></li>
 								<li role="presentation"><a href="#tab_groups" aria-controls="گروه‌های کاربری" role="tab" data-toggle="tab">گروه‌های کاربری</a></li>
+								<li role="presentation"><a href="#tab_defenitions" aria-controls="تعاریف" role="tab" data-toggle="tab">زیرنویس</a></li>
 							</ul>
 						</div>
 						<div class="col-xs-9">
@@ -85,6 +86,22 @@
 									<ul class="row" data-type="groups">
 									{{{getDefinitionCheckboxes 14 'checkbox' 'li'}}}
 									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_defenitions">
+									<div class="row">
+										<div class="col-sm-4">
+											<strong>دسته‌های انبار</strong>
+											<ul class="row" data-type="crawl">
+											{{{getDefinitionCheckboxesById 55 'checkbox' 'li'}}}
+											</ul>
+										</div>
+										<div class="col-sm-4">
+											<strong>گروه</strong>
+											<ul class="row" data-type="crawl">
+											{{{getDefinitionCheckboxesById 63 'checkbox' 'li'}}}
+											</ul>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
