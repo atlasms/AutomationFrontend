@@ -12,6 +12,11 @@
 	<div class="seeker">
 		<div class="inner"></div>
 	</div>
+	{{#if template.seekbar.range}}
+	<div class="range">
+		<div class="inner"></div>
+	</div>
+	{{/if}}
 	{{/if}}
 	{{#ifCond template.seekbar.duration "||" template.seekbar.current}}
 	<div class="original clearfix">
