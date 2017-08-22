@@ -27,6 +27,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .open-item': 'openItem'
             , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
             , 'submit .categories-metadata-form': 'saveMetadata'
+            , 'click [data-task="send-telegram"]': 'sendTelegram'
+        }
+        , sendTelegram: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = {
+                MediaId: self.getId()
+                , Params: null
+                , DestApp: 'telegram'
+                , Cmd: 'publish'
+            };
+            new MediaitemModel({overrideUrl: Config.api.social}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
         }
         , saveMetadata: function (e) {
             e.preventDefault();
