@@ -115,7 +115,7 @@
 										<span class="input-group-addon">انتخاب دسته</span>
 										<select class="form-control" data-type="repo-type-select">
 											{{#select Genre}}
-											{{{getDefinitionOptions 55}}}
+											{{{getDefinitionOptions 55 'crawl'}}}
 											{{/select}}
 										</select>
 									</div>
@@ -166,14 +166,14 @@
 					</div>
 					<div class="actions form-inline">
 						<div class="form-group pull-right">
-							<button type="submit" class="btn green-jungle pull-right fade in" data-task="save">ذخیره</button>
+							<button type="submit" class="btn green-jungle pull-right" data-task="save" {{#authorize 1048576}}{{else}}disabled{{/authorize}}>ذخیره</button>
 						</div>
 						<div class="form-group pull-right">
 							<div class="input-group">
 								<span class="input-group-addon">گروه</span>
 								<select class="form-control" data-type="items-group-select">
 									{{#select Genre}}
-									{{{getDefinitionOptions 63}}}
+									{{{getDefinitionOptions 63 'crawl'}}}
 									{{/select}}
 								</select>
 							</div>

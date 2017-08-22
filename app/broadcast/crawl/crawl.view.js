@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , playerInstance: {}
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
-            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال زیرنویس", type: 'button', task: 'show-export-form'}}
+            {'button': {cssClass: 'btn red-flamingo pull-right', text: "دریافت فایل", type: 'button', task: 'show-export-form', access: 524288}}
         ]
         , statusbar: []
         , whitelist: 'b, strong, i, font'
