@@ -294,21 +294,24 @@ body.fixed-toolbar {
 
 .c1 { width: 8.33333%; float: left; }
 .c2 { width: 16.66666%; float: left; }
-.c3 { width: 25%; float: left; }
+.c3 { width: 20%; float: left; }
 div#schedule-table {
     transform: translateZ(0); backface-visibility: hidden; transform: translate3d(0, 0, 0);
     font-size: 16px;
     margin-bottom: 0;
-    .id, .r { width: 3.33333%; padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
+    .id, .r { width: 4.33333%; padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
     input, textarea { transition: none; }
     .form-group.form-md-line-input .form-control ~ label:after { transition: none; }
-    
+    figure {
+        overflow: hidden; margin: 0 auto; max-width: 100%;
+        img { max-width: 100%; height: auto; }
+    }
     .table-header {
         font-weight: bold; border-left: 5px solid transparent;
         clear: both;
         > div {
             // padding: 0 15px;
-            padding: 0 8px;
+            padding: 0 6px; font-size: 15px;
             float: left; position: relative; box-sizing: border-box;
             outline: 1px solid #e7ecf1;
             }
@@ -330,7 +333,11 @@ div#schedule-table {
             @include clearfix;
             border-left: 5px solid #ddd;  padding: 0; margin: 0;
             &.active { background: #eef1f5; }
-            .td { height: 80px; outline: 1px solid #e7ecf1; padding: 8px 8px 0; }
+            .td {
+                height: 80px; outline: 1px solid #e7ecf1; padding: 8px 8px 0;
+                &.ep { padding: 8px 0 0; }
+                &.img { padding: 6px 6px 0; }
+            }
             .id, .r { text-align: center; }
             textarea {
                 height: 55px; background: transparent; border: 0 none; box-shadow: none; border-bottom: 1px solid #c2cad8;
@@ -378,6 +385,17 @@ div#schedule-table {
     .form-group.form-md-line-input { padding-top: 0; }
 }
 .stat-holder { line-height: 34px; }
+#shotlist {
+    
+    form {
+        padding: 20px; background: #eee; margin: 10px 0;
+        input { text-align: center; }
+        .form-group { margin-bottom: 0; }
+    }
+    .shotlist-table {
+        tbody tr { cursor: pointer; }
+    }
+}
 
 /// Reviews
 #returnees-table, #review-table {
@@ -427,7 +445,9 @@ div#schedule-table {
         &:hover { .date { opacity: 1; visibility: visible } }
     }
 }
- 
+
+.ui-sortable-placeholder { background: repeating-linear-gradient(45deg, #eee, #eee 10px, #fff 10px, #fff 20px); }
+
 /// Crawl Page
 @media screen and (max-width: 1500px) {
         #crawl-page .portlet .portlet-title .actions { max-width:100% !important; float: none; }
@@ -455,7 +475,6 @@ div#schedule-table {
         &.ui-sortable-helper {
             button { display: none !important; }
         }
-        &.ui-sortable-placeholder { background: repeating-linear-gradient(45deg, #eee, #eee 10px, #fff 10px, #fff 20px); }
         &:hover {
             [data-task="review"], [data-task="delete"] { visibility: visible; opacity: 1; }
         }
@@ -577,7 +596,7 @@ div#schedule-table {
 #seekbar {
     padding: 0 10px;
     a { transition: none; }
-    .current, .duration { color: #717778; }
+    .current, .duration { color: #B5B8B8; }
     .seeker {
         width: 100%; height: 10px; margin-bottom: 10px;
         > .inner {
@@ -592,7 +611,7 @@ div#schedule-table {
 .controls {
     padding: 0 20px;
     a[data-type="controls"] {
-        display: inline-block; width: 40px; height: 30px; color: #bbb; font-size: 24px; line-height: 30px; text-shadow: 0 0 2px #000;
+        display: inline-block; width: 35px; height: 30px; color: #bbb; font-size: 22px; line-height: 30px; text-shadow: 0 0 2px #000;
         &:hover, &:focus, &:active { color: #fff; text-decoration: none; outline: 0 none; }
         &[data-task="play-pause"] {
             display: inline-block; font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; font-size: 24px; color: #eee;
@@ -630,5 +649,15 @@ div#schedule-table {
             &:hover { text-shadow: 0 0 transparent; }
         }
         &:hover { text-shadow: 0 0 1px #bbb }
+    }
+}
+.range {
+    margin-bottom: 10px;
+    .inner { height: 8px; background: none repeat scroll 100% 0 #242828; box-shadow: 0 1px 0 rgba(255,255,255,0.05); position: relative; }
+    .ui-slider-range { background: #3FABA4; height: 100%; position: absolute; top: 0; }
+    .ui-slider-handle {
+        color: silver; display: block; position: absolute;
+        &:before { content: ']'; font-family:"Arial Black"; font-weight: bold; font-size: 16px; position: absolute; top: -8px; left: -3px; }
+        & + .ui-slider-handle:before { content: '[' }
     }
 }
