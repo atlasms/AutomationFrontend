@@ -395,7 +395,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , processData: false
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $this.reLoad();
+//                    $this.reLoad();
                 }
             });
         }
@@ -710,7 +710,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , prepareSave: function () {
             var data = [];
-            var $rows = $("#schedule-table li");
+            var $rows = $("#schedule-table .table-body li");
             $rows.each(function () {
                 var row = {};
                 $(this).find("input, textarea, select").each(function () {

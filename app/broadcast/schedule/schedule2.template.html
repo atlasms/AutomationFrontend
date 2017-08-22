@@ -149,7 +149,7 @@
 						</div>
 						<div class="img td c1">
 							<figure>
-								<!--<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />-->
+								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 							</figure>
 						</div>
 						<div class="td r text-center">
@@ -188,7 +188,7 @@
 								<label for="ep{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
 							</div>
 						</div>
-						<div class="id td">
+						<div class="id td ep">
 							<div class="">
 								<input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
 							</div>
@@ -207,6 +207,18 @@
 								<input name="CondcutorFeatured" data-validation="digit" id="ft{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
 									   <label for="ft{{@index}}"></label>
 							</div>
+						</div>
+						<div class="hide">
+							<select class="form-control" name="ConductorType">
+								{{#select ConductorType}}
+								<option value="0">مجموعه خارجی</option>
+								<option value="1">مجموعه ایرانی</option>
+								<option value="2">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
+								<option value="3">سینمایی</option>
+								<option value="4">آنونس، تیزر، میان&zwnj;برنامه</option>
+								<option value="5">آگهی بازرگانی</option>
+								{{/select}}
+							</select>
 						</div>
 					</li>
 					{{/each}}

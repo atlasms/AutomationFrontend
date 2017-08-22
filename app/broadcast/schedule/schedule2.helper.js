@@ -46,9 +46,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
 //                    validate.time($(this));
 
                     if (!moment($row.find("[data-type=duration]").val(), 'HH:mm:SS', true).isValid() || !moment($row.find("[data-type=start]").val(), 'HH:mm:SS', true).isValid())
-                        $row.addClass("error");
+                        $row.addClass("error").attr('title', 'تایم غیرمجاز');
                     else
-                        $row.removeClass("error");
+                        $row.removeClass("error").removeAttr('title');
 
                     ScheduleHelper.updateTimes($row);
 
@@ -61,15 +61,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     if ($row.hasClass('gap'))
                         $row.removeClass('gap')
             });
-//            $(document).on('activated', '#schedule-page tbody tr', function() {
-//                console.log($(this).find("[data-suggestion=true]").data());
-//                ScheduleHelper.suggestion($(this).find("[data-suggestion=true]"));
-//            });
-//            $(document).on('deactivated', '#schedule-page tbody tr', function() {
-//                console.log('tr deactivated!');
-//                ScheduleHelper.suggestion($(this), true);
-//            });
-/*aaaaaaaaaaaa*/
             $(document).on('click', '[data-type="episode-title"]', function (e) {
                 var $cell = $(this).parents(".td:first");
                 var suggestionCreated = $cell.attr('data-filled');
@@ -172,7 +163,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var $row = (typeof $row !== "undefined") ? $row : $("#schedule-table .table-body li.active");
             var $next = $row.next();
             var $prev = $row.prev();
-            $row.remove().promise().done(function() {
+            $row.remove().promise().done(function () {
                 $next.addClass('active');
             });
 //            $row.remove().promise().done(function () {
@@ -195,7 +186,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var rows = $("#schedule-table .table-body li");
             if (rows.length > 1) {
                 if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
-                    row.addClass("error");
+                    row.addClass("error").attr('title', 'مدت برنامه اشتباه است.');
                     return;
                 }
             }
@@ -203,7 +194,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'), true);
             console.time('cloning-row');
             var clone = row.clone();
-            clone.addClass('error new').removeClass('gap fixed overlap');
+            clone.addClass('error new').removeClass('gap fixed overlap').attr('title', 'اطلاعات سطر وارد نشده است.');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
             clone.find('textarea').val('');
@@ -254,15 +245,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , updateTimes: function ($row) {
+            console.log('------------------- PROCESSING TIMES -------------------');
+            console.time('processing-time-finished');
             // Updated times from current row to the last row
             // If a fixed item is found, return
             var $rows = $row.nextAll().addBack();
             var stack = 0;
             var fixedTime = 0;
             var error = false;
-            if ($rows.length < 2)
-                return
+//            if ($rows.length <= 2)
+//                return;
             // Look table for any overlaps or gaps [error]
+            console.time('looping-through-items');
             $rows.each(function (i) {
                 var $this = $(this);
                 // Found a gap => mark it as gap!
@@ -301,26 +295,29 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
                 }
             });
+            console.timeEnd('looping-through-items');
             if (error) {
-                $row.addClass('error').addClass(error);
+                $row.addClass('error').addClass(error).attr('title', 'تایم برنامه‌ها همپوشانی دارد.');
                 return false;
             } else {
                 if ($rows.length < 2) {
                     var rowStart = Global.createTime(Global.processTime($row.prev().find("[data-type=start]").val()) + Global.processTime($row.prev().find("[data-type=duration]").val()));
                     $row.find("[data-type=start]").val(rowStart);
                 }
+                console.time('looping-through-items-again');
                 $rows.each(function () {
                     var $this = $(this);
 
-                    // TODO: Time is not correct (maybe tomorrow?)
-                    if ($this.prev().length && Global.processTime($this.find("[data-type=start]").val()) < Global.processTime($this.prev().find("[data-type=start]").val()))
-                        $this.addClass('error');
-
                     var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
                     if (!(/^\d+$/.test(nextStart)))
-                        $this.addClass("error");
+                        $this.addClass("error").attr('title', 'مقدار شروع اشتباه است.');
                     else
-                        $this.removeClass("error");
+                        $this.removeClass("error").removeAttr('title');
+                    // Prevent items from starting tomorrow
+                    if ($this.prev().length && ScheduleHelper.getTimeInSeconds($this.find("[data-type=start]").val()) < ScheduleHelper.getTimeInSeconds($this.prev().find("[data-type=start]").val())) {
+                        $this.addClass('error').attr('title', 'تایم شروع از امروز خارج شده است.');
+                    }
+
                     if ($this.next().length) {
                         if ($this.next().hasClass('fixed')) {
                             return true;
@@ -328,9 +325,20 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $this.next().find("[data-type=start]").val(Global.createTime(nextStart));
                     }
                 });
+                console.timeEnd('looping-through-items-again');
             }
+            console.time('process-gaps');
             ScheduleHelper.processGaps();
+            console.timeEnd('process-gaps');
+            console.time('set-footer-stats');
             ScheduleHelper.setStates();
+            console.timeEnd('set-footer-stats');
+            console.timeEnd('processing-time-finished');
+        }
+        , getTimeInSeconds: function (value) {
+            if (typeof value !== "undefined" && value.indexOf(':') !== "undefined")
+                return (+value.split(":")[0] * 3600) + (+value.split(":")[1] * 60) + +value.split(":")[2];
+            return 0;
         }
         , checkForOverlaps: function () {
             var $rows = $("#schedule-table .table-body").find("li");
@@ -339,7 +347,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
                 if ($this.next().length) {
                     if (Global.processTime($this.next().find("[data-type=start]").val()) < nextStart)
-                        !$this.hasClass('fixed') && $this.addClass('error overlap');
+                        !$this.hasClass('fixed') && $this.addClass('error overlap').attr('title', 'سطر همپوشانی پیدا کرده است.');
                     if (Global.processTime($this.next().find("[data-type=start]").val()) > nextStart)
                         ScheduleHelper.duplicateRow($this, true);
                 }
@@ -522,9 +530,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             this.time = function ($element) {
 //                if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/.test($element.val()))
                 if (!moment($element.val(), 'HH:mm:SS', true).isValid())
-                    $element.parent().addClass("has-error");
+                    $element.parent().addClass("has-error").attr('title', 'زمان برنامه اشتباه است.');
                 else
-                    $element.parent().removeClass("has-error");
+                    $element.parent().removeClass("has-error").removeAttr('title');
             };
             this.beforeSave = function () {
                 if ($("#schedule-table .table-body li.error").length) {
@@ -534,8 +542,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     return false;
                 }
                 return true;
-            }
-            ;
+            };
         }
         , setStates: function () {
             var getRowsCount = function () {
@@ -630,7 +637,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
              * Method to generate two arrays containing all start times and all end times
              */
             var $startSelect = $("select[data-type=itemlist][name=startdate], .source[name=starttime]");
-            var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime], .destination[name=starttime]");
+            var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime]");
             var $rows = $("#schedule-table .table-body li");
             var starts = [];
             $.each($rows, function () {
@@ -648,9 +655,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             if (typeof callback === "object")
                 callback.timeArrays = {starts: starts, ends: ends};
             if ($startSelect.length) {
-                $startSelect.empty();
-                for (var i = 0; i < starts.length; i++)
-                    $startSelect.append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+//                if (!$startSelect.hasClass('destination')) {
+                    $startSelect.empty();
+                    for (var i = 0; i < starts.length; i++)
+                        $startSelect.append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+//                }
             }
             if ($endSelect.length) {
                 $endSelect.each(function () {
