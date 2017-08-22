@@ -10,11 +10,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'storage.helper'], functio
 //        return permit;
 //    };
     var Authorize = {
-        access : function (action, permissions) {
+        access : function (action, permissions, type) {
             var permit = false;
-            var permissions = (typeof permissions === "undefined") ? Storage('Access') : permissions;
+            var permissions = (typeof permissions !== "undefined" && permissions) ? permissions : Storage('Access');
+            var type = (typeof type !== "undefined" && type) ? type : 'access';
             $.each(permissions, function () {
-                if (this.Key === 'access' && this.Value == action)
+                if (this.Key === type && this.Value == action)
                     permit = true;
             });
             return permit;

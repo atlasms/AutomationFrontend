@@ -232,12 +232,17 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 });
                 return JSON.stringify(items);
             });
-            Handlebars.registerHelper('getDefinitionOptions', function (id, options) {
+            Handlebars.registerHelper('getDefinitionOptions', function (id, accessType, options) {
                 var items = '';
+                var accessType = typeof accessType === "string" ? accessType : false;
                 $.each(Config.definitions, function () {
                     if (this.Id === id)
                         for (i = 0; i < this.Children.length; i++)
-                            items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
+                            if (accessType) {
+                                if (Authorize.access(this.Children[i].Id, null, accessType))
+                                    items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
+                            } else
+                                items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
                 });
                 return items;
             });
@@ -250,6 +255,17 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         for (i = 0; i < this.Children.length; i++)
                             items += (container ? '<' + container + '>' : '') + '<div class="checkbox checkbox-primary checkbox-circle col-xs-12"><input name="force" data-validation="digit" id="checkbox_df' + this.Children[i].Value + '" value="' + this.Children[i].Value + '" type="' + type + '"><label for="checkbox_df' + this.Children[i].Value + '">' + this.Children[i].Key + '</label></div>' + (container ? '</' + container + '>' : '');
 //                            items += '<option value="' + this.Children[i].Value + '">' + this.Children[i].Key + '</option>';
+                });
+                return items;
+            });
+            Handlebars.registerHelper('getDefinitionCheckboxesById', function (id, type, container, options) {
+                var type = (typeof type !== "undefined") ? type : 'checkbox';
+                var container = (typeof container !== "undefined") ? container : null;
+                var items = '';
+                $.each(Config.definitions, function () {
+                    if (this.Id === id)
+                        for (i = 0; i < this.Children.length; i++)
+                            items += (container ? '<' + container + '>' : '') + '<div class="checkbox checkbox-primary checkbox-circle col-xs-12"><input name="force" data-validation="digit" id="checkbox_df' + this.Children[i].Id + '" value="' + this.Children[i].Id + '" type="' + type + '"><label for="checkbox_df' + this.Children[i].Id + '">' + this.Children[i].Key + '</label></div>' + (container ? '</' + container + '>' : '');
                 });
                 return items;
             });
