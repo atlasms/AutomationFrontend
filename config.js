@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "transitionSpedd": 200,
         "notificationsInterval": 60000,
         "notificationsCount": 10,
-        "schedulePageLimit": 200,
+        "schedulePageLimit": 100,
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
@@ -76,6 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
+            , "resources/ottingest": {"private": true, "access": null, "action": "OTTIngestView", "file": "app/resources/ingest/ottingest.view"}
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
             , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
@@ -128,6 +129,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "sms": "pr/sms"
             , "lantv": "share/lantv/"
             , "hsm": "hsm"
+            , "social": "social"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
