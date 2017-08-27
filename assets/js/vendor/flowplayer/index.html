@@ -1,0 +1,51 @@
+<!doctype html>
+
+<head>
+
+	<!-- player skin -->
+	<link rel="stylesheet" href="skin/skin.css">
+
+	<!-- site specific styling -->
+	<style>
+		body { font: 12px "Myriad Pro", "Lucida Grande", sans-serif; text-align: center; }
+		.flowplayer { width: 600px; }
+		a[href*="hello"] { opacity: 0.00000000000000000001 !important; pointer-events: none !important; }
+	</style>
+
+	<!-- for video tag based installs flowplayer depends on jQuery 1.7.2+ -->
+	<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+	<!-- include flowplayer -->
+	<script src="flowplayer.min.js"></script>
+	<script src="flowplayer.hlsjs.min.js"></script>
+
+</head>
+
+<body>
+
+	<!-- the player -->
+	<div class="flowplayer" >
+		<video>
+			<source type="application/x-mpegurl" src="http://184.72.239.149/vod/smil:BigBuckBunny.smil/playlist.m3u8">
+		</video>
+	</div>
+	<script>
+        $(function () {
+			$(".flowplayer").flowplayer();
+//			return;
+//            flowplayer(".flowplayer", {
+//                playlist: [{
+//                        hlsjs: {
+//                            // codec not specified in master playlist
+//                            defaultAudioCodec: "mp4a.40.2"
+//                        },
+//                        sources: [
+//                            {type: "application/x-mpegurl",
+//                                src: "http://184.72.239.149/vod/smil:BigBuckBunny.smil/playlist.m3u8"}
+//                        ]
+//                    }]
+//            });
+        });
+	</script>
+
+</body>
