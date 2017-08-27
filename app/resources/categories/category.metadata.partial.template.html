@@ -6,6 +6,7 @@
 		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
 		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
+		<li><a href="#tab-telegram" data-toggle="tab">تلگرام</a></li>
 		<li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
 		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
 	</ul>
@@ -182,7 +183,8 @@
 					</div>
 				</div>
 			</div>
-			<hr />
+		</div>
+		<div class="tab-pane fade" id="tab-telegram">
 			<div class="form-group">
 				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
 				<div class="col-sm-2">
@@ -199,7 +201,10 @@
 				</div>
 				<label class="col-sm-2 control-label">کانال</label>
 				<div class="col-sm-2">
-					<input type="text" class="form-control" name="TelegramChannel" value="{{TelegramChannel}}" placeholder="پیش فرض">
+					<!--<input type="text" class="form-control" name="TelegramChannel" value="{{TelegramChannel}}" placeholder="پیش فرض">-->
+					<select class="form-control" name="TelegramChannel">
+						<!--<option value="">کانال تست معاونت سیما</option>-->
+					</select>
 				</div>
 				<div class="col-sm-1">
 					<button type="button" class="btn btn-primary" data-task="send-telegram">ارسال</button>
