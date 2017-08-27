@@ -30,10 +30,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     , keys: true
                 }
             }
+            , debug: true
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
-        if (typeof this.options.playlist !== "undefined" && this.options.playlist.length > 0) // Using playlist, thus adding VTT
+        if (typeof this.options.playlist !== "undefined" && this.options.playlist.length > 0 && typeof options.file !== "undefined") // Using playlist, thus adding VTT
             this.options.playlist[0].tracks = [{file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails"}];
         this.callback = (typeof callback !== "undefined") ? callback : null;
 
@@ -57,7 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate($this.options);
                 $container.html(output).promise().done(function () {
-                    var instance = $this.instance = jwplayer('player').setup($this.options);
+                        var instance = $this.instance = jwplayer('player').setup($this.options);
                     $this.instance.onReady(function () {
                         $this.setEvents();
                         $this.setUI($this, instance);
@@ -237,9 +238,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             });
         }
         , play: function (instance, $key) {
-            instance = this.getInstance(instance);
-            instance.play();
             var $this = this;
+            instance = this.getInstance(instance);
+            if (!$this.isPlaying)
+                this.instance.play();
+            else
+                this.instance.pause();
             if (typeof $key !== "undefined") {
                 window.setTimeout(function () {
                     if (!$this.isPlaying)
