@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'ingestHelper', 'jquery-ui', 'tree.helper', 'player.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, IngestHelper, ui, Tree, Player) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
     var OTTIngestView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -24,6 +24,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="add-clip"]': 'addClip'
             , 'click [data-task="delete-shot"]': 'deleteShot'
             , 'click .shotlist-table tbody tr': 'loadShot'
+            , 'click [data-task="load-list"]': 'loadItemlist'
+            , 'click #itemlist tbody tr': 'loadVideo'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
@@ -91,9 +93,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
         , openAddForm: function (e) {
-            // TEMP 
-            $("#media-filename").val(this.player.options.file);
-
+// TEMP 
+            var path = '{tv}\\360p\\{date}\\*.ts';
+            var date = Global.jalaliToGregorian($('.itemlist-filter [name="date"]').val()).replace(/\-/g, '\\');
+            $("#media-filename").val(path.replace(/{tv}/g, $('.itemlist-filter [name="channel"]').val()).replace(/{date}/, date));
             $(this.$modal).modal('toggle');
         }
         , selectRow: function (e) {
@@ -130,6 +133,75 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             });
         }
+        , loadVideo: function(e) {
+            e.preventDefault();
+            var self = this;
+            $("#itemlist").find("tbody tr").removeClass('active');
+            $(e.target).parents("tr:first").addClass('active');
+            var params = $(e.target).parents("tr:first").data('params');
+            params = typeof params === "object" ? params : JSON.parse(params);
+            params.start = params.start.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
+            params.end  = params.end.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
+//            http://172.16.16.69/archive/360p.m3u8?c=tv1&start=2017/08/22/01/49&end=2017/08/22/02/28
+            var url = 'http://172.16.16.69/archive/360p.m3u8?' + $.param(params);
+            var duration = $(e.target).parents("tr:first").data('duration');
+            self.renderPlayer(url, Global.processTime(duration));
+        }
+        , renderPlayer: function(url, duration) {
+            var self = this;
+            if (self.playerInstance)
+                self.player.remove();
+            $('#player-container').empty();
+            var playerConfig = {
+                clip: {
+                    sources: [
+                        {type: "application/x-mpegurl", src: url}
+                    ]
+                }
+                , template: { seekbar: {range: true} , controls: false }
+                , duration: duration
+            };
+            var player = new Player('#player-container', playerConfig);
+            player.render();
+            self.player = player;
+            self.playerInstance = player.instance;
+            
+            self.loadShotlist();
+        }
+        , loadShotlist: function() {
+            // Load Shot-list
+            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
+            var $container = $("#shotlist");
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function() {
+                    IngestHelper.mask('time');
+                });
+            });
+        }
+        , loadItemlist: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
+            var self = this;
+            var params = $(".itemlist-filter").serializeObject();
+            params.date = params.date.replace(/\-/g, '/');
+            var template = Template.template.load('resources/ingest', 'ingest.ottitems.partial');
+            var $container = $("#itemlist");
+            var modelParams = {overrideUrl: 'share/ott/medialist'};
+            new IngestModel(modelParams).fetch({
+                data: $.param(params)
+                , success: function(items) {
+                    items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            $container.stop().fadeIn();
+                        });
+                    });
+                }
+            });
+        }
         , loadStorageFiles: function (e) {
             typeof e !== "undefined" && e.preventDefault();
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
@@ -157,26 +229,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , afterRender: function () {
             var self = this;
-            var playerConfig = {
-                duration: 185
-                , file: '/assets/data/sample.mp4'
-                , image: '/assets/data/sample.jpg'
-//                , controls: false
-                , template: {seekbar: {range: true}}
-            };
-            var player = new Player('#player-container', playerConfig);
-            player.render();
-            self.player = player;
-            self.playerInstance = player.instance;
-            // Load Shot-list
-            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
-            var $container = $("#shotlist");
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output);
-            });
-
+            self.attachDatepickers();
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
@@ -211,12 +264,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , getShotlistData: function () {
             var $list = $("#shotlist tbody tr");
+            var itemStart = Global.processTime($("#itemlist tbody tr.active .start").text());
             var data = [];
             if ($list.length) {
                 $list.each(function () {
                     data.push({
-                        start: Global.processTime($(this).find("td").eq(0).text())
-                        , end: Global.processTime($(this).find("td").eq(1).text())
+                        start: Global.processTime($(this).find("td").eq(0).text()) + itemStart
+                        , end: Global.processTime($(this).find("td").eq(1).text()) + itemStart
                     });
                 });
             }
@@ -224,7 +278,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , prepareSave: function () {
             var data = [{}];
-            console.log(this.getShotlistData()); 
+            console.log(this.getShotlistData());
             data[0].Shotlist = this.getShotlistData();
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
@@ -295,6 +349,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     , containment: "parent"
                 });
             }
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {
+                            $datePickers.blur();
+                        }
+                    }));
+                }
+            });
+            self.loadItemlist();
         }
     });
     return OTTIngestView;

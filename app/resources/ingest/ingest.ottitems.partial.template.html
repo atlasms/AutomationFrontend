@@ -1,0 +1,35 @@
+<table class="table table-bordered table-striped table-condensed flip-content">
+	<thead>
+		<tr>
+			<th class="col-xs-1"></th>
+			<th class="col-xs-5">نام برنامه</th>
+			<th class="col-xs-2 text-center">شروع</th>
+			<th class="col-xs-2 text-center">پایان</th>
+			<th class="col-xs-2 text-center">مدت</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each []}}
+		<tr data-id="{{id}}" data-index="{{math @index "+" 1}}" data-duration="{{min2sec duration}}" data-params='{"c": "{{channel}}", "start": "{{startMiladi}}", "end": "{{endMiladi}}"}'>
+			<td class="text-center">
+					{{config placeholderImage}}
+				<figure>
+					<img src="{{thumb}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+				</figure>
+			</td>
+			<td>
+				{{title}}
+			</td>
+			<td class="text-right">
+				<span class="start">{{extractTime startMiladi}}</span>
+			</td>
+			<td class="text-center">
+				<span class="end">{{extractTime endMiladi}}</span>
+			</td>
+			<td class="text-center">
+				<span class="duration">{{min2sec duration}}</span>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
