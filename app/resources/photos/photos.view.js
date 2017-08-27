@@ -168,6 +168,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 if (!$row.find("input, textarea, select").length)
                     return true;
                 data[i] = {};
+                data[i].Shotlist = [];
                 $row.find("input, textarea, select").each(function () {
                     var $input = $(this);
                     if (typeof $input.attr("name") !== "undefined") {

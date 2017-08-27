@@ -145,6 +145,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , prepareSave: function () {
             var data = [{}];
+            data[0].Shotlist = [];
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {
