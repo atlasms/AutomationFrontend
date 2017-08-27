@@ -18,6 +18,7 @@
         "icon": "server",
         "items": [
             { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
+            { "title": "اینجست OTT", "alias": "resources_ottingest", "icon": "arrow-circle-up", "link": "/resources/ottingest" },
             { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
             { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
             { "title": "مدیا", "alias": "resources_media", "icon": "database", "link": "/resources/media" },
