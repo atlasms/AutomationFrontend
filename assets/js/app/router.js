@@ -85,15 +85,18 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 return;
             }
             $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-header-fixed-mobile page-sidebar-closed");
+            typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             var template = Template.template.load('', 'app');
             var user = UserHelper.getUser();
+            var content = $.extend(true, {}, user, Config);
+            console.log(content);
             this.getMenu().done(function (rawMenu) {
                 Global.Cache.saveMenu(rawMenu);
                 var menu = self.prepareMenu(rawMenu);
                 ///
                 template.done(function (data) {
-                    var handlebarsTemplate = Template.handlebars.compile($(data).wrap('<p/>').parent().html());
-                    var output = handlebarsTemplate(user);
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    var output = handlebarsTemplate(content);
                     $(Config.positions.wrapper).html(output);
                     self.loadMenu(menu);
                     self.loadPage(actions);
