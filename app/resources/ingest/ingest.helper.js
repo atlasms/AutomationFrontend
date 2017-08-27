@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'mousetrap', 'hotkeys', 'toastr', 'bloodhound', 'typeahead'
-], function ($, _, Backbone, Config, Global, moment, jDate, Mousetrap, Hotkeys, toastr, Bloodhound, Typeahead) {
+define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask'
+], function ($, _, Backbone, Config, Global, mask) {
     var IngestHelper = {
         flags: {}
         , init: function (reinit) {
