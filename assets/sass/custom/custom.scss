@@ -17,7 +17,7 @@
 */
 // @import "../global/plugins/select2";
 // @import "../global/components/elements/cards/_card-1";
-
+ 
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, #main, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
@@ -394,6 +394,17 @@ div#schedule-table {
     }
     .shotlist-table {
         tbody tr { cursor: pointer; }
+    }
+}
+#ingest-page {
+    .flowplayer {
+        /*height: 360px;*/ direction: rtl;
+        a[href*="hello"] { opacity: 0.00000000000000000001 !important; pointer-events: none !important; }
+        .fp-header .fp-share { display: none; }
+    }
+    #itemlist {
+        max-height: 600px; overflow: hidden; overflow-y: scroll;
+        table tbody tr { cursor: pointer; }
     }
 }
 

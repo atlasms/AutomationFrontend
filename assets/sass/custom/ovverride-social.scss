@@ -1,0 +1,9 @@
+body.social {
+    .login-bg { background-image: url('../img/bg1-social.jpg'); }
+    .page-header.navbar { background: #6a3381; }
+    .header-slogan {
+        display: block !important; float: left; color: #ddd; line-height: 75px; font-size: 20px;
+        span.logo { height: 65px; width: 90px; background: url('../img/logo-light.png') no-repeat left 0 transparent; overflow: hidden; filter: contrast(800%) saturate(0); float: left; margin-right: 20px; }
+        span { display: inline-block; }
+    }
+}
