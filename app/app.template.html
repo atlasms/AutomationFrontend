@@ -7,6 +7,12 @@
 				<div class="menu-toggler sidebar-toggler">
 				</div>
 			</div>
+			{{#if Config.overrideClass}}
+			<div class="header-slogan hide">
+				<span class="logo"></span>
+				<span class="text">{{Config.headerTitle}}</span>
+			</div>
+			{{/if}}
 			<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
 			<div class="page-top">
 				<div class="top-menu">
@@ -57,7 +63,7 @@
 						</li>
 						<li class="dropdown dropdown-user dropdown-dark">
 							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-								<span class="username username-hide-on-mobile"> {{Name}} {{Family}}</span>
+								<span class="username username-hide-on-mobile"> {{User.Name}} {{User.Family}}</span>
 								<img alt="" class="img-circle" src="/assets/img/avatar9.jpg" /> </a>
 							<ul class="dropdown-menu dropdown-menu-default">
 								<li>
