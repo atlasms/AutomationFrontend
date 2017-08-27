@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
             template.done(function (data) {
                 var html = $(data).wrap('<p/>').parent().html();
                 var handlebarsTemplate = Template.handlebars.compile(html);
-                var output = handlebarsTemplate(this.data);
+                var output = handlebarsTemplate(Config);
                 $(Config.positions.wrapper).html(output);
                 typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             });
