@@ -88,12 +88,10 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             var template = Template.template.load('', 'app');
             var user = UserHelper.getUser();
-            var content = $.extend(true, {}, user, Config);
-            console.log(content);
+            var content = { User: user, Config: Config };
             this.getMenu().done(function (rawMenu) {
                 Global.Cache.saveMenu(rawMenu);
                 var menu = self.prepareMenu(rawMenu);
-                ///
                 template.done(function (data) {
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate(content);
