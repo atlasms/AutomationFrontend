@@ -8,6 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
      */
     window.Config = {
         "title": "اتوماسیون تولید و پخش",
+        "loginMessage": "ورود به سامانه اتوماسیون",
         "channel": "ایران‌کالا",
         "storageKey": "automation" + '_' + window.location.host.replace(/\./g, '').split(":")[0],
         "siteUrl": "http://localhost",
