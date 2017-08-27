@@ -22,13 +22,17 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     accum += block.fn(i);
                 return accum;
             });
+            Handlebars.registerHelper('min2sec', function (value, options) {
+                return Global.createTime(+value * 60);
+            });
             Handlebars.registerHelper('debug', function (value, options) {
                 console.log(value);
             });
             Handlebars.registerHelper('extractTime', function (value, options) {
-                if (value && value.indexOf('T') !== "-1" && +value.split('-')[0] === 1900)
+                if (typeof value === "undefined" || !value || +value.split('-')[0] === 1900)
                     return '';
-                return time = (value && value.indexOf("T") !== -1) ? value.split('T')[1] : value;
+                var splitter = (value.indexOf('T') !== -1) ? 'T' : ' ';
+                return time = value.split(splitter)[1];
 //                return (parseInt(time) !== 0) ? time : '';
             });
             Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
