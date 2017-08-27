@@ -26,6 +26,7 @@ require.config({
         , "x-editable": {deps: ["jquery", "bootstrap/tooltip", "bootstrap/popover"], exports: "jQuery"}
         , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
         , "jwplayer": {exports: "jwplayer"}
+        , "flowplayer": {exports: "flowplayer"}
         , "ladda": {deps: ["spin"]}
         , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
         , "cropper": {deps: ["jquery"]}
@@ -53,6 +54,8 @@ require.config({
         , "jstree": ["vendor/jstree.min"]
         , "tus": ["vendor/tus"]
         , "jwplayer": ["vendor/jwplayer/jwplayer"]
+        , "flowplayer": ["vendor/flowplayer/flowplayer.min"]
+        , "hlsjs": ["vendor/flowplayer/flowplayer.hlsjs.min"]
         , "bootbox": ["vendor/bootbox.min"]
         , "spin": ["vendor/spin.min"]
         , "ladda": ["vendor/ladda.min"]
@@ -154,6 +157,7 @@ require.config({
         , "tree.helper": ["helpers/tree"]
         , "storage.helper": ["helpers/storage"]
         , "player.helper": ["helpers/player"]
+        , "flowplayer.helper": ["helpers/flowplayer"]
         , "editable.helper": ["helpers/editable"]
         , "authorization": ["helpers/authorization"]
     }
