@@ -637,7 +637,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
              * Method to generate two arrays containing all start times and all end times
              */
             var $startSelect = $("select[data-type=itemlist][name=startdate], .source[name=starttime]");
-            var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime]");
+            var $endSelect = $("select[data-type=itemlist][name=enddate], .source[name=endtime], .destination[name=starttime]");
             var $rows = $("#schedule-table .table-body li");
             var starts = [];
             $.each($rows, function () {
@@ -664,6 +664,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             if ($endSelect.length) {
                 $endSelect.each(function () {
                     var $this = $(this);
+                    if ($this.hasClass('destination') && $this.html() !== "")
+                        return true;
 //                        ends.shift();
                     $this.empty();
                     for (var i = 0; i < ends.length; i++)
