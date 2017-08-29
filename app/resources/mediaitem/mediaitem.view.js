@@ -28,6 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
             , 'submit .categories-metadata-form': 'saveMetadata'
             , 'click [data-task="send-telegram"]': 'sendTelegram'
+            , 'click [data-task="publish-website"]': 'publishWebsite'
         }
         , sendTelegram: function (e) {
             e.preventDefault();
@@ -46,8 +47,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function (model, response) {
-                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ارسال به تلگرام', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
+        }
+        , publishWebsite: function(e) {
+            e.preventDefault();
+            var self = this;
+            var data = {
+                MediaId: self.getId()
+                , Params: null
+                , DestApp: 'website'
+                , Cmd: 'publish'
+            };
+            new MediaitemModel({overrideUrl: Config.api.social}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('با موفقیت انجام شد', 'انتشار روی وب‌سایت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
         }

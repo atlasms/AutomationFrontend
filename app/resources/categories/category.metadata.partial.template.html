@@ -107,6 +107,9 @@
 						{{/select}}
 					</select>
 				</div>
+				<div class="col-sm-4">
+					<button type="button" class="btn btn-info" data-task="publish-website">انتشار</button>
+				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">شروع انتشار</label>
@@ -187,13 +190,13 @@
 		<div class="tab-pane fade" id="tab-telegram">
 			<div class="form-group">
 				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
-				<div class="col-sm-2">
+				<div class="col-sm-1">
 					<div class="checkbox checkbox-primary checkbox-circle">
 						<input name="TelegramState" id="r_t1" value="1" type="radio" {{isChecked 1 TelegramState}} />
 						<label for="r_t1">بلی</label>
 					</div>
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-1">
 					<div class="checkbox checkbox-primary checkbox-circle">
 						<input name="TelegramState" id="r_t2" value="0" type="radio" {{isChecked 0 TelegramState}} />
 						<label for="r_t2">خیر</label>
@@ -207,7 +210,7 @@
 					</select>
 				</div>
 				<div class="col-sm-1">
-					<button type="button" class="btn btn-primary" data-task="send-telegram">ارسال</button>
+					<button type="button" class="btn btn-info" data-task="send-telegram">ارسال</button>
 				</div>
 			</div>
 			<div class="form-group">
