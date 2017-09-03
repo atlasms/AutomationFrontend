@@ -49,8 +49,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $row.addClass("error").attr('title', 'تایم غیرمجاز');
                     else
                         $row.removeClass("error").removeAttr('title');
-
-                    ScheduleHelper.updateTimes($row);
+                    if ($row.hasClass('fixed'))
+                        ScheduleHelper.updateTimes($row.prev().prev());
+                    else
+                        ScheduleHelper.updateTimes($row);
 
                 }
             });
@@ -98,6 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $(document).on('click', "#schedule-table .table-body li", function (e) {
                 if (e.shiftKey) {
                     $(this).toggleClass("selected");
+                    document.getSelection().removeAllRanges();
                     e.preventDefault();
                     return false;
                 }
@@ -146,7 +149,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 e.preventDefault();
             });
             $(document).on('keydown', null, 'shift+del', function (e) {
-                ScheduleHelper.deleteRow();
+                if ($("#schedule-table .table-body li.selected").length) {
+                    console.log('items to delete: ' + $("#schedule-table .table-body li.selected").length);
+                    $("#schedule-table .table-body li.selected").each(function() {
+                        ScheduleHelper.deleteRow($(this));
+                    });
+                } else
+                    ScheduleHelper.deleteRow();
                 e.preventDefault();
             });
             $(document).on('click', ".tools [data-task=delete]", function (e) {
@@ -155,15 +164,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , deleteRow: function ($row, skipUpdate) {
-            if (typeof $row === "undefined") {
-                var $rows = $("#schedule-table .table-body li");
+            var $rows = $("#schedule-table .table-body li");
+            if (typeof $row === "undefined")
                 if ($rows.length < 2)
                     return false;
-            }
             var $row = (typeof $row !== "undefined") ? $row : $("#schedule-table .table-body li.active");
             var $next = $row.next();
             var $prev = $row.prev();
             $row.remove().promise().done(function () {
+                $rows.parent().find("li.active").length && $rows.removeClass("active");
                 $next.addClass('active');
             });
 //            $row.remove().promise().done(function () {
@@ -656,9 +665,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 callback.timeArrays = {starts: starts, ends: ends};
             if ($startSelect.length) {
 //                if (!$startSelect.hasClass('destination')) {
-                    $startSelect.empty();
-                    for (var i = 0; i < starts.length; i++)
-                        $startSelect.append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
+                $startSelect.empty();
+                for (var i = 0; i < starts.length; i++)
+                    $startSelect.append('<option value="' + starts[i].time + '">[' + starts[i].time + '] ' + starts[i].title + '</option>');
 //                }
             }
             if ($endSelect.length) {
