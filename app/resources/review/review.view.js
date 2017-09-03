@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -131,19 +131,46 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var self = this;
-            var task = new MediaModel({id: $("tr.active").attr('data-id')}).save({
-                key: 'State'
-                , value: $(e.currentTarget).attr('data-task')
-            }, {
-                patch: true
-                , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                }
-                , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    self.reLoad();
-                }
-            });
+            if ($(e.currentTarget).attr('data-task') == 2) {
+                bootbox.confirm({
+                    message: "آیتم انتخاب شده رد شود؟"
+                    , buttons: {
+                        confirm: {className: 'btn-success'}
+                        , cancel: {className: 'btn-danger'}
+                    }
+                    , callback: function (results) {
+                        if (results) {
+                            new MediaModel({id: $("tr.active").attr('data-id')}).save({
+                                key: 'State'
+                                , value: $(e.currentTarget).attr('data-task')
+                            }, {
+                                patch: true
+                                , error: function (e, data) {
+                                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                }
+                                , success: function (model, response) {
+                                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                    self.reLoad();
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                new MediaModel({id: $("tr.active").attr('data-id')}).save({
+                    key: 'State'
+                    , value: $(e.currentTarget).attr('data-task')
+                }, {
+                    patch: true
+                    , error: function (e, data) {
+                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    }
+                    , success: function (model, response) {
+                        toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        self.reLoad();
+                    }
+                });
+            }
         }
         , reLoad: function () {
             this.load();
