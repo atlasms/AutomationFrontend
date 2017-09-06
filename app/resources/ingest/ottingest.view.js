@@ -133,6 +133,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             });
         }
+        , offsetTime: function(datetime, offset) {
+            if (typeof datetime === "undefined")
+                return null;
+            var dt = datetime.split(' ');
+            if (typeof offset !== "undefined") {
+                var date = new Date(dt[0].split('-')[0], (+dt[0].split('-')[1] - 1), dt[0].split('-')[2], dt[1].split(':')[0], dt[1].split(':')[1], dt[1].split(':')[2]);
+                date.setTime(date.getTime() + (offset * 1000));
+                datetime = date.getFullYear() + '-' + Global.zeroFill(date.getMonth() + 1) + '-' + Global.zeroFill(date.getDate());
+                datetime += ' ' + Global.zeroFill(date.getHours()) + ':' + Global.zeroFill(date.getMinutes()) + ':' + Global.zeroFill(date.getSeconds());
+            }
+            return datetime.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
+        }
         , loadVideo: function(e) {
             e.preventDefault();
             var self = this;
@@ -140,8 +152,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $(e.target).parents("tr:first").addClass('active');
             var params = $(e.target).parents("tr:first").data('params');
             params = typeof params === "object" ? params : JSON.parse(params);
-            params.start = params.start.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
-            params.end  = params.end.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
+            params.start = self.offsetTime(params.start, -300);
+            params.end = self.offsetTime(params.end, 300);
+//            params.start = params.start.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
+//            params.end  = params.end.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
 //            http://172.16.16.69/archive/360p.m3u8?c=tv1&start=2017/08/22/01/49&end=2017/08/22/02/28
             var url = 'http://172.16.16.69/archive/360p.m3u8?' + $.param(params);
             var duration = $(e.target).parents("tr:first").data('duration');
@@ -170,8 +184,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadShotlist: function() {
             // Load Shot-list
-            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
             var $container = $("#shotlist");
+            if (!$container.is(":empty"))
+                return;
+            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
