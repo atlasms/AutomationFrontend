@@ -9,25 +9,49 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             'click [data-task=filter_rows]': 'filter'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=open-details]': 'openDetails'
+            , 'click [data-task=restore-schedule]': 'restoreSchedule'
         }
         , flags: {}
         , reLoad: function () {
             this.load();
         }
+        , restoreSchedule: function (e) {
+            e.preventDefault();
+            var date = Global.jalaliToGregorian($('[name="schedule-dest"]').val());
+            var data = JSON.parse($("#raw-data").val());
+            $.each(data, function() {
+                this.CondcutorStartTime = date + 'T' + this.CondcutorStartTime.split("T")[1];
+            });
+            new ScheduleModel().save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'انتقال کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $this.reLoad();
+                }
+            });
+        }
         , openDetails: function (e) {
             var self = this;
             var $this = $(e.target);
-            if (!$this.next().is("textarea") || $this.next().val() === "")
+            if (typeof $this.data('id') === "undefined")
                 return false;
-            var cachedData = $this.next().val().replace(/\\/g, "");
-            var items = JSON.parse(cachedData);
-            var template = Template.template.load('broadcast/schedule', 'scheduledetail.partial');
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate(items);
-                $(self.$modal).find(".modal-body").html(output).promise().done(function () {
-                    $(self.$modal).modal('toggle');
-                });
+            var params = {path: '/log/' + $this.data('id')};
+            new ScheduleModel(params).fetch({
+                success: function (items) {
+                    items = JSON.parse(self.prepareItems(items.toJSON(), params)[0]["logData"]);
+                    var template = Template.template.load('broadcast/schedule', 'scheduledetail.partial');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $(self.$modal).find(".modal-body").html(output).promise().done(function () {
+                            $(self.$modal).modal('toggle');
+
+                            $('[name="schedule-dest"]').val() === "" && $('[name="schedule-dest"]').pDatepicker(CONFIG.settings.datepicker) && $(".datepicker-plot-area").css({'z-index': 100000});
+                        });
+                    });
+                }
             });
         }
         , load: function (extend) {

@@ -1,47 +1,48 @@
+<textarea id="raw-data" class="hide">{{stringify []}}</textarea>
 <table class="table table-condensed table-bordered table-striped table-hover">
-		<thead>
-			<tr>
-				<th>ردیف</th>
-				<th class="col-xs-1">شروع</th>
-				<th class="col-xs-1">مدت</th>
-				<th class="col-xs-3">نام برنامه</th>
-				<th class="col-xs-1">قسمت</th>
-				<th class="col-xs-3">توضیحات</th>
-				<th>تکرار</th>
-				<th>منتخب</th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each []}}
-			<tr data-id="{{ConductorId}}" class="{{#if CondcutorFeatured}}highlight{{/if}}">
-				<td style="text-align: center;">
-					{{math @index "+" 1}}
-				</td>
-				<td style="text-align: center;">
-					<span>{{extractTime CondcutorStartTime}}</span>
-				</td>
-				<td style="text-align: center;">
-					<span>{{time ConductorDuration}}</span>
-				</td>
-				<td>
-					{{#if ConductorCategoryTitle}}
-					{{ConductorCategoryTitle}}&nbsp;
-					{{/if}}
-					<strong>{{ConductorTitle}}</strong>
-				</td>
-				<td style="text-align: center;">
-					<span>{{ConductorEpisodeNumber}}</span>
-				</td>
-				<td>
-					{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
-				</td>
-				<td style="text-align: center;">
-					{{#if ConductorRepeat}}&times;{{/if}}
-				</td>
-				<td style="text-align: center;">
-					{{#if CondcutorFeatured}}&times;{{/if}}
-				</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
+	<thead>
+		<tr>
+			<th>ردیف</th>
+			<th class="col-xs-1">شروع</th>
+			<th class="col-xs-1">مدت</th>
+			<th class="col-xs-3">نام برنامه</th>
+			<th class="col-xs-1">قسمت</th>
+			<th class="col-xs-3">توضیحات</th>
+			<th>تکرار</th>
+			<th>منتخب</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each []}}
+		<tr data-id="{{ConductorId}}" class="{{#if CondcutorFeatured}}highlight{{/if}}">
+			<td style="text-align: center;">
+				{{math @index "+" 1}}
+			</td>
+			<td style="text-align: center;">
+				<span>{{extractTime CondcutorStartTime}}</span>
+			</td>
+			<td style="text-align: center;">
+				<span>{{time ConductorDuration}}</span>
+			</td>
+			<td>
+				{{#if ConductorCategoryTitle}}
+				{{ConductorCategoryTitle}}&nbsp;
+				{{/if}}
+				<strong>{{ConductorTitle}}</strong>
+			</td>
+			<td style="text-align: center;">
+				<span>{{ConductorEpisodeNumber}}</span>
+			</td>
+			<td>
+				{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
+			</td>
+			<td style="text-align: center;">
+				{{#if ConductorRepeat}}&times;{{/if}}
+			</td>
+			<td style="text-align: center;">
+				{{#if CondcutorFeatured}}&times;{{/if}}
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
