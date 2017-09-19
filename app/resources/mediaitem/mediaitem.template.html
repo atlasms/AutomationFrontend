@@ -116,7 +116,13 @@
 							{{#ifCond State '!=' 1}}
 							{{#authorize 1024}}<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>{{/authorize}}
 							{{/ifCond}}
-							{{#authorize 262144}}<a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>{{/authorize}}
+							{{#authorize 2097152}}
+								<a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
+							{{else}}
+								{{#authorize 262144}}
+								<a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
+								{{/authorize}}
+							{{/authorize}}
 							{{#ifCond Type '==' 0}}
 							<div id="player-container"><!-- Player Container --></div>
 							{{/ifCond}}
