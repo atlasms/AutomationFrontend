@@ -187,8 +187,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     date[i] = (i === 1) ? parseInt(date[i]) - 1 : parseInt(date[i]);
                 return new moment(date).format(format);
             });
-            Handlebars.registerHelper('getMedia', function (value, options) {
-                return value.replace('.jpg', '_lq.mp4');
+            Handlebars.registerHelper('getMedia', function (value, hq, options) {
+                var fix = (typeof hq !== "undefined" && hq == true) ? 'hq' : 'lq';
+                return value.replace('.jpg', '_' + fix + '.mp4');
             });
             Handlebars.registerHelper('replace', function (haystack, needle, replace, options) {
                 return haystack.replace(needle, replace);
