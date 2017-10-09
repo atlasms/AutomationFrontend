@@ -113,8 +113,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "status": "#status-items"
         },
         "api": {
-            "url": "http://au.iktv.ir:8080/api/"
+//            "url": "http://au.iktv.ir:8080/api/"
 //            "url": "http://188.209.144.171:8080/api/"
+//            "url": "http://172.16.16.201:8080/api/"
             , "login": "login"
             , "schedule": "conductor"
             , "crawl": "crawl"
