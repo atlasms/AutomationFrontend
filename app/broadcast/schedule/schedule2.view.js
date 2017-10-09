@@ -384,7 +384,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , submit: function (e) {
             e.preventDefault();
-            $("button[type=submit]").prop('disabled', true).addClass('disabled');
+//            $("button[type=submit]").prop('disabled', true).addClass('disabled');
             var $this = this;
             var helper = new ScheduleHelper.validate();
             if (!helper.beforeSave())
@@ -396,16 +396,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , processData: false
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
+//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
 //                    $this.reLoad();
                 }
                 , error: function() {
                     alert('error');
-                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
+//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
                 }
                 , fail: function() {
                     alert('fail');
-                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
+//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
                 }
             });
         }
