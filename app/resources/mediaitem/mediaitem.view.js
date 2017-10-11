@@ -382,7 +382,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     break;
                 case 'metadata':
                     var catid = $('[data-task="change-category"]').attr('data-id');
-                    var params = {query: 'MasterId=' + catid, type: 1};
+                    var masterId = self.getId();
+                    var params = {query: 'MasterId=' + masterId, type: 1};
                     tmpl = ['resources/categories', 'category.metadata.partial'];
                     model = new MetadataModel(params);
                     break;

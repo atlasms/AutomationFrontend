@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
     var IngestView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
@@ -22,20 +22,43 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , submit: function (e) {
             e.preventDefault();
-            var $this = this;
+            var self = this;
             var helper = new IngestHelper.validate();
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
+            if (data[0].SiteTitle.length < 9) {
+                toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
             new IngestModel({overrideUrl: Config.api.media}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $($this.$modal).find("form").trigger('reset');
-                    $($this.$modal).modal('hide');
-                    $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                , success: function (d) {
+                    data = data[0];
+                    delete data.Description;
+                    delete data.Duration;
+                    delete data.EpisodeNumber;
+                    delete data.FileName;
+                    delete data.Shotlist;
+                    delete data.Title;
+                    var items = self.prepareItems(d.toJSON(), {});
+                    data.MasterId = items[0].Id;
+                    data.Type = 1;
+                    for (var field in data)
+                        data.field = $.trim(data.field);
+                    new MetadataModel().save(null, {
+                        data: JSON.stringify(data)
+                        , contentType: 'application/json'
+                        , processData: false
+                        , success: function (dd) {
+                            toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            $(self.$modal).find("form").trigger('reset');
+                            $(self.$modal).modal('hide');
+                            $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                        }
+                    });
                 }
             });
         }
