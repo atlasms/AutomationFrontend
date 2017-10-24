@@ -1,20 +1,48 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var MediaView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
+            {'button': {cssClass: 'btn btn-warning', text: 'نمایش برنامه‌ها', type: 'button', task: 'show_tree', icon: 'fa fa-sitemap'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
+            , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
         , flags: {}
+        , cache: {
+        }
+        , mode: 'latest'
         , events: {
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
             , 'click [data-task=refresh]': 'reLoad'
+            , 'click [data-task=show_tree]': 'showTree'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'change [data-type=change-mode]': 'changeMode'
+            , 'click #tree .jstree-anchor': 'loadCategory'
+        }
+        , showTree: function() {
+            if ($("#media-list").hasClass('tree-open')) {
+                $("#tree").fadeOut(300);
+                $("#itemlist").animate({
+                    'margin-right': 0
+                });
+                $("#media-list").removeClass('tree-open');
+            } else {
+                $("#tree").fadeIn(300);
+                $("#itemlist").animate({
+                    'margin-right': '25%'
+                });
+                $("#media-list").addClass('tree-open');
+            }
+        }
+        , loadCategory: function (e) {
+            var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
+            this.cache.currentCategory = parseInt(id);
+            this.mode === "tree" && this.loadItems();
         }
         , selectRow: function (e) {
             var $el = $(e.currentTarget);
@@ -30,27 +58,61 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , load: function (e, extend) {
             if (typeof e !== "undefined")
                 e.preventDefault();
-            console.info('Loading items');
-            var params = {
-                q: $.trim($("[name=q]").val())
-                , type: $("[name=type]").val()
-            };
+            var params = this.getParams();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
-            this.render(params);
+            this.loadItems(params);
             return false;
+        }
+        , getParams: function () {
+            var self = this;
+            var mode = $("[data-type=change-mode]").val();
+            switch (mode) {
+                case 'tree':
+                    var catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+                    // TEMP
+//                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), categoryId: catid};
+                    var params = {categoryId: catid};
+                    break;
+                default:
+                case 'latest':
+                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val()};
+                    break;
+            }
+            return params;
         }
         , render: function (params) {
             var self = this;
             var template = Template.template.load('resources/media', 'media');
             var $container = $(Config.positions.main);
-            var params = (typeof params !== "undefined") ? params : {q: '', type: -1};
-            var model = new MediaModel(params);
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function () {
+                    self.loadTree();
+                });
+            });
+            return;
+        }
+        , loadTree: function () {
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+        }
+        , changeMode: function (e) {
+            this.mode = $(e.target).val();
+            this.loadItems();
+            e.preventDefault();
+            return false;
+        }
+        , loadItems: function (params) {
             var self = this;
-            var data = typeof params !== "undefined" ? $.param({q: params.q}) : null;
+            var params = (typeof params !== "undefined") ? params : self.getParams();
+            var data = $.param(params);
+            var model = new MediaModel(params);
             model.fetch({
                 data: data
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/media', 'media.items.partial');
+                    var $container = $("#itemlist");
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
@@ -60,6 +122,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
             });
+        }
+        , handleTreeCallbacks: function (params, $tree, node) {
+            var self = this;
+            self.cache.currentCategory = params.id;
+            params.method === "ready" && self.loadItems();
         }
         , afterRender: function () {
             var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
@@ -77,8 +144,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            $(document).on('change', "#toolbar select", function () {
-                self.load();
+            $(document).on('change', "#toolbar select[data-type=type]", function () {
+                self.loadItems();
             });
         }
         , renderStatusbar: function () {

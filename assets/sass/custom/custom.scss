@@ -672,3 +672,9 @@ div#schedule-table {
         & + .ui-slider-handle:before { content: '[' }
     }
 }
+
+#media-list {
+    position: relative;
+    #tree { width: 24%; background: #fff; padding: 15px; position: absolute; top: 0; left: 0; display: none; }
+    // .mainbody { margin-left: 25%; }
+}

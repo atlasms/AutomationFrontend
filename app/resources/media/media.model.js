@@ -11,10 +11,11 @@ define(["jquery", "underscore", "backbone", "config"
             options = {};
         }
         , url: function () {
+            var type = (this.type) ? '' : (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
             if (this.overrideUrl !== "")
-                return this.overrideUrl + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
+                return this.overrideUrl + this.path + this.query + type;
             else
-                return Config.api.media + this.path + this.query + (this.query !== "" ? '&'  : '?') + 'type=' + this.type;
+                return Config.api.media + this.path + this.query + type;
         }
         , parse: function (data) {
             data = _.map(data, _.identity);
