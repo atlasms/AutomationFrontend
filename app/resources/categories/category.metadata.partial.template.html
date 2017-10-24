@@ -112,6 +112,17 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-sm-3 control-label">شیوه ارسال</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="SitePublishTrigger">
+						{{#select SitePublishTrigger}}
+						<option value="0">ارسال همزمان با کنداکتور</option>
+						<option value="1">ارسال همزمان با بازبینی</option>
+						{{/select}}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label">شروع انتشار</label>
 				<div class="col-sm-3">
 					<div class="input-group">
