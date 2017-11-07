@@ -301,7 +301,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var output = '';
                 if (typeof $_GET[property] !== "undefined") {
                     output = $_GET[property];
-                    if (date !== false)
+                    if (date)
                         output = Global.gregorianToJalali(output.split('T')[0]);
                 }
                 return output;
