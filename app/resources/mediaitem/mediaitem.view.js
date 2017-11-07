@@ -384,7 +384,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     var catid = $('[data-task="change-category"]').attr('data-id');
                     var masterId = self.getId();
                     var params = {query: 'MasterId=' + masterId, type: 1};
-                    tmpl = ['resources/categories', 'category.metadata.partial'];
+                    tmpl = ['resources/mediaitem', 'mediaitem.metadata.partial'];
                     model = new MetadataModel(params);
                     break;
             }
