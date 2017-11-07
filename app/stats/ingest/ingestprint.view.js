@@ -16,10 +16,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $rows.show();
             else {
                 $rows.hide();
-                $rows.each(function () {
-                    if ($(this).data('state') == value)
-                        $(this).show();
-                });
+                if (value == 4)
+                    $rows.each(function () {
+                        if ($(this).data('broadcast-count') > 0)
+                            $(this).show();
+                    });
+                else
+                    $rows.each(function () {
+                        if ($(this).data('state') == value)
+                            $(this).show();
+                    });
             }
             this.updateStats($rows);
         }

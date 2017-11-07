@@ -67,7 +67,7 @@
 	</thead>
 	<tbody>
 		{{#each items}}
-		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-state="{{State}}" data-duration="{{Duration}}">
+		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-state="{{State}}" data-duration="{{Duration}}" data-broadcast-count="{{ConductorUseCount}}">
 			<td class="text-center">
 				<span class="idx">{{math @index "+" 1}}</span>
 				<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>

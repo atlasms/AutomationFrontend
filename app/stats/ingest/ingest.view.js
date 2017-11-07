@@ -33,10 +33,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $rows.show();
             else {
                 $rows.hide();
-                $rows.each(function () {
-                    if ($(this).data('state') == value)
-                        $(this).show();
-                });
+                if (value == 4)
+                    $rows.each(function () {
+                        if ($(this).data('broadcast-count') > 0)
+                            $(this).show();
+                    });
+                else
+                    $rows.each(function () {
+                        if ($(this).data('state') == value)
+                            $(this).show();
+                    });
             }
             this.updateStats($rows);
         }
@@ -132,7 +138,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 if ($(this).is(":visible")) {
                     stats.count++;
                     stats.duration += $(this).data('duration');
-                    $(this).find("td:first").html(stats.count);
+                    $(this).find(".idx").html(stats.count);
                 }
             });
             $("[data-type=duration]").html(Global.createTime(stats.duration));
