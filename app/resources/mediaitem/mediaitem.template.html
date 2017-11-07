@@ -6,8 +6,8 @@
 					<div class="row">
 						<div class="col-md-7">
 							<div class="basic-details" data-editable="{{#authorize 2048}}true{{/authorize}}">
-								<strong>اطلاعات پایه</strong>
-								<table class="table table-bordered table-hover hidden-header">
+								<h5><strong>اطلاعات پایه</strong></h5>
+								<table class="table table-bordered table-hover table-striped hidden-header">
 									<thead>
 										<tr>
 											<th class="col-xs-3"></th>
@@ -45,7 +45,7 @@
 												<span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
 												{{#ifCond State '==' 2}}
 												<button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}" {{#authorize 32768}}{{else}}disabled{{/authorize}}>
-													<i class="fa fa-reply"></i> بازگشت به بازبینی
+														<i class="fa fa-reply"></i> بازگشت به بازبینی
 												</button>
 												{{/ifCond}}
 											</td>
@@ -66,62 +66,115 @@
 												<a href="#" class="x-editable" id="episode-field" data-type="number" data-pk="{{Id}}" data-field="EpisodeNumber" data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
 											</td>
 										</tr>
-										<tr>
-											<td>تاریخ ایجاد</td>
-											<td>{{#if Created}}{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}}){{/if}}</td>
-										</tr>
-										<tr>
-											<td>تاریخ ویرایش</td>
-											<td>{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}}){{/if}}</td>
-										</tr>
-										<tr>
-											<td>تاریخ بازبینی</td>
-											<td>{{#if Published}}{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}}){{/if}}</td>
-										</tr>
-										<tr>
-											<td>تعداد پخش</td>
-											<td>
-												<span class="label label-info label-sm">{{ConductorUseCount}}</span>
-											</td>
-										</tr>
-										<tr>
-											<td>اولین پخش</td>
-											<td>
-												{{#if FirstCondcutorUse}}
-													{{#each FirstCondcutorUse}}
-														{{#if @first}}
-															{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
-														{{/if}}
-													{{/each}}
-												{{/if}}
-											</td>
-										</tr>
-										<tr>
-											<td>آخرین پخش</td>
-											<td>
-												{{#if LastCondcutorUse}}
-													{{#each LastCondcutorUse}}
-														{{#if @first}}
-															{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
-														{{/if}}
-													{{/each}}
-												{{/if}}
-											</td>
-										</tr>
 									</tbody>
 								</table>
+								<div class="row">
+									<div class="col-xs-12 col-md-6">
+										<h5><strong>اتوماسیون / پخش</strong></h5>
+										<table class="table table-bordered table-striped table-hover hidden-header">
+											<thead>
+												<tr>
+													<th class="col-xs-3"></th>
+													<th class="col-xs-9"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>تاریخ ایجاد</td>
+													<td>{{#if Created}}{{extractTime Created}} {{extractDate Created}} ({{CreatedByText}}){{/if}}</td>
+												</tr>
+												<tr>
+													<td>تاریخ ویرایش</td>
+													<td>{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}} ({{ModifiedByText}}){{/if}}</td>
+												</tr>
+												<tr>
+													<td>تاریخ بازبینی</td>
+													<td>{{#if Published}}{{extractTime Published}} {{extractDate Published}} ({{PublishedByText}}){{/if}}</td>
+												</tr>
+												<tr>
+													<td>تعداد پخش</td>
+													<td>
+														<span class="label label-info label-sm">{{ConductorUseCount}}</span>
+													</td>
+												</tr>
+												<tr>
+													<td>اولین پخش</td>
+													<td>
+														{{#if FirstCondcutorUse}}
+														{{#each FirstCondcutorUse}}
+														{{#if @first}}
+														{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
+														{{/if}}
+														{{/each}}
+														{{/if}}
+													</td>
+												</tr>
+												<tr>
+													<td>آخرین پخش</td>
+													<td>
+														{{#if LastCondcutorUse}}
+														{{#each LastCondcutorUse}}
+														{{#if @first}}
+														{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}
+														{{/if}}
+														{{/each}}
+														{{/if}}
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="col-xs-12 col-md-6">
+										<h5><strong>وب‌سایت</strong></h5>
+										<table class="table table-bordered table-striped table-hover hidden-header">
+											<thead>
+												<tr>
+													<th class="col-xs-3"></th>
+													<th class="col-xs-9"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>عنوان قسمت</td>
+													<td>{{#if WebSite.Title}}{{WebSite.Title}}{{/if}}</td>
+												</tr>
+												<tr>
+													<td>تاریخ انتشار</td>
+													<td>{{#if WebSite.Published}}{{extractTime WebSite.Published}} {{extractDate WebSite.Published}}{{/if}}</td>
+												</tr>
+												<tr>
+													<td>لینک قسمت</td>
+													<td>{{#if WebSite.ShortUrl}}<a href="{{WebSite.ShortUrl}}" target="_blank">{{WebSite.ShortUrl}}</a>{{/if}}</td>
+												</tr>
+												<tr>
+													<td>تعداد نمایش</td>
+													<td>{{#if WebSite.ViewCount}}<span class="label label-info label-sm">{{WebSite.ViewCount}}</span>{{/if}}</td>
+												</tr>
+												<tr>
+													<td>عنوان برنامه</td>
+													<td>{{#if WebSite.ProgramTitle}}{{WebSite.ProgramTitle}}{{/if}}</td>
+												</tr>
+												<tr>
+													<td>لینک برنامه</td>
+													<td>{{#if WebSite.ProgramUrl}}<a href="{{WebSite.ProgramUrl}}" target="_blank">{{WebSite.ProgramUrl}}</a>{{/if}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-5">
+							<h5>&nbsp;</h5><div class="clearfix"></div>
 							{{#ifCond State '!=' 1}}
 							{{#authorize 1024}}<button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i class="fa fa-refresh"></i> تغییر ویدیو</button>{{/authorize}}
 							{{/ifCond}}
 							{{#authorize 2097152}}
-								<a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
+							<a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
 							{{else}}
-								{{#authorize 262144}}
-								<a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
-								{{/authorize}}
+							{{#authorize 262144}}
+							<a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i class="fa fa-download"></i> دریافت فایل</a>
+							{{/authorize}}
 							{{/authorize}}
 							{{#ifCond Type '==' 0}}
 							<div id="player-container"><!-- Player Container --></div>
