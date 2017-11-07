@@ -84,6 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
             , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
+            , "resources/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "BroadcastprintView", "file": "app/resources/mediaitem/broadcastprint.view"}
             , "resources/live": {"private": true, "access": null, "action": "LiveView", "file": "app/resources/live/live.view"}
             , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
             , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
@@ -102,6 +103,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "monitoring/ualogs": {"private": true, "access": null, "action": "UserActivityLogsView", "file": "app/monitoring/ualogs/ualogs.view"}
             , "stats/ingest": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/ingestprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
+//            , "newsroom/news": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/newsroom/news/ingest.view"}
         },
         "positions": {
             "wrapper": "body"
