@@ -33,7 +33,7 @@ require.config({
         , "pace": {deps: ["jquery"]}
 //        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
-    , urlArgs: "bust=" + (new Date()).getTime()
+    , urlArgs: "_=" + (new Date()).getTime()
     , paths: {
         // Library Dependencies
         jquery: ["vendor/jquery-3.1.1.min"]

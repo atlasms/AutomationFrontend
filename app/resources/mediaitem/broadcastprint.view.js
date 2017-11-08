@@ -17,7 +17,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 
         }
         , getId: function () {
-            return Backbone.history.getFragment().split("/").pop().split("?")[0];
+            return $_GET['id'];
+//            return Backbone.history.getFragment().split("/").pop().split("?")[0];
         }
         , render: function (params) {
             var self = this;
