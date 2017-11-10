@@ -40,7 +40,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             template.done(function (data) {
                                 var handlebarsTemplate = Template.handlebars.compile(data);
                                 var output = handlebarsTemplate(items);
-                                $("#broadcast-place").html(output);
+                                $("#broadcast-place").html(output).promise().done(function() {
+                                    self.updateStats();
+                                });
                             });
                         }
                     });
@@ -65,6 +67,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , prepareContent: function () {
             this.renderToolbar();
+        }
+        , updateStats: function () {
+            var data = {duration: 0, count: 0};
+            $("#broadcast-place .table tbody tr").each(function () {
+                data.duration += $(this).data('duration');
+                data.count++;
+            });
+            $("[data-type=duration]").html(Global.createTime(data.duration));
+            $("[data-type=count]").html(data.count);
+        }
+        , processSum: function (items) {
+            var data = {items: items, duration: 0, count: 0};
+            $.each(items, function () {
+                data.duration += this.Duration;
+                data.count++;
+            });
+            return data;
         }
         , renderToolbar: function () {
         }
