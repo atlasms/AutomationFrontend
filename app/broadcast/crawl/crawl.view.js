@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , playerInstance: {}
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
-            {'button': {cssClass: 'btn red-flamingo pull-right', text: "دریافت فایل", type: 'button', task: 'show-export-form', access: 524288}}
+            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال فایل", type: 'button', task: 'show-export-form', access: 524288}}
         ]
         , statusbar: []
         , whitelist: 'b, strong, i, font'
@@ -25,7 +25,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
             , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
             , 'click [data-task=duplicate]': 'duplicateItems'
-            , 'click [data-task=show-export-form]': 'showExportToolbar'
+//            , 'click [data-task=show-export-form]': 'showExportToolbar'
+            , 'click [data-task=show-export-form]': 'exportCrawls'
             , 'click [data-task=show-repository]': 'toggleRepositoryForm'
             , 'change [name=force]': 'warnForceDuplicate'
             , 'click [data-task="review"]': 'reviewItem'
@@ -53,6 +54,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var text = e.originalEvent.clipboardData.getData("text/plain");
                 document.execCommand("insertHTML", false, text);
             }
+        }
+        , exportCrawls: function(e) {
+            e.preventDefault();
+            var data = {
+                groupid: $('.portlet.crawl .actions [data-type="items-group-select"]').val()
+                , sectionid: $('.portlet.crawl .actions [data-type="items-type-select"]').val()
+                , date: Global.jalaliToGregorian($('.portlet.crawl .actions [data-type="items-datepicker"]').val()) + 'T' + '00:00:00'
+            };
+            new CrawlModel({overrideUrl: 'crawl/publish'}).fetch({
+                data: $.param(data)
+                , success: function (d) {
+                    console.log(d);
+                    toastr.success('با موفقیت انجام شد', 'ارسال زیرنویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+            console.log(data);
         }
         , duplicateItems: function(e) {
             e.preventDefault();
