@@ -266,7 +266,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , processData: false
                 , success: function (d) {
                     $editor.empty();
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره زیرنویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $(".crawl-items-select").find("tbody").prepend('<tr data-id="0"><td><div class="checkbox checkbox-success checkbox-circle"><input type="checkbox" /><label></label></div></td><td><span class="text">' + params.Text + '</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>');
                 }
             });

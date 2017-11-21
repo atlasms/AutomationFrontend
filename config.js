@@ -67,6 +67,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     $("#crop-width").length && $("#crop-width").val(Math.round(e.width));
                     $("#crop-height").length && $("#crop-height").val(Math.round(e.height));
                 }
+            },
+            "crawlEditor": {
+                colorsEnabled: false,
+                stylesEnabled: false
             }
         },
         "routes": {

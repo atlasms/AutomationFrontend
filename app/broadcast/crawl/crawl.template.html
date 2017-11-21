@@ -38,7 +38,7 @@
 								<span class="input-group-addon">گروه</span>
 								<select class="form-control" data-type="duplicate-group-select">
 									{{#select Genre}}
-									{{{getDefinitionOptions 63}}}
+									{{{getDefinitionOptions 63 'crawl'}}}
 									{{/select}}
 								</select>
 							</div>
@@ -101,12 +101,16 @@
 						<div class="editor-toolbar row">
 							<div class="col-xs-6">
 								<ul class="list-inline list-unstyled">
+									{{#ifConfig "settings.crawlEditor.stylesEnabled"}}
 									<li><a href="#" class="btn btn-xs btn-default" data-task="bold" title="پررنگ"><i class="fa fa-bold"></i></a></li>
 									<li><a href="#" class="btn btn-xs btn-default" data-task="italic" title="پررنگ"><i class="fa fa-italic"></i></a></li>
+									{{/ifConfig}}
+									{{#ifConfig "settings.crawlEditor.colorsEnabled"}}
 									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="red" title="قرمز"><i class="fa fa-circle" style="color: red"></i></a></li>
 									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="lightgreen" title="سبز"><i class="fa fa-circle" style="color: lightgreen"></i></a></li>
 									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="blue" title="آبی"><i class="fa fa-circle" style="color: blue"></i></a></li>
 									<li><a href="#" class="btn btn-xs btn-default" data-task="color" data-value="violet" title="بنفش"><i class="fa fa-circle" style="color: violet"></i></a></li>
+									{{/ifConfig}}
 								</ul>
 							</div>
 							<div class="col-xs-5">

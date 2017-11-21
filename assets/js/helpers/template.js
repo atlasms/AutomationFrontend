@@ -166,6 +166,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('config', function (value, options) {
                 return Config[value];
             });
+            Handlebars.registerHelper('ifConfig', function (value, options) {
+                var values = value.split('.');
+                var conditionValue = Config;
+                for (var i in values)
+                    conditionValue = conditionValue[values[i]];
+                return conditionValue ? options.fn(this) : options.inverse(this);
+            });
             Handlebars.registerHelper('getName', function (value, source, options) {
                 return source[value];
             });
