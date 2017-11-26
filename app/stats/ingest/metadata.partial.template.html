@@ -2,14 +2,14 @@
 	<tr class="active">
 		<td class="col-xs-2">
 			<div class="stat-holder">
-				مجموع تایم
-				<span data-type="duration" class="label label-info label-sm">{{time duration}}</span>
+				تعداد آیتم‌ها
+				<span data-type="count" class="label label-info label-sm">{{count}}</span>
 			</div>
 		</td>
 		<td class="col-xs-2">
 			<div class="stat-holder">
-				تعداد آیتم‌ها
-				<span data-type="count" class="label label-info label-sm">{{count}}</span>
+				مجموع تولید
+				<span data-type="duration" class="label label-info label-sm">{{time duration}}</span>
 			</div>
 		</td>
 		<td class="col-xs-3">
@@ -17,18 +17,30 @@
 				<span class="input-group-addon">از</span>
 				<input type="text" class="form-control datepicker" name="startdate" placeholder="" value="">
 			</div>-->
-			{{#if header}}{{else}}
+			<div class="stat-holder">
+				مجموع پخش (بدون تکرار)
+				<span data-type="totalbroadcast" class="label label-info label-sm">{{time totalbroadcast}}</span>
+			</div>
+			{{#if header}}
+			{{else}}
 				{{$_get 'startdate' 1}}
 			{{/if}}
 		</td>
-		<td class="col-xs-3">
+		<td class="col-xs-2">
 <!--			<div class="input-group">
 				<span class="input-group-addon">تا</span>
 				<input type="text" class="form-control datepicker" name="enddate" placeholder="" value="">
 			</div>-->
-			{{#if header}}{{else}}
+			<div class="stat-holder">
+				مجموع تکرار
+				<span data-type="totalrepeats" class="label label-info label-sm">{{time totalrepeats}}</span>
+			</div>
+			{{#if header}}
+			{{else}}
 				{{$_get 'enddate' 1}}
 			{{/if}}
+		</td>
+		<td class="col-xs-1">
 		</td>
 		<td class="col-xs-3">
 			<select data-type="state" class="form-control" name="state">
@@ -88,7 +100,7 @@
 				{{#if @first}}<span class="">{{extractTime CondcutorStartTime}} {{extractDate CondcutorStartTime}}</span>{{/if}}
 				{{/each}}
 			</td>
-			<td class="text-center">
+			<td class="text-center broadcast-count">
 				{{ConductorUseCount}}
 			</td>
 			<td class="text-center">

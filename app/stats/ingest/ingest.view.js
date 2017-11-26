@@ -133,22 +133,42 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return data;
         }
         , updateStats: function ($rows) {
-            var stats = {duration: 0, count: 0};
+            var stats = {duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0};
             $rows.each(function () {
                 if ($(this).is(":visible")) {
                     stats.count++;
                     stats.duration += $(this).data('duration');
                     $(this).find(".idx").html(stats.count);
+                    
+                    if ($(this).find(".broadcast-count").text() > 0) {
+                        stats.totalbroadcast += ($(this).data('duration'));
+                        stats.totalrepeats += ($(this).data('duration') * ($(this).find(".broadcast-count").text() - 1));
+                    }
                 }
             });
             $("[data-type=duration]").html(Global.createTime(stats.duration));
             $("[data-type=count]").html(stats.count);
+            $("[data-type=totalbroadcast]").html(Global.createTime(stats.totalbroadcast));
+            $("[data-type=totalrepeats]").html(Global.createTime(stats.totalrepeats));
         }
         , processSum: function (items) {
-            var data = {items: items, duration: 0, count: 0, header: true};
+//            var data = {items: items, duration: 0, count: 0, header: true};
+//            $.each(items, function () {
+//                data.duration += this.Duration;
+//                data.count++;
+//            });
+//            return data;
+//            
+            
+            var data = {items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: true};
             $.each(items, function () {
-                data.duration += this.Duration;
-                data.count++;
+                    data.count++;
+                    data.duration += this.Duration;
+                  
+                    if (this.ConductorUseCount > 0) {
+                        data.totalbroadcast += this.Duration;
+                        data.totalrepeats += (this.Duration * (this.ConductorUseCount - 1));
+                }
             });
             return data;
         }

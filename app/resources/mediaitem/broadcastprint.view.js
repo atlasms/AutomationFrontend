@@ -69,12 +69,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.renderToolbar();
         }
         , updateStats: function () {
-            var data = {duration: 0, count: 0};
+            var data = {duration: 0, count: 0, repeats: 0};
             $("#broadcast-place .table tbody tr").each(function () {
-                data.duration += $(this).data('duration');
+                if (data.count > 0)
+                    data.repeats += $(this).data('duration');
+                else
+                    data.duration += $(this).data('duration');
                 data.count++;
             });
             $("[data-type=duration]").html(Global.createTime(data.duration));
+            $("[data-type=repeats]").html(Global.createTime(data.repeats));
             $("[data-type=count]").html(data.count);
         }
         , processSum: function (items) {
