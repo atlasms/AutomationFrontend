@@ -21,10 +21,7 @@
 				مجموع پخش (بدون تکرار)
 				<span data-type="totalbroadcast" class="label label-info label-sm">{{time totalbroadcast}}</span>
 			</div>
-			{{#if header}}
-			{{else}}
-				{{$_get 'startdate' 1}}
-			{{/if}}
+			
 		</td>
 		<td class="col-xs-2">
 <!--			<div class="input-group">
@@ -35,12 +32,18 @@
 				مجموع تکرار
 				<span data-type="totalrepeats" class="label label-info label-sm">{{time totalrepeats}}</span>
 			</div>
-			{{#if header}}
-			{{else}}
-				{{$_get 'enddate' 1}}
-			{{/if}}
 		</td>
 		<td class="col-xs-1">
+			{{#if header}}
+			{{else}}
+				از 
+				<strong style="direction: ltr">{{$_get 'startdate' 1}}</strong>
+			{{/if}}
+			{{#if header}}
+			{{else}}
+				تا 
+				<strong>{{$_get 'enddate' 1}}</strong>
+			{{/if}}
 		</td>
 		<td class="col-xs-3">
 			<select data-type="state" class="form-control" name="state">

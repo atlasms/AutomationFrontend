@@ -202,7 +202,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         }
         , setEvents: function (instance) {
             instance = this.getInstance(instance);
-            console.log(instance)
+//            console.log(instance)
             var $this = this;
             // we don't have a duration yet, so start playing
 //            if (this.duration === 0 && this.isPlaying === false)

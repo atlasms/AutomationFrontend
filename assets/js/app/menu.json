@@ -4,8 +4,8 @@
         "alias": "broadcast",
         "icon": "youtube-play",
         "items": [
-            { "title": "کنداکتور", "alias": "broadcast_schedule", "icon": "table", "link": "/broadcast/schedule" },
-            { "title": "کنداکتور 2 - تست", "alias": "broadcast_schedule2", "icon": "table", "link": "/broadcast/schedule2" },
+            { "title": "کنداکتور قدیم", "alias": "broadcast_schedule", "icon": "table", "link": "/broadcast/schedule" },
+            { "title": "کنداکتور", "alias": "broadcast_schedule2", "icon": "table", "link": "/broadcast/schedule2" },
             { "title": "EPG", "alias": "broadcast_epg", "icon": "align-right", "link": "#" },
             { "title": "بازبینی پخش", "alias": "broadcast_review", "icon": "play-circle", "link": "#" },
             { "title": "فایل‌های به‌روزشونده", "alias": "broadcast_updatables", "icon": "refresh", "link": "#" },
@@ -18,6 +18,7 @@
         "icon": "server",
         "items": [
             { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
+            { "title": "شات‌لیست", "alias": "resources_shotlist", "icon": "arrow-circle-up", "link": "/resources/shotlist" },
             { "title": "اینجست OTT", "alias": "resources_ottingest", "icon": "arrow-circle-up", "link": "/resources/ottingest" },
             { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
             { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
@@ -57,6 +58,14 @@
             { "title": "مدیریت محتوا", "alias": "website_content", "icon": "file-text", "link": "#" },
             { "title": "مدیریت کلیدواژه‌ها", "alias": "website_tags", "icon": "tags", "link": "#" },
             { "title": "دسته‌بندی‌ها", "alias": "website_categories", "icon": "sitemap", "link": "#" }
+        ]
+    },
+    {
+        "title": "نیوزروم",
+        "alias": "newsroom",
+        "icon": "newspaper-o",
+        "items": [
+            { "title": "اخبار", "alias": "news", "icon": "th-list", "link": "/newsroom/news" }
         ]
     },
     {

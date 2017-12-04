@@ -139,6 +139,7 @@ require.config({
         , "monitoring.ualogs.view": ["../../app/monitoring/ualogs/ualogs.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
         , "stats.ingestprint.view": ["../../app/stats/ingest/ingestprint.view"]
+        , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

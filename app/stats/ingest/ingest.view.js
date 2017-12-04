@@ -197,11 +197,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            
+                            self.updatePrintButton();
                         });
                     });
                 }
             });
+        }
+        , updatePrintButton: function() {
+            var $printButton = $(".print-btn");
+            var dates = '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            if ($printButton.attr('href').indexOf('startdate') === -1)
+                $printButton.attr('href', $printButton.attr('href') + dates);
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;

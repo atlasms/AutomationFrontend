@@ -1,0 +1,92 @@
+<div id="ingest-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<div class="row">
+				<div class="col-xs-12 col-sm-2">
+					<div id="tree"></div>
+				</div>
+				<div class="col-xs-12 col-sm-10">
+					<div class="row">
+						<div class="col-xs-6">
+							<form class="itemlist-filter form-horizontal">
+								<div class="form-group">
+									<div class="col-xs-10">
+										<div class="input-group">
+											<span class="input-group-addon">جستجو</span>
+											<input type="text" name="q" class="form-control" value="" />
+										</div>
+										<input type="hidden" name="type" value="0" />
+										<input type="hidden" name="category" value="" />
+										<input type="hidden" name="state" value="1" />
+									</div>
+									<div class="col-xs-2">
+										<button type="button" class="btn btn-success" data-task="load-list">نمایش</button>
+									</div>
+								</div>
+							</form>
+							<div id="itemlist"></div>
+						</div>
+						<div class="col-xs-6">
+							<div id="player-container"></div>
+							<div id="shotlist"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade zoom-out" id="metadata-form-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content"  role="form" class="">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">ورود اطلاعات برنامه</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" name="Type" value="0" />
+					<input type="hidden" data-type="path-id" name="MetaCategoryId" value="0" />
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<input type="text" data-type="path" class="form-control" id="path" value="" disabled />
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="form-group">
+								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="Duration" id="media-duration" value="00:00:00" required readonly />
+							</div>
+						</div>
+						<div class="col-xs-9">
+							<div class="form-group">
+								<input type="text" data-type="filename" class="form-control ltr" id="media-filename" name="FileName" value="" readonly required />
+							</div>
+						</div>
+					</div>
+					<br />
+					<br />
+					<div class="row">
+						<div class="col-xs-9">
+							<div class="form-group">
+								<input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت" required />
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="form-group">
+								<input type="text" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره قسمت" required />
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div class="form-group">
+								<textarea class="form-control" name="Description" rows="5" placeholder="توضیحات قسمت"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<span class="help-inline hidden">پیش از ثبت اطلاعات می‌بایست فولدر را انتخاب نمایید</span>
+					<button type="submit" class="btn btn-success">ذخیره اطلاعات</button>
+				</div>
+			</form><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
