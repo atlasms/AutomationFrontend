@@ -6,8 +6,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
         };
         this.options = $.extend({}, this.defaults, options);
         this.callback = (typeof callback !== "undefined") ? callback : null;
-        if (typeof this.options.service === "undefined" || !this.options.service)
-            throw 'No service specified';
+        if (typeof this.options.simple === "undefined" || this.options.simple !== true) {
+            if (typeof this.options.service === "undefined" || !this.options.service)
+                throw 'No service specified';
+        }
     };
     _.extend(Editable.prototype, {
         init: function () {
@@ -31,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
                                     return 'This field is required';
                             }
                         });
-                        self.setEventListeners($this, options);
+                        options.callback && self.setEventListeners($this, options);
                     }
                 });
             }, 1000);

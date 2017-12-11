@@ -26,12 +26,12 @@
 					<th class="col-xs-12"></th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody data-editable="true">
 				{{#each Items}}
 				<tr>
 					<td class="">
-						<span class="text">{{{this}}}</span>
-						<button data-task="review"><i class="fa fa-edit"></i></button>
+						<span class="text x-editable" data-type="textarea">{{{this}}}</span>
+						<!--<button data-task="review"><i class="fa fa-edit"></i></button>-->
 						<button data-task="delete"><i class="fa fa-trash"></i></button>
 					</td>
 				</tr>

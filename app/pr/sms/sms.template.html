@@ -4,6 +4,7 @@
 			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
 				<thead>
 					<tr>
+						<th></th>
 						<th class="">شناسه</th>
 						<th class="col-xs-10">پیام</th>
 						<th class="col-xs-1 text-center">فرستنده</th>
@@ -13,10 +14,16 @@
 				<tbody>
 					{{#each []}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
-						<td>{{math @index "+" 1}}</td>
-						<td class="">
-							<span class="" style="word-break: break-all;">{{Msg}}</span>
+						<td>
+							{{#if showCheckbox}}
+							<div class="checkbox checkbox-danger checkbox-circle">
+								<input name="selected" data-validation="digit" id="checkbox_{{@index}}" value="" type="checkbox">
+								<label for="checkbox_{{@index}}"></label>
+							</div>
+							{{/if}}
 						</td>
+						<td>{{math @index "+" 1}}</td>
+						<td class="body"><span class="" style="word-break: break-all;">{{Msg}}</span></td>
 						<td class=" text-right">
 							<span class="ltr">{{From}}</span>
 						</td>

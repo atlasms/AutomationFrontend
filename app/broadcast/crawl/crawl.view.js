@@ -1,22 +1,26 @@
-// TODO: Colors for crawl items
-// TODO: Using real data services
-// TODO: Make editor as an standalone helper
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'bootbox', 'bootstrap/modal', 'bootstrap/tooltip'
-], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'pr.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'bootbox', 'bootstrap/popover', 'editable.helper', 'bootstrap/modal', 'bootstrap/tooltip'
+], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, PRModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui, bootbox, $popover, Editable) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
         model: 'CrawlModel'
         , playerInstance: {}
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
-            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال فایل", type: 'button', task: 'show-export-form', access: 524288}}
+            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال فایل", type: 'button', task: 'show-export-form', access: 524288}},
+            {'button': {cssClass: 'btn blue', text: "پیامک‌ها", type: 'button', task: 'show-sms-modal', icon: 'fa fa-comment', access: 524288}}
         ]
         , statusbar: []
         , whitelist: 'b, strong, i, font'
+//        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
+        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
         , flags: {}
         , events: {
             'click [data-task="save"]': 'submit'
             , 'click [data-task=load]': 'load'
+            , 'click [data-task=load-sms]': 'loadSMSList'
+            , 'click [data-task=show-sms-modal]': 'toggleSMSModal'
+            , 'click [data-task=add-sms-items]': 'addSMSItems'
+            , 'click #pr-sms-page table tbody tr': 'selectSMSRow'
             , 'click [data-task=add-repository]': 'addToRepository'
             , 'click [data-task=add-crawl]': 'addSingle'
             , 'change [data-type="repo-type-select"]': 'loadRepositoryItems'
@@ -55,7 +59,52 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 document.execCommand("insertHTML", false, text);
             }
         }
-        , exportCrawls: function(e) {
+        , toggleSMSModal: function (e) {
+            e.preventDefault();
+            $("#sms-modal").modal('toggle');
+            if (!$("#pr-sms-page table tbody tr").length)
+                this.loadSMSList();
+        }
+        , selectSMSRow: function (e) {
+            if (!$(e.target).is("input") && !$(e.target).is("label")) {
+                e.preventDefault();
+                var checkBox = $(e.target).parents("tr:first").find("input[type=checkbox]");
+                checkBox.attr("checked", !checkBox.attr("checked"));
+            }
+        }
+        , addSMSItems: function (e) {
+            e.preventDefault();
+            var self = this;
+            $("#pr-sms-page table tbody tr").each(function () {
+                if ($(this).find("input[name=selected]").attr("checked") === 'checked') {
+                    self.addCrawl({content: $(this).find(".body").text()});
+                }
+            });
+        }
+        , loadSMSList: function (e) {
+            var self = this;
+            typeof e !== "undefined" && e.preventDefault();
+            var params = {start: Global.jalaliToGregorian($("[name=start]").val()) + 'T00:00:00', end: Global.jalaliToGregorian($("[name=start]").val()) + 'T23:59:59'};
+            var model = new PRModel({query: $.param(params)});
+            var template = Template.template.load('pr/sms', 'sms');
+            var $container = $("#sms-items");
+            model.fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    $.each(items, function () {
+                        this.showCheckbox = true;
+                    });
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender();
+                        });
+                    });
+                }
+            });
+        }
+        , exportCrawls: function (e) {
             e.preventDefault();
             var data = {
                 groupid: $('.portlet.crawl .actions [data-type="items-group-select"]').val()
@@ -71,7 +120,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
             console.log(data);
         }
-        , duplicateItems: function(e) {
+        , duplicateItems: function (e) {
             e.preventDefault();
             var self = this;
             var data = this.prepareSave();
@@ -242,8 +291,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , addCrawl: function (params) {
-//            $(".crawl-items").find("tbody").append('<tr><td><span class="label label-info label-sm">' + $('[data-type="type-select"]').find(":selected").text() + '</span> <span class="text">' + params.content + '</span></td></tr>');
-            $(".crawl-items").find("tbody").append('<tr><td><span class="text">' + params.content + '</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>');
+            var self = this;
+            $(".crawl-items").find("tbody").append(self.crawlItemTmpl.replace(/{content}/, params.content)).promise().done(function() {
+//                $(".crawl-items").find("tr:last")
+                var editable = new Editable({simple: true});
+                editable.init();
+            });
         }
         , addToRepository: function (e) {
             var self = this;
@@ -342,19 +395,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             };
             $.each($datePickers, function () {
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
+//                if ($(this).attr('name') === "start")
+//                    $(this).val(Global.jalaliToGregorian(persianDate().subtract('days', 1).format('YYYY-MM-DD')));
             });
             self.loadCrawlItems(null, function () {
                 self.initSortable();
+                var editable = new Editable({simple: true});
+                editable.init();
             });
         }
         , initSortable: function (refresh) {
             var refresh = (typeof refresh !== "undefined") ? refresh : false;
             try {
                 $(".crawl-items").sortable('refresh');
-            } catch(e) {
+            } catch (e) {
                 $(".crawl-items").sortable({
                     items: "tr"
-                    , cancel: 'a, button'
+                    , cancel: 'a, button, input, textarea'
                     , axis: 'y'
                     , forcePlaceholderSize: true
                     , placeholder: ".sort-placeholder"
