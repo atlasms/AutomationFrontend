@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
                                     return 'This field is required';
                             }
                         });
-                        options.callback && self.setEventListeners($this, options);
+                        options.callback !== null && self.setEventListeners($this, options);
                     }
                 });
             }, 1000);
