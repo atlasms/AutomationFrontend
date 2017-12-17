@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
                                     return 'This field is required';
                             }
                         });
-                        options.callback !== null && self.setEventListeners($this, options);
+                        self.callback !== null && self.setEventListeners($this, options);
                     }
                 });
             }, 1000);
@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
                     key: $(e.currentTarget).attr('data-field')
                     , value: params.newValue
                 };
-                self.callback["handleEditables"]($(e.currentTarget).attr('data-pk'), data);
+                self.callback !== null && self.callback["handleEditables"]($(e.currentTarget).attr('data-pk'), data);
             });
 //            $obj.on('init', function (e, edt) {
 //                self.callback["handleEditables"]('aaaa');
