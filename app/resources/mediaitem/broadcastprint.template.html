@@ -61,6 +61,7 @@
 	.stats-table { margin-bottom: 20px; }
 	.stats-table .col-xs-2 { width: 16.666666%; }
 	.stats-table .col-xs-8 { width: 66.666666%; }
+	.table-tools { display: none; }
 </style>
 <div class="wrapper">
 	<div id="ingest-page" class="portlet box">
@@ -89,7 +90,13 @@
 										<span data-type="count" class="label label-info label-sm"></span>
 									</div>
 								</td>
-								<td class="col-xs-6"></td>
+								<td class="col-xs-2">
+									{{#if params.startJalali}}<strong>{{params.startJalali}}</strong>{{/if}}
+								</td>
+								<td class="col-xs-2">
+									{{#if params.endJalali}}<strong>{{params.endJalali}}</strong>{{/if}}
+								</td>
+								<td class="col-xs-2"></td>
 							</tr>
 						</table>
 						<div id="broadcast-place"></div>

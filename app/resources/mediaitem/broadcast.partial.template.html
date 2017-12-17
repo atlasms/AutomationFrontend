@@ -1,6 +1,35 @@
-<a href="/resources/broadcastprint/?id={{#each []}}{{#if @first}}{{ConductorMediaId}}{{/if}}{{/each}}&title={{#each []}}{{#if @first}}{{ConductorTitle}}{{/if}}{{/each}}" target="_blank" class="btn btn-default print-btn pull-right" style="margin-bottom: 20px;">
+<a href="/resources/broadcastprint/?id={{#each items}}{{#if @first}}{{ConductorMediaId}}{{/if}}{{/each}}&title={{#each items}}{{#if @first}}{{ConductorTitle}}{{/if}}{{/each}}{{#if params.start}}&start={{params.start}}{{/if}}{{#if params.end}}&end={{params.end}}{{/if}}" target="_blank" class="btn btn-default print-btn pull-right" style="margin-bottom: 20px;">
 	<i class="fa fa-print"></i> چاپ
 </a>
+<div class="table-tools pull-left">
+	<form class="form-inline">
+		<div class="form-group">
+			<select class="form-control" data-task="change-mediausage-mode">
+				<option value="all">همه</option>
+				<option value="daterange" {{#if params.start}}selected{{/if}}>بازه زمانی</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon has-icon">
+					<i class="fa fa-calendar"></i>
+				</span>
+				<input type="text" class="form-control datepicker" {{#if params.start}}{{else}}disabled{{/if}} name="startdate" placeholder="" value="{{#if params.start}}{{params.start}}{{else}}{{createDate 0}}{{/if}}">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon has-icon">
+					<i class="fa fa-calendar"></i>
+				</span>
+				<input type="text" class="form-control datepicker" {{#if params.end}}{{else}}disabled{{/if}} name="enddate" placeholder="" value="{{#if params.end}}{{params.end}}{{else}}{{createDate 0}}{{/if}}">
+			</div>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-success" data-task="apply-mediausage-filters">نمایش</button>
+		</div>
+	</form>
+</div>
 <div class="clearfix"></div>
 <table class="table table-bordered table-hover table-striped">
 	<thead>
@@ -17,7 +46,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{#each []}}
+		{{#each items}}
 		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" class="" data-duration="{{ConductorDuration}}">
 			<td class="text-center">{{math @index "+" 1}}</td>
 			<td class="">

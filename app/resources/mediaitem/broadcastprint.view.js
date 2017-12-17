@@ -22,24 +22,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , render: function (params) {
             var self = this;
-
             var masterTemplate = Template.template.load('resources/mediaitem', 'broadcastprint');
+            var range = (typeof $_GET['start'] !== "undefined" && typeof $_GET['end'] !== "undefined") ? {
+                start: $_GET['start']
+                , end: $_GET['end']
+                , startJalali: Global.gregorianToJalali($_GET['start'])
+                , endJalali: Global.gregorianToJalali($_GET['end'])
+            } : {};
             masterTemplate.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
+                var output = handlebarsTemplate({params: range});
                 var $container = $(Config.positions.wrapper);
                 $container.html(output).promise().done(function () {
                     var params = {
-                        overrideUrl: Config.api.schedule + '/mediausecount?id=' + self.getId()
+//                        overrideUrl: Config.api.schedule + '/mediausecount?id=' + self.getId()
+                        overrideUrl: Config.api.schedule + '/' + (range ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59' : '')
                     };
                     model = new MediaitemModel(params);
                     model.fetch({
                         success: function (items) {
                             items = self.prepareItems(items.toJSON(), params);
+                            var d = {
+                                items: items
+                                , params: range
+                            };
+                            console.log(d);
                             var template = Template.template.load('resources/mediaitem', 'broadcast.partial');
                             template.done(function (data) {
                                 var handlebarsTemplate = Template.handlebars.compile(data);
-                                var output = handlebarsTemplate(items);
+                                var output = handlebarsTemplate(d);
                                 $("#broadcast-place").html(output).promise().done(function() {
                                     self.updateStats();
                                 });
@@ -48,8 +59,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 });
             });
-
-
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

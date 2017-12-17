@@ -29,6 +29,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'submit .categories-metadata-form': 'saveMetadata'
             , 'click [data-task="send-telegram"]': 'sendTelegram'
             , 'click [data-task="publish-website"]': 'publishWebsite'
+            , 'change [data-task="change-mediausage-mode"]': 'mediaUsageChangeMode'
+            , 'click [data-task="apply-mediausage-filters"]': 'mediaUsageFilter'
         }
         , sendTelegram: function (e) {
             e.preventDefault();
@@ -52,7 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
-        , publishWebsite: function(e) {
+        , publishWebsite: function (e) {
             e.preventDefault();
             var self = this;
             var data = {
@@ -414,6 +416,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     });
                                 } else {
                                     var handlebarsTemplate = Template.handlebars.compile(data);
+                                    if (service === "broadcast")
+                                        items = { items: items, params: {} };
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
                                         if ($container.find(".scroller").length)
@@ -565,6 +569,48 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 if (reset)
                     $this.val($this.attr('data-default'));
+            });
+        }
+        , mediaUsageChangeMode: function (e) {
+            var self = this;
+            var val = $(e.target).val();
+            switch (val) {
+                case 'all':
+                    $(".table-tools .datepicker").prop('disabled', true);
+                    break;
+                case 'daterange':
+                    $(".table-tools .datepicker").prop("disabled", false);
+                    self.attachDatepickers();
+                    break;
+            }
+        }
+        , mediaUsageFilter: function (e, type) {
+            e.preventDefault();
+            var self = this;
+            var type = $('[data-task="change-mediausage-mode"]').val();
+            var range = (type === "daterange") ? {
+                start: Global.jalaliToGregorian($(".table-tools .datepicker[name=startdate]").val())
+                , end: Global.jalaliToGregorian($(".table-tools .datepicker[name=enddate]").val())
+            } : null;
+            var params = {
+                overrideUrl: Config.api.schedule + '/' + (range ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59': '')
+            };
+            var template = Template.template.load('resources/mediaitem', 'broadcast.partial');
+            new MediaitemModel(params).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var d = {
+                        items: items
+                        , params: range
+                    };
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(d);
+                        $("#tab-schedule").html(output).promise().done(function() {
+                            self.attachDatepickers();
+                        });
+                    });
+                }
             });
         }
     });
