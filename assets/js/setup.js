@@ -137,6 +137,8 @@ require.config({
         , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
         , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]
         , "monitoring.ualogs.view": ["../../app/monitoring/ualogs/ualogs.view"]
+        , "stats.broadcast.view": ["../../app/stats/broadcast/broadcast.view"]
+        , "stats.broadcastprint.view": ["../../app/stats/broadcast/broadcastprint.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
         , "stats.ingestprint.view": ["../../app/stats/ingest/ingestprint.view"]
         , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]

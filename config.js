@@ -106,6 +106,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "monitoring/ingest": {"private": true, "access": null, "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
             , "monitoring/playlist": {"private": true, "access": null, "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}
             , "monitoring/ualogs": {"private": true, "access": null, "action": "UserActivityLogsView", "file": "app/monitoring/ualogs/ualogs.view"}
+            , "stats/broadcast": {"private": true, "access": null, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
+            , "stats/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
             , "stats/ingest": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/ingestprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
 //            , "newsroom/news": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/newsroom/news/ingest.view"}

@@ -84,6 +84,7 @@
         "icon": "area-chart",
         "items": [
             { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
+            { "title": "گزارش کنداکتور زنده", "alias": "stats_broadcast", "icon": "bar-chart", "link": "/stats/broadcast" },
             { "title": "آمار پخش", "alias": "broadcast_stats", "icon": "pie-chart", "link": "#" },
             { "title": "آمار منابع", "alias": "resources_stats", "icon": "bar-chart", "link": "#" },
             { "title": "آمار آرشیو", "alias": "archive_stats", "icon": "file-video-o", "link": "#" },
