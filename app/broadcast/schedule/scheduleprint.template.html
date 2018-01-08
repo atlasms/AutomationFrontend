@@ -47,6 +47,7 @@
 	.date.number-only { font-size: 14px; text-align: center; font-weight: bold }
 	.date.number-only span { display: inline-block; padding: 0 8px; }
 	code{border:1px solid #e1e1e1;}
+	select { border: 0 none; color: #000; background: transparent; -webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: ''; }
 </style>
 <div class="wrapper">
 	<table class="metadata" cellspacing="0" cellpadding="0" style="">
@@ -80,6 +81,7 @@
 				<th style="width: 40px; text-align: center;">قسمت</th>
 				<th style="width: 150px; text-align: center;">نام فایل</th>
 				<th>توضیحات</th>
+				<th style="width: 120px;">نوع برنامه</th>
 				<th style="width: 40px; text-align: center;">تکرار</th>
 				<th style="width: 40px; text-align: center;">منتخب</th>
 			</tr>
@@ -117,6 +119,13 @@
 				</td>
 				<td>
 					{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
+				</td>
+				<td>
+					<select name="ConductorType" disabled>
+						{{#select ConductorType}}
+						{{{getDefinitionOptions 71}}}
+						{{/select}}
+					</select>
 				</td>
 				<td style="text-align: center;">
 					{{#if ConductorRepeat}}&times;{{/if}}
