@@ -1,0 +1,21 @@
+{
+  "devDependencies": {
+    "gulp": "latest",
+    "gulp-util": "latest",
+    "gulp-sass": "latest",
+    "gulp-coffee": "latest",
+    "gulp-uglify": "latest",
+    "gulp-concat": "latest",
+    "gulp-connect": "latest",
+    "gulp-prettify": "latest",
+    "gulp-minify-css": "latest",
+    "gulp-rename": "latest",
+    "gulp-sourcemaps": "latest",
+    "gulp-touch": "latest",
+    "gulp-rtlcss": "latest",
+    "autoprefixer": "latest",
+    "gulp-postcss": "latest",
+    "gulp-foreach": "latest",
+    "gulp-add-src": "latest"
+  }
+}
