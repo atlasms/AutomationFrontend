@@ -20,12 +20,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'change [data-type=state]': 'filterStates'
         }
         , filterStates: function (e) {
+            return false;
             var value = typeof e === "object" ? $(e.target).val() : e;
-
             var $printButton = $(".print-btn");
-//            $printButton.attr('href', $printButton.attr('href').split('state=')[0] + 'state=' + value);
-            var href  = '/stats/ingestprint?category=' + $("#items-table").attr('data-catid') + '&state=' + value;
-                href += '?startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var href  = '/stats/broadcastprint?type=' + $('[data-type=type]').val();
+                href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
             $printButton.attr('href', href);
             
             var $rows = $("#items-table tbody").find("tr");
@@ -94,6 +93,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
+            var definedItems = toolbar.getDefinedToolbar(71, 'type');
+            var elements = $.merge($.merge([], self.toolbar), definedItems);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
@@ -143,33 +144,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     
                     if ($(this).find(".broadcast-count").text() > 0) {
                         stats.totalbroadcast += ($(this).data('duration'));
-//                        stats.totalrepeats += ($(this).data('duration') * ($(this).find(".broadcast-count").text() - 1));
                     }
                 }
             });
             $("[data-type=duration]").html(Global.createTime(stats.duration));
             $("[data-type=count]").html(stats.count);
             $("[data-type=totalbroadcast]").html(Global.createTime(stats.totalbroadcast));
-//            $("[data-type=totalrepeats]").html(Global.createTime(stats.totalrepeats));
         }
         , processSum: function (items) {
-//            var data = {items: items, duration: 0, count: 0, header: true};
-//            $.each(items, function () {
-//                data.duration += this.Duration;
-//                data.count++;
-//            });
-//            return data;
-//            
-            
             var data = {items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: true};
             $.each(items, function () {
                     data.count++;
                     data.duration += this.ConductorDuration;
-                  
-//                    if (this.ConductorUseCount > 0) {
-                        data.totalbroadcast += this.ConductorDuration;
-//                        data.totalrepeats += (this.Duration * (this.ConductorUseCount - 1));
-//                }
+                    data.totalbroadcast += this.ConductorDuration;
             });
             console.log(data);
             return data;
@@ -181,7 +168,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , end: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
             var params = {
-                overrideUrl: Config.api.schedule + '/mediausecountbydate?id=0&startdate=' + range.start + '&enddate=' + range.end
+                overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $('[data-type=type]').val() + '&startdate=' + range.start + '&enddate=' + range.end
             };
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);
@@ -201,7 +188,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , updatePrintButton: function() {
             var $printButton = $(".print-btn");
-            var dates = '?startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var dates = '?type=' + $('[data-type=type]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
             if ($printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + dates);
         }
