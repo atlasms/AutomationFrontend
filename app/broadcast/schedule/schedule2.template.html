@@ -130,7 +130,8 @@
 					<div class="c2"><span>برنامه</span></div>
 					<div class="c2"><span>عنوان قسمت</span></div>
 					<div class="id"><span>قسمت</span></div>
-					<div class="c3"><span>توضیحات</span></div>
+					<div class="c2"><span>توضیحات</span></div>
+					<div class="c1"><span>نوع آیتم</span></div>
 					<div class="r"><span>تکرار</span></div>
 					<div class="r"><span>منتخب</span></div>
 				</nav>
@@ -193,8 +194,17 @@
 								<input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
 							</div>
 						</div>
-						<div class="c3 td">
+						<div class="c2 td">
 							<textarea class="form-control" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
+						</div>
+						<div class="c1 td">
+							<div class="form-group form-md-line-input fixed-label">
+								<select class="form-control" name="ConductorType">
+									{{#select ConductorType}}
+									{{{getDefinitionOptions 71}}}
+									{{/select}}
+								</select>
+							</div>
 						</div>
 						<div class="r td text-center">
 							<div class="checkbox checkbox-success checkbox-circle">
@@ -207,18 +217,6 @@
 								<input name="CondcutorFeatured" data-validation="digit" id="ft{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
 									   <label for="ft{{@index}}"></label>
 							</div>
-						</div>
-						<div class="hide">
-							<select class="form-control" name="ConductorType">
-								{{#select ConductorType}}
-								<option value="0">مجموعه خارجی</option>
-								<option value="1">مجموعه ایرانی</option>
-								<option value="2">آرم&zwnj;استیشن، وله، اعلام برنامه</option>
-								<option value="3">سینمایی</option>
-								<option value="4">آنونس، تیزر، میان&zwnj;برنامه</option>
-								<option value="5">آگهی بازرگانی</option>
-								{{/select}}
-							</select>
 						</div>
 					</li>
 					{{/each}}

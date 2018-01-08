@@ -294,13 +294,15 @@ body.fixed-toolbar {
 } 
 
 .c1 { width: 8.33333%; float: left; }
-.c2 { width: 16.66666%; float: left; }
+.c2 { width: 16%; float: left; }
 .c3 { width: 20%; float: left; }
 div#schedule-table {
     transform: translateZ(0); backface-visibility: hidden; transform: translate3d(0, 0, 0);
     font-size: 16px;
     margin-bottom: 0;
-    .id, .r { width: 4.33333%; padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
+    .id, .r { padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
+    .id { width: 4.33333%; }
+    .r { width: 3.33333%; }
     input, textarea { transition: none; }
     .form-group.form-md-line-input .form-control ~ label:after { transition: none; }
     figure {
