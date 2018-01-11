@@ -55,12 +55,13 @@
 	</thead>
 	<tbody>
 		{{#each items}}
-		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-duration="{{ConductorDuration}}">
+		<tr data-id="{{ConductorId}}" data-index="{{math @index "+" 1}}" data-duration="{{ConductorDuration}}">
 			<td class="text-center">
-				<span class="idx">{{math @index "+" 1}}</span>
+				<span class="idx" style="display: block;">{{math @index "+" 1}}</span>
+				{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
 			</td>
 			<td>
-				<strong>{{ConductorTitle}}{{#if ConductorCategoryTitle}} « {{ConductorCategoryTitle}}{{/if}}</strong>
+				<strong>{{ConductorTitle}}{{#if ConductorCategoryTitle}} » {{ConductorCategoryTitle}}{{/if}}</strong>
 			</td>
 			<td class="text-center">
 				{{extractDate CondcutorStartTime}}
@@ -76,7 +77,7 @@
 			</td>
 			<td class="text-center">
 				<div class="checkbox checkbox-success checkbox-circle">
-					<input type="checkbox" id="checkbox_1_{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} disabled />
+					<input type="checkbox" id="checkbox_1_{{@index}}" value="{{#if ConductorIsFixed}}1{{/if}}" {{#if ConductorIsFixed}}checked{{/if}} disabled />
 						   <label for="checkbox_1_{{@index}}"></label>
 				</div>
 			</td>

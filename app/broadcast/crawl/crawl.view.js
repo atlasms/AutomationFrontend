@@ -262,6 +262,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                 callback(items);
                             else
                                 self.initSortable(true);
+                            var editable = new Editable({simple: true});
+                            editable.init();
                         });
                     });
                 }
