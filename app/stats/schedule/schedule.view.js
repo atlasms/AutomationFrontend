@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return false;
             var value = typeof e === "object" ? $(e.target).val() : e;
             var $printButton = $(".print-btn");
-            var href  = '/stats/broadcastprint?type=' + $('[data-type=type]').val();
+            var href  = '/stats/scheduleprint?CategoryId=' + $('[name=CategoryId]').val();
                 href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
             $printButton.attr('href', href);
             
@@ -45,6 +45,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
             this.updateStats($rows);
         }
+        , handleTreeCalls: function (routes, path) {
+            var self = this;
+            var pathId = routes.pop().toString();
+            var params = {overrideUrl: Config.api.media};
+            $("[name=CategoryId]").length && $("[name=CategoryId]").val(pathId.toString());
+            this.loadItems();
+            /*
+            var template = Template.template.load('resources/ingest', 'metadata.partial');
+            var $container = $(self.$metadataPlace);
+            var model = new IngestModel(params);
+            model.fetch({
+                data: $.param({categoryId: pathId})
+                , success: function (data) {
+                    items = self.prepareItems(data.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender();
+                        });
+                    });
+                }
+//                , error: function (e, data) {
+//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                }
+            });
+            */
+        }
         , reLoad: function () {
             this.load();
         }
@@ -56,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , render: function (params) {
             var self = this;
-            var template = Template.template.load('stats/broadcast', 'broadcast');
+            var template = Template.template.load('stats/schedule', 'schedule');
             var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
@@ -67,9 +95,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function () {
-//            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+//            this.loadItems();
             this.attachDatepickers();
-            this.loadItems();
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             this.renderStatusbar();
         }
         , attachDatepickers: function () {
@@ -93,8 +121,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
-            var definedItems = toolbar.getDefinedToolbar(71, 'type');
-            var elements = $.merge($.merge([], self.toolbar), definedItems);
+//            var definedItems = toolbar.getDefinedToolbar(71, 'type');
+            var elements = $.merge([], self.toolbar);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
@@ -168,7 +196,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , end: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
             var params = {
-                overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $('[data-type=type]').val() + '&startdate=' + range.start + '&enddate=' + range.end
+                overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + range.start + '&enddate=' + range.end
             };
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);
@@ -188,7 +216,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , updatePrintButton: function() {
             var $printButton = $(".print-btn");
-            var dates = '?type=' + $('[data-type=type]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var dates = '/stats/scheduleprint?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
             if ($printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + dates);
         }

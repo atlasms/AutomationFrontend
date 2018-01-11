@@ -78,7 +78,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             };
             var params = {
 //                overrideUrl: Config.api.schedule + '/mediausecountbydate?id=0&startdate=' + range.start + '&enddate=' + range.end
-                overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $_GET['type'] + '&startdate=' + range.start + '&enddate=' + range.end
+                overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $_GET['CategoryId'] + '&startdate=' + range.start + '&enddate=' + range.end
             };
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);

@@ -26,7 +26,7 @@
 		</td>
 		{{#if header}}
 		<td>
-			<a href="/stats/broadcastprint" target="_blank" class="btn btn-default print-btn">
+			<a href="" target="_blank" class="btn btn-default print-btn">
 				<i class="fa fa-print"></i> چاپ
 			</a>
 		</td>
@@ -58,7 +58,7 @@
 		<tr data-id="{{ConductorId}}" data-index="{{math @index "+" 1}}" data-duration="{{ConductorDuration}}">
 			<td class="text-center">
 				<span class="idx" style="display: block;">{{math @index "+" 1}}</span>
-				{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
+				{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}#versions" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
 			</td>
 			<td>
 				<strong>{{ConductorTitle}}{{#if ConductorCategoryTitle}} » {{ConductorCategoryTitle}}{{/if}}</strong>

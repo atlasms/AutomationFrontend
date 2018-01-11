@@ -85,7 +85,7 @@
         "items": [
             { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
             { "title": "گزارش نوع کنداکتور", "alias": "stats_broadcast", "icon": "bar-chart", "link": "/stats/broadcast" },
-            { "title": "گزارش کنداکتور", "alias": "stats_schedule", "icon": "pie-chart", "link": "stats/schedule" },
+            { "title": "گزارش کنداکتور", "alias": "stats_schedule", "icon": "pie-chart", "link": "/stats/schedule" },
             { "title": "آمار منابع", "alias": "resources_stats", "icon": "bar-chart", "link": "#" },
             { "title": "آمار آرشیو", "alias": "archive_stats", "icon": "file-video-o", "link": "#" },
             { "title": "آمار وب‌سایت", "alias": "website_stats", "icon": "line-chart", "link": "#" },

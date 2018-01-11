@@ -188,7 +188,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , updatePrintButton: function() {
             var $printButton = $(".print-btn");
-            var dates = '?type=' + $('[data-type=type]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var dates = '/stats/broadcastprint?type=' + $('[data-type=type]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
             if ($printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + dates);
         }
