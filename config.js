@@ -110,6 +110,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "stats/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
             , "stats/ingest": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/ingestprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
+            , "stats/schedule": {"private": true, "access": null, "action": "StatsScheduleView", "file": "app/stats/schedule/schedule.view"}
+            , "stats/scheduleprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsSchedulePrintView", "file": "app/stats/schedule/scheduleprint.view"}
 //            , "newsroom/news": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/newsroom/news/ingest.view"}
         },
         "positions": {

@@ -141,6 +141,8 @@ require.config({
         , "stats.broadcastprint.view": ["../../app/stats/broadcast/broadcastprint.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
         , "stats.ingestprint.view": ["../../app/stats/ingest/ingestprint.view"]
+        , "stats.schedule.view": ["../../app/stats/schedule/schedule.view"]
+        , "stats.scheduleprint.view": ["../../app/stats/schedule/scheduleprint.view"]
         , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]
 
                 // Helpers
