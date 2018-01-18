@@ -146,20 +146,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 }
             });
-            $("[data-type=duration]").html(Global.createTime(stats.duration));
+            $("[data-type=duration]").html(Global.createTime2(stats.duration));
             $("[data-type=count]").html(stats.count);
-            $("[data-type=totalbroadcast]").html(Global.createTime(stats.totalbroadcast));
-            $("[data-type=totalrepeats]").html(Global.createTime(stats.totalrepeats));
+            $("[data-type=totalbroadcast]").html(Global.createTime2(stats.totalbroadcast));
+            $("[data-type=totalrepeats]").html(Global.createTime2(stats.totalrepeats));
         }
         , processSum: function (items) {
-//            var data = {items: items, duration: 0, count: 0, header: true};
-//            $.each(items, function () {
-//                data.duration += this.Duration;
-//                data.count++;
-//            });
-//            return data;
-//            
-            
             var data = {items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: true};
             $.each(items, function () {
                     data.count++;
@@ -206,7 +198,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , updatePrintButton: function() {
             var $printButton = $(".print-btn");
             var dates = '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
-            if ($printButton.attr('href').indexOf('startdate') === -1)
+            if ($printButton.length && $printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + dates);
         }
         , renderStatusbar: function () {

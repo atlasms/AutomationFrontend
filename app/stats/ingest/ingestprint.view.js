@@ -91,10 +91,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 }
             });
-            $("[data-type=duration]").html(Global.createTime(stats.duration));
+            $("[data-type=duration]").html(Global.createTime2(stats.duration));
             $("[data-type=count]").html(stats.count);
-            $("[data-type=totalbroadcast]").html(Global.createTime(stats.totalbroadcast));
-            $("[data-type=totalrepeats]").html(Global.createTime(stats.totalrepeats));
+            $("[data-type=totalbroadcast]").html(Global.createTime2(stats.totalbroadcast));
+            $("[data-type=totalrepeats]").html(Global.createTime2(stats.totalrepeats));
         }
         , processSum: function (items) {
             var data = {items: items, duration: 0, count: 0};
