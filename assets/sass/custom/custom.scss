@@ -133,7 +133,8 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
     &:hover { color: #333; text-decoration: none; }
 }
 .box.portlet { direction: ltr; text-align: left; }
-.editable-input textarea { min-width: 350px; }
+.editable-input textarea { min-width: 450px; }
+.editable-input input { min-width: 450px; padding-left: 24px; padding-right: 12px !important; }
 .form-group.form-md-line-input .form-control:not(select):not(textarea) { font-size: 16px; }
 .rtl-date { direction: rtl; display: inline-block; }
 // Typeahead
