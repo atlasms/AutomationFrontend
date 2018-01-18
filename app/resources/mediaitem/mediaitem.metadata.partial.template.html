@@ -6,7 +6,7 @@
 		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
 		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
 		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
-		<li><a href="#tab-telegram" data-toggle="tab">تلگرام</a></li>
+		<li><a href="#tab-social" data-toggle="tab">شبکه‌های اجتماعی</a></li>
 		<li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
 		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
 	</ul>
@@ -39,9 +39,10 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">خلاصه</label>
+				<label class="col-sm-3 control-label">کلیدواژه‌ها</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" rows="2" name="Summary">{{Summary}}</textarea>
+					<input class="form-control" type="text" name="Keywords" value="{{Keywords}}" />
+					<span class="help-block">کلیدواژه‌ها می‌بایست با استفاده از کامای انگلیسی «,» از هم جدا شوند.</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -63,6 +64,30 @@
 				<label class="col-sm-3 control-label">تهیه کننده</label>
 				<div class="col-sm-6">
 					<input type="text" class="form-control" name="Producer" value="{{Producer}}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">کارگردان</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="Director" value="{{Director}}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">تصویربردار</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="CameraMan" value="{{CameraMan}}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">صدابردار</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="SoundRecordist" value="{{SoundRecordist}}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">تدوین‌گر</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="Editor" value="{{Editor}}">
 				</div>
 			</div>
 		</div>
@@ -198,7 +223,22 @@
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane fade" id="tab-telegram">
+		<div class="tab-pane fade" id="tab-social">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">پخش زنده</label>
+				<div class="col-sm-1">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="SocialLive" id="r_sl1" value="1" type="radio" {{isChecked 1 SocialLive}} />
+						<label for="r_sl1">بلی</label>
+					</div>
+				</div>
+				<div class="col-sm-1">
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="SocialLive" id="r_sl2" value="0" type="radio" {{isChecked 0 SocialLive}} />
+						<label for="r_sl2">خیر</label>
+					</div>
+				</div>
+			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
 				<div class="col-sm-1">
