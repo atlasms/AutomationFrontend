@@ -6,6 +6,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
         , events: {}
 //        , el: 
         , render: function () {
+            location.href = '/resources/media';
+            return false;
             var self = this;
             var template = Template.template.load('dashboard', 'dashboard');
             template.done(function (data) {
