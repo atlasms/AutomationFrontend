@@ -12,9 +12,9 @@
 @import "loading";
 @import "login";
 @import "modal-transitions";
-@import "select2";
 @import "x-editable";
 */
+@import "select2";
 // @import "../global/plugins/select2";
 // @import "../global/components/elements/cards/_card-1";
  
@@ -188,7 +188,7 @@ div.tooltip-inner {
 }
  
 // Mainbody
-#main { padding-bottom: 100px; }
+// #main { padding-bottom: 100px; }
 .page-content { padding-top: 30px; } 
 .page-content { padding-top: 0 !important; }
 
@@ -598,6 +598,34 @@ div#schedule-table {
     dd { height: 35px; margin-bottom: 10px; }
 }
 
+// Newsroom
+.news-dashboard {
+    display: flex; flex-direction: column; min-height: 400px;
+    .portlet {
+        flex: 1 1 auto; display: flex; flex-direction: column; height: 0; overflow: hidden;
+        .portlet-body { flex: 1 1 auto; display: flex; }
+        small { display: block; max-height: 16px; overflow: hidden; margin-top: 6px; }
+        &.itemlist .portlet-body {
+            overflow: hidden; overflow-y: scroll;
+            tbody tr { cursor: pointer; }
+        }
+        &.item .portlet-body {
+            padding-right: 0;
+            .row {
+                width: 100%;
+                > div { height: 100%; }
+            }
+            .form-group, textarea { height: 100%; }
+            textarea { font-size: 18px; }
+            figure {
+                img { display: block; width: 100%; height: auto; max-height: none; }
+            }
+        }
+    }
+    .metadata-inner {
+        height: 100%; overflow: hidden; overflow-y: auto;
+    }
+}
 
 #player-container {
     background: #3C3E3F;

@@ -1,0 +1,98 @@
+<div class="col-xs-12 col-sm-7">
+	<div class="form-group">
+		<textarea class="form-control">{{headline}}
+{{body}}</textarea>
+	</div>
+</div>
+<div class="col-xs-12 col-sm-5">
+	<div class="metadata-inner">
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="active"><a href="#item-metadata" role="tab" data-toggle="tab">اطلاعات کلی</a></li>
+			<li><a href="#item-related" role="tab" data-toggle="tab">اخبار مرتبط</a></li>
+			<li><a href="#item-original" role="tab" data-toggle="tab">خبر اصلی</a></li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="item-metadata">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th class="col-xs-3">منبع</th>
+							<td class="col-xs-9">{{sourceText}}</td>
+							<td rowspan="4">
+								<figure style="width: 300px">
+									<img src="{{thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+								</figure>
+							</td>
+						</tr>
+						<tr>
+							<th class="col-xs-3">موضوع</th>
+							<td class="col-xs-9">{{topicText}}</td>
+						</tr>
+						<tr>
+							<th class="col-xs-3">تاریخ انتشار</th>
+							<td class="col-xs-9">{{extractTime publishDate}} {{extractDate publishDate}}</td>
+						</tr>
+						<tr>
+							<th class="col-xs-3">لینک منبع</th>
+							<td class="col-xs-9">
+								<a href="{{originalUrl}}" target="_blank"><i class="fa fa-external-link"></i> لینک</a>
+							</td>
+						</tr>
+						<tr>
+							<th class="col-xs-3">کلیدواژه‌ها</th>
+							<td class="col-xs-9" colspan="2">
+								<ul class="list-inline">
+									{{#each keywords}}
+									<li>
+										<span class="label label-sm label-default">{{title}}</span>
+									</li>
+									{{/each}}
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="item-related">
+				<table class="table table-condensed table-hover table-striped">
+					<thead>
+						<tr>
+							<th class="">#</th>
+							<th class=""></th>
+							<th class="col-xs-7">خبر</th>
+							<th class="col-xs-3 text-center">زمان</th>
+							<th class="col-xs-2">منبع</th>
+							<th class=""></th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each relatedItems}}
+						<tr data-id="{{id}}">
+							<td>
+								<!--{{math @index "+" 1}}-->
+								{{id}}
+							</td>
+							<td>
+								<figure style="width: 80px;">
+									<img src="{{thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+								</figure>
+							</td>
+							<td>
+								<strong>{{headline}}</strong>
+							</td>
+							<td class="text-center">{{extractTime publishDate}} {{extractDate publishDate}}</td>
+							<td>{{sourceText}}</td>
+							<td>
+								<a class="item-link btn btn-link" href="{{originalUrl}}" target="_blank"><i class="fa fa-external-link"></i></a>
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="item-original">
+				{{{replaceTarget bodyHtml}}}
+			</div>
+		</div>
+	</div>
+</div>

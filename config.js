@@ -113,7 +113,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "stats/ingestprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/schedule": {"private": true, "access": null, "action": "StatsScheduleView", "file": "app/stats/schedule/schedule.view"}
             , "stats/scheduleprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsSchedulePrintView", "file": "app/stats/schedule/scheduleprint.view"}
-//            , "newsroom/news": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/newsroom/news/ingest.view"}
+            , "newsroom": {"private": true, "access": null, "action": "NewsroomView", "file": "app/newsroom/newsroom.view"}
+            , "newsroom/news": {"private": true, "access": null, "action": "NewsroomNewsView", "file": "app/newsroom/news/news.view"}
         },
         "positions": {
             "wrapper": "body"
@@ -143,6 +144,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "lantv": "share/lantv/"
             , "hsm": "hsm"
             , "social": "social"
+            , "newsroom": "newssource"
         },
         "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [

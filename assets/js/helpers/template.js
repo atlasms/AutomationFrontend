@@ -232,6 +232,19 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return 'danger';
                 }
             });
+            Handlebars.registerHelper('resolveNewsLabel', function (value, options) {
+                var value = +value;
+                switch (value) {
+                    case 0:
+                        return 'primary';
+                    case 1:
+                        return 'warning';
+                    case 2:
+                        return 'success';
+                    default:
+                        return 'info';
+                }
+            });
             Handlebars.registerHelper('getDefinitions', function (id, options) {
                 var items = [];
                 $.each(Config.definitions, function () {
@@ -283,6 +296,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                             items += (container ? '<' + container + '>' : '') + '<div class="checkbox checkbox-primary checkbox-circle col-xs-12"><input name="force" data-validation="digit" id="checkbox_df' + this.Children[i].Id + '" value="' + this.Children[i].Id + '" type="' + type + '"><label for="checkbox_df' + this.Children[i].Id + '">' + this.Children[i].Key + '</label></div>' + (container ? '</' + container + '>' : '');
                 });
                 return items;
+            });
+            Handlebars.registerHelper('replaceTarget', function (html, options) {
+                return html.replace(new RegExp('<a ', 'g'), '<a target="_blank" ');
             });
             Handlebars.registerHelper('authorize', function (action, options) {
                 if (Authorize.access(action))

@@ -88,14 +88,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var label = (typeof args.text !== "undefined") ? args.text : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
             var addon = (typeof args.addon !== "undefined") ? args.addon : false;
+            var multi = (typeof args.multi !== "undefined" && args.multi) ? ' multiple="true"' : '';
+            var placeholder = (typeof args.placeholder !== "undefined" && args.placeholder) ? ' placeholder="' + args.placeholder + '"' : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
+            if (label && !icon)
+                icon = label;
             var options = '';
             if (typeof args.options !== "undefined" && args.options.length)
                 for (var i = 0; i < args.options.length; i++)
                     options += '<option value="' + args.options[i].value + '">' + args.options[i].text + '</option>';
             var output = '<div class="form-group"><div class="input-group">';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
-            output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '">' + options + '</select></div></div>';
+            output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '"' + multi + placeholder + '>' + options + '</select></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , radio: function (args) {
@@ -112,6 +116,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var output = '<div class="form-group">';
             output += options.replace(/{name}/gi, args.name);
             output += '</div>';
+            this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
+        }
+        , separator: function(args) {
+            var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
+            var output = '<div class="clearfix"></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
     });

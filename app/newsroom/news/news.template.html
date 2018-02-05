@@ -1,0 +1,56 @@
+<div id="mewsroom-page" class="news-dashboard">
+	<div class="portlet itemlist box">
+		<div class="portlet-body">
+			<div class="mainbody">
+				<table class="table table-condensed table-hover table-striped">
+					<thead>
+						<tr>
+							<th class="">#</th>
+							<th class=""></th>
+							<th class="col-xs-6">خبر</th>
+							<th class="col-xs-2 text-center">زمان</th>
+							<th class="col-xs-1">موضوع</th>
+							<th class="col-xs-2">منبع</th>
+							<th class="col-xs-1 text-center">نوع منبع</th>
+							<th class=""></th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each []}}
+						<tr data-id="{{id}}">
+							<td>
+								<!--{{math @index "+" 1}}-->
+								{{id}}
+							</td>
+							<td>
+								<figure style="width: 80px;">
+									<img src="{{thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+								</figure>
+							</td>
+							<td>
+								<strong>{{headline}}</strong>
+								<small style="" class="text-muted">{{summary}}</small>
+							</td>
+							<td class="text-center">{{extractTime publishDate}} {{extractDate publishDate}}</td>
+							<td>{{topicText}}</td>
+							<td>{{sourceText}}</td>
+							<td>
+								<span style="display: block;" class="text-center label label-{{resolveNewsLabel sourceTypeValue}}">{{sourceTypeText}}</span>
+							</td>
+							<td>
+								<a class="item-link btn btn-link" href="{{originalUrl}}" target="_blank"><i class="fa fa-external-link"></i></a>
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="portlet item box">
+		<div class="portlet-body">
+			<div class="mainbody row">
+			</div>
+		</div>
+	</div>
+</div>

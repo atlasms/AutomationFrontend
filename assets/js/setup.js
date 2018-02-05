@@ -99,6 +99,7 @@ require.config({
         , "pr.model": ["../../app/pr/pr.model"]
         , "live.model": ["../../app/resources/live/live.model"]
         , "monitoring.model": ["../../app/monitoring/monitoring.model"]
+        , "newsroom.model": ["../../app/newsroom/newsroom.model"]
 
                 // Views
         , "app.view": ["../../app/app.view"]
@@ -145,6 +146,8 @@ require.config({
         , "stats.schedule.view": ["../../app/stats/schedule/schedule.view"]
         , "stats.scheduleprint.view": ["../../app/stats/schedule/scheduleprint.view"]
         , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]
+        , "newsroom.view": ["../../app/newsroom/newsroom.view"]
+        , "newsroom.news.view": ["../../app/newsroom/news/news.view"]
 
                 // Helpers
         , "layout": ["app/layout"]
