@@ -24,6 +24,8 @@
 											<td>
 												{{#ifCond Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
 												{{#ifCond Type '==' 1}}<i class="fa fa-picture-o"></i> تصویر{{/ifCond}}
+												{{#ifCond Type '==' 2}}<i class="fa fa-headphones"></i> صدا{{/ifCond}}
+												{{#ifCond Type '==' 3}}<i class="fa fa-video-camera"></i> راش{{/ifCond}}
 											</td>
 										</tr>
 										<tr>
@@ -177,6 +179,9 @@
 							{{/authorize}}
 							{{/authorize}}
 							{{#ifCond Type '==' 0}}
+							<div id="player-container"><!-- Player Container --></div>
+							{{/ifCond}}
+							{{#ifCond Type '==' 3}}
 							<div id="player-container"><!-- Player Container --></div>
 							{{/ifCond}}
 							{{#ifCond Type '==' 1}}
