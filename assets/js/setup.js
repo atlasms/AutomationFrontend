@@ -31,6 +31,7 @@ require.config({
         , "wysihtml5": {deps: ["jquery", "vendor/wysihtml5-0.3.0"], exports: "jQuery"}
         , "cropper": {deps: ["jquery"]}
         , "pace": {deps: ["jquery"]}
+        , "bootpag": {deps: ["jquery"]}
 //        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
     , urlArgs: "_=" + (new Date()).getTime()
@@ -69,6 +70,7 @@ require.config({
         , "clusterize": ["vendor/clusterize.min"]
         , "typeahead": ["vendor/typeahead.jquery"]
         , "bloodhound": ["vendor/bloodhound.min"]
+        , "bootpag": ["vendor/jquery.bootpag.min"]
 
                 // Static files
         , "menu": ["json!../../app/menu"]

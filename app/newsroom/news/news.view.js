@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'bootpag', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, Paginator) {
     var NewsroomNewsView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
@@ -8,7 +8,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click tr[data-id]': 'loadItem'
         }
         , toolbar: [
-//            , {'separator': {}}
             {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'refresh', icon: 'fa fa-envelope'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
@@ -21,22 +20,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             }
         ]
+        , statusbar: [
+            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
+//            , {type: 'total-current', text: 'در حال نمایش', cssClass: 'badge grey-salsa'}
+        ]
         , defaultParams: {
             keyword: null
             , topic: null
             , source: null
             , q: ''
+            , offset: 0
+            , count: 50
             , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
             , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
         }
         , render: function () {
             this.loadItems();
+            this.renderStatusbar();
             return this;
         }
-        , loadItems: function () {
+        , loadItems: function (overridePrams) {
             var self = this;
             var params = self.getToolbarParams();
-            var model = new NewsroomModel({query: $.param($.extend({}, self.defaultParams, params)), path: 'list'});
+            var requestParams = $.extend({}, self.defaultParams, params, overridePrams);
+            var model = new NewsroomModel({query: $.param(requestParams), path: 'list'});
             var template = Template.template.load('newsroom/news', 'news');
             model.fetch({
                 success: function (items) {
@@ -45,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $(Config.positions.main).html(output).promise().done(function () {
-                            self.afterRender();
+                            self.afterRender(items, requestParams);
                         });
                     });
                 }
@@ -84,14 +91,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 , enddate: Global.jalaliToGregorian($('[name="startdate"]').val()) + 'T23:59:59'
             };
         }
-        , afterRender: function () {
+        , afterRender: function (items, requestParams) {
             this.handleDashboardHeight();
             this.attachDatepickers();
             this.fillSelects();
+            this.handleStatusbar(items);
+            this.renderPagination(items, requestParams);
+            $('[data-type="total-count"]').html(items.count);
+        }
+        , renderPagination: function (items, requestParams) {
+            var self = this;
+            $('.paginator').bootpag({
+                total: Math.ceil(items.count / requestParams.count),
+                page: (requestParams.offset / requestParams.count) + 1,
+                maxVisible: 10,
+                leaps: true,
+                firstLastUse: true,
+                first: '→',
+                last: '←',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+            }).on("page", function (event, num) {
+                requestParams.offset = (num - 1) * requestParams.count;
+                self.loadItems(requestParams);
+            });
         }
         , handleDashboardHeight: function () {
             var self = this;
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 self.processDashboardHeight();
             }, 500);
             $(window).on('resize', function () {
@@ -129,6 +161,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 toolbar[method](this[method]);
             });
             toolbar.render();
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
+        }
+        , handleStatusbar: function (items) {
+//            console.log(items);
+            $("#status-items .total-count span").html(items.count);
         }
         , prepareContent: function () {
             this.renderToolbar();
