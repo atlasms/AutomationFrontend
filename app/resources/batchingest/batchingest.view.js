@@ -32,18 +32,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
-            
+            var cachedItems = self.items;
             var ingestedItems = [];
-            for (var i = 0; i < self.items.items.length; i++) {
-                var current = data[0];
-                current.FileName = self.items.items[i]['FileName'];
-                current.Duration = self.items.items[i]['Duration'];
-                ingestedItems.push(current);
+            for (var i = 0; i < cachedItems.items.length; i++) {
+                ingestedItems.push($.extend({}, data[0], {FileName: cachedItems.items[i]['FileName'], Duration: cachedItems.items[i]['Duration']}, {Type: 3}));
             }
             data = ingestedItems;
             if (!data.length)
                 return false;
-            
+
             new IngestModel({overrideUrl: Config.api.media}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -83,22 +80,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $row = $el.parents("tr:first");
             if ($row.hasClass("disabled"))
                 return false;
-//            $el.parents("tbody").find("tr").removeClass('active success');
             $row.toggleClass('active success');
             var $rows = $row.parent().find("> tr.active");
-            this.handleSelecterRows($rows);
-//            $('input[name="FileName"]').val('');
-//            $('input[name="Duration"]').val('');
-//            $row.find("[data-prop]").each(function () {
-//                if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
-//                    $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
-//            });
-//            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
+            this.handleSelectedRows($rows);
             if ($rows.find('tr.active'))
                 $('button[data-task=add]').removeClass('disabled');
-            console.log(this.items);
         }
-        , handleSelecterRows: function($rows) {
+        , handleSelectedRows: function ($rows) {
             var self = this;
             self.items = {};
             if ($rows.length === 0)
@@ -109,11 +97,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
                         $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
                 });
+                self.items = {
+                    items: [{Duration: $row.data('duration'), FileName: $row.data('filename')}]
+                    , duration: $row.data("duration")
+                };
             } else {
                 $('input[name="FileName"]').val('-BATCH-');
                 var params = {duration: 0, items: []};
-                $rows.each(function() {
-                    console.log($(this));
+                $rows.each(function () {
                     params.duration += $(this).data('duration');
                     params.items.push({
                         Duration: $(this).data('duration')
@@ -123,6 +114,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $('input[name="Duration"]').val(Global.createTime2(params.duration));
                 self.items = params;
             }
+            return self.items;
         }
         , reLoad: function () {
             this.load();
@@ -172,11 +164,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , afterRender: function () {
             this.loadStorageFiles();
-//            console.log(this.flags.treeLoaded)
-//            if (typeof this.flags.treeLoaded === "undefined") {
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
-//                this.flags.treeLoaded = true;
-//            }
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
                 IngestHelper.init();
@@ -187,8 +175,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , renderToolbar: function () {
             var self = this;
-//            if (self.flags.toolbarRendered)
-//                return;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
             $.each(elements, function () {
@@ -196,7 +182,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toolbar[method](this[method]);
             });
             toolbar.render();
-//            self.flags.toolbarRendered = true;
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -250,13 +235,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-//                            self.afterRender();
                         });
                     });
                 }
-//                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-//                }
             });
         }
         , renderStatusbar: function () {
