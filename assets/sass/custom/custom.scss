@@ -17,7 +17,12 @@
 @import "select2";
 // @import "../global/plugins/select2";
 // @import "../global/components/elements/cards/_card-1";
- 
+
+@keyframes blink{0%{opacity:1}50%{opacity:0}100%{opacity:1}} 
+.blink {
+    display: inline-block;
+    &:before { display: inline-block; width: 12px; height: 12px; border-radius: 100%; background: #eb1f1f; content: ''; margin-left: 8px; animation: blink 1s; animation-iteration-count: infinite; }
+}
 // Global Rules
 h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-align: left; }
 .help-block, #main, p, button, label, table, tr, td, textarea, strong  { direction: ltr; text-align: left; }
@@ -78,6 +83,9 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 
 // Toolbar
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }
+#toolbar {
+    .datepicker { width: 120px; }
+}
 #toolbar .input-group-addon {
     min-width: 84px;
     &.has-icon {
@@ -605,7 +613,13 @@ div#schedule-table {
     .portlet {
         flex: 1 1 auto; display: flex; flex-direction: column; height: 0; overflow: hidden;
         .portlet-body { flex: 1 1 auto; display: flex; }
-        small { display: block; max-height: 16px; overflow: hidden; margin-top: 6px; }
+        small {
+            display: block; max-height: 16px; overflow: hidden; margin-top: 6px;
+            &.blink {
+                display: inline-block; margin-left: 40px; overflow: visible;
+            }
+        }
+        &.box>.portlet-title>.caption { padding-top: 5px; line-height: 27px; }
         &.itemlist .portlet-body {
             overflow: hidden; overflow-y: scroll;
             tbody tr { cursor: pointer; }

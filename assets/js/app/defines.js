@@ -56,9 +56,9 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             toastr.options.closeButton = true;
             $.ajaxSetup({
                 statusCode: {
-                    0: function () {
-                        toastr.error('Request Cancelled.', 'خطا');
-                    },
+//                    0: function () {
+//                        toastr.error('Request Cancelled.', 'خطا');
+//                    },
                     400: function () {
                         toastr.error('درخواست نا معتبر. [400]', 'خطا');
                     },
