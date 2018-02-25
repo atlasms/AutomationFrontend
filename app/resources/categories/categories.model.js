@@ -11,10 +11,6 @@ define(["jquery", "underscore", "backbone", "config"
         , url: function () {
             return Config.api.tree + this.path + this.query;
         }
-        , parse: function (data) {
-            data = _.map(data, _.identity);
-            return data;
-        }
         , save: function (key, val, options) {
             return Backbone.Model.prototype.save.call(this, key, val, options);
         }

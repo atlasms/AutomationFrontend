@@ -292,7 +292,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{{#each media}}
+					{{#each media.items}}
 					{{#ifCond Type '==' 0}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>
@@ -348,7 +348,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{{#each media}}
+					{{#each media.items}}
 					{{#ifCond Type '==' 1}}
 					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
 						<td>

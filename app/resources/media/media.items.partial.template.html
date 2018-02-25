@@ -1,61 +1,76 @@
-<table class="table table-bordered table-striped table-condensed flip-content table-hover">
-	<thead>
-		<tr>
-			<th class="">شناسه</th>
-			<th class="col-xs-1"></th>
-			<th class="col-xs-3">نام آیتم</th>
-			<th class="col-xs-1 text-center">برنامه</th>
-			<th class="col-xs-2 text-center">زمان ثبت</th>
-			<th class="col-xs-1">ایجاد کننده</th>
-			<th class="col-xs-2 text-center">آخرین ویرایش</th>
-			<th class="col-xs-1">ویرایش کننده</th>
-			<th class="text-center">قسمت</th>
-			<th class="text-center"># پخش</th>
-			<th class="col-xs-1 text-center">مدت</th>
-			<th class="col-xs-2 text-center">وضعیت</th>
-		</tr>
-	</thead>
-	<tbody>
-		{{#each []}}
-		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-type="{{Type}}">
-			<td>{{Id}}</td>
-			<td class="text-center">
-				<figure>
-					<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-				</figure>
-			</td>
-			<td>
-				{{Title}}
-				<small class="help-block text-muted clip-line">{{Description}}</small>
-			</td>
-			<td class="text-left">
-				<span class="">{{MetaCategoryName}}</span>
-			</td>
-			<td class="text-right">
-				<span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
-			</td>
-			<td class="text-left">
-				<span class="">{{CreatedByText}}</span>
-			</td>
-			<td class="text-right">
-				<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
-			</td>
-			<td class="text-left">
-				<span class="">{{ModifiedByText}}</span>
-			</td>
-			<td class="text-center">
-				{{EpisodeNumber}}
-			</td>
-			<td class="text-center">
-				<span class="" data-title="">{{ConductorUseCount}}</span>
-			</td>
-			<td class="text-center">
-				<span class="time">{{time Duration}}</span>
-			</td>
-			<td class="text-center">
-				<span class="label label-{{resolveLabel State}}">{{StateText}}</span>
-			</td>
-		</tr>
-		{{/each}}
-	</tbody>
-</table>
+<div class="portlet itemlist box">
+	<div class="portlet-title" style="background: #3598dc">
+		<div class="caption">
+			تعداد:
+			<span data-type="total-count"></span>
+		</div>
+		<div class="actions" style="padding: 7px 0 0 0;">
+			<div class="paginator"></div>
+		</div>
+	</div>
+	<div class="portlet-body" style="border: 1px solid #3598dc; padding: 0;">
+		<div class="mainbody">
+			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
+				<thead>
+					<tr>
+						<th class="">شناسه</th>
+						<th class="col-xs-1"></th>
+						<th class="col-xs-3">نام آیتم</th>
+						<th class="col-xs-1 text-center">برنامه</th>
+						<th class="col-xs-2 text-center">زمان ثبت</th>
+						<th class="col-xs-1">ایجاد کننده</th>
+						<th class="col-xs-2 text-center">آخرین ویرایش</th>
+						<th class="col-xs-1">ویرایش کننده</th>
+						<th class="text-center">قسمت</th>
+						<th class="text-center">#&nbsp;پخش</th>
+						<th class="col-xs-1 text-center">مدت</th>
+						<th class="col-xs-2 text-center">وضعیت</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each items}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-type="{{Type}}">
+						<td>{{Id}}</td>
+						<td class="text-center">
+							<figure>
+								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+							</figure>
+						</td>
+						<td>
+							{{Title}}
+							<small class="help-block text-muted clip-line">{{Description}}</small>
+						</td>
+						<td class="text-left">
+							<span class="">{{MetaCategoryName}}</span>
+						</td>
+						<td class="text-right">
+							<span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
+						</td>
+						<td class="text-left">
+							<span class="">{{CreatedByText}}</span>
+						</td>
+						<td class="text-right">
+							<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
+						</td>
+						<td class="text-left">
+							<span class="">{{ModifiedByText}}</span>
+						</td>
+						<td class="text-center">
+							{{EpisodeNumber}}
+						</td>
+						<td class="text-center">
+							<span class="" data-title="">{{ConductorUseCount}}</span>
+						</td>
+						<td class="text-center">
+							<span class="time">{{time Duration}}</span>
+						</td>
+						<td class="text-center">
+							<span class="label label-{{resolveLabel State}}">{{StateText}}</span>
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -4,6 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         model: 'CategoriesModel'
         , toolbar: []
         , statusbar: []
+        , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
@@ -59,19 +60,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             id = parseInt(id);
             if (typeof id !== "undefined" && id) {
                 var self = this;
-                var mediaItemsParams = {query: 'categoryId=' + id};
+                var mediaItemsParams = {query: $.param({categoryId: id, offset: 0, count: this.defaultListLimit})};
                 var itemsModel = new MediaModel(mediaItemsParams);
                 // Loading folder media
                 itemsModel.fetch({
                     success: function (mediaItems) {
-                        mediaItems = self.prepareItems(mediaItems.toJSON(), mediaItemsParams);
+                        mediaItems = mediaItems.toJSON();
                         // Loading metadata
                         var params = {query: 'MasterId=' + id};
                         var model = new MetadataModel(params);
                         model.fetch({
                             success: function (item) {
-                                item = self.prepareItems(item.toJSON(), params);
+                                item = item.toJSON();
                                 item.media = mediaItems;
+                                console.log(item);
                                 var template = Template.template.load('resources/categories', 'category.metadata.partial');
                                 var $container = $(".metadata.portlet-body");
                                 template.done(function (data) {

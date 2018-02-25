@@ -4,6 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'MediaitemModel'
+        , defaultListLimit: Config.defalutMediaListLimit
         , playerInstance: {}
         , player: null
         , modal_storage: '#storage-modal'
@@ -398,7 +399,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             items = self.prepareItems(items.toJSON(), params);
                             template.done(function (data) {
                                 if (service === "metadata") {
-                                    var mediaItemsParams = {query: 'categoryId=' + catid};
+                                    var mediaItemsParams = {query: $.param({categoryId: catid, offset: 0, count: self.defaultListLimit})};
                                     var itemsModel = new MediaModel(mediaItemsParams);
                                     itemsModel.fetch({
                                         success: function (mediaItems) {

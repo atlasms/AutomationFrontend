@@ -18,6 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "notificationsInterval": 60000,
         "notificationsCount": 10,
         "schedulePageLimit": 100,
+        "defalutMediaListLimit": 25,
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'

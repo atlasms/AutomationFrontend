@@ -6,6 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'MediaModel'
+        , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn blue-sharp', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
@@ -203,9 +204,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = $(".itemlist-filter").serializeObject();
             var template = Template.template.load('resources/media', 'media.items-condensed.partial');
             var $container = $("#itemlist");
-            var modelParams = {};
+            var modelParams = {offset: 0, count: self.defaultListLimit};
             new MediaModel(modelParams).fetch({
-                data: $.param(params)
+                data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
                 , success: function(items) {
                     items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
                     template.done(function (data) {

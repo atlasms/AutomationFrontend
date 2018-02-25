@@ -6,6 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
+        , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn blue-sharp', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
@@ -203,9 +204,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             params.date = params.date.replace(/\-/g, '/');
             var template = Template.template.load('resources/ingest', 'ingest.ottitems.partial');
             var $container = $("#itemlist");
-            var modelParams = {overrideUrl: 'share/ott/medialist'};
+            var modelParams = {overrideUrl: 'share/ott/medialist', offset: 0, count: self.defaultListLimit};
             new IngestModel(modelParams).fetch({
-                data: $.param(params)
+                data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
                 , success: function(items) {
                     items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
                     template.done(function (data) {

@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var MediaView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
+        , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , cache: {
         }
@@ -71,11 +72,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
                     // TEMP
 //                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), categoryId: catid};
-                    var params = {categoryId: catid};
+                    var params = {categoryId: catid, offset: 0, count: self.defaultListLimit};
                     break;
                 default:
                 case 'latest':
-                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val()};
+                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), offset: 0, count: self.defaultListLimit};
                     break;
             }
             return params;
@@ -110,14 +111,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             model.fetch({
                 data: data
                 , success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
+//                    items = self.prepareItems(items.toJSON(), params);
+                    items = items.toJSON();
                     var template = Template.template.load('resources/media', 'media.items.partial');
                     var $container = $("#itemlist");
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            self.afterRender();
+                            self.afterRender(items, params);
                         });
                     });
                 }
@@ -128,10 +130,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             self.cache.currentCategory = params.id;
             params.method === "ready" && self.loadItems();
         }
-        , afterRender: function () {
-            var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
-            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+        , afterRender: function (items, requestParams) {
+//            var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
+//            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+            $('[data-type="total-count"]').html(items.count);
+            this.renderPagination(items, requestParams);
             this.renderStatusbar();
+        }
+        , renderPagination: function (items, requestParams) {
+            var self = this;
+            $('.paginator').bootpag({
+                total: Math.ceil(items.count / requestParams.count),
+                page: (requestParams.offset / requestParams.count) + 1,
+                maxVisible: 10,
+                leaps: true,
+                firstLastUse: true,
+                first: '→',
+                last: '←',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+            }).on("page", function (event, num) {
+                requestParams.offset = (num - 1) * requestParams.count;
+                self.loadItems(requestParams);
+            });
         }
         , renderToolbar: function () {
             var self = this;

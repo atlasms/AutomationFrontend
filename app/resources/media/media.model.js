@@ -16,11 +16,11 @@ define(["jquery", "underscore", "backbone", "config"
                 return this.overrideUrl + this.path + this.query + type;
             else
                 return Config.api.media + this.path + this.query + type;
-        }
-        , parse: function (data) {
-            data = _.map(data, _.identity);
-            return data;
-        }
+        } 
+//       , parse: function (data) {
+//            data = _.map(data, _.identity);
+//            return data;
+//        }
         , navigate: function (data) {
 //            var win = window.open(Config.api.url + Config.api.storagefiles + '?' + data, '_blank');
 //            win && win.focus();
