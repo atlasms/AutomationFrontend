@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
         ]
+        , defaultListLimit: Config.defalutMediaListLimit
         , statusbar: []
         , flags: {}
         , events: {
@@ -228,13 +229,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
             model.fetch({
-                data: $.param({categoryId: pathId})
+                data: $.param({categoryId: pathId, count: self.defaultListLimit, offset: 0})
                 , success: function (data) {
-                    items = self.prepareItems(data.toJSON(), params);
+                    items = data.toJSON();
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            $('[data-type="total-count"]').html(items.count);
                         });
                     });
                 }
