@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 // Toolbar
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }
 #toolbar {
-    .datepicker { width: 120px; }
+    .datepicker { width: 110px; }
 }
 #toolbar .input-group-addon {
     min-width: 84px;
@@ -598,7 +598,7 @@ div#schedule-table {
 
 // User Messages
 .user-select { max-width: 70%; }
-.mail-to {
+.controls-to {
     .dl-horizontal { padding-top: 10px; }
     dt {
         clear: none;
