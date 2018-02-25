@@ -97,3 +97,26 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade zoom-out" id="send-item-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<form class="modal-content"  role="form" class="">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">ارسال خبر</h4>
+			</div>
+			<div class="modal-body">
+				<div class="controls controls-to">
+					<dl class="dl-horizontal">
+						<dt><label><input type="radio" name="to-type" data-toggle="ToUserId" value="0" checked>&nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label></dt>
+						<dd><select class="form-control" name="ToUserId"></select></dd>
+						<dt><label><input type="radio" name="to-type" data-toggle="ToUserId" value="1">&nbsp;&nbsp;<i class="fa fa-user text-muted"></i> خودم</label></dt>
+						<dd></dd>
+					</dl>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-info">ارسال</button> 
+				</div>
+			</div>
+		</form><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
