@@ -15,10 +15,10 @@ define(["jquery", "underscore", "backbone", "config"
             else
                 return Config.api.media + this.path + this.query;
         }
-        , parse: function (data) {
-            data = _.map(data, _.identity);
-            return data;
-        }
+//        , parse: function (data) {
+//            data = _.map(data, _.identity);
+//            return data;
+//        }
         , navigate: function (data) {
 //            var win = window.open(Config.api.url + Config.api.storagefiles + '?' + data, '_blank');
 //            win && win.focus();
