@@ -19,7 +19,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
 //            var template = Template.template.load('shared', 'notification.partial');
             var $container = $(this.modal_details);
             model.fetch({
-                success: function (items) {
+                global: false
+                , success: function (items) {
                     items = items.toJSON();
                     $(e.currentTarget).removeClass("unread").addClass("read");
 //                    template.done(function (data) {
