@@ -1,15 +1,17 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'bootpag', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'bootpag', 'bootstrap/tab', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel) {
     var NewsroomNewsView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
         , events: {
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
+            , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
+            , 'click [data-toggle="ToUserId"]': 'toogleReceipt'
             , 'click tr[data-id]': 'loadItem'
         }
         , toolbar: [
-            {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'refresh', icon: 'fa fa-envelope'}}
+            {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-envelope'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
             , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'کلیدواژه', name: 'keyword', text: 'کلیدواژه', icon: 'fa fa-tag', multi: true, options: [], addon: true}}
@@ -45,9 +47,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             this.attachDatepickers();
             return this;
         }
-        , reLoad: function(e) {
+        , reLoad: function (e) {
             e.preventDefault();
             this.loadItems({});
+        }
+        , toogleReceipt: function (e) {
+            $('[name=ToUserId]').prop('disabled', function (index, prop) {
+                return prop == true ? false : true;
+            });
+        }
+        , toggleSendModal: function (e) {
+            e.preventDefault();
+            $("#send-item-modal").modal('toggle');
         }
         , loadItems: function (overridePrams) {
             var self = this;
@@ -63,8 +74,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $(Config.positions.main).html(output).promise().done(function () {
-                            self.afterRender(items, requestParams);
                             self.activateFirstItem();
+                            self.afterRender(items, requestParams);
                         });
                     });
                 }
@@ -86,14 +97,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(item);
                         $(self.itamContainer).html(output).promise().done(function () {
-//                            self.afterRender();
+                            self.loadUsersList();
                         });
                     });
                 }
             });
             e.preventDefault();
         }
-        , activateFirstItem: function() {
+        , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
         }
         , getToolbarParams: function () {
@@ -113,16 +124,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             $('[data-type="total-count"]').html(items.count);
             this.handleDifferCount(items, requestParams);
         }
-        , handleDifferCount: function(items, requestParams) {
+        , loadUsersList: function () {
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Name + ' ' + this.Family + '</option>');
+                    });
+                }
+            });
+        }
+        , handleDifferCount: function (items, requestParams) {
+            var self = this;
             if (typeof this.data.differInterval !== "undefined") {
                 window.clearInterval(this.data.differInterval);
                 $(".blink").fadeOut();
             }
-            this.data.differInterval = window.setInterval(function() {
+            Backbone.history.on("all", function (route, router) {
+                if (typeof self.data.differInterval !== "undefined") {
+                    window.clearInterval(self.data.differInterval);
+//                    $(".blink").fadeOut();
+                }
+            });
+            this.data.differInterval = window.setInterval(function () {
                 $.ajax({
                     url: Config.api.url + Config.api.newsroom + '/list/livecount'
                     , data: $.param(requestParams)
-                    , success: function(data) {
+                    , global: false
+                    , success: function (data) {
                         if (data > items.count) {
                             $(".blink span").html(data - items.count);
                             $(".blink").fadeOut().fadeIn();
@@ -173,7 +202,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 var $select = $(this);
                 new NewsroomModel(params).fetch({
                     success: function (items) {
-                        $select.select2({data: self.prepareList(self.prepareItems(items.toJSON(), params)), dir: "rtl", multiple: true, width: 180, tags: false, placeholder: $select.attr('placeholder')});
+                        $select.select2({data: self.prepareList(self.prepareItems(items.toJSON(), params)), dir: "rtl", multiple: true, width: 160, tags: false, placeholder: $select.attr('placeholder')});
                     }
                 });
             });
