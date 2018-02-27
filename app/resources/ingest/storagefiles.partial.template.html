@@ -5,7 +5,10 @@
 			<th class="col-xs-2 text-center">حجم</th>
 			<th class="col-xs-2 text-center">ساعت و تاریخ</th>
 			<th class="col-xs-5 text-center">نام فایل</th>
-			<th class="col-xs-1 text-center">#</th>
+			<th class="col-xs-1 text-center">
+				<span class="sharp">#</span>
+				<span class="select-all hide"><input type="checkbox" name="select-all" value="0" /></span>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,10 +28,7 @@
 			</td>
 			<td>
 				<div class="ltr text-right">
-					<!--<a class="preview-link" href="javascript:preview('{{Url}}/{{FileName}}');">-->
-						<!--<i class="fa fa-play-circle"></i>-->
-						<span data-prop="FileName">{{FileName}}</span>
-					<!--</a>-->
+					<span data-prop="FileName">{{FileName}}</span>
 				</div>
 			</td>
 			<td class="text-center" data-type="index">

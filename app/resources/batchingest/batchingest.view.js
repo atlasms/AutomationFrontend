@@ -17,6 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=add]': 'openAddForm'
             , 'click [data-task=refresh]': 'loadStorageFiles'
+            , 'click [name=select-all]': 'selectStorageFiles'
             , 'click #storagefiles tbody tr': 'selectRow'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
@@ -155,6 +156,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $container.stop().fadeIn();
+                            $(".sharp").addClass("hide");
+                            $(".select-all").removeClass("hide");
                         });
                     });
                 }
@@ -162,6 +165,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
+        }
+        , selectStorageFiles: function(e) {
+//            e.preventDefault();
+            if ($(e.target).prop('checked')) 
+                $("#storagefiles tr[data-filename]").addClass('active success') && $('button[data-task=add]').removeClass('disabled');
+            else
+                $("#storagefiles tr[data-filename]").removeClass('active success') && $('button[data-task=add]').addClass('disabled');
         }
         , afterRender: function () {
             this.loadStorageFiles();
