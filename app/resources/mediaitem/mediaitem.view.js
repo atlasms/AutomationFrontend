@@ -390,6 +390,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     tmpl = ['resources/mediaitem', 'mediaitem.metadata.partial'];
                     model = new MetadataModel(params);
                     break;
+                case 'rush':
+                    var params = {
+                        id: $("tr[data-type]").data('type') === 3 ? $("tr[data-pid]").data('pid') : self.getId()
+                        , overrideUrl: Config.api.versionsbypid
+                    };
+                    tmpl = ['resources/mediaitem', 'versions.partial'];
+                    model = new MediaitemModel(params);
+                    break;
             }
             if (tmpl && model) {
                 var template = Template.template.load(tmpl[0], tmpl[1]);

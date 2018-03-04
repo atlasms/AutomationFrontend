@@ -30,10 +30,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
-            if (data[0].SiteTitle.length < 9) {
-                toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                return false;
-            }
             var cachedItems = self.items;
             var ingestedItems = [];
             for (var i = 0; i < cachedItems.items.length; i++) {
@@ -48,29 +44,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (d) {
-                    data = data[0];
-                    delete data.Description;
-                    delete data.Duration;
-                    delete data.EpisodeNumber;
-                    delete data.FileName;
-                    delete data.Shotlist;
-                    delete data.Title;
-                    var items = self.prepareItems(d.toJSON(), {});
-                    data.MasterId = items[0].Id;
-                    data.Type = 1;
-                    for (var field in data)
-                        data.field = $.trim(data.field);
-                    new MetadataModel().save(null, {
-                        data: JSON.stringify(data)
-                        , contentType: 'application/json'
-                        , processData: false
-                        , success: function (dd) {
-                            toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                            $(self.$modal).find("form").trigger('reset');
-                            $(self.$modal).modal('hide');
-                            $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
-                        }
-                    });
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $(self.$modal).find("form").trigger('reset');
+                    $(self.$modal).modal('hide');
+                    $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
                 }
             });
         }
@@ -129,7 +106,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , render: function (params) {
             var self = this;
-            var template = Template.template.load('resources/ingest', 'ingest');
+            var template = Template.template.load('resources/batchingest', 'batchingest');
             var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
@@ -166,12 +143,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
         }
-        , selectStorageFiles: function(e) {
+        , selectStorageFiles: function (e) {
 //            e.preventDefault();
-            if ($(e.target).prop('checked')) 
+            var self = this;
+            if ($(e.target).prop('checked'))
                 $("#storagefiles tr[data-filename]").addClass('active success') && $('button[data-task=add]').removeClass('disabled');
             else
                 $("#storagefiles tr[data-filename]").removeClass('active success') && $('button[data-task=add]').addClass('disabled');
+            window.setTimeout(function () {
+                self.handleSelectedRows($("#storagefiles tr.active"));
+            }, 200);
         }
         , afterRender: function () {
             this.loadStorageFiles();

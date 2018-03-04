@@ -136,6 +136,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "metadata": "metadata"
             , "media": "media"
             , "mediaversions": "media/history"
+            , "versionsbypid": "media/historybypid"
 //            , "review": "metadata?categoryid=11"
             , "definitions": "dfn"
             , "comments": "comments"

@@ -17,9 +17,14 @@
 									<tbody>
 										<tr>
 											<td>شناسه</td>
-											<td>{{Id}}</td>
+											<td>
+												{{Id}}
+												{{#ifCond Type '==' 3}}
+													<a href="/resources/mediaitem/{{Pid}}" class="label label-sm label-info" target="_blank">مدیای اصلی ({{Pid}})</a>
+												{{/ifCond}}
+											</td>
 										</tr>
-										<tr>
+										<tr data-type="{{Type}}" data-pid="{{Pid}}">
 											<td>نوع</td>
 											<td>
 												{{#ifCond Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
@@ -204,6 +209,7 @@
 								<li data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
 								<li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
 								<li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
+								<li data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
 								<!--<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>-->
 							</ul>
 						</div>
@@ -213,6 +219,7 @@
 								<div class="tab-pane fade" id="tab-metadata"></div>
 								<div class="tab-pane fade" id="tab-versions"></div>
 								<div class="tab-pane fade" id="tab-schedule"></div>
+								<div class="tab-pane fade" id="tab-rush"></div>
 								<!--<div class="tab-pane fade" id="tab-publicdata"></div>-->
 							</div>
 						</div>
