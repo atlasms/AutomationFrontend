@@ -75,11 +75,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var value = (typeof args.value !== "undefined") ? args.value : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
             var addon = (typeof args.addon !== "undefined") ? args.addon : false;
+            var disabled = (typeof args.disabled !== "undefined") ? ' disabled' : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
             var output = '<div class="form-group"><div class="input-group">';
 //            output += addon ? '<span class="input-group-addon"></span>' : '';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
-            output += '<input type="' + type + '" class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" /></div></div>';
+            output += '<input type="' + type + '" ' + disabled + ' class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" /></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , select: function (args) {

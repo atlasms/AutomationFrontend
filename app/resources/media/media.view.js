@@ -4,9 +4,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //        el: $(Config.positions.wrapper),
         model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-warning', text: 'نمایش برنامه‌ها', type: 'button', task: 'show_tree', icon: 'fa fa-sitemap'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
+            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
+            , {'button': {cssClass: 'btn btn-warning', text: 'نمایش برنامه‌ها', type: 'button', task: 'show_tree', icon: 'fa fa-sitemap'}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
+            , {'input': {cssClass: 'form-control', disabled: true, placeholder: 'برنامه', type: 'text', name: 'cat-name', value: "", text: "برنامه", addon: true, icon: 'fa fa-sitemap'}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
             , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
@@ -14,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , cache: {
+            currentCategory: ''
         }
         , mode: 'latest'
         , events: {
@@ -25,7 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'change [data-type=change-mode]': 'changeMode'
             , 'click #tree .jstree-anchor': 'loadCategory'
         }
-        , showTree: function() {
+        , showTree: function () {
             if ($("#media-list").hasClass('tree-open')) {
                 $("#tree").fadeOut(300);
                 $("#itemlist").animate({
@@ -43,6 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadCategory: function (e) {
             var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
             this.cache.currentCategory = parseInt(id);
+            $('[name="cat-name"]').val($(e.target).text());
             this.mode === "tree" && this.loadItems();
         }
         , selectRow: function (e) {
@@ -59,26 +66,41 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , load: function (e, extend) {
             if (typeof e !== "undefined")
                 e.preventDefault();
-            var params = this.getParams();
+            var params = this.getParams(true);
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.loadItems(params);
             return false;
         }
-        , getParams: function () {
+        , getParams: function (skipQueries) {
             var self = this;
             var mode = $("[data-type=change-mode]").val();
-            switch (mode) {
-                case 'tree':
-                    var catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
-                    // TEMP
-//                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), categoryId: catid};
-                    var params = {categoryId: catid, offset: 0, count: self.defaultListLimit};
-                    break;
-                default:
-                case 'latest':
-                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), offset: 0, count: self.defaultListLimit};
-                    break;
-            }
+            var state = (typeof $_GET['state'] !== 'undefined') ? $_GET['state'] : $("[name=state]").val();
+            var catid = '';
+            
+            if (typeof skipQueries !== 'undefined' && skipQueries)
+                state = $("[name=state]").val();
+            if (mode === 'tree')
+                catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+//            switch (mode) {
+//                case 'tree':
+//                    // TEMP
+////                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), categoryId: catid};
+//                    var params = {categoryId: catid, offset: 0, count: self.defaultListLimit};
+//                    break;
+//                default:
+//                case 'latest':
+                    var params = {
+                        q: $.trim($("[name=q]").val()), 
+                        type: $("[name=type]").val(), 
+                        offset: 0, 
+                        count: self.defaultListLimit, 
+                        categoryId: catid, 
+                        state: state,
+                        startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00',
+                        enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                    };
+//                    break;
+//            }
             return params;
         }
         , render: function (params) {
@@ -111,7 +133,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             model.fetch({
                 data: data
                 , success: function (items) {
-//                    items = self.prepareItems(items.toJSON(), params);
                     items = items.toJSON();
                     var template = Template.template.load('resources/media', 'media.items.partial');
                     var $container = $("#itemlist");
@@ -128,7 +149,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , handleTreeCallbacks: function (params, $tree, node) {
             var self = this;
             self.cache.currentCategory = params.id;
-            params.method === "ready" && self.loadItems();
+            params.method === "ready" && $('[name="cat-name"]').val(params.text) && self.loadItems();
         }
         , afterRender: function (items, requestParams) {
 //            var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
@@ -161,17 +182,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , renderToolbar: function () {
             var self = this;
-//            var elements = this.toolbar;
             var toolbar = new Toolbar();
-            var definedItems = toolbar.getDefinedToolbar(47, 'type');
-            var elements = $.merge($.merge([], self.toolbar), definedItems);
+            var definedTypes = toolbar.getDefinedToolbar(47, 'type');
+            var definedStates = toolbar.getDefinedToolbar(2, 'state');
+            var elements = $.merge($.merge($.merge([], self.toolbar), definedTypes), definedStates);
+            console.log(elements);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
             toolbar.render();
+            this.afterRenderToolbar();
             $(document).on('change', "#toolbar select[data-type=type]", function () {
                 self.loadItems();
+            });
+        }
+        , afterRenderToolbar: function () {
+            $('[data-type="state"]').val((typeof $_GET['state'] !== 'undefined') ? $_GET['state'] : '1');
+            var $datePickers = $(".datepicker");
+            var datepickerConf = {
+                onSelect: function () {
+                    self.load();
+                    $datePickers.blur();
+                }
+            };
+            $.each($datePickers, function () {
+                $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });
         }
         , renderStatusbar: function () {

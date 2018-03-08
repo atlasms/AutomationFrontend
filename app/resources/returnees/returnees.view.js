@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'statusbar'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var ReturneesView = Backbone.View.extend({
         playerInstance: null
         , model: 'MediaModel'
