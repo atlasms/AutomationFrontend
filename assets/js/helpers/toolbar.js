@@ -55,6 +55,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
         , button: function (args) {
 //            console.log(Authorize.access(args.access));
             var cssClass = (typeof args.cssClass !== "undefined") ? args.cssClass : 'btn';
+            var style = (typeof args.style !== "undefined") ? ' style="' + args.style + '" ' : '';
             var text = (typeof args.text !== "undefined") ? args.text : 'Submit';
             var type = (typeof args.type !== "undefined") ? args.type : 'submit';
             var task = (typeof args.task !== "undefined") ? args.task : '';
@@ -62,9 +63,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
 
             if (!args.access || Authorize.access(args.access))
-                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '">' + icon + text + '</button>';
+                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '"' + style +'>' + icon + text + '</button>';
             else
-                var output = '<button type="' + type + '" class="' + cssClass + '" disabled>' + icon + text + '</button>';
+                var output = '<button type="' + type + '" class="' + cssClass + '" disabled' + style +'>' + icon + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {

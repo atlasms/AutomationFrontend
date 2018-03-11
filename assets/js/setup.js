@@ -118,6 +118,7 @@ require.config({
         , "resources.ottingest.view": ["../../app/resources/ingest/ottingest.view"]
         , "resources.photos.view": ["../../app/resources/photos/photos.view"]
         , "resources.media.view": ["../../app/resources/media/media.view"]
+        , "resources.mediaprint.view": ["../../app/resources/media/mediaprint.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
         , "resources.review.view": ["../../app/resources/review/review.view"]
         , "resources.returnees.view": ["../../app/resources/returnees/returnees.view"]

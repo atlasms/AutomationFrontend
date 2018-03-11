@@ -14,6 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
             , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
 //            , {'select': {cssClass: 'form-control', name: 'date-mode', options: [{value: 'production', text: 'تاریخ تولید'}, {value: 'broadcast', text: 'تاریخ پخش'}], addon: true, icon: 'fa fa-list'}}
+            , {'button': {cssClass: 'btn btn-default pull-right', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
@@ -26,11 +27,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , events: {
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
+            , 'click [data-task=print]': 'print'
             , 'click [data-task=refresh]': 'reLoad'
             , 'click [data-task=show_tree]': 'showTree'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'change [data-type=change-mode]': 'changeMode'
             , 'click #tree .jstree-anchor': 'loadCategory'
+        }
+        , print: function(e) {
+            e.preventDefault();
+            var params = this.getParams();
+            params.stateText = $('[data-type="state"]').find('option:selected').text();
+            params.typeText = $('[data-type="type"]').find('option:selected').text();
+            params.categoryText = $('[data-type="change-mode"]').val() === 'latest' ? 'همه' : $('[name="cat-name"]').val();
+            var win = window.open('/resources/mediaprint/?' + $.param(params), '_blank');
+            win.focus();
         }
         , showTree: function () {
             if ($("#media-list").hasClass('tree-open')) {

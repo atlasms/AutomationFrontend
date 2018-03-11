@@ -1,0 +1,60 @@
+<div class="portlet itemlist box">
+	<div class="portlet-body" style="">
+		<div class="mainbody">
+			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
+				<thead>
+					<tr>
+						<th style="width: 40px;" class="">شناسه</th>
+						<th style="width: 200px;" class="col-xs-3">نام آیتم</th>
+						<th style="width: 100px;" class="col-xs-1 text-center">برنامه</th>
+						<th style="width: 120px;" class="col-xs-2 text-center">زمان ثبت</th>
+						<th style="width: 80px;" class="col-xs-1">ایجاد کننده</th>
+						<th style="width: 120px;" class="col-xs-2 text-center">آخرین ویرایش</th>
+						<th style="width: 80px;" class="col-xs-1">ویرایش کننده</th>
+						<th style="width: 40px;" class="text-center">قسمت</th>
+						<th style="width: 40px;" class="text-center">#&nbsp;پخش</th>
+						<th style="width: 60px;" class="col-xs-1 text-center">مدت</th>
+						<!--<th style="width: 60px;" class="col-xs-2 text-center">وضعیت</th>-->
+					</tr>
+				</thead>
+				<tbody>
+					{{#each items}}
+					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-type="{{Type}}">
+						<td>{{Id}}</td>
+						<td>
+							{{Title}}
+						</td>
+						<td class="">
+							<span class="">{{MetaCategoryName}}</span>
+						</td>
+						<td class="text-left">
+							<span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
+						</td>
+						<td class="">
+							<span class="">{{CreatedByText}}</span>
+						</td>
+						<td class="text-left">
+							<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
+						</td>
+						<td class="">
+							<span class="">{{ModifiedByText}}</span>
+						</td>
+						<td class="text-center">
+							{{EpisodeNumber}}
+						</td>
+						<td class="text-center">
+							<span class="" data-title="">{{ConductorUseCount}}</span>
+						</td>
+						<td class="text-center">
+							<span class="time">{{time Duration}}</span>
+						</td>
+<!--						<td class="text-center">
+							<span class="label label-{{resolveLabel State}}">{{StateText}}</span>
+						</td>-->
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
