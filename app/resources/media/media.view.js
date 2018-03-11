@@ -13,6 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
                     value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
             , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
+//            , {'select': {cssClass: 'form-control', name: 'date-mode', options: [{value: 'production', text: 'تاریخ تولید'}, {value: 'broadcast', text: 'تاریخ پخش'}], addon: true, icon: 'fa fa-list'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
@@ -155,6 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            var overrideConfig = {search: false, showPaginationSwitch: false, pageSize: 25};
 //            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
             $('[data-type="total-count"]').html(items.count);
+            $('[data-type="total-duration"]').html(Global.createTime2(items.duration));
             this.renderPagination(items, requestParams);
             this.renderStatusbar();
         }
