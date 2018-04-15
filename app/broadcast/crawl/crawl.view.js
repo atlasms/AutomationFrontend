@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , statusbar: []
         , whitelist: 'b, strong, i, font'
 //        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
-        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
+        , crawlItemTmpl: '<tr><td class="ordering"><div style="width: 75px;"><span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span> <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span></div></td><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
         , flags: {}
         , events: {
             'click [data-task="save"]': 'submit'
@@ -313,6 +313,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     , type: $('[data-type="type-select"]').val()
                 });
             });
+            items.prop('checked', false);
         }
         , addSingle: function (e) {
             var self = this;
