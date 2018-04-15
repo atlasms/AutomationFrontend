@@ -37,6 +37,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click .crawl-items [data-task="delete"]': 'deleteItem'
             , 'click [data-task="delete-all"]': 'deleteAllItems'
             , 'click .repository-items [data-task="delete"]': 'deleteRepoItem'
+            , 'click [data-task="reorder"]': 'reorderRows'
             , 'click .editor-toolbar .btn': function (e) {
                 e.preventDefault();
                 var button = $(e.currentTarget);
@@ -57,6 +58,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 e.preventDefault();
                 var text = e.originalEvent.clipboardData.getData("text/plain");
                 document.execCommand("insertHTML", false, text);
+            }
+        }
+        , reorderRows: function (e) {
+            e.preventDefault();
+            var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
+            var $row = $this.parents('tr:first');
+            var direction = $this.data('value');
+            console.log($this, $row, direction, $row.prev().is('tr'), $row.next().is('tr'));
+            if (direction === 'up') {
+                if ($row.prev().is('tr')) {
+                    $row.insertBefore($row.prev());
+                }
+            } else {
+                if ($row.next().is('tr')) {
+                    $row.insertAfter($row.next());
+                }
             }
         }
         , toggleSMSModal: function (e) {
@@ -213,9 +230,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $("html, body").animate({'scrollTop': 0});
         }
         , toggleRowSelection: function (e) {
-            e.preventDefault();
-            $(e.currentTarget).find("input[type=checkbox]").prop("checked", !$(e.currentTarget).find("input[type=checkbox]").prop("checked"));
-            return true;
+            if (!$(e.target).is('button')) {
+                e.preventDefault();
+                $(e.currentTarget).find("input[type=checkbox]").prop("checked", !$(e.currentTarget).find("input[type=checkbox]").prop("checked"));
+                return true;
+            }
         }
         , loadRepositoryItems: function (e, callback) {
             typeof e === "object" && e && e.preventDefault();
@@ -231,10 +250,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            var editable = new Editable({simple: true, el: '.repository-items'}, self);
+                            editable.init();
                             typeof callback === "function" && callback(items);
 //                            $('[data-tooltip]').tooltip({title: $(this).data('created'), container: 'body'});
                         });
                     });
+                }
+            });
+        }
+        , handleEditables: function (id, params, callback) {
+            var self = this;
+            new CrawlModel({id: id}).save(params, {
+                patch: true
+                , error: function(e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
         }
@@ -294,7 +327,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , addCrawl: function (params) {
             var self = this;
-            $(".crawl-items").find("tbody").append(self.crawlItemTmpl.replace(/{content}/, params.content)).promise().done(function() {
+            $(".crawl-items").find("tbody").append(self.crawlItemTmpl.replace(/{content}/, params.content)).promise().done(function () {
 //                $(".crawl-items").find("tr:last")
                 var editable = new Editable({simple: true});
                 editable.init();

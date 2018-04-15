@@ -3,6 +3,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
         this.defaults = {
             rtl: true
             , showbuttons: true
+            , el: null
         };
         this.options = $.extend({}, this.defaults, options);
         this.callback = (typeof callback !== "undefined") ? callback : null;
@@ -17,7 +18,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
             var options = self.options;
             self.setGlobalSettings();
             window.setTimeout(function () {
-                $(".x-editable").each(function () {
+                var $fields = options.el !== null ? $(options.el).find(".x-editable") : $(".x-editable");
+                $fields.each(function () {
                     var $this = $(this);
                     if ($this.parents("[data-editable]").length && $this.parents("[data-editable]").attr('data-editable')) {
                         $this.editable({
