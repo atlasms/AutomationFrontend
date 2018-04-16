@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'bootpag', 'bootstrap/tab', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootpag', 'bootstrap/tab', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr) {
     var NewsroomNewsView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
@@ -7,11 +7,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
             , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
+            , 'click button[data-task="send-draft"]': 'sendDraft'
             , 'click [data-toggle="ToUserId"]': 'toogleReceipt'
             , 'click tr[data-id]': 'loadItem'
         }
         , toolbar: [
-            {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-envelope'}}
+            {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
+            , {'button': {cssClass: 'btn blue-sharp pull-right', text: 'ذخیره', type: 'button', task: 'send-draft', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
             , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'کلیدواژه', name: 'keyword', text: 'کلیدواژه', icon: 'fa fa-tag', multi: true, options: [], addon: true}}
@@ -45,11 +47,47 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             this.renderStatusbar();
             this.fillSelects();
             this.attachDatepickers();
+            this.initHotKeys();
             return this;
         }
         , reLoad: function (e) {
             e.preventDefault();
             this.loadItems({});
+        }
+        , sendDraft: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = {
+                cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: 0
+            };
+            new NewsroomModel({overrideUrl: 'nws'}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ارسال به پیش‌نویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+        }
+        , initHotKeys: function () {
+            $.hotkeys.options.filterInputAcceptingElements = false;
+            $.hotkeys.options.filterTextInputs = false;
+
+            $(document).on('keydown', null, 'down', function (e) {
+                var activeRow = $("#news-items tbody").find("tr.active");
+//                if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus")))
+                    if (activeRow.find("+ tr").length) {
+                        activeRow.removeClass('active info').trigger('deactivated').next('tr').addClass('active info').trigger('activated').trigger('click');
+                    }
+            });
+            $(document).on('keydown', null, 'up', function (e) {
+                var activeRow = $("#news-items tbody").find("tr.active");
+//                if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                    if (activeRow.prev('tr').length) {
+                        activeRow.removeClass('active info').trigger('deactivated').prev('tr').addClass('active info').trigger('activated').trigger('click');
+                    }
+//                }
+            });
         }
         , toogleReceipt: function (e) {
             $('[name=ToUserId]').prop('disabled', function (index, prop) {
@@ -86,7 +124,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             if ($(e.target).is("a") || $(e.target).parents("a").length)
                 return true;
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
-            $row.parent().find(".info").removeClass('info') && $row.addClass('info');
+            $row.parent().find(".active").removeClass('active info') && $row.addClass('active info');
             var params = {query: $.param({id: $row.data("id")}), path: 'item'};
             var model = new NewsroomModel(params);
             var template = Template.template.load('newsroom/item', 'item.partial');
@@ -97,6 +135,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(item);
                         $(self.itamContainer).html(output).promise().done(function () {
+                            self.data['currentItem'] = $row.data("id");
                             self.loadUsersList();
                         });
                     });
