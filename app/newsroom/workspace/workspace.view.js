@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootpag', 'bootstrap/tab', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootbox', 'bootpag', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/tooltip'
+], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr, bootbox) {
     var NewsroomWorkspaceView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
@@ -7,26 +7,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
             , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
-            , 'click button[data-task="delete"]': 'deleteItems'
+            , 'click button[data-task="delete-batch"]': 'deleteBatch'
+            , 'click button[data-task="delete"]': 'deleteItem'
+            , 'click button[data-task="archive"]': 'archiveItem'
             , 'click button[data-task="merge"]': 'mergeItems'
             , 'click button[data-task="duplicate"]': 'duplicateItme'
             , 'click button[data-task="print"]': 'printItem'
             , 'click button[data-task="new"]': 'createItem'
-            , 'click tr[data-id]': 'loadItem'
+            , 'click button[data-task="save"]': 'saveItem'
+            , 'click #news-items tr[data-id]': 'loadItem'
+            , 'change select[data-type="mode"]': 'reLoad'
         }
         , toolbar: [
-            {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
-            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete', icon: 'fa fa-trash'}}
-            , {'button': {cssClass: 'btn green-haze pull-right', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
-            , {'button': {cssClass: 'btn green-sharp pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
+            {'button': {cssClass: 'btn btn-success pull-right', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
+//            , {'button': {cssClass: 'btn blue pull-right', text: 'ثبت (F4)', type: 'button', task: 'save', icon: 'fa fa-save'}}
+            , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
+//            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete-batch', icon: 'fa fa-trash'}}
+            , {'button': {cssClass: 'btn purple-medium pull-right', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
+            , {'button': {cssClass: 'btn yellow-gold pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
             , {'button': {cssClass: 'btn btn-default pull-right', text: 'پرینت', type: 'button', task: 'print', icon: 'fa fa-print'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
-//            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-//            , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'کلیدواژه', name: 'keyword', text: 'کلیدواژه', icon: 'fa fa-tag', multi: true, options: [], addon: true}}
-//            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'موضوع', name: 'topic', text: 'موضوع', multi: true, icon: 'fa fa-filter', options: [], addon: true}}
-//            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'منبع', name: 'source', text: 'منبع', multi: true, icon: 'fa fa-globe', ptions: [], addon: true}}
-//            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search'}}
 //            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'
 //                    , value: Global.getVar("enddate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
 //                }
@@ -66,7 +68,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var self = this;
             $.hotkeys.options.filterInputAcceptingElements = false;
             $.hotkeys.options.filterTextInputs = false;
-            $(document).off('keydown', null, 'down');
+            $(document).off('keydown', null);
             $(document).on('keydown', null, 'down', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
                 if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
@@ -76,7 +78,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     }
                 }
             });
-            $(document).off('keydown', null, 'up');
             $(document).on('keydown', null, 'up', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
                 if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
@@ -86,16 +87,113 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     }
                 }
             });
-            $(document).off('keydown', null, 'f2');
             $(document).on('keydown', null, 'f2', function () {
                 self.sendDraft();
+            });
+            $(document).on('keydown', null, 'f5', function () {
+                self.loadItems(null, true);
+                return false;
+            });
+            $(document).on('keydown', null, 'f4', function () {
+                self.saveItem();
+                return false;
             });
         }
         , toggleSendModal: function (e) {
             e.preventDefault();
             $("#send-item-modal").modal('toggle');
         }
-        , loadItems: function (overridePrams) {
+        , updateCurrentRowTitle: function (id, title) {
+            $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
+        }
+        , getItemId: function ($el) {
+            if ($el.is('[data-id]') || $el.parent('[data-id]').length) {
+                return $el.is('[data-id]') ? $el.data('id') : $el.parent().data('id');
+            } else {
+                return null;
+            }
+        }
+        , updateItem: function (params, data, message, callback) {
+            new NewsroomModel(params).save(data, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', message, {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if (typeof callback === "function")
+                        callback();
+                }
+            });
+        }
+        , archiveItem: function (e) {
+            var self = this;
+            var id = this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
+            if (typeof id === "undefined" || id === "")
+                return false;
+            bootbox.confirm({
+                message: "مورد آرشیو خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var params = {id: id, overrideUrl: 'nws'};
+                        var data = [{'key': 'kind', value: 1}];
+                        self.updateItem(params, data, 'آرشیو', function () {
+                            $("#news-items tr[data-id=" + id + "]").remove();
+                        });
+                    }
+                }
+            });
+        }
+        , deleteItem: function (e) {
+            var self = this;
+            var id = this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
+            if (typeof id === "undefined" || id === "")
+                return false;
+            bootbox.confirm({
+                message: "مورد حذف خواهد شد. آیا مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var params = {id: id, overrideUrl: 'nws'};
+                        var data = [{'key': 'kind', value: -1}];
+                        self.updateItem(params, data, 'حذف آیتم', function () {
+                            $("#news-items tr[data-id=" + id + "]").remove();
+                        });
+                    }
+                }
+            });
+        }
+        , deleteBatch: function () {
+
+        }
+        , saveItem: function () {
+            var self = this;
+            var id = this.getId();
+            if (typeof id === "undefined" || id === "")
+                return false;
+            var params = [
+                {'key': 'headline', value: $('[name="headline"]').val()}
+                , {'key': 'body', value: $('[name="body"]').val()}
+            ];
+            new NewsroomModel({id: self.getId(), overrideUrl: 'nws'}).save(params, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.updateCurrentRowTitle(self.getId(), $('[name="headline"]').val());
+                }
+            });
+        }
+        , loadItems: function (overridePrams, skipClickTrigger) {
             var self = this;
             var overridePrams = typeof overridePrams === "object" ? overridePrams : {};
             var params = self.getToolbarParams();
@@ -111,7 +209,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         $(Config.positions.main).html(output).promise().done(function () {
                             self.activateFirstItem();
                             self.afterRender(items, requestParams);
-                            self.loadUsersList();
+//                            self.loadUsersList();
                         });
                     });
                 }
@@ -119,6 +217,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         }
         , loadItem: function (e) {
             var self = this;
+            if ($(e.target).is('input') || $(e.target).is('label') || $(e.target).is('.btn') || $(e.target).parents('.btn').length)
+                return true;
             if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== false)
                 return false;
             if ($(e.target).is("a") || $(e.target).parents("a").length)
@@ -138,11 +238,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         $(self.itamContainer).html(output).promise().done(function () {
                             self.data['currentItem'] = $row.data("id");
                             self.data['itemIsLoading'] = false;
+                            self.loadMetadata(item.sourceId);
                         });
                     });
                 }
             });
-            e.preventDefault();
+        }
+        , loadMetadata: function(id) {
+            var self = this;
+            var params = {query: $.param({id: id}), path: 'item'};
+            var model = new NewsroomModel(params);
+            var template = Template.template.load('newsroom/workspace', 'metadata.partial');
+            model.fetch({
+                success: function (item) {
+                    item = self.prepareItems(item.toJSON(), params);
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(item);
+                        $("#metadata-tabs").html(output).promise().done(function () {
+                        });
+                    });
+                }
+            });
+        }
+        , getId: function () {
+            return $("#news-items tr.active").data('id');
         }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
@@ -150,6 +270,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , getToolbarParams: function () {
             return {
                 mode: $('[name="mode"]').val()
+                , q: $('[name="q"]').val()
             };
         }
         , afterRender: function (items, requestParams) {
@@ -157,6 +278,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             this.handleStatusbar(items);
             this.renderPagination(items, requestParams);
             $('[data-type="total-count"]').html(items.count);
+            $('[data-toggle="tooltip"]').tooltip();
             this.handleDifferCount(items, requestParams);
         }
         , loadUsersList: function () {
@@ -308,5 +430,4 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
     });
 
     return NewsroomWorkspaceView;
-
 });

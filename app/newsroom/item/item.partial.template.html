@@ -9,7 +9,10 @@
 	<div class="metadata-inner">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#item-metadata" role="tab" data-toggle="tab">اطلاعات کلی</a></li>
-			<li><a href="#item-related" role="tab" data-toggle="tab">اخبار مرتبط</a></li>
+			<li><a href="#item-related" role="tab" data-toggle="tab">
+				   اخبار مرتبط
+					 <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+				</a></li>
 		</ul>
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="item-metadata">

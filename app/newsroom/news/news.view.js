@@ -73,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var self = this;
             $.hotkeys.options.filterInputAcceptingElements = false;
             $.hotkeys.options.filterTextInputs = false;
-            $(document).off('keydown', null, 'down');
+            $(document).off('keydown', null);
             $(document).on('keydown', null, 'down', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
                 if (activeRow.find("+ tr").length) {
@@ -81,7 +81,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         activeRow.removeClass('active info').trigger('deactivated').next('tr').addClass('active info').trigger('activated').trigger('click');
                 }
             });
-            $(document).off('keydown', null, 'up');
             $(document).on('keydown', null, 'up', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
                 if (activeRow.prev('tr').length) {
@@ -89,7 +88,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         activeRow.removeClass('active info').trigger('deactivated').prev('tr').addClass('active info').trigger('activated').trigger('click');
                 }
             });
-            $(document).off('keydown', null, 'f2');
             $(document).on('keydown', null, 'f2', function () {
                 self.sendDraft();
             });

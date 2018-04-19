@@ -1,6 +1,7 @@
 <style>
 	html, body { overflow: hidden; }
 	.page-content-wrapper .page-content { min-height: 0; }
+	.checkbox { margin: 5px; }
 </style>
 <div id="mewsroom-workspace" class="news-dashboard">
 	<div class="portlet itemlist box">
@@ -21,24 +22,39 @@
 				<table id="news-items" class="table table-condensed table-hover table-striped">
 					<thead>
 						<tr>
-							<th class="">#</th>
-							<th class="col-xs-8">عنوان</th>
+							<th class="text-center">#</th>
+							<th class="col-xs-5">عنوان</th>
 							<th class="col-xs-2 text-center">زمان</th>
-							<th class="col-xs-2">از / به</th>
+							<th class="col-xs-2 text-center">ویرایش</th>
+							<th class="col-xs-1">فرستنده</th>
+							<th class="col-xs-1"></th>
+							<th class="col-xs-1 text-center">منبع</th>
 						</tr>
 					</thead>
 					<tbody>
 						{{#each items}}
-						<tr data-id="{{id}}">
+						<tr data-id="{{id}}" data-type="{{sourceTableCode}}">
 							<td>
 								<!--{{math @index "+" 1}}-->
-								{{id}}
+								<!--{{id}}-->
+								<div class="checkbox checkbox-success checkbox-circle">
+									<input type="checkbox" id="repo-check{{@index}}" />
+									<label for="repo-check{{@index}}"></label>
+								</div>
 							</td>
-							<td>
+							<td data-type="headline">
 								<strong>{{headline}}</strong>
 							</td>
 							<td class="text-center">{{extractTime receiveDatetime}} {{extractDate receiveDatetime}}</td>
-							<td>{{toUserText}}</td>
+							<td class="text-center">{{extractTime modifiedDatetime}} {{extractDate modifiedDatetime}}</td>
+							<td>{{fromUserText}}</td>
+							<td>
+								<button class="btn btn-sm red-flamingo" data-task="delete" data-toggle="tooltip" title="حذف"><i class="fa fa-trash"></i></button>
+								<button class="btn btn-sm purple" data-task="archive" data-toggle="tooltip" title="آرشیو"><i class="fa fa-file"></i></button>
+							</td>
+							<td>
+								<span style="display: block;" class="text-center label label-{{resolveNewsLabel sourceTableCode}}">{{sourceTableText}}</span>
+							</td>
 						</tr>
 						{{/each}}
 					</tbody>
