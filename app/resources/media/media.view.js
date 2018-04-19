@@ -199,7 +199,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var definedTypes = toolbar.getDefinedToolbar(47, 'type');
             var definedStates = toolbar.getDefinedToolbar(2, 'state');
             var elements = $.merge($.merge($.merge([], self.toolbar), definedTypes), definedStates);
-            console.log(elements);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);

@@ -117,6 +117,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "stats/scheduleprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsSchedulePrintView", "file": "app/stats/schedule/scheduleprint.view"}
             , "newsroom": {"private": true, "access": null, "action": "NewsroomView", "file": "app/newsroom/newsroom.view"}
             , "newsroom/news": {"private": true, "access": null, "action": "NewsroomNewsView", "file": "app/newsroom/news/news.view"}
+            , "newsroom/workspace": {"private": true, "access": null, "action": "NewsroomWorkspaceView", "file": "app/newsroom/workspace/workspace.view"}
         },
         "positions": {
             "wrapper": "body"

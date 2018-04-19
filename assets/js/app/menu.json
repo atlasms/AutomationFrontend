@@ -66,7 +66,8 @@
         "alias": "newsroom",
         "icon": "newspaper-o",
         "items": [
-            { "title": "اخبار", "alias": "news", "icon": "th-list", "link": "/newsroom/news" }
+            { "title": "اخبار", "alias": "news", "icon": "th-list", "link": "/newsroom/news" },
+            { "title": "محیط ویرایش", "alias": "news", "icon": "edit", "link": "/newsroom/workspace" }
         ]
     },
     {

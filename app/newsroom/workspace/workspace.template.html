@@ -1,0 +1,55 @@
+<style>
+	html, body { overflow: hidden; }
+	.page-content-wrapper .page-content { min-height: 0; }
+</style>
+<div id="mewsroom-workspace" class="news-dashboard">
+	<div class="portlet itemlist box">
+		<div class="portlet-title" style="background: #1BA39C">
+			<div class="caption">
+				تعداد:
+				<span data-type="total-count"></span>
+				<small class="blink" style="display: none" data-task="load">
+					<span></span> خبر جدید
+				</small>
+			</div>
+			<div class="actions">
+				<div class="paginator"></div>
+			</div>
+		</div>
+		<div class="portlet-body" style="border: 1px solid #1BA39C; padding: 0;">
+			<div class="mainbody">
+				<table id="news-items" class="table table-condensed table-hover table-striped">
+					<thead>
+						<tr>
+							<th class="">#</th>
+							<th class="col-xs-8">عنوان</th>
+							<th class="col-xs-2 text-center">زمان</th>
+							<th class="col-xs-2">از / به</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each items}}
+						<tr data-id="{{id}}">
+							<td>
+								<!--{{math @index "+" 1}}-->
+								{{id}}
+							</td>
+							<td>
+								<strong>{{headline}}</strong>
+							</td>
+							<td class="text-center">{{extractTime receiveDatetime}} {{extractDate receiveDatetime}}</td>
+							<td>{{toUserText}}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="portlet item box">
+		<div class="portlet-body">
+			<div class="mainbody row">
+			</div>
+		</div>
+	</div>
+</div>

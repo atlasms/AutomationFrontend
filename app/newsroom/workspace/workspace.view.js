@@ -1,46 +1,54 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootpag', 'bootstrap/tab', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr) {
-    var NewsroomNewsView = Backbone.View.extend({
+    var NewsroomWorkspaceView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
         , events: {
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
             , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
-            , 'click button[data-task="send-draft"]': 'sendDraft'
-            , 'click [data-toggle="ToUserId"]': 'toogleReceipt'
+            , 'click button[data-task="delete"]': 'deleteItems'
+            , 'click button[data-task="merge"]': 'mergeItems'
+            , 'click button[data-task="duplicate"]': 'duplicateItme'
+            , 'click button[data-task="print"]': 'printItem'
+            , 'click button[data-task="new"]': 'createItem'
             , 'click tr[data-id]': 'loadItem'
         }
         , toolbar: [
             {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
-            , {'button': {cssClass: 'btn blue-sharp pull-right', text: 'خودم', type: 'button', task: 'send-draft', icon: 'fa fa-save'}}
+            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete', icon: 'fa fa-trash'}}
+            , {'button': {cssClass: 'btn green-haze pull-right', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
+            , {'button': {cssClass: 'btn green-sharp pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
+            , {'button': {cssClass: 'btn btn-default pull-right', text: 'پرینت', type: 'button', task: 'print', icon: 'fa fa-print'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'کلیدواژه', name: 'keyword', text: 'کلیدواژه', icon: 'fa fa-tag', multi: true, options: [], addon: true}}
-            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'موضوع', name: 'topic', text: 'موضوع', multi: true, icon: 'fa fa-filter', options: [], addon: true}}
-            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'منبع', name: 'source', text: 'منبع', multi: true, icon: 'fa fa-globe', ptions: [], addon: true}}
-            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'
-                    , value: Global.getVar("enddate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
-                }
-            }
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar'
-                    , value: Global.getVar("startdate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
-                }
-            }
+            , {'button': {cssClass: 'btn btn-success', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
+//            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+//            , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'کلیدواژه', name: 'keyword', text: 'کلیدواژه', icon: 'fa fa-tag', multi: true, options: [], addon: true}}
+//            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'موضوع', name: 'topic', text: 'موضوع', multi: true, icon: 'fa fa-filter', options: [], addon: true}}
+//            , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'منبع', name: 'source', text: 'منبع', multi: true, icon: 'fa fa-globe', ptions: [], addon: true}}
+//            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search'}}
+//            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'
+//                    , value: Global.getVar("enddate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
+//                }
+//            }
+//            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar'
+//                    , value: Global.getVar("startdate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
+//                }
+//            }
         ]
         , statusbar: [
 //            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
         ]
         , defaultParams: {
-            keyword: null
-            , topic: null
-            , source: null
-            , q: ''
+//            keyword: null
+//            , topic: null
+//            , source: null
+//            , q: ''
+            mode: 1
             , offset: 0
             , count: 50
-            , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
-            , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+//            , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
+//            , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
         }
         , render: function () {
             this.loadItems();
@@ -54,21 +62,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             e.preventDefault();
             this.loadItems({});
         }
-        , sendDraft: function (e) {
-            typeof e !== "undefined" && e.preventDefault();
-            var self = this;
-            var data = [{
-                    cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: 0
-                }];
-            new NewsroomModel({overrideUrl: 'nws'}).save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ارسال به پیش‌نویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                }
-            });
-        }
         , initHotKeys: function () {
             var self = this;
             $.hotkeys.options.filterInputAcceptingElements = false;
@@ -76,27 +69,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             $(document).off('keydown', null, 'down');
             $(document).on('keydown', null, 'down', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
-                if (activeRow.find("+ tr").length) {
-                    if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
-                        activeRow.removeClass('active info').trigger('deactivated').next('tr').addClass('active info').trigger('activated').trigger('click');
+                if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
+                    if (activeRow.find("+ tr").length) {
+                        if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
+                            activeRow.removeClass('active info').trigger('deactivated').next('tr').addClass('active info').trigger('activated').trigger('click');
+                    }
                 }
             });
             $(document).off('keydown', null, 'up');
             $(document).on('keydown', null, 'up', function (e) {
                 var activeRow = $("#news-items tbody").find("tr.active");
-                if (activeRow.prev('tr').length) {
-                    if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
-                        activeRow.removeClass('active info').trigger('deactivated').prev('tr').addClass('active info').trigger('activated').trigger('click');
+                if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
+                    if (activeRow.prev('tr').length) {
+                        if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
+                            activeRow.removeClass('active info').trigger('deactivated').prev('tr').addClass('active info').trigger('activated').trigger('click');
+                    }
                 }
             });
             $(document).off('keydown', null, 'f2');
             $(document).on('keydown', null, 'f2', function () {
                 self.sendDraft();
-            });
-        }
-        , toogleReceipt: function (e) {
-            $('[name=ToUserId]').prop('disabled', function (index, prop) {
-                return prop == true ? false : true;
             });
         }
         , toggleSendModal: function (e) {
@@ -108,8 +100,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var overridePrams = typeof overridePrams === "object" ? overridePrams : {};
             var params = self.getToolbarParams();
             var requestParams = $.extend({}, self.defaultParams, params, overridePrams);
-            var model = new NewsroomModel({query: $.param(requestParams), path: 'list'});
-            var template = Template.template.load('newsroom/news', 'news');
+            var model = new NewsroomModel({query: $.param(requestParams), overrideUrl: 'nws'});
+            var template = Template.template.load('newsroom/workspace', 'workspace');
             model.fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), $.extend({}, params, {path: 'list'}));
@@ -118,8 +110,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var output = handlebarsTemplate(items);
                         $(Config.positions.main).html(output).promise().done(function () {
                             self.activateFirstItem();
-                            self.loadUsersList();
                             self.afterRender(items, requestParams);
+                            self.loadUsersList();
                         });
                     });
                 }
@@ -133,9 +125,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 return true;
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
             $row.parent().find(".active").removeClass('active info') && $row.addClass('active info');
-            var params = {query: $.param({id: $row.data("id")}), path: 'item'};
+            var params = {id: $row.data("id"), overrideUrl: 'nws'};
             var model = new NewsroomModel(params);
-            var template = Template.template.load('newsroom/item', 'item.partial');
+            var template = Template.template.load('newsroom/workspace', 'workspace-item.partial');
             self.data['itemIsLoading'] = true;
             model.fetch({
                 success: function (item) {
@@ -146,29 +138,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         $(self.itamContainer).html(output).promise().done(function () {
                             self.data['currentItem'] = $row.data("id");
                             self.data['itemIsLoading'] = false;
-                            self.centerItem($row);
                         });
                     });
                 }
             });
             e.preventDefault();
         }
-        , centerItem: function($row) {
-            console.log($row.position());
-            var topPosition = $row.position().top - 65 <= 0 ? 0 : $row.position().top - 30;
-            $(".itemlist .portlet-body").animate({'scrollTop': topPosition });
-        }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
         }
         , getToolbarParams: function () {
             return {
-                keyword: $('[data-type="keyword"]').val().join(',')
-                , topic: $('[data-type="topic"]').val().join(',')
-                , source: $('[data-type="source"]').val().join(',')
-                , q: $('[name="q"]').val()
-                , startdate: Global.jalaliToGregorian($('[name="startdate"]').val()) + 'T00:00:00'
-                , enddate: Global.jalaliToGregorian($('[name="enddate"]').val()) + 'T23:59:59'
+                mode: $('[name="mode"]').val()
             };
         }
         , afterRender: function (items, requestParams) {
@@ -190,29 +171,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         }
         , handleDifferCount: function (items, requestParams) {
             var self = this;
-            if (typeof this.data.differInterval !== "undefined") {
-                window.clearInterval(this.data.differInterval);
-                $(".blink").fadeOut();
-            }
+//            if (typeof this.data.differInterval !== "undefined") {
+//                window.clearInterval(this.data.differInterval);
+//                $(".blink").fadeOut();
+//            }
             Backbone.history.on("all", function (route, router) {
                 if (typeof self.data.differInterval !== "undefined") {
                     window.clearInterval(self.data.differInterval);
 //                    $(".blink").fadeOut();
                 }
             });
-            this.data.differInterval = window.setInterval(function () {
-                $.ajax({
-                    url: Config.api.url + Config.api.newsroom + '/list/livecount'
-                    , data: $.param(requestParams)
-                    , global: false
-                    , success: function (data) {
-                        if (data > items.count) {
-                            $(".blink span").html(data - items.count);
-                            $(".blink").fadeOut().fadeIn();
-                        }
-                    }
-                });
-            }, 5000);
+//            this.data.differInterval = window.setInterval(function () {
+//                $.ajax({
+//                    url: Config.api.url + Config.api.newsroom + '/list/livecount'
+//                    , data: $.param(requestParams)
+//                    , global: false
+//                    , success: function (data) {
+//                        if (data > items.count) {
+//                            $(".blink span").html(data - items.count);
+//                            $(".blink").fadeOut().fadeIn();
+//                        }
+//                    }
+//                });
+//            }, 5000);
         }
         , renderPagination: function (items, requestParams) {
             var self = this;
@@ -271,6 +252,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var self = this;
             var elements = self.toolbar;
             var toolbar = new Toolbar();
+            var definedModes = toolbar.getDefinedToolbar(86, 'mode');
+            var elements = $.merge($.merge([], self.toolbar), definedModes);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
@@ -324,6 +307,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         }
     });
 
-    return NewsroomNewsView;
+    return NewsroomWorkspaceView;
 
 });
