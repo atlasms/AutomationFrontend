@@ -1,7 +1,9 @@
 define(["config", "jquery", "underscore", "backbone", "router", "template", "global", 'user.helper', 'toastr'
 ], function (Config, $, _, Backbone, Router, Template, Global, UserHelper, toastr) {
     var initialize = function (pace) {
-        pace.options = {restartOnRequestAfter: false, ajax: false};
+        var self = this;
+        var clockUpdateInterval = null;
+        var clockInterval = null;
         pace.start();
         (function () {
             window.CONFIG = Config;
@@ -47,8 +49,6 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
             Backbone.View.prototype.close = function () {
                 this.undelegateEvents();
                 this.stopListening();
-//        this.$el.empty();
-//        this.remove();
             };
 
             toastr.options.positionClass = 'toast-bottom-left';
@@ -89,21 +89,29 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
         registerHandlebarsHelpers();
         $("title").text(Config.title);
 
-        $.ajax({
-            type: 'HEAD'
-            , url: window.location.href.toString()
-            , success: function (data, textStatus, request) {
+        var systemDate = function () {
+            Global.getServerDate(function (request) {
                 var serverDate = request.getResponseHeader('Date');
                 var d = new Date(serverDate);
                 window.SERVERDATE = d;
                 d.setSeconds(d.getSeconds() + 1);
-                window.setInterval(function () {
+                if (typeof self.clockInterval !== null)
+                    window.clearInterval(self.clockInterval);
+                self.clockInterval = window.setInterval(function () {
                     d.setSeconds(d.getSeconds() + 1);
                     var dateTime = Global.gregorianToJalali(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()) + ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
                     $("#server-time span").text(dateTime);
                 }, 1000);
-            }
-        });
+            });
+        };
+        systemDate();
+        if (clockUpdateInterval !== null)
+            window.clearInterval(clockUpdateInterval);
+        clockUpdateInterval = window.setInterval(function () {
+            systemDate();
+        }, 900000);
+
+
 
         return true;
     };

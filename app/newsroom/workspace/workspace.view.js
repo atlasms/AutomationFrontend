@@ -13,17 +13,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click button[data-task="merge"]': 'mergeItems'
             , 'click button[data-task="duplicate"]': 'duplicateItme'
             , 'click button[data-task="print"]': 'printItem'
-            , 'click button[data-task="new"]': 'createItem'
+            , 'click button[data-task="new"]': 'openItemModal'
             , 'click button[data-task="save"]': 'saveItem'
+            , 'click button[data-task="send"]': 'sendItem'
+            , 'submit #new-item-form': 'createItem'
             , 'click #news-items tr[data-id]': 'loadItem'
             , 'change select[data-type="mode"]': 'reLoad'
+            , 'click [name="to-type"]': 'changeSendReceipt'
+            , 'blur [data-type="new-headline"]': function (e) {
+                if ($(e.target).val() === '')
+                    $(e.target).val('خبر خام');
+            }
+            , 'focus [data-type="new-headline"]': function (e) {
+                if ($(e.target).val() === 'خبر خام')
+                    $(e.target).val('');
+            }
         }
         , toolbar: [
             {'button': {cssClass: 'btn btn-success pull-right', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
 //            , {'button': {cssClass: 'btn blue pull-right', text: 'ثبت (F4)', type: 'button', task: 'save', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
 //            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete-batch', icon: 'fa fa-trash'}}
-            , {'button': {cssClass: 'btn purple-medium pull-right', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
+            , {'button': {cssClass: 'btn purple-medium pull-right hide', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
             , {'button': {cssClass: 'btn yellow-gold pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
             , {'button': {cssClass: 'btn btn-default pull-right', text: 'پرینت', type: 'button', task: 'print', icon: 'fa fa-print'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
@@ -41,20 +52,36 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , statusbar: [
 //            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
         ]
+        , websiteParams: {
+            ShortTitle: ''
+            , Title: ''
+            , Introtext: ''
+            , Fulltext: ''
+            , Alias: ''
+            , Youtube: ''
+            , IsPublished: 0
+            , ItemPriority: 1
+            , Contributor: 0
+            , Repositories: []
+            , Tags: []
+            , Categories: []
+            , Owner: 0
+        }
+        , websiteUsers: []
         , defaultParams: {
-//            keyword: null
-//            , topic: null
-//            , source: null
-//            , q: ''
             mode: 1
             , offset: 0
             , count: 50
-//            , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
-//            , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+        }
+        , changeSendReceipt: function (e) {
+            var $this = $(e.target);
+            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
         }
         , render: function () {
             this.loadItems();
-            this.renderStatusbar();
+//            this.loadUsersList();
+//            this.renderStatusbar();
             this.fillSelects();
             this.attachDatepickers();
             this.initHotKeys();
@@ -170,8 +197,97 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
         }
+        , duplicateItme: function (e) {
+            this.sendItem(e, 0);
+        }
+        , sendItem: function (e, userId) {
+            typeof e !== "undefined" && e.preventDefault();
+            var self = this;
+            var selectedUserId = $('[name="ToUserId"]').is(':disabled') ? $('[name="ToWebsiteUserId"]').val() : $('[name="ToUserId"]').val();
+            var sendType = typeof userId === "undefined" && $('[name="ToUserId"]').is(':disabled') ? 'website' : 'panel';
+            var userId = typeof userId !== "undefined" ? userId : selectedUserId;
+            var params = {overrideUrl: 'nws'};
+
+            switch (sendType) {
+                case 'website':
+                    var data = self.websiteParams;
+                    data.Owner = selectedUserId;
+                    data.Title = data.ShortTitle = $('[name="headline"]').val();
+                    data.Fulltext = $('[name="body"]').val();
+                    $.ajax({
+                        headers: {'Authorization': "F25E893F-FAA6-43E6-AB4E-9F0A85C719D6"}
+                        , url: 'http://77.36.163.147/services/pl/contents.svc/'
+                        , data: JSON.stringify(data)
+                        , processData: false
+                        , type: 'post'
+                        , success: function () {
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            $("#send-item-modal").modal('hide');
+                        }
+                    });
+                    break;
+                default:
+                case 'panel':
+                    var data = [{
+                            cmd: 'send', sourceId: this.data.currentItem, sourceTable: 'workspace', destTable: 'workspace', destId: userId
+                        }];
+                    new NewsroomModel(params).save(null, {
+                        data: JSON.stringify(data)
+                        , contentType: 'application/json'
+                        , processData: false
+                        , success: function () {
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            $("#send-item-modal").modal('hide');
+                            self.loadItems();
+                        }
+                    });
+                    break;
+            }
+            return false;
+        }
         , deleteBatch: function () {
 
+        }
+        , createItem: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
+            var self = this;
+            var data = $("#new-item-form").serializeObject();
+            data.cmd = 'create';
+            data.sourceTable = 'workspace';
+            data.destTable = 'workspace';
+            new NewsroomModel({overrideUrl: 'nws'}).save(null, {
+                data: JSON.stringify([data])
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $("#new-item-modal").modal('hide');
+                    self.loadItems();
+                }
+            });
+            return false;
+        }
+        , mergeItems: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
+            var selectedItems = [];
+            $("#news-items tbody tr").each(function () {
+                if ($(this).find("input[name=selected]").prop("checked")) {
+                    selectedItems.push($(this).data('id'));
+                }
+            });
+            var data = [{
+                    cmd: 'merge', sourceId: '', sourceTable: 'workspace', destTable: 'workspace', destId: 0, data: selectedItems.jion(',')
+                }];
+            new NewsroomModel({overrideUrl: 'nws'}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ادغام اخبار', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.loadItems();
+                }
+            });
+            return false;
         }
         , saveItem: function () {
             var self = this;
@@ -209,7 +325,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         $(Config.positions.main).html(output).promise().done(function () {
                             self.activateFirstItem();
                             self.afterRender(items, requestParams);
-//                            self.loadUsersList();
                         });
                     });
                 }
@@ -244,7 +359,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
         }
-        , loadMetadata: function(id) {
+        , loadMetadata: function (id) {
             var self = this;
             var params = {query: $.param({id: id}), path: 'item'};
             var model = new NewsroomModel(params);
@@ -260,6 +375,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     });
                 }
             });
+        }
+        , openItemModal: function (e) {
+            e.preventDefault();
+            $("#new-item-modal").modal('show');
         }
         , getId: function () {
             return $("#news-items tr.active").data('id');
@@ -280,15 +399,40 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             $('[data-type="total-count"]').html(items.count);
             $('[data-toggle="tooltip"]').tooltip();
             this.handleDifferCount(items, requestParams);
+            this.loadUsersList();
         }
         , loadUsersList: function () {
+            if ($("select[name=ToUserId] option").length > 1)
+                return false;
             new UsersManageModel({}).fetch({
                 success: function (items) {
                     var items = items.toJSON();
                     $.each(items, function () {
-                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Name + ' ' + this.Family + '</option>');
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
                     });
                 }
+            });
+            this.loadWebsiteUsersList();
+        }
+        , loadWebsiteUsersList: function () {
+            var self = this;
+            if (self.websiteUsers.length > 1) {
+                self.fillwebsiteUsersSelect(self.websiteUsers);
+                return false;
+            }
+            var params = {path: 'iktvwebsiteusers', overrideUrl: 'nws'};
+            new NewsroomModel(params).fetch({
+                success: function (users) {
+                    self.websiteUsers = self.prepareItems(users.toJSON(), params);
+                    self.fillwebsiteUsersSelect(self.websiteUsers);
+                }
+            });
+        }
+        , fillwebsiteUsersSelect: function (users) {
+            if ($("select[name=ToWebsiteUserId] option").length > 1)
+                return false;
+            $.each(users, function () {
+                $("[name=ToWebsiteUserId]").append('<option value="' + this.Id + '">' + this.Name + '</option>');
             });
         }
         , handleDifferCount: function (items, requestParams) {
@@ -428,6 +572,5 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             return items;
         }
     });
-
     return NewsroomWorkspaceView;
 });

@@ -8,7 +8,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click button[data-task="refresh"]': 'reLoad'
             , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
             , 'click button[data-task="send-draft"]': 'sendDraft'
-            , 'click [data-toggle="ToUserId"]': 'toogleReceipt'
+            , 'click button[data-task="send"]': 'sendItem'
+//            , 'click [data-toggle="ToUserId"]': 'toogleReceipt'
+            , 'click [name="to-type"]': 'changeSendReceipt'
             , 'click tr[data-id]': 'loadItem'
         }
         , toolbar: [
@@ -32,6 +34,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , statusbar: [
 //            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
         ]
+        , websiteParams: {
+            ShortTitle: ''
+            , Title: ''
+            , Introtext: ''
+            , Fulltext: ''
+            , Alias: ''
+            , Youtube: ''
+            , IsPublished: 0
+            , ItemPriority: 1
+            , Contributor: 0
+            , Repositories: []
+            , Tags: []
+            , Categories: []
+            , Owner: 0
+        }
+        , websiteUsers: []
         , defaultParams: {
             keyword: null
             , topic: null
@@ -42,12 +60,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
             , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
         }
+        , changeSendReceipt: function (e) {
+            var $this = $(e.target);
+            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
+        }
         , render: function () {
             this.loadItems();
             this.renderStatusbar();
             this.fillSelects();
             this.attachDatepickers();
             this.initHotKeys();
+//            this.loadUsersList();
             return this;
         }
         , reLoad: function (e) {
@@ -68,6 +92,49 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     toastr.success('با موفقیت انجام شد', 'ارسال به پیش‌نویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
+        }
+        , sendItem: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
+            var self = this;
+            var selectedUserId = $('[name="ToUserId"]').is(':disabled') ? $('[name="ToWebsiteUserId"]').val() : $('[name="ToUserId"]').val();
+            var sendType = typeof userId === "undefined" && $('[name="ToUserId"]').is(':disabled') ? 'website' : 'panel';
+
+            switch (sendType) {
+                case 'website':
+                    var data = self.websiteParams;
+                    data.Owner = selectedUserId;
+                    data.Title = data.ShortTitle = $('[name="headline"]').val();
+                    data.Fulltext = $('[name="body"]').val();
+                    $.ajax({
+                        headers: {'Authorization': "F25E893F-FAA6-43E6-AB4E-9F0A85C719D6"}
+                        , url: 'http://77.36.163.147/services/pl/contents.svc/'
+                        , data: JSON.stringify(data)
+                        , processData: false
+                        , type: 'post'
+                        , success: function () {
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            $("#send-item-modal").modal('hide');
+                        }
+                    });
+                    break;
+                default:
+                case 'panel':
+                    var data = [{
+                            cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: selectedUserId
+                        }];
+                    new NewsroomModel({overrideUrl: 'nws'}).save(null, {
+                        data: JSON.stringify(data)
+                        , contentType: 'application/json'
+                        , processData: false
+                        , success: function () {
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            $("#send-item-modal").modal('hide');
+//                    self.loadItems();
+                        }
+                    });
+                    break;
+            }
+            return false;
         }
         , initHotKeys: function () {
             var self = this;
@@ -116,8 +183,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         var output = handlebarsTemplate(items);
                         $(Config.positions.main).html(output).promise().done(function () {
                             self.activateFirstItem();
-                            self.loadUsersList();
                             self.afterRender(items, requestParams);
+//                            self.loadUsersList();
                         });
                     });
                 }
@@ -151,10 +218,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             });
             e.preventDefault();
         }
-        , centerItem: function($row) {
+        , centerItem: function ($row) {
             console.log($row.position());
             var topPosition = $row.position().top - 65 <= 0 ? 0 : $row.position().top - 30;
-            $(".itemlist .portlet-body").animate({'scrollTop': topPosition });
+            $(".itemlist .portlet-body").animate({'scrollTop': topPosition});
         }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
@@ -175,15 +242,40 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             this.renderPagination(items, requestParams);
             $('[data-type="total-count"]').html(items.count);
             this.handleDifferCount(items, requestParams);
+            this.loadUsersList();
         }
         , loadUsersList: function () {
+            if ($("select[name=ToUserId] option").length > 1)
+                return false;
             new UsersManageModel({}).fetch({
                 success: function (items) {
                     var items = items.toJSON();
                     $.each(items, function () {
-                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Name + ' ' + this.Family + '</option>');
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
                     });
                 }
+            });
+            this.loadWebsiteUsersList();
+        }
+        , loadWebsiteUsersList: function () {
+            var self = this;
+            if (self.websiteUsers.length > 1) {
+                self.fillwebsiteUsersSelect(self.websiteUsers);
+                return false;
+            }
+            var params = {path: 'iktvwebsiteusers', overrideUrl: 'nws'};
+            new NewsroomModel(params).fetch({
+                success: function (users) {
+                    self.websiteUsers = self.prepareItems(users.toJSON(), params);
+                    self.fillwebsiteUsersSelect(self.websiteUsers);
+                }
+            });
+        }
+        , fillwebsiteUsersSelect: function (users) {
+            if ($("select[name=ToWebsiteUserId] option").length > 1)
+                return false;
+            $.each(users, function () {
+                $("[name=ToWebsiteUserId]").append('<option value="' + this.Id + '">' + this.Name + '</option>');
             });
         }
         , handleDifferCount: function (items, requestParams) {

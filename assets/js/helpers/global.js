@@ -232,16 +232,27 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
         }
-        , getServerDate: function (jalali, datetime) {
-            var jalali = (typeof jalali !== "undefined") ? jalali : false;
-            var datetime = (typeof datetime !== "undefined") ? datetime : false;
-            var d = SERVERDATE;
-            var output = d.getFullYear() + '-' + Global.zeroFill(d.getMonth() + 1) + '-' + Global.zeroFill(d.getDate());
-            if (jalali)
-                output = Global.gregorianToJalali(output);
-            if (datetime)
-                output += ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
-            return output;
+//        , getServerDate: function (jalali, datetime) {
+//            var jalali = (typeof jalali !== "undefined") ? jalali : false;
+//            var datetime = (typeof datetime !== "undefined") ? datetime : false;
+//            var d = SERVERDATE;
+//            var output = d.getFullYear() + '-' + Global.zeroFill(d.getMonth() + 1) + '-' + Global.zeroFill(d.getDate());
+//            if (jalali)
+//                output = Global.gregorianToJalali(output);
+//            if (datetime)
+//                output += ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
+//            return output;
+//        }
+        , getServerDate: function (callback) {
+            $.ajax({
+                type: 'HEAD'
+                , url: window.location.href.toString()
+                , cache: false
+                , success: function (data, textStatus, request) {
+                    if (typeof callback === "function")
+                        callback(request);
+                }
+            });
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
