@@ -152,6 +152,7 @@ require.config({
         , "newsroom.view": ["../../app/newsroom/newsroom.view"]
         , "newsroom.news.view": ["../../app/newsroom/news/news.view"]
         , "newsroom.workspace.view": ["../../app/newsroom/workspace/workspace.view"]
+        , "newsroom.itemprint.view": ["../../app/newsroom/item/itemprint.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

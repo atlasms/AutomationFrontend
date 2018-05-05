@@ -148,12 +148,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 sign = (timestamp !== Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
                 var time = new Date(0, 0, 0, 0, 0, timestamp, 0);
-                var hours = Global.zeroFill(time.getHours(), 2);
-                var minutes = Global.zeroFill(time.getMinutes(), 2);
-                var seconds = Global.zeroFill(time.getSeconds(), 2);
-                output = hours + ":" + minutes + ":" + seconds;
-                output = (showSign) ? output + sign : output;
+            } else {
+                var time = new Date();
             }
+            var hours = Global.zeroFill(time.getHours(), 2);
+            var minutes = Global.zeroFill(time.getMinutes(), 2);
+            var seconds = Global.zeroFill(time.getSeconds(), 2);
+            output = hours + ":" + minutes + ":" + seconds;
+            output = (showSign) ? output + sign : output;
             return output;
         }
         , createDate: function (offset) {

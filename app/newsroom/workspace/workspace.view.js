@@ -197,6 +197,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
         }
+        , printItem: function(e) {
+            var self = this;
+            var id = this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
+            if (typeof id === "undefined" || id === "")
+                return false;
+            var win = window.open('/newsroom/itemprint/' + id, '_blank');
+            win.focus();
+        }
         , duplicateItme: function (e) {
             this.sendItem(e, 0);
         }
