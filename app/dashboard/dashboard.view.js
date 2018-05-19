@@ -4,10 +4,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
     var DashboardView = Backbone.View.extend({
         data: {}
         , events: {}
-//        , el: 
         , render: function () {
-            location.href = '/resources/media';
-            return false;
+            // Initial redirect, if any
+            if (typeof Config.initialRedirect !== "undefined") {
+                location.href = Config.initialRedirect;
+                return false;
+            }
+
             var self = this;
             var template = Template.template.load('dashboard', 'dashboard');
             template.done(function (data) {
