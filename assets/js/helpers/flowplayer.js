@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
     };
 
     _.extend(Player.prototype, {
-        render: function () {
+        render: function (callback) {
 //            console.log(this.options);
             var $this = this;
             var container = this.getContainer(this.$el);
@@ -64,6 +64,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                             $('#player').removeClass('is-rtl');
                             $this.setUI($this, instance);
                             $this.setEvents();
+                            if (typeof callback === "function") {
+                                callback(instance);
+                            }
                         });
                     });
                 });
