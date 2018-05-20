@@ -1,0 +1,16 @@
+{{#each []}}
+<tr data-id="{{id}}" data-index="{{math @index "+" 1}}" data-duration="{{time duration}}" data-url="{{video}}">
+	<td class="text-center">
+		{{config placeholderImage}}
+		<figure>
+			<img src="{{img}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+		</figure>
+	</td>
+	<td>
+		<span class="title">{{title}}</span>
+	</td>
+	<td class="text-center">
+		<span class="time">{{time duration}}</span>
+	</td>
+</tr>
+{{/each}}
