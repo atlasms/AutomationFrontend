@@ -1,0 +1,27 @@
+<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time duration}}">
+	<td class="ordering">
+		<div style="width: 68px;">
+			<span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
+			<span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span>
+		</div>
+	</td>
+	<td class="col-xs-2">
+		<figure>
+			<img src="{{img}}" alt="" onerror="this.onerror=null;this.src='/assets/img/placeholder.png'">
+		</figure>
+	</td>
+	<td class="col-xs-10">
+		{{#if title}}<h4>{{title}}</h4>{{/if}}
+		{{#if tags}}
+		<p>
+			{{#each tags}}
+			<span data-id="{{id}}" class="label label-info label-sm">{{title}}</span>
+			{{/each}}
+		</p>
+		{{/if}}
+		<span data-type="start">{{start}}</span>
+		<span data-type="end">{{end}}</span>
+		<span data-type="duration" class="badge badge-info">{{time shotDuration}}</span>
+	</td>
+	<td><button class="btn btn-default btn-xs" data-task="delete-shot"><i class="fa fa-trash"></i></button></td>
+</tr>
