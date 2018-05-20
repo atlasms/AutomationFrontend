@@ -134,7 +134,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             });
         }
-        , offsetTime: function(datetime, offset) {
+        , offsetTime: function (datetime, offset) {
             if (typeof datetime === "undefined")
                 return null;
             var dt = datetime.split(' ');
@@ -146,7 +146,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
             return datetime.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
         }
-        , loadVideo: function(e) {
+        , loadVideo: function (e) {
             e.preventDefault();
             var self = this;
             $("#itemlist").find("tbody tr").removeClass('active');
@@ -162,7 +162,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var duration = $(e.target).parents("tr:first").data('duration');
             self.renderPlayer(url, Global.processTime(duration));
         }
-        , renderPlayer: function(url, duration) {
+        , renderPlayer: function (url, duration) {
             var self = this;
             if (self.playerInstance)
                 self.player.remove();
@@ -173,17 +173,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         {type: "application/x-mpegurl", src: url}
                     ]
                 }
-                , template: { seekbar: {range: true} , controls: false }
+                , template: {seekbar: {range: true}, controls: false}
                 , duration: duration
             };
             var player = new Player('#player-container', playerConfig);
             player.render();
             self.player = player;
             self.playerInstance = player.instance;
-            
+
             self.loadShotlist();
         }
-        , loadShotlist: function() {
+        , loadShotlist: function () {
             // Load Shot-list
             var $container = $("#shotlist");
             if (!$container.is(":empty"))
@@ -192,7 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function() {
+                $container.html(output).promise().done(function () {
                     IngestHelper.mask('time');
                 });
             });
@@ -207,7 +207,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var modelParams = {overrideUrl: 'share/ott/medialist', offset: 0, count: self.defaultListLimit};
             new IngestModel(modelParams).fetch({
                 data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
-                , success: function(items) {
+                , success: function (items) {
                     items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
