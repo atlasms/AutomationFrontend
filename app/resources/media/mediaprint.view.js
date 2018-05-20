@@ -43,6 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return;
         }
         , loadItems: function (params) {
+            $("body").prepend('<div class="spinner"><img src="/assets/img/loading-spinner-blue.gif" /></div>');
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getParams();
             var data = $.param(params);
@@ -64,6 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , afterRender: function (items) {
+            $("body").find('.spinner').remove();
             $('[data-type="total-count"]').html(items.count);
             $('[data-type="total-duration"]').html(Global.createTime2(items.duration));
         }
