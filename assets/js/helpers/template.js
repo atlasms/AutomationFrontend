@@ -332,6 +332,11 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 }
                 return output;
             });
+            Handlebars.registerHelper('br', function (text) {
+                text = Handlebars.Utils.escapeExpression(text);
+                text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
+                return new Handlebars.SafeString(text);
+            });
         }
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {
