@@ -102,6 +102,7 @@ require.config({
         , "live.model": ["../../app/resources/live/live.model"]
         , "monitoring.model": ["../../app/monitoring/monitoring.model"]
         , "newsroom.model": ["../../app/newsroom/newsroom.model"]
+        , "shared.model": ["../../app/shared/shared.model"]
 
                 // Views
         , "app.view": ["../../app/app.view"]
@@ -116,6 +117,7 @@ require.config({
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
         , "resources.batchingest.view": ["../../app/resources/batchingest/batchingest.view"]
         , "resources.ottingest.view": ["../../app/resources/ingest/ottingest.view"]
+        , "resources.epgdata.view": ["../../app/resources/epgdata/epgdata.view"]
         , "resources.photos.view": ["../../app/resources/photos/photos.view"]
         , "resources.media.view": ["../../app/resources/media/media.view"]
         , "resources.mediaprint.view": ["../../app/resources/media/mediaprint.view"]
@@ -149,6 +151,7 @@ require.config({
         , "stats.schedule.view": ["../../app/stats/schedule/schedule.view"]
         , "stats.scheduleprint.view": ["../../app/stats/schedule/scheduleprint.view"]
         , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]
+        , "resources.shotlist2.view": ["../../app/resources/shotlist/shotlist2.view"]
         , "newsroom.view": ["../../app/newsroom/newsroom.view"]
         , "newsroom.news.view": ["../../app/newsroom/news/news.view"]
         , "newsroom.workspace.view": ["../../app/newsroom/workspace/workspace.view"]
@@ -174,6 +177,7 @@ require.config({
         , "player.helper": ["helpers/player"]
         , "flowplayer.helper": ["helpers/flowplayer"]
         , "editable.helper": ["helpers/editable"]
+        , "timeline.helper": ["helpers/timeline"]
         , "authorization": ["helpers/authorization"]
     }
 });
