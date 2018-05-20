@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(this.data);
                 $(Config.positions.main).html(output);
-            });
+            });            
             return this;
         }
     });
