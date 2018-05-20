@@ -19,6 +19,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "notificationsCount": 10,
         "schedulePageLimit": 100,
         "defalutMediaListLimit": 25,
+        "loginMode": "default",
+        "initialRedirect": "/resources/media",
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
@@ -84,7 +86,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
             , "resources/batchingest": {"private": true, "access": null, "action": "BatchIngestView", "file": "app/resources/batchingest/batchingest.view"}
             , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
+            , "resources/shotlist2": {"private": true, "access": null, "action": "ShotlistView2", "file": "app/resources/shotlist/shotlist2.view"}
             , "resources/ottingest": {"private": true, "access": null, "action": "OTTIngestView", "file": "app/resources/ingest/ottingest.view"}
+            , "resources/epgdata": {"private": true, "access": null, "action": "EPGDataView", "file": "app/resources/epgdata/epgdata.view"}
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
             , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
             , "resources/mediaprint": {"private": true, "access": null, "skipLayout": true, "action": "MediaPrintView", "file": "app/resources/media/mediaprint.view"}
@@ -150,8 +154,79 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "hsm": "hsm"
             , "social": "social"
             , "newsroom": "newssource"
+            , "tags": "share/tags/"
         },
-        "temp": {
+        "channels": {
+            'tv1': {
+                title: 'یک',
+                id: 'tv1'
+            },
+            'tv2': {
+                title: 'دو',
+                id: 'tv2'
+            },
+            'tv3': {
+                title: 'سه',
+                id: 'tv3'
+            },
+            'tv4': {
+                title: 'چهار',
+                id: 'tv4'
+            },
+            'tehran': {
+                title: 'تهران',
+                id: 'tehran'
+            },
+//        'irinn': {
+//            title: 'خبر',
+//            id: 'irinn'
+//        },
+            'ofogh': {
+                title: 'افق',
+                id: 'ofogh'
+            },
+            'quran': {
+                title: 'قرآن',
+                id: 'quran'
+            },
+            'pooya': {
+                title: 'پویا',
+                id: 'pooya'
+            },
+            'omid': {
+                title: 'امید',
+                id: 'omid'
+            },
+            'namayesh': {
+                title: 'نمایش',
+                id: 'namayesh'
+            },
+            'tamasha': {
+                title: 'تماشا',
+                id: 'tamasha'
+            },
+            'doctv': {
+                title: 'مستند',
+                id: 'mostanad'
+            },
+            'amouzesh': {
+                title: 'آموزش',
+                id: 'amouzesh'
+            },
+            'salamat': {
+                title: 'سلامت',
+                id: 'salamat'
+            },
+            'varzesh': {
+                title: 'ورزش',
+                id: 'varzesh'
+            },
+            'nasim': {
+                title: 'نسیم',
+                id: 'nasim'
+            }
+        }
+        , "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
                     {Id: "2", Key: "دو خطی", Value: "2"},
                     {Id: "1", Key: "تک خط", Value: "1"},
