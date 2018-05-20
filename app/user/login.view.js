@@ -10,9 +10,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         , render: function () {
             STORAGE.clear();
             typeof $_GET.redirect !== "undefined" && console.log($_GET);
-            var template = Template.template.load('user', 'login');
-            template.done(function (data) {
-                var html = $(data).wrap('<p/>').parent().html();
+            var theme = (typeof Config.loginMode === "undefined" || Config.loginMode === 'default') ? 'login' : Config.loginMode;
+            var template = Template.template.load('user', theme);
+            template.done(function (html) {
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(Config);
                 $(Config.positions.wrapper).html(output);
@@ -25,7 +25,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
             var key = STORAGEKEY;
             var form = $(".login-content").find("form:first").serializeObject();
             var userModel = new User({path: '/login'});
-            console.log(userModel);
             userModel.save(null, {
                 data: JSON.stringify(form)
                 , contentType: 'application/json'
