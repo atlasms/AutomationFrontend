@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
         , openAddForm: function (e) {
-            $("#media-filename").val('trim');
+            $("#media-filename").val('shotlist');
             $(this.$modal).modal('toggle');
         }
         , selectRow: function (e) {
@@ -311,7 +311,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , prepareSave: function () {
             var data = [{}];
 //            console.log(this.getShotlistData());
-            data[0].Shotlist = this.getShotlistData();
+//            data[0].Shotlist = this.getShotlistData();
+            data[0].Shotlist = this.timeline.exportTimeline();
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {

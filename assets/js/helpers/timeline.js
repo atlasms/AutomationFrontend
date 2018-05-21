@@ -5,6 +5,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             repository: true
             , tags: false
             , buttons: true
+            , ordering: true
+            , sortable: true
+            , autoLoad: true
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
@@ -22,8 +25,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         player = null;
     };
 
+    var demoData = '{"items":[{"id":"30263","duration":62,"title":"مجله معرفی برنامه های شبکه ایران کالا  ","img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30263.jpg","video":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30263_lq.mp4"},{"id":"30254","duration":92,"title":"وله مناسبتی رحلت امام خمینی ( ره )","img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30254.jpg","video":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30254_lq.mp4"},{"id":"30251","duration":3621,"title":"\tپایش پلاس - بازپخش 31-02-97","img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30251.jpg","video":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30251_lq.mp4"},{"id":"30230","duration":50,"title":"مجله به روایت تصویر شرکت تهویه دماوند پارس ","img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30230.jpg","video":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30230_lq.mp4"},{"id":"30014","duration":363,"title":"شرکت طب فا","img":"http://cdn2.iktv.ir/mam/Converted/2018-05-19/30014.jpg","video":"http://cdn2.iktv.ir/mam/Converted/2018-05-19/30014_lq.mp4"}],"shots":[{"id":"30254","start":38,"end":92,"shotDuration":54,"mediaDuration":92,"img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30254.jpg","title":"وله مناسبتی رحلت امام خمینی ( ره )"},{"id":"30230","start":6,"end":14,"shotDuration":8,"mediaDuration":50,"img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30230.jpg","title":"مجله به روایت تصویر شرکت تهویه دماوند پارس "},{"id":"30014","start":187,"end":363,"shotDuration":176,"mediaDuration":363,"img":"http://cdn2.iktv.ir/mam/Converted/2018-05-19/30014.jpg","title":"شرکت طب فا"},{"id":"30251","start":0,"end":3621,"shotDuration":3621,"mediaDuration":3621,"img":"http://cdn2.iktv.ir/mam/Converted/2018-05-20/30251.jpg","title":"\tپایش پلاس - بازپخش 31-02-97"}]}';
+
     _.extend(Timeline.prototype, {
-        render: function () {
+        render: function (timeline) {
+            if (this.options.autoLoad && typeof timeline === "undefined") {
+                this.loadTimeline();
+                return false;
+            }
+            var timeline = typeof timeline !== "undefined" ? timeline : this.timeline;
             var self = this;
             var template = Template.template.load('shared', 'timeline');
             // Render timeline plugin
@@ -32,25 +42,29 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 var output;
                 if (self.options.tags) {
                     self._loadTags(function (tags) {
-                        output = handlebarsTemplate($.extend({}, self.timeline, {tags: tags}));
+                        output = handlebarsTemplate($.extend({}, timeline, {tags: tags}));
                         $(self.$el).html(output);
-                        self._afterRender();
+                        self._afterRender(timeline);
                     });
                 } else {
-                    output = handlebarsTemplate(self.timeline);
+                    output = handlebarsTemplate(timeline);
                     $(self.$el).html(output);
-                    self._afterRender();
+                    self._afterRender(timeline);
                 }
-
             });
         }
-        , _afterRender: function () {
+        , _afterRender: function (timeline) {
             // load shots
+            if (timeline.shots.length)
+                this.addShot(null, timeline, true);
             // load media(s)
+            if (timeline.items.length)
+                this.addMedia(timeline.items);
             // Add event listeners
             this._registerEvents();
             // Initialize Sortables
-            this.initSortable();
+            if (this.options.sortable)
+                this.initSortable();
             this.renderPlayer(null, 0);
             if (this.options.tags)
                 $('select[data-type="tags"]').select2({dir: "rtl", multiple: true, tags: false, placeholder: 'کلیدواژه‌ها'});
@@ -140,31 +154,54 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         , _getMediaDetails: function () {
             // Get media description
         }
-        , addShot: function (e) {
+        , addShot: function (e, shots, initial) {
             // Add shot to shotlist
-            e.preventDefault();
+            typeof e !== "undefined" && e && e.preventDefault();
+            var self = this;
+            var items = typeof shots !== "undefined" ? shots : this._getShotData();
+            if (items.shots.constructor === Array) {
+                var template = Template.template.load('shared', 'shotlist-item.partial');
+                var $container = $("#shotlist table tbody");
+                template.done(function (data) {
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    console.log(items);
+                    var output = handlebarsTemplate(items);
+                    $container.append(output).promise().done(function () {
+                        if (self.options.sortable)
+                            self.initSortable(true);
+                        self.updateTotalDuration();
+                        if (typeof initial !== "undefined" && initial)
+                            window.setTimeout(function () {
+                                $("#shotlist tbody tr:first").trigger('click');
+                            }, 500);
+                    });
+                });
+            }
+        }
+        , _getShotData: function () {
             var self = this;
             var $form = $("#shotlist form");
             var shotData = $form.serializeObject();
             if (shotData.start && shotData.end && Global.processTime(shotData.start) < Global.processTime(shotData.end)) {
                 shotData['shotDuration'] = Global.processTime(shotData.end) - Global.processTime(shotData.start);
+                shotData['start'] = Global.processTime(shotData.start);
+                shotData['end'] = Global.processTime(shotData.end);
                 if (this.options.tags) {
                     tags = $('[data-type="tags"]').val();
                     shotData['tags'] = [];
                     for (var t in tags)
                         shotData['tags'].push({id: tags[t], title: $('[data-type="tags"]').find('option[value=' + tags[t] + ']').text()});
                 }
+//                shotData['options'] = this.options;
                 var item = $.extend({}, self.currentMedia, shotData);
-                var template = Template.template.load('shared', 'shotlist-item.partial');
-                var $container = $("#shotlist table tbody");
-                template.done(function (data) {
-                    var handlebarsTemplate = Template.handlebars.compile(data);
-                    var output = handlebarsTemplate(item);
-                    $container.append(output).promise().done(function () {
-                        self.initSortable(true);
-                    });
-                });
+
+                // Refactoring 
+                item['mediaDuration'] = item.duration;
+                delete item.duration;
+
+                return {shots: [item], options: self.options};
             }
+            return null;
         }
         , playShot: function (e) {
             // Get media file and play it showing the cuts
@@ -190,27 +227,46 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     id: $(this).attr('data-id')
                     , start: Global.processTime($(this).find('[data-type="start"]').text())
                     , end: Global.processTime($(this).find('[data-type="end"]').text())
-                    , duration: Global.processTime($(this).data('duration'))
+                    , shotDuration: Global.processTime($(this).data('duration'))
                     , mediaDuration: Global.processTime($(this).data('media-duration'))
                     , img: $(this).find('img').attr('src')
+                    , title: $(this).find('.title').text()
                 });
             });
             return data;
         }
         , deleteShot: function (e) {
             e.preventDefault();
+            var self = this;
             $shot = $(e.target).parents("tr:first");
             $shot.slideUp('fast', function () {
-                $shot.remove();
+                $shot.remove().promise().done(function () {
+                    if (self.options.sortable)
+                        this.initSortable(true);
+                    self.updateTotalDuration();
+                });
             });
-            this.initSortable(true);
+        }
+        , updateTotalDuration: function () {
+            if ($("#status-items .total-duration").length) {
+                var total = 0;
+                $('#shotlist tr').each(function () {
+                    total += Global.processTime($(this).data('duration'));
+                });
+                $("#status-items .total-duration").find('.badge').html(Global.createTime2(total));
+            }
         }
         , loadTimeline: function () {
-            // Load Timeline from outside
-            // Initialize Sortables - refresh
+            if (!this.options.autoLoad)
+                return false;
+            // Load Timeline from service api, etc.
+            // TODO: Demo!
+            var timeline = JSON.parse(demoData.replace(/[\u0000-\u0019]+/g, ""));
+            timeline['options'] = this.options;
+            this.render(timeline);
         }
         , exportTimeline: function (e) {
-            e.preventDefault();
+            typeof e !== "undefined" && e.preventDefault();
             var self = this;
             var $media = $("#timeline-repository tbody tr");
             var items = [];
