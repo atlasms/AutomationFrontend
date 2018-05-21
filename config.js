@@ -85,8 +85,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
             , "resources/batchingest": {"private": true, "access": null, "action": "BatchIngestView", "file": "app/resources/batchingest/batchingest.view"}
-            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
-            , "resources/shotlist2": {"private": true, "access": null, "action": "ShotlistView2", "file": "app/resources/shotlist/shotlist2.view"}
+//            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
+            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView2", "file": "app/resources/shotlist/shotlist2.view"}
             , "resources/ottingest": {"private": true, "access": null, "action": "OTTIngestView", "file": "app/resources/ingest/ottingest.view"}
             , "resources/epgdata": {"private": true, "access": null, "action": "EPGDataView", "file": "app/resources/epgdata/epgdata.view"}
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}

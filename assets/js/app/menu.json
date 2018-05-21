@@ -19,8 +19,7 @@
         "items": [
             { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
             { "title": "ورود اطلاعات راش", "alias": "resources_batchingest", "icon": "circle-o", "link": "/resources/batchingest" },
-            { "title": "شات‌لیست", "alias": "resources_shotlist", "icon": "arrow-circle-up", "link": "/resources/shotlist" },
-            { "title": "شات‌لیست", "alias": "resources_shotlist2", "icon": "arrow-circle-up", "link": "/resources/shotlist2" },
+            { "title": "شات‌لیست", "alias": "resources_shotlist2", "icon": "arrow-circle-up", "link": "/resources/shotlist" },
             { "title": "اینجست OTT", "alias": "resources_ottingest", "icon": "arrow-circle-up", "link": "/resources/ottingest" },
             { "title": "مدیریت EPG", "alias": "resources_epgdata", "icon": "arrow-circle-up", "link": "/resources/epgdata" },
             { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
