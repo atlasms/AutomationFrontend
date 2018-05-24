@@ -1,3 +1,8 @@
+<style>
+span.select2-container {
+	z-index:10050;
+}
+</style>
 <div id="ingest-page" class="portlet box">
 	<div class="portlet-body">
 		<div class="mainbody">
@@ -23,7 +28,7 @@
 				<div class="modal-body">
 					<input type="hidden" name="Type" value="0" />
 					<input type="hidden" data-type="path-id" name="MetaCategoryId" value="0" />
-					
+
 					<input type="hidden" name="MasterId" value="" />
 					<input type="hidden" name="Kind" value="0" />
 					<input type="hidden" name="SiteFeatured" value="0" />
@@ -70,22 +75,56 @@
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="form-group">
-										<input type="text" data-type="title" class="form-control" id="media-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required />
+							<div class="form-group">
+								<div class="row">
+									<div class="col-xs-3">
+										<label class="control-label">کلیدواژه‌ها</label>
+									</div>
+									<div class="col-xs-9">
+										<select class="form-control select2" name="Tags" multiple>
+											{{#each tags}}
+											<option value="{{id}}">{{title}}</option>
+											{{/each}}
+										</select>
 									</div>
 								</div>
-								<div class="col-xs-12">
-									<div class="form-group">
-										<textarea class="form-control" name="SiteSummary" rows="3" placeholder="خلاصه وب‌سایت" required></textarea>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<div class="col-xs-3">
+										<label class="control-label">محورها</label>
+									</div>
+									<div class="col-xs-9">
+										<select class="form-control select2" name="Subjects" multiple>
+											{{#each subjects}}
+											<option value="{{id}}">{{title}}</option>
+											{{/each}}
+										</select>
 									</div>
 								</div>
-								<div class="col-xs-12">
-									<div class="form-group">
-										<textarea class="form-control" name="SiteDescr" rows="5" placeholder="توضیحات وب‌سایت"></textarea>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<div class="col-xs-3">
+										<label class="control-label">عوامل</label>
+									</div>
+									<div class="col-xs-9">
+										<select class="form-control select2" name="Persons" multiple>
+											{{#each persons}}
+											<option value="{{id}}">{{name}} {{family}}</option>
+											{{/each}}
+										</select>
 									</div>
 								</div>
+							</div>
+							<div class="form-group">
+								<input type="text" data-type="title" class="form-control" id="media-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required />
+							</div>
+							<div class="form-group">
+								<textarea class="form-control" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
+							</div>
+							<div class="form-group">
+								<textarea class="form-control" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت"></textarea>
 							</div>
 						</div>
 					</div>

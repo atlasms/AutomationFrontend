@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "defalutMediaListLimit": 25,
         "loginMode": "default",
         "initialRedirect": "/resources/media",
+        "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
         "settings": {
             "datepicker": {
                 "format": 'YYYY-MM-DD'
@@ -155,6 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "social": "social"
             , "newsroom": "newssource"
             , "tags": "share/tags/"
+            , "shotlist": "shotlist"
         },
         "channels": {
             'tv1': {

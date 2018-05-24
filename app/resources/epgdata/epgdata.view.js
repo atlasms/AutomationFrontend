@@ -32,44 +32,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
         }
-        , loadShot: function (e) {
-            var $row = $(e.target).parents("tr:first");
-            var params = [
-                Global.processTime($row.find("td").eq(0).text())
-                        , Global.processTime($row.find("td").eq(1).text())
-            ];
-            this.player.setRange(params, this.playerInstance, true);
-        }
-        , addClip: function (e) {
-            e.preventDefault();
-            var $form = $("#shotlist form");
-            var data = $form.serializeObject();
-            var tmpl = '<tr><td>{start}</td><td>{end}</td><td>{duration}</td><td><button class="btn btn-default btn-xs" data-task="delete-shot"><i class="fa fa-trash"></i></button></td></tr>';
-            if (data.start && data.end && Global.processTime(data.start) < Global.processTime(data.end)) {
-                var duration = Global.createTime(Global.processTime(data.end) - Global.processTime(data.start));
-                $form.next("table").find("tbody").append(tmpl.replace(/{start}/, data.start).replace(/{end}/, data.end).replace(/{duration}/, duration));
-                this.initSortable(true);
-                this.handleDurations($form.next("table").find("tbody"));
-            }
-        }
-        , handleDurations: function (items) {
-            items = items.find("tr");
-            var time = 0;
-            items.each(function () {
-                time += Global.processTime($(this).find("td").eq(2).text());
-            });
-            time = Global.createTime(time);
-            this.handleStatusbar(time);
-            $('input[data-type="duration"]').val(time);
-        }
-        , deleteShot: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $row = $(e.target).parents("tr:first");
-            var $table = $row.parents('tbody');
-            $row.remove();
-            this.handleDurations($table);
-        }
         , submit: function (e) {
             e.preventDefault();
             var self = this;
@@ -89,11 +51,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
         }
-        , seekPlayer: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget);
-            this.player.seek($el.attr('data-seek'), this.playerInstance);
-        }
         , openAddForm: function (e) {
 // TEMP 
             var path = '{tv}\\360p\\{date}\\*.ts';
@@ -112,7 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             params.start = this.offsetTime(params.start, -300);
             params.end = this.offsetTime(params.end, 300);
             var url = 'http://172.16.16.69/archive/360p.m3u8?' + $.param(params);
-            
+
 
 
 //            $el.parents("tbody").find("tr").removeClass('active success');
@@ -159,25 +116,38 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadVideo: function (e) {
             e.preventDefault();
             var self = this;
+            var $item = $(e.target).parents("tr:first");
             $("#itemlist").find("tbody tr").removeClass('active');
-            $(e.target).parents("tr:first").addClass('active');
-            var params = $(e.target).parents("tr:first").data('params');
+            $item.addClass('active');
+            var params = $item.data('params');
             params = typeof params === "object" ? params : JSON.parse(params);
             params.start = self.offsetTime(params.start);
             params.end = self.offsetTime(params.end);
             var url = 'http://172.16.16.69/archive/360p.m3u8?' + $.param(params);
-            var duration = $(e.target).parents("tr:first").data('duration');
+            var duration = $item.data('duration');
             var media = {
                 url: url
 //                url: '/assets/data/sample.mp4'
                 , duration: Global.processTime(duration)
                 , title: ''
                 , img: ''
-                , id: 0
+                , id: $item.data('id')
             };
-            console.log(media);
-            this.timeline.loadMedia(media);
-//            self.renderPlayer(url, Global.processTime(duration));
+//            console.log(media);
+            self.timeline.loadMedia(media);
+            self.loadItemShots(media.id, function (d) {
+                self.timeline.mapThenAddShots(d, true);
+            });
+        }
+        , loadItemShots: function(id, callback) {
+            var self = this;
+            var params = {overrideUrl: Config.api.shotlist, query: 'type=1&externalid=' + id};
+            new IngestModel(params).fetch({
+               success: function(d) {
+                   if (typeof callback === "function")
+                       callback(self.prepareItems(d.toJSON(), params));
+               } 
+            });
         }
         , renderPlayer: function (url, duration) {
             var self = this;
@@ -199,20 +169,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             self.playerInstance = player.instance;
 
             self.loadShotlist();
-        }
-        , loadShotlist: function () {
-            // Load Shot-list
-            var $container = $("#shotlist");
-            if (!$container.is(":empty"))
-                return;
-            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    IngestHelper.mask('time');
-                });
-            });
         }
         , loadItemlist: function (e) {
             typeof e !== "undefined" && e.preventDefault();
@@ -267,7 +223,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             self.attachDatepickers();
             // TODO: Test
             this.timeline = new Timeline('#timeline', {
-                repository: false, tags: true, buttons: false
+                repository: false, metadata: true, buttons: false, sidebar: true, ordering: false, sortable: false, type: 1
             });
             this.timeline.render();
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();

@@ -2,12 +2,18 @@
 	.flowplayer { direction: ltr; }
 	#timeline-repository figure { width: 80px; }
 	#timeline-repository tr { cursor: pointer; }
-	#shotlist h4 { font-size: 14px; font-weight: bold; margin-top: 0; }
-	#shotlist form { padding: 10px; margin: 0 0 10px 0; }
-	#shotlist tbody tr:first-child .ordering .btn:first-child { visibility: hidden; }
-	#shotlist tbody tr:last-child .ordering .btn:last-child { display: none; }
-	#shotlist tbody figure { width: 80px; }
-	#shotlist .ordering { font-size: 0; }
+	#shotlist form { padding: 10px; margin: 0 0 10px 0; padding-bottom: 0; }
+	#shotlist form .note { margin-left: -10px; }
+	#shotlist form .note.note-info { margin-top: 15px; }
+	#shotlist form .note.note-success { background: transparent; }
+	#shotlist-table h4 { font-size: 14px; font-weight: bold; margin-top: 0; }
+	#shotlist-table tbody tr:first-child .ordering .btn:first-child { visibility: hidden; }
+	#shotlist-table tbody tr:last-child .ordering .btn:last-child { display: none; }
+	#shotlist-table tbody figure { width: 80px; }
+	#shotlist-table .ordering { font-size: 0; }
+	#shotlist-table .label.label-sm { padding-top: 0; padding-bottom: 0; }
+	#shotlist-table p[data-metadata] { margin-bottom: 8px; } 
+	#shotlist-table .note.note-success { background: transparent; }
 </style>
 <div id="timeline-container">
 	{{#if options.buttons}}
@@ -30,8 +36,17 @@
 				</tbody>
 			</table>
 		</div>
+		{{else}}
+		{{#if options.sidebar}}
+		<div class="col-sm-5">
+			<table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
+				<tbody>
+				</tbody>
+			</table>
+		</div>
 		{{/if}}
-		<div class="{{#if options.repository}}col-sm-7{{else}}col-sm-12{{/if}}">
+		{{/if}}
+		<div class="{{#if options.repository}}col-sm-7{{else}}{{#if options.sidebar}}col-sm-7{{else}}col-sm-12{{/if}}{{/if}}">
 			<div id="player-container"></div>
 			<div id="shotlist">
 				<form class="shotlist-form form-horizontal">
@@ -44,25 +59,63 @@
 						<div class="{{#if options.tags}}col-xs-2{{else}}col-xs-4{{/if}}">
 							<input type="text" class="form-control time" name="end" placeholder="00:00:00" data-type="clip-end" />
 						</div>
-						{{#if options.tags}}
-						<div class="col-xs-5">
-							<select class="form-control" name="tags" data-type="tags" placeholder="کلیدواژه‌ها" multiple>
-								{{#each tags}}
-								<option value="{{id}}">{{title}}</option>
-								{{/each}}
-							</select>
-							<!--<input type="text" class="form-control tags text-right" name="tags" data-type="tags" placeholder="کلیدواژه" />-->
-						</div>
-						{{/if}}
 						<div class="{{#if options.tags}}col-xs-1{{else}}col-xs-2{{/if}}">
 							<button type="button" class="btn btn-info pull-right" data-task="add-clip"><i class="fa fa-plus"></i></button>
 						</div>
 					</div>
+					<div class="form-group metadata note note-info">
+						<div class="col-xs-3">
+							<label>
+								<input type="radio" name="metadataType" id="r1" value="tags" checked>
+								کلیدواژه
+							</label>
+						</div>
+						<div class="col-xs-9">
+							<select class="form-control" name="Tags" data-type="metadata" placeholder="کلیدواژه‌ها" multiple>
+								{{#each tags}}
+								<option value="{{id}}">{{title}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group metadata note note-success">
+						<div class="col-xs-3">
+							<label>
+								<input type="radio" name="metadataType" id="r2" value="subjects">
+								محورها
+							</label>
+						</div>
+						<div class="col-xs-9">
+							<select class="form-control" name="Subjects" data-type="metadata" placeholder="محورها" multiple disabled>
+								{{#each subjects}}
+								<option value="{{id}}">{{title}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group metadata note note-danger">
+						<div class="col-xs-3">
+							<label>
+								<input type="radio" name="metadataType" id="r3" value="persons">
+								عوامل
+							</label>
+						</div>
+						<div class="col-xs-9">
+							<select class="form-control" name="Persons" data-type="metadata" placeholder="عوامل" multiple disabled>
+								{{#each persons}}
+								<option value="{{id}}">{{name}} {{family}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
 				</form>
-				<table class="table table-condensed table-hover table-bordered table-striped">
+				{{#if options.sidebar}}
+				{{else}}
+				<table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
 					<tbody>
 					</tbody>
 				</table>
+				{{/if}}
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'select2', 'shared.model', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, select2, SharedModel) {
     var IngestView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
@@ -64,7 +64,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , openAddForm: function (e) {
-            $(this.$modal).modal('toggle');
+            $(this.$modal).on('shown.bs.modal', function () {
+                window.setTimeout(function () {
+                    $("select.select2").each(function () {
+                        if ($(this).hasClass("select2-hidden-accessible"))
+                            $(this).select2('destroy');
+                        $(this).select2({dir: "rtl", multiple: true, tags: false, width: '100%', placeholder: $(this).parent().parent().find('label').text(), dropdownParent: $(this).parents('.modal-body')});
+                    });
+                }, 500);
+            });
+            $(this.$modal).modal('show');
         }
         , selectRow: function (e) {
             var $el = $(e.target);
@@ -95,10 +104,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    self.afterRender();
+                self.getTags(function (params) {
+                    var output = handlebarsTemplate(params);
+                    $container.html(output).promise().done(function () {
+                        self.afterRender();
+                    });
                 });
+            });
+        }
+        , getTags: function (callback) {
+            var params = {tags: [], subjects: [], persons: []};
+            new SharedModel().fetch({
+                success: function (tags) {
+                    params.tags = tags.toJSON();
+                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                        success: function (persons) {
+                            params.persons = persons.toJSON();
+                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                                success: function (subjects) {
+                                    params.subjects = subjects.toJSON();
+                                    if (typeof callback === "function")
+                                        callback(params);
+                                }
+                            });
+                        }
+                    });
+                }
             });
         }
         , loadStorageFiles: function (e) {
@@ -174,6 +205,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {
                     data[0][$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
+                    if ($input.attr("name") === "Tags")
+                        $.each(data[0]['Tags'], function (i) {
+                            data[0]['Tags'][i] = {'id': ~~data[0]['Tags'][i]};
+                        });
+                    if ($input.attr("name") === "Subjects")
+                        $.each(data[0]['Subjects'], function (i) {
+                            data[0]['Subjects'][i] = {'id': ~~data[0]['Subjects'][i]};
+                        });
+                    if ($input.attr("name") === "Persons")
+                        $.each(data[0]['Persons'], function (i) {
+                            data[0]['Persons'][i] = {'id': ~~data[0]['Persons'][i]};
+                        });
                     if (typeof $input.attr('data-before-save') !== "undefined") {
                         switch ($input.attr('data-before-save')) {
                             case 'prepend-date':

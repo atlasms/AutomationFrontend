@@ -234,6 +234,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
         }
+        , getEPGMedia(data) {
+            return typeof data === "undefined" || !data ? '' : CONFIG.epgMediaPath.replace(/{start}/, data.startMiladi.replace(' ', '/').replace(/\:/g, '/'))
+                    .replace(/{end}/, data.endMiladi.replace(' ', '/').replace(/\:/g, '/'))
+                    .replace(/{channel}/, data.channel);
+        }
 //        , getServerDate: function (jalali, datetime) {
 //            var jalali = (typeof jalali !== "undefined") ? jalali : false;
 //            var datetime = (typeof datetime !== "undefined") ? datetime : false;

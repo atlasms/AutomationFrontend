@@ -1,5 +1,6 @@
 {{#each shots}}
-<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time mediaDuration}}">
+<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time mediaDuration}}" data-type="{{../options.type}}" data-external-id="{{externalId}}"
+	class="{{#if Tags}}note note-info{{/if}}{{#if Persons}}note note-danger{{/if}}{{#if Subjects}}note note-success{{/if}}">
 	{{#if ../options.ordering}}
 	<td class="ordering">
 		<div style="width: 68px;">
@@ -15,14 +16,29 @@
 	</td>
 	<td class="col-xs-10">
 		{{#if title}}<h4 class="title">{{title}}</h4>{{/if}}
-		{{#if tags}}
-		<p>
-			{{#each tags}}
+		{{#if Tags}}
+		<p data-metadata="tags">
+			{{#each Tags}}
 			<span data-id="{{id}}" class="label label-info label-sm">{{title}}</span>
 			{{/each}}
 		</p>
 		{{/if}}
+		{{#if Persons}}
+		<p data-metadata="persons">
+			{{#each Persons}}
+			<span data-id="{{id}}" class="label label-danger label-sm">{{#if title}}{{title}}{{else}}{{name}} {{family}}{{/if}}</span>
+			{{/each}}
+		</p>
+		{{/if}}
+		{{#if Subjects}}
+		<p data-metadata="subjects">
+			{{#each Subjects}}
+			<span data-id="{{id}}" class="label label-success label-sm">{{title}}</span>
+			{{/each}}
+		</p>
+		{{/if}}
 		<span data-type="start">{{time start}}</span>
+		<span class="badge badge-default badge-roundless">&nbsp;</span>
 		<span data-type="end">{{time end}}</span>
 		<span data-type="duration" class="badge badge-info">{{time shotDuration}}</span>
 	</td>
