@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'bootstrap/transition'
-], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.schedule.model'
+], function ($, _, Backbone, Template, Config, Global, moment, ScheduleModel) {
     var SchedulePrintView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'ScheduleModel'
@@ -8,8 +8,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , flags: {}
         , events: {}
         , processTime: function (options) {
-            var validate = new ScheduleHelper.validate();
-            validate.time($(options.target));
+//            var validate = new ScheduleHelper.validate();
+//            validate.time($(options.target));
         }
         , reLoad: function () {
             this.load();
@@ -39,20 +39,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     if ($("#schedule-page tbody tr").length)
                         $("#schedule-page tbody").empty();
                 }
             });
         }
         , afterRender: function () {
-            ScheduleHelper.mask("time");
-            $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
-            if (typeof this.flags.helperLoaded === "undefined") {
-                ScheduleHelper.init();
-                this.flags.helperLoaded = true;
-            } else
-                ScheduleHelper.init(true);
+//            ScheduleHelper.mask("time");
+//            $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
+//            if (typeof this.flags.helperLoaded === "undefined") {
+//                ScheduleHelper.init();
+//                this.flags.helperLoaded = true;
+//            } else
+//                ScheduleHelper.init(true);
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
