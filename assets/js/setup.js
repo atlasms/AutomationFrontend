@@ -37,7 +37,7 @@ require.config({
     , urlArgs: "_=" + (new Date()).getTime()
     , paths: {
         // Library Dependencies
-        jquery: ["vendor/jquery-3.3.1.min"]
+        jquery: ["vendor/jquery-3.1.1.min"]
         , "jquery-ui": ["vendor/jquery-ui.min"]
         , "underscore": ["vendor/underscore-min"]
         , "backbone": ["vendor/backbone-min"]
@@ -151,7 +151,7 @@ require.config({
         , "stats.schedule.view": ["../../app/stats/schedule/schedule.view"]
         , "stats.scheduleprint.view": ["../../app/stats/schedule/scheduleprint.view"]
         , "resources.shotlist.view": ["../../app/resources/shotlist/shotlist.view"]
-        , "resources.shotlist2.view": ["../../app/resources/shotlist/shotlist2.view"]
+//        , "resources.shotlist2.view": ["../../app/resources/shotlist/shotlist2.view"]
         , "newsroom.view": ["../../app/newsroom/newsroom.view"]
         , "newsroom.news.view": ["../../app/newsroom/news/news.view"]
         , "newsroom.workspace.view": ["../../app/newsroom/workspace/workspace.view"]
