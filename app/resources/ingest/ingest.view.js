@@ -204,19 +204,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {
-                    data[0][$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
-                    if ($input.attr("name") === "Tags")
-                        $.each(data[0]['Tags'], function (i) {
-                            data[0]['Tags'][i] = {'id': ~~data[0]['Tags'][i]};
-                        });
-                    if ($input.attr("name") === "Subjects")
-                        $.each(data[0]['Subjects'], function (i) {
-                            data[0]['Subjects'][i] = {'id': ~~data[0]['Subjects'][i]};
-                        });
-                    if ($input.attr("name") === "Persons")
-                        $.each(data[0]['Persons'], function (i) {
-                            data[0]['Persons'][i] = {'id': ~~data[0]['Persons'][i]};
-                        });
+                    switch ($input.attr("name")) {
+                        default:
+                            data[0][$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
+                            break;
+                        case 'Tags':
+                        case 'Subjects':
+                        case 'Persons':
+                            var metadata = [];
+                            $.each($input.val(), function () {
+                                metadata.push({id: ~~this});
+                            });
+                            data[0][$input.attr("name")] = metadata;
+                            break;
+                    }
                     if (typeof $input.attr('data-before-save') !== "undefined") {
                         switch ($input.attr('data-before-save')) {
                             case 'prepend-date':
