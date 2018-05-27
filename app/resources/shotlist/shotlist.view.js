@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -22,9 +22,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=refresh]': 'reLoad'
             , 'click #storagefiles tbody tr': 'selectRow'
             , 'click [data-seek]': 'seekPlayer'
-            , 'click [data-task="add-clip"]': 'addClip'
-            , 'click [data-task="delete-shot"]': 'deleteShot'
-            , 'click .shotlist-table tbody tr': 'loadShot'
+//            , 'click [data-task="add-clip"]': 'addClip'
+//            , 'click [data-task="delete-shot"]': 'deleteShot'
+//            , 'click .shotlist-table tbody tr': 'loadShot'
             , 'click [data-task="load-list"]': 'loadItemlist'
             , 'submit .itemlist-filter': 'loadItemlist'
             , 'click #itemlist tbody tr': 'loadVideo'
@@ -32,6 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
         }
+        , timeline: {}
         , loadShot: function (e) {
             var $row = $(e.target).parents("tr:first");
             var params = [
@@ -99,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
         , openAddForm: function (e) {
-            $("#media-filename").val('trim');
+            $("#media-filename").val('shotlist');
             $(this.$modal).modal('toggle');
         }
         , selectRow: function (e) {
@@ -135,6 +136,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.afterRender();
                 });
             });
+            
+            // TODO: Test
+            this.timeline = new Timeline('#timeline', {singleMode: false, repository: true});
+            this.timeline.render();
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');
@@ -156,33 +161,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return true;
             e.preventDefault();
             var self = this;
-            $("#itemlist").find("tbody tr").removeClass('active');
-            $(e.target).parents("tr:first").addClass('active');
-            var url = self.getMedia($(e.target).parents("tr:first").find("img").attr('src'));
+//            $("#itemlist").find("tbody tr").removeClass('active');
+//            $(e.target).parents("tr:first").addClass('active');
+//            var url = self.getMedia($(e.target).parents("tr:first").find("img").attr('src'));
 //            var url = "http://localhost:8008/assets/data/sample.mp4";
             var duration = $(e.target).parents("tr:first").data('duration');
-            self.renderPlayer(url, Global.processTime(duration));
-        }
-        , renderPlayer: function(url, duration) {
-            var self = this;
-            if (self.playerInstance)
-                self.player.remove();
-            $('#player-container').empty();
-            var playerConfig = {
-                clip: {
-                    sources: [
-                        {src: url, type: 'video/mp4'}
-                    ]
-                }
-                , template: { seekbar: {range: true} , controls: false }
-                , duration: duration
-            };
-            var player = new Player('#player-container', playerConfig);
-            player.render();
-            self.player = player;
-            self.playerInstance = player.instance;
             
-            self.loadShotlist();
+            //TODO
+            this.timeline.addMedia({
+                id: $(e.target).parents("tr:first").attr('data-id')
+                , duration: Global.processTime(duration)
+                , title: $(e.target).parents("tr:first").find('.title').text()
+                , img: $(e.target).parents("tr:first").find("img").attr('src')
+                , video: self.getMedia($(e.target).parents("tr:first").find("img").attr('src'))
+            });
         }
         , loadShotlist: function() {
             // Load Shot-list
@@ -279,25 +271,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , prepareContent: function () {
             this.renderToolbar();
         }
-        , getShotlistData: function () {
-            var $list = $("#shotlist tbody tr");
-//            var itemStart = Global.processTime($("#itemlist tbody tr.active .start").text());
-            var data = [];
-            if ($list.length) {
-                $list.each(function () {
-                    data.push({
-                        start: Global.processTime($(this).find("td").eq(0).text())
-                        , end: Global.processTime($(this).find("td").eq(1).text())
-                        , id: $(this).attr('data-media')
-                    });
-                });
-            }
-            return data;
-        }
         , prepareSave: function () {
             var data = [{}];
-//            console.log(this.getShotlistData());
-            data[0].Shotlist = this.getShotlistData();
+            data[0].Shotlist = this.timeline.exportTimeline();
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {
@@ -322,24 +298,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = {overrideUrl: Config.api.media};
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
-            /*
-             var template = Template.template.load('resources/ingest', 'metadata.partial');
-             var $container = $(self.$metadataPlace);
-             var model = new IngestModel(params);
-             model.fetch({
-             data: $.param({categoryId: pathId})
-             , success: function (data) {
-             items = self.prepareItems(data.toJSON(), params);
-             template.done(function (data) {
-             var handlebarsTemplate = Template.handlebars.compile(data);
-             var output = handlebarsTemplate(items);
-             $container.html(output).promise().done(function () {
-             //                            self.afterRender();
-             });
-             });
-             }
-             });
-             */
+
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;
