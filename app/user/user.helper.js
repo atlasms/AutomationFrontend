@@ -6,7 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             if (typeof map[actions] !== "undefined" && map[actions].private === false)
                 return true;
             else {
-                if (STORAGE.getItem(this.storageKey)) {
+                if (typeof STORAGE !== "unedfined" && STORAGE && STORAGE.getItem(this.storageKey)) {
                     var content = JSON.parse(STORAGE.getItem(this.storageKey));
                     if (content.username && content.token) {
                         return true;

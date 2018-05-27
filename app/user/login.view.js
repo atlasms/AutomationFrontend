@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         }
         , el: $(Config.positions.wrapper)
         , render: function () {
-            STORAGE.clear();
+            typeof STORAGE !== "unedfined" && STORAGE && STORAGE.clear();
             typeof $_GET.redirect !== "undefined" && console.log($_GET);
             var theme = (typeof Config.loginMode === "undefined" || Config.loginMode === 'default') ? 'login' : Config.loginMode;
             var template = Template.template.load('user', theme);
