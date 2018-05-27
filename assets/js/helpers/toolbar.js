@@ -46,11 +46,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             });
             return items;
         }
-        , render: function () {
+        , render: function (callback) {
             if (this.toolbar === "")
                 this.$el.slideUp(Config.transitionSpedd);
             else
                 this.$el.html(this.toolbar + '<div class="clearfix"></div>').slideDown(Config.transitionSpedd);
+            if (typeof callback === "function")
+                callback(true);
         }
         , button: function (args) {
 //            console.log(Authorize.access(args.access));
