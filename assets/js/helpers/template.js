@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri', 'authorization'
-], function ($, _, Backbone, Handlebars, Config, Global, moment, Authorize) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri', 'authorization', 'pdatepicker'
+], function ($, _, Backbone, Handlebars, Config, Global, moment, Authorize, pDatepicker) {
     var template = {
         handlebarHelpers: function () {
             if (typeof Handlebars === "undefined")
