@@ -234,10 +234,22 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
         }
-        , getEPGMedia(data) {
+        , getEPGMedia: function(data) {
             return typeof data === "undefined" || !data ? '' : CONFIG.epgMediaPath.replace(/{start}/, data.startMiladi.replace(' ', '/').replace(/\:/g, '/'))
                     .replace(/{end}/, data.endMiladi.replace(' ', '/').replace(/\:/g, '/'))
                     .replace(/{channel}/, data.channel);
+        }
+        , getQuery: function (name, url) {
+            if (!url)
+                url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+            if (!results)
+                return null;
+            if (!results[2])
+                return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 //        , getServerDate: function (jalali, datetime) {
 //            var jalali = (typeof jalali !== "undefined") ? jalali : false;
