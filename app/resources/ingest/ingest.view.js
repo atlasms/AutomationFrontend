@@ -61,6 +61,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         }
                     });
                 }
+				, error: function (e, data) {
+                    toastr.error(data.responseJSON, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
             });
         }
         , openAddForm: function (e) {
