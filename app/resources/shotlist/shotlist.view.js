@@ -79,6 +79,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
+            data[0]['Data'] = JSON.stringify(this.timeline.exportTimeline());
+            data[0]['Cmd'] = 'concat';
             new MediaModel().save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -273,7 +275,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , prepareSave: function () {
             var data = [{}];
-            data[0].Shotlist = this.timeline.exportTimeline();
+            data[0].Shotlist = this.timeline.exportShots(undefined);
+            $.each(data[0].Shotlist, function() {
+                this.duration = this.shotDuration;
+                delete this.shotDuration;
+                delete this.mediaDuration;
+            });
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {

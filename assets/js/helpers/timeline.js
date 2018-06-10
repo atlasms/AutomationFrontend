@@ -154,15 +154,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             if (self.playerInstance)
                 self.player.remove();
             $('#player-container').empty();
+            var type = media.url.indexOf('m3u8') !== -1 ? "application/x-mpegurl" : 'video/mp4';
             var playerConfig = {
                 clip: {
                     sources: [
-                        {src: media.url, type: 'video/mp4'}
+                        {src: media.url, type: type}
                     ]
                 }
                 , template: {seekbar: {range: true}, controls: false}
                 , duration: media.duration
             };
+            console.log(playerConfig);
             var player = new Player('#player-container', playerConfig);
             player.render();
             self.currentMedia = media;
@@ -176,7 +178,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             $('[data-type="metadata"]').find('option:selected').prop('selected', false);
             $('[data-type="metadata"]').trigger('change');
         }
-        , clearShots: function() {
+        , clearShots: function () {
             $("#shotlist-table tr").remove();
         }
         , _getMediaDetails: function () {
@@ -352,12 +354,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             return metadata;
         }
         , exportShots: function (e) {
-            e.preventDefault();
+            typeof e !== "undefined" && e.preventDefault();
             var $shots = $("#shotlist-table tbody tr");
             var data = [];
             $shots.each(function () {
                 data.push({
-                    id: $(this).attr('data-id')
+                    id: $(this).attr('data-external-id')
                     , start: Global.processTime($(this).find('[data-type="start"]').text())
                     , end: Global.processTime($(this).find('[data-type="end"]').text())
                     , shotDuration: Global.processTime($(this).data('duration'))
