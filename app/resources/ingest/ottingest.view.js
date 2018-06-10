@@ -158,7 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            params.start = params.start.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
 //            params.end  = params.end.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
 //            http://172.16.16.69/archive/360p.m3u8?c=tv1&start=2017/08/22/01/49&end=2017/08/22/02/28
-            var url = 'http://172.16.16.69/archive/360p.m3u8?' + $.param(params);
+            var url = 'http://172.16.16.69/archive/list2.m3u8?' + $.param(params);
             var duration = $(e.target).parents("tr:first").data('duration');
             self.renderPlayer(url, Global.processTime(duration));
         }
