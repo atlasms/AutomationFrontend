@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
         , render: function () {
             // Initial redirect, if any
             if (typeof Config.initialRedirect !== "undefined") {
-                location.href = Config.initialRedirect;
+                new Backbone.Router().navigate(Config.initialRedirect, {trigger: true});
                 return false;
             }
 
