@@ -1,0 +1,31 @@
+<style>
+	.fixed-label.form-group.form-md-line-input label { text-indent: 0; }
+	.form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.edited~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.focus:not([readonly])~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.form-control-static~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm:focus:not([readonly])~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm[readonly]~label { top: 0; font-size: 13px; }
+</style>
+<div id="prices-page" class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						{{#each []}}
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="heading-{{math @index "+" 1}}">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{math @index "+" 1}}">
+										{{Title}} <small class="text-muted">({{Unit}})</small>
+									</a>
+								</h4>
+							</div>
+							<div id="collapse-{{math @index "+" 1}}" class="panel-collapse collapse" role="tabpanel" data-id="{{Id}}">
+								<div class="panel-body">
+								</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

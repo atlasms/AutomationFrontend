@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'submit', task: 'add'}}
         ]
         , statusbar: []
+        , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , events: {
             'click [type=submit]': 'submit'
@@ -187,18 +188,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("#path").removeClass('alert-danger').addClass('alert-info');
             $("[data-type=path]").length && $("[data-type=path]").text(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
-
-            var template = Template.template.load('resources/photos', 'metadata.partial');
+            var template = Template.template.load('resources/ingest', 'metadata.partial');
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
+            var fetchParams = {
+                categoryId: pathId
+                , offset: 0
+                , count: self.defaultListLimit
+            };
             model.fetch({
-                data: $.param({categoryId: pathId})
+                data: $.param(fetchParams)
                 , success: function (data) {
-                    items = self.prepareItems(data.toJSON(), params);
+                    items = self.prepareItems(data.toJSON(), $.merge({}, $.merge({}, params), fetchParams));
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            console.log(items);
 //                            self.afterRender();
                         });
                     });

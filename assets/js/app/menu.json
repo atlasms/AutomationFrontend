@@ -9,7 +9,8 @@
             { "title": "EPG", "alias": "broadcast_epg", "icon": "align-right", "link": "#" },
             { "title": "بازبینی پخش", "alias": "broadcast_review", "icon": "play-circle", "link": "#" },
             { "title": "فایل‌های به‌روزشونده", "alias": "broadcast_updatables", "icon": "refresh", "link": "#" },
-            { "title": "مدیریت کرال", "alias": "broadcast_crawl", "icon": "font", "link": "/broadcast/crawl" }
+            { "title": "مدیریت کرال", "alias": "broadcast_crawl", "icon": "font", "link": "/broadcast/crawl" },
+            { "title": "قیمت‌ها", "alias": "broadcast_prices", "icon": "line-chart", "link": "/broadcast/prices" }
         ]
     },
     {

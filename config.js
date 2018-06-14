@@ -82,6 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
             , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/schedule2": {"private": true, "access": null, "action": "ScheduleView2", "file": "app/broadcast/schedule/schedule2.view"}
+            , "broadcast/prices": {"private": true, "access": null, "action": "PricesView", "file": "app/broadcast/prices/prices.view"}
             , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
@@ -157,6 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "newsroom": "newssource"
             , "tags": "share/tags/"
             , "shotlist": "shotlist"
+            , "economy": "economy"
         },
         "channels": {
             'tv1': {
