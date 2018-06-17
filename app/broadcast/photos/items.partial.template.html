@@ -1,0 +1,45 @@
+<form>
+	<div class="form-group">
+		<button type="submit" class="btn green-jungle">ذخیره</button>
+	</div>
+	<table class="table table-condensed table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th class="col-xs-2">عنوان</th>
+				<th class="col-xs-2">واحد</th>
+				<th class="col-xs-2">مقدار</th>
+				<th class="col-xs-2">آخرین ویرایش</th>
+				<th class="col-xs-4">کاربر</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each []}}
+			<tr data-id="{{Tree_Id}}">
+				<td>{{Tree_Id}}</td>
+				<td class="">
+					{{Title}}
+				</td>
+				<td class="">
+					{{Unit}}
+				</td>
+				<td>
+					<input type="hidden" name="Tree_Id" value="{{Tree_Id}}" />
+					<div class="form-group form-md-line-input form-md-floating-label has-info">
+						<input type="text" class="form-control input-sm" name="v_{{Tree_Id}}" data-type="value" value="" required />
+						<label for="v_{{Tree_Id}}">
+							{{#if Last_Value}}آخرین مقدار: {{Last_Value}}{{/if}}
+						</label>
+					</div>
+				</td>
+				<td class="text-right">
+					{{extractTime Last_Datetime}} {{extractDate Last_Datetime}}
+				</td>
+				<td>
+					{{UserText}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</form>

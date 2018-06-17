@@ -1,0 +1,31 @@
+{{#each []}}
+<tr data-id="{{MediaId}}" data-index="{{math @index "+" 1}}">
+	<td class="ordering">
+		<div style="width: 75px;">
+			<span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
+			<span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span>
+		</div>
+	</td>
+	<td>
+		<!--		<span class="idx hide">{{math @index "+" 1}}</span>-->
+		<!--<a class="item-link" href="/resources/mediaitem/{{MediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>-->
+		<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+			<input name="ShowMedia" value="" type="checkbox" {{#if ShowMedia}}checked{{/if}}>
+			<label></label>
+		</div>
+	</td>
+	<td class="text-center">
+		{{config placeholderImage}}
+		<figure>
+			<img src="{{Media.Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+		</figure>
+	</td>
+	<td>
+		<span class="title">{{Media.Title}}</span>
+		<small class="help-block text-muted clip-line">{{Media.Description}}</small>
+	</td>
+	<td>
+		<span data-task="delete" class="btn btn-sm btn-default"><i class="fa fa-trash"></i></span>
+	</td>
+</tr>
+{{/each}}

@@ -85,6 +85,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcast/prices": {"private": true, "access": null, "action": "PricesView", "file": "app/broadcast/prices/prices.view"}
             , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
+            , "broadcast/photos": {"private": true, "access": null, "action": "BroadcastPhotosView", "file": "app/broadcast/photos/photos.view"}
             , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
             , "resources/batchingest": {"private": true, "access": null, "action": "BatchIngestView", "file": "app/resources/batchingest/batchingest.view"}
 //            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
@@ -159,6 +160,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "tags": "share/tags/"
             , "shotlist": "shotlist"
             , "economy": "economy"
+            , "broadcastphotos": "conductormedia"
         },
         "channels": {
             'tv1': {

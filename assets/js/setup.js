@@ -116,6 +116,7 @@ require.config({
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
         , "broadcast.crawl.view": ["../../app/broadcast/crawl/crawl.view"]
         , "broadcast.prices.view": ["../../app/broadcast/prices/prices.view"]
+        , "broadcast.photos.view": ["../../app/broadcast/photos/photos.view"]
         , "resources.ingest.view": ["../../app/resources/ingest/ingest.view"]
         , "resources.batchingest.view": ["../../app/resources/batchingest/batchingest.view"]
         , "resources.ottingest.view": ["../../app/resources/ingest/ottingest.view"]
