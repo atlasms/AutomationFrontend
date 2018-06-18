@@ -18,6 +18,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             , 'click [data-task=refresh]': 'reLoad'
             , 'show.bs.collapse #accordion': 'collapse'
             , 'blur input[type="text"]': 'setEdited'
+            , 'change [name="State"]': 'changeState'
+        }
+        , changeState: function(e) {
+//            var $item = $(e.target);
+            var state = e.target.checked;
+            new EconomyModel({id: 'tree/' + $(e.target).parents('.panel-heading').data('id')}).save({state: state}, {
+                patch: true
+                , error: function(e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
         }
         , setEdited: function (e) {
             if ($(e.target).val() !== "")

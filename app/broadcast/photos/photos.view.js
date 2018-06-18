@@ -23,6 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click #itemlist table tbody tr': 'addItem'
             , 'click [data-task="reorder"]': 'reorderRows'
             , 'click [data-task="delete"]': 'deleteRow'
+            , 'click [data-type="load-items"]': 'filterItems'
         }
         , submit: function (e) {
             e.preventDefault();
@@ -52,7 +53,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , reLoad: function () {
             this.load();
         }
-        , reloadPhotos: function() {
+        , filterItems: function () {
+            this.loadItems();
+        }
+        , reloadPhotos: function () {
             this.loadPhotos();
         }
         , load: function (e, extend) {
@@ -67,7 +71,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
+                var output = handlebarsTemplate({initialDate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))});
                 $container.html(output).promise().done(function () {
                     self.afterRender();
                 });
@@ -77,7 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             this.attachDatepickers(function () {
-                self.loadPhotos(undefined, function() {
+                self.loadPhotos(undefined, function () {
                     self.initSortable();
                 });
             });
@@ -104,7 +108,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 onSelect: function () {
 //                    self.load();
 //                    $datePickers.blur();
-                    self.reloadPhotos();
+                    if ($(this.inputElem).parents('#workspace').length)
+                        self.reloadPhotos();
+//                        console.log(this.inputElem);
                 }
             };
             $.each($datePickers, function () {
@@ -131,7 +137,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             }
         }
-        , deleteRow: function(e) {
+        , deleteRow: function (e) {
             e.preventDefault();
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
             $row.remove();
@@ -208,12 +214,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
             var params = {
-                q: '',
+                q: $('[name="q"]').val(),
                 type: 1,
                 offset: 0,
                 count: self.defaultListLimit,
                 CategoryId: catid,
-                state: 1
+                state: 1,
+                startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00',
+                enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
             return params;
         }

@@ -1,6 +1,8 @@
 <style>
 	.fixed-label.form-group.form-md-line-input label { text-indent: 0; }
 	.form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.edited~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.focus:not([readonly])~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm.form-control-static~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm:focus:not([readonly])~label, .form-group.form-md-line-input.form-md-floating-label .form-control.input-sm[readonly]~label { top: 0; font-size: 13px; }
+	#prices-page .panel-heading { position: relative; }
+	#prices-page .checkbox { position: absolute; top: 50%; left: 0; transform: translateY(-50%); margin: 0; padding-left: 20px; }
 </style>
 <div id="prices-page" class="portlet box">
 	<div class="portlet-body">
@@ -10,12 +12,16 @@
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 						{{#each []}}
 						<div class="panel panel-default">
-							<div class="panel-heading" role="tab" id="heading-{{math @index "+" 1}}">
+							<div class="panel-heading" role="tab" id="heading-{{math @index "+" 1}}" data-id="{{Id}}">
 								<h4 class="panel-title">
 									<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{math @index "+" 1}}">
 										{{Title}} <small class="text-muted">({{Unit}})</small>
 									</a>
 								</h4>
+								<div class="checkbox checkbox-success checkbox-circle">
+									<input name="State" value="" id="state-{{@index}}" type="checkbox" {{#if State}}checked{{/if}}>
+										   <label for="state-{{@index}}">فعال</label>
+								</div>
 							</div>
 							<div id="collapse-{{math @index "+" 1}}" class="panel-collapse collapse" role="tabpanel" data-id="{{Id}}">
 								<div class="panel-body">
