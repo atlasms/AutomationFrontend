@@ -215,7 +215,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
             var params = {
                 q: $('[name="q"]').val(),
-                type: 1,
+                type: $('[name="Type"]').val(),
                 offset: 0,
                 count: self.defaultListLimit,
                 CategoryId: catid,
