@@ -1,14 +1,17 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'tree.helper', 'jquery-ui'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Tree, ui) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'tree.helper', 'jquery-ui', 'bootpag'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Tree, ui) {
     var BroadcastPhotosView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $itemsPlace: "#items-place"
         , model: 'EconomyModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            , {'button': {cssClass: 'btn btn-info', text: 'کپی آیتم‌ها', type: 'button', task: 'toggle-duplicate-form', icon: 'fa fa-copy'}}
             , {'button': {cssClass: 'btn green-jungle', text: 'ذخیره', type: 'button', task: 'submit'}}
         ]
-        , statusbar: []
+        , statusbar: [
+            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
+        ]
         , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , cache: {
@@ -23,13 +26,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click #itemlist table tbody tr': 'addItem'
             , 'click [data-task="reorder"]': 'reorderRows'
             , 'click [data-task="delete"]': 'deleteRow'
+            , 'click [data-task="toggle-duplicate-form"]': 'toggleDuplicateForm'
             , 'click [data-type="load-items"]': 'filterItems'
+            , 'click [data-task="copy"]': 'copy'
         }
         , submit: function (e) {
             e.preventDefault();
             var self = this;
             var data = [];
             var $items = $("#photo-items table tbody tr");
+            if (!$items.length) {
+                toastr.warning('لیست خالی قابل ذخیره نیست!', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
             var params = this.getPhotosParams();
             $items.each(function (i) {
                 data.push({
@@ -49,6 +58,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
+        }
+        , copy: function (e) {
+            e.preventDefault();
+            var data = $("#duplicate-items").serializeObject();
+            data.SourceDate = Global.jalaliToGregorian(data.SourceDate) + 'T00:00:00';
+            data.DestDate = Global.jalaliToGregorian(data.DestDate) + 'T00:00:00';
+            new MediaModel({overrideUrl: Config.api.broadcastphotos + '/copy'}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function (d) {
+                    toastr.success('با موفقیت انجام شد', 'کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+
         }
         , reLoad: function () {
             this.load();
@@ -76,6 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.afterRender();
                 });
             });
+            self.renderStatusbar();
         }
         , afterRender: function () {
             var self = this;
@@ -83,6 +108,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.attachDatepickers(function () {
                 self.loadPhotos(undefined, function () {
                     self.initSortable();
+                    self.updateStatusbar();
                 });
             });
         }
@@ -141,6 +167,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
             $row.remove();
+            this.updateStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
@@ -152,6 +179,44 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toolbar[method](this[method]);
             });
             toolbar.render();
+        }
+        , updateStatusbar: function () {
+            var count = $("#photo-items tbody tr").length;
+            $('[data-type="photos-count"]').text(count);
+            if (count > 0)
+                $("#status-items .total-count span").html(count);
+            else
+                $("#status-items .total-count span").html('');
+        }
+        , renderStatusbar: function () {
+            var elements = this.statusbar;
+            var statusbar = new Statusbar();
+            $.each(elements, function () {
+                statusbar.addItem(this);
+            });
+            statusbar.render();
+        }
+        , renderPagination: function (items, requestParams) {
+            var self = this;
+            $('.paginator').bootpag({
+                total: Math.ceil(items.count / requestParams.count),
+                page: (requestParams.offset / requestParams.count) + 1,
+                maxVisible: 10,
+                leaps: true,
+                firstLastUse: true,
+                first: '→',
+                last: '←',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+            }).off("page").on("page", function (event, num) {
+                requestParams.offset = (num - 1) * requestParams.count;
+                self.loadItems(requestParams);
+            });
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -206,6 +271,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var output = handlebarsTemplate(items);
                 $container.append(output).promise().done(function () {
                     self.initSortable(true);
+                    self.updateStatusbar();
                 });
             });
 
@@ -241,6 +307,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
 //                            self.afterRender(items, params);
+                            $('[data-type="total-count"]').text(items.count);
+                            self.updateStatusbar();
+                            self.renderPagination(items, params);
                         });
                     });
                 }
@@ -282,6 +351,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.cache.currentCategory = routes.pop().toString();
             $('.portlet-title small').text(' [' + path.join(' ') + ']');
             this.loadItems();
+        }
+        , toggleDuplicateForm: function (e) {
+            e.preventDefault();
+            $(".duplicate-items").toggleClass('hidden');
         }
     });
     return BroadcastPhotosView;

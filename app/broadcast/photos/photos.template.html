@@ -6,7 +6,73 @@
 	#photos-page .table { width: 100%; max-width: 100%; }
 	.clip-line { word-break: break-all; }
 	#itemlist, #photo-items { height: 550px; max-height: 550px; overflow: scroll; overflow-x: hidden; }
+	/*#photo-items { height: 593px; max-height: 593px; }*/
 </style>
+<div class="portlet box toolbar-box" id="sub-toolbar">
+	<div class="portlet light bg-inverse duplicate-items hidden">
+		<div class="portlet-body">
+			<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+				<strong>اخطار!</strong>
+				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
+			</div>
+			<form class="" id="duplicate-items" class="form-inline">
+				<div class="row">
+					<div class="col-xs-5">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">تاریخ مبدا</span>
+										<input type="text" name="SourceDate" class="form-control datepicker source" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">بخش مبدا</span>
+										<select class="form-control" name="SourceSection">
+											{{#select Genre}}
+											{{{getDefinitionOptions 92}}}
+											{{/select}}
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">تاریخ مقصد</span>
+										<input type="text" name="DestDate" class="form-control datepicker source" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon">بخش مقصد</span>
+										<select class="form-control" name="DestSection">
+											{{#select Genre}}
+											{{{getDefinitionOptions 92}}}
+											{{/select}}
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-primary pull-right" type="button" data-task="copy"><i class="fa fa-copy"></i> کپی</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 <div id="photos-page" class="">
 	<div class="row">
 		<div class="col-xs-7">
@@ -59,7 +125,23 @@
 								<div id="tree"></div>
 							</div>
 							<div class="col-xs-8">
-								<div id="itemlist"></div>
+								<div class="portlet itemlist box" style="margin: 0;">
+									<div class="portlet-title" style="background: #3598dc; padding: 3px 10px; margin: 0;">
+										<div class="caption">
+											<span class="fa fa-columns" style=""></span>
+											تعداد:
+											<span data-type="total-count"></span>
+										</div>
+										<div class="actions" style="padding: 7px 0 0 0;">
+											<div class="paginator"></div>
+										</div>
+									</div>
+								</div>
+								<div class="portlet-body" style="border: 1px solid #3598dc; padding: 0;">
+									<div class="mainbody">
+										<div id="itemlist"></div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -70,8 +152,8 @@
 			<div id="workspace" class="portlet photos light box">
 				<div class="portlet-title">
 					<div class="caption">
-						<i class="fa fa-photo"></i>
-						<span class="caption-subject font-dark bold uppercase">تصاویر</span>
+						<i class="fa fa-th"></i>
+						<span class="caption-subject font-dark bold uppercase"></span>
 					</div>
 					<div class="actions form-inline">
 						<div class="form-group pull-right">
@@ -94,23 +176,35 @@
 				</div>
 				<div class="portlet-body">
 					<div class="mainbody">
-						<div id="photo-items">
-							<table class="table table-bordered table-striped table-condensed flip-content">
-								<thead>
-									<tr>
-										<th class="">#</th>
-										<th class="col-xs-1"></th>
-										<th class="col-xs-2">تصویر</th>
-										<th class="col-xs-8">عنوان</th>
-										<th class="col-xs-1"></th>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</table>
+						<div class="portlet itemlist box" style="margin: 0;">
+							<div class="portlet-title" style="background: #1BBC9B; padding: 3px 10px; margin: 0;">
+								<div class="caption">
+									<span class="fa fa-columns" style=""></span>
+									تعداد:
+									<span data-type="photos-count"></span>
+								</div>
+							</div>
+						</div>
+						<div class="portlet-body" style="border: 1px solid #1BBC9B; padding: 0;">
+							<div class="mainbody">
+								<div id="photo-items">
+									<table class="table table-bordered table-striped table-condensed flip-content">
+										<thead>
+											<tr>
+												<th class="">#</th>
+												<th class="col-xs-1"></th> 
+												<th class="col-xs-2">تصویر</th>
+												<th class="col-xs-8">عنوان</th>
+												<th class="col-xs-1"></th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
