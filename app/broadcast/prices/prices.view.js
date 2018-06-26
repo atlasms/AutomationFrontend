@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
         , changeState: function(e) {
 //            var $item = $(e.target);
             var state = e.target.checked;
-            new EconomyModel({id: 'tree/' + $(e.target).parents('.panel-heading').data('id')}).save({state: state}, {
+            new EconomyModel({id: 'tree/' + $(e.target).parents('.panel-heading').data('id')}).save({key: 'state', value: state}, {
                 patch: true
                 , error: function(e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
