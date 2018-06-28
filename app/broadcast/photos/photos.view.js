@@ -133,7 +133,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var datepickerConf = {
                 onSelect: function () {
 //                    self.load();
-//                    $datePickers.blur();
+                    $datePickers.blur();
                     if ($(this.inputElem).parents('#workspace').length)
                         self.reloadPhotos();
 //                        console.log(this.inputElem);
@@ -183,10 +183,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , updateStatusbar: function () {
             var count = $("#photo-items tbody tr").length;
             $('[data-type="photos-count"]').text(count);
-            if (count > 0)
-                $("#status-items .total-count span").html(count);
-            else
-                $("#status-items .total-count span").html('');
+            $("#status-items .total-count span").html(count);
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;
@@ -300,7 +297,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 data: data
                 , success: function (items) {
                     items = items.toJSON();
-                    var template = Template.template.load('resources/media', 'media.items-condensed.partial');
+                    var template = Template.template.load('broadcast/photos', 'media.items-condensed.partial');
                     var $container = $("#itemlist");
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
@@ -338,6 +335,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            self.updateStatusbar();
                             if (typeof callback === 'function')
                                 callback();
 //                            self.afterRender(items, params);
