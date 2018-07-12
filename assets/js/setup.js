@@ -130,6 +130,7 @@ require.config({
         , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
         , "resources.broadcastprint.view": ["../../app/resources/mediaitem/broadcastprint.view"]
         , "resources.live.view": ["../../app/resources/live/live.view"]
+        , "resources.editor.view": ["../../app/resources/editor/editor.view"]
         , "user.messages.view": ["../../app/user/messages/inbox.view"]
         , "user.notifications.view": ["../../app/user/notifications/notifications.view"]
         , "user.acl.view": ["../../app/user/acl/acl.view"]
