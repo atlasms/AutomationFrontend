@@ -101,6 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
             , "resources/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "BroadcastprintView", "file": "app/resources/mediaitem/broadcastprint.view"}
             , "resources/live": {"private": true, "access": null, "action": "LiveView", "file": "app/resources/live/live.view"}
+            , "resources/editor": {"private": true, "access": null, "action": "MediaEditorView", "file": "app/resources/editor/editor.view"}
             , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
             , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
             , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
@@ -135,8 +136,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "status": "#status-items"
         },
         "api": {
-//            "url": "http://au.iktv.ir:8080/api/"
-            "url": "http://46.225.139.98:8080/api/"
+            "url": "http://au.iktv.ir:8080/api/"
+//            "url": "http://46.225.139.98:8080/api/"
             , "login": "login"
             , "schedule": "conductor"
             , "crawl": "crawl"
