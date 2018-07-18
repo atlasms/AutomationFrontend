@@ -30,7 +30,7 @@
             { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
             { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/media?state=2" },
             { "title": "پخش زنده", "alias": "resources_live", "icon": "tv", "link": "/resources/live" },
-            { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "video", "link": "/resources/editor" }
+            { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "play-circle", "link": "/resources/editor" }
         ]
     },
     {
