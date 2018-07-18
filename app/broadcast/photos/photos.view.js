@@ -47,6 +47,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     , Sort: i + 1
                     , DateTime: params.date
                     , ShowMedia: $(this).find('[name="ShowMedia"]:first')[0].checked ? 1 : 0
+                    , TitleKind: $(this).find('[name=TitleKind]:first').val()
                 });
             });
             params.overrideUrl = Config.api.broadcastphotos;
@@ -119,7 +120,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             } catch (e) {
                 $("#photo-items tbody").sortable({
                     items: "tr"
-                    , cancel: 'a, button, input, textarea'
+                    , cancel: 'a, button, input, textarea, select'
                     , axis: 'y'
                     , forcePlaceholderSize: true
                     , placeholder: ".sort-placeholder"

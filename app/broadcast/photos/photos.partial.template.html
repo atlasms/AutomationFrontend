@@ -11,7 +11,16 @@
 		<!--<a class="item-link" href="/resources/mediaitem/{{MediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>-->
 		<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
 			<input name="ShowMedia" value="" type="checkbox" {{#if ShowMedia}}checked{{/if}}>
-			<label></label>
+				   <label></label>
+		</div>
+	</td>
+	<td>
+		<div class="form-group">
+			<select class="form-control" name="TitleKind">
+				{{#select TitleKind}}
+				{{{getDefinitionOptions 98}}}
+				{{/select}}
+			</select>
 		</div>
 	</td>
 	<td class="text-center">
