@@ -5,14 +5,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $itemsPlace: "#items-place"
         , model: 'EconomyModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-info', text: 'کپی آیتم‌ها', type: 'button', task: 'toggle-duplicate-form', icon: 'fa fa-copy'}}
+//            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            {'button': {cssClass: 'btn btn-info', text: 'کپی آیتم‌ها', type: 'button', task: 'toggle-duplicate-form', icon: 'fa fa-copy'}}
             , {'button': {cssClass: 'btn green-jungle', text: 'ذخیره', type: 'button', task: 'submit'}}
         ]
         , statusbar: [
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
         ]
         , defaultListLimit: Config.defalutMediaListLimit
+        , defalutPhotosListLimit: 100
+        , defaultPhotosListOffset: 0
         , flags: {}
         , cache: {
             currentCategory: ''
@@ -29,6 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="toggle-duplicate-form"]': 'toggleDuplicateForm'
             , 'click [data-type="load-items"]': 'filterItems'
             , 'click [data-task="copy"]': 'copy'
+            , 'click [data-type="reload-photos"]': 'reloadPhotos'
         }
         , submit: function (e) {
             e.preventDefault();
@@ -112,6 +115,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.updateStatusbar();
                 });
             });
+        }
+        , initPhotosPaginator: function () {
+            var self = this;
+            $(".photos-paginator").bootpag({
+                total: Math.ceil($("#photo-items tbody tr").length / self.defalutPhotosListLimit),
+                page: (self.defaultPhotosListOffset / self.defalutPhotosListLimit) + 1,
+                maxVisible: self.defalutPhotosListLimit,
+                leaps: true,
+                firstLastUse: true,
+                first: '→',
+                last: '←',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+            }).off("page").on("page", function (event, num) {
+                self.handlePhotosPagination((num - 1) * self.defalutPhotosListLimit);
+//                requestParams.offset = (num - 1) * requestParams.count;
+//                self.loadItems(requestParams);
+            });
+            self.handlePhotosPagination();
         }
         , initSortable: function (refresh) {
             var refresh = (typeof refresh !== "undefined") ? refresh : false;
@@ -252,6 +279,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , addItem: function (e) {
             var self = this;
             var $item = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
+            $item.parent().find(".success").removeClass('success');
+            $item.addClass('success');
             var items = [{
                     MediaId: $item.data('id')
                     , ShowMedia: 1
@@ -269,6 +298,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var output = handlebarsTemplate(items);
                 $container.append(output).promise().done(function () {
                     self.initSortable(true);
+//                    self.initPhotosPaginator();
                     self.updateStatusbar();
                 });
             });
@@ -323,6 +353,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getPhotosParams();
             // Load Photos
+            $('.total-count span').text(0);
+            $('.portlet-title [data-type="photos-count"]').text(0);
             var data = $.param(params);
             params.overrideUrl = Config.api.broadcastphotos;
             var model = new MediaModel(params);
@@ -337,12 +369,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             self.updateStatusbar();
+                            self.initPhotosPaginator();
                             if (typeof callback === 'function')
                                 callback();
 //                            self.afterRender(items, params);
                         });
                     });
                 }
+            });
+        }
+        , handlePhotosPagination: function (offset, count) {
+            var count = typeof count !== "undefined" ? count : this.defalutPhotosListLimit;
+            var offset = typeof offset !== "undefined" ? offset : this.defaultPhotosListOffset;
+            var $items = $("#photo-items tbody tr").slice(offset, count + offset);
+            $("#photo-items tbody tr").hide(function () {
+                $items.show(1);
             });
         }
         , handleTreeCalls: function (routes, path) {
