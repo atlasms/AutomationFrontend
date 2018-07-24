@@ -136,7 +136,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "status": "#status-items"
         },
         "api": {
-            "url": "http://au.iktv.ir:8080/api/"
+            "url": (location.href.indexOf('localhost') !== -1) ? 'http://au.iktv.ir/services/api/' : "/services/api/"
 //            "url": "http://46.225.139.98:8080/api/"
             , "login": "login"
             , "schedule": "conductor"
