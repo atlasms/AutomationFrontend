@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
         ]
         , defaultListLimit: Config.defalutMediaListLimit
-        , defalutPhotosListLimit: 100
+        , defalutPhotosListLimit: 70
         , defaultPhotosListOffset: 0
         , flags: {}
         , cache: {
@@ -111,7 +111,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             this.attachDatepickers(function () {
                 self.loadPhotos(undefined, function () {
-                    self.initSortable();
+//                    self.initSortable();
                     self.updateStatusbar();
                 });
             });
@@ -297,7 +297,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate(items);
                 $container.append(output).promise().done(function () {
-                    self.initSortable(true);
+//                    self.initSortable(true);
 //                    self.initPhotosPaginator();
                     self.updateStatusbar();
                 });
