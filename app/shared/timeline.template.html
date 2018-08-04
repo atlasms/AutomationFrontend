@@ -14,6 +14,8 @@
 	#shotlist-table .label.label-sm { padding-top: 0; padding-bottom: 0; }
 	#shotlist-table p[data-metadata] { margin-bottom: 8px; } 
 	#shotlist-table .note.note-success { background: transparent; }
+	#page-info { display: block; position: absolute; top: 20px; left: 20px; height: 64px; }
+	#page-info h4 { margin: 0; line-height: 34px; }
 </style>
 <div id="timeline-container">
 	{{#if options.buttons}}
@@ -23,6 +25,7 @@
 	<div class="row">
 		{{#if options.repository}}
 		<div class="{{#if options.sidebar}}col-sm-3{{else}}col-sm-5{{/if}}">
+			
 			{{#if options.titles}}<h4>منابع</h4>{{/if}}
 			<table id="timeline-repository" class="table table-condensed table-bordered table-hover table-bordered table-striped">
 				<thead>

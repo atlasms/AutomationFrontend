@@ -360,6 +360,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             });
         }
+        , showProjectId: function(id) {
+            $("#page-info").find('strong').html(id);
+            $("#page-info").show(1);
+        }
         , afterRender: function () {
             var self = this;
             self.attachDatepickers();
@@ -370,6 +374,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             if (this.getId() && this.getId() !== "editor") {
                 this.loadTimeline(this.getId());
+                this.showProjectId(this.getId())
             }
 
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
@@ -389,7 +394,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
-            toolbar.render();
+            toolbar.render(undefined, '<div id="page-info" class="alert alert-danger" style="display: none;"><h4><span>شناسه پروژه</span>&nbsp;&nbsp;<strong></strong></h4></div>');
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")

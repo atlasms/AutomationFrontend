@@ -46,11 +46,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             });
             return items;
         }
-        , render: function (callback) {
+        , render: function (callback, extra) {
             if (this.toolbar === "")
                 this.$el.slideUp(Config.transitionSpedd);
-            else
-                this.$el.html(this.toolbar + '<div class="clearfix"></div>').slideDown(Config.transitionSpedd);
+            else {
+                if (typeof extra !== "undefined" && extra)
+                    this.$el.html(this.toolbar + '<div class="clearfix"></div>' + extra).slideDown(Config.transitionSpedd);
+                else
+                    this.$el.html(this.toolbar + '<div class="clearfix"></div>').slideDown(Config.transitionSpedd);
+            }
             if (typeof callback === "function")
                 callback(true);
         }
@@ -65,9 +69,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
 
             if (!args.access || Authorize.access(args.access))
-                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '"' + style +'>' + icon + text + '</button>';
+                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '"' + style + '>' + icon + text + '</button>';
             else
-                var output = '<button type="' + type + '" class="' + cssClass + '" disabled' + style +'>' + icon + text + '</button>';
+                var output = '<button type="' + type + '" class="' + cssClass + '" disabled' + style + '>' + icon + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {
@@ -122,7 +126,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             output += '</div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
-        , separator: function(args) {
+        , separator: function (args) {
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
             var output = '<div class="clearfix"></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
