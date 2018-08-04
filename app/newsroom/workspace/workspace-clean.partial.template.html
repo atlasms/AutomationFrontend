@@ -1,0 +1,30 @@
+<table id="news-items" class="table table-condensed table-hover table-striped">
+	<thead>
+		<tr>
+			<th class="text-center">#</th>
+			<th class="col-xs-4">عنوان</th>
+			<th class="col-xs-2 text-center">زمان</th>
+			<th class="col-xs-2 text-center">ویرایش</th>
+			<th class="col-xs-1">فرستنده</th>
+			<th class="col-xs-1 text-center">منبع</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each items}}
+		<tr data-id="{{id}}" data-type="{{sourceTableCode}}">
+			<td class="text-center">
+				{{id}}
+			</td>
+			<td data-type="headline">
+				<strong>{{headline}}</strong>
+			</td>
+			<td class="text-center">{{extractTime receiveDatetime}} {{extractDate receiveDatetime}}</td>
+			<td class="text-center">{{extractTime modifiedDatetime}} {{extractDate modifiedDatetime}}</td>
+			<td>{{fromUserText}}</td>
+			<td>
+				<span style="display: block;" class="text-center label label-{{resolveNewsLabel sourceTableCode}}">{{sourceTableText}}</span>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

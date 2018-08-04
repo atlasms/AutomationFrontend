@@ -234,7 +234,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 mm = '0' + mm;
             return yyyy + '-' + mm + '-' + dd;
         }
-        , getEPGMedia: function(data) {
+        , getEPGMedia: function (data) {
             return typeof data === "undefined" || !data ? '' : CONFIG.epgMediaPath.replace(/{start}/, data.startMiladi.replace(' ', '/').replace(/\:/g, '/'))
                     .replace(/{end}/, data.endMiladi.replace(' ', '/').replace(/\:/g, '/'))
                     .replace(/{channel}/, data.channel);
@@ -271,6 +271,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                     if (typeof callback === "function")
                         callback(request);
                 }
+            });
+        }
+        , processPrice: function (num) {
+            var n = num.toString(), p = n.indexOf('.');
+            return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function (m, i) {
+                return p < 0 || i < p ? m + ',' : m;
             });
         }
         // TEMP

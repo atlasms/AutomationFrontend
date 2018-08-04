@@ -22,7 +22,8 @@
 	{{/if}}
 	<div class="row">
 		{{#if options.repository}}
-		<div class="col-sm-5">
+		<div class="{{#if options.sidebar}}col-sm-3{{else}}col-sm-5{{/if}}">
+			{{#if options.titles}}<h4>منابع</h4>{{/if}}
 			<table id="timeline-repository" class="table table-condensed table-bordered table-hover table-bordered table-striped">
 				<thead>
 					<tr>
@@ -36,9 +37,9 @@
 				</tbody>
 			</table>
 		</div>
-		{{else}}
 		{{#if options.sidebar}}
-		<div class="col-sm-5">
+		<div class="{{#if options.repository}}col-sm-3{{else}}col-sm-5{{/if}}">
+			{{#if options.titles}}<h4>شات‌ها</h4>{{/if}}
 			<table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
 				<tbody>
 				</tbody>
@@ -46,7 +47,20 @@
 		</div>
 		{{/if}}
 		{{/if}}
-		<div class="{{#if options.repository}}col-sm-7{{else}}{{#if options.sidebar}}col-sm-7{{else}}col-sm-12{{/if}}{{/if}}">
+		<div class="
+			{{#if options.repository}}
+				{{#if options.sidebar}}
+					col-sm-6
+				{{else}}
+					col-sm-7
+				{{/if}}
+			{{else}}
+				{{#if options.sidebar}}
+					col-sm-7
+				{{else}}
+				col-sm-12
+				{{/if}}
+			{{/if}}">
 			<div id="player-container"></div>
 			<div id="shotlist">
 				<form class="shotlist-form form-horizontal">
@@ -113,6 +127,7 @@
 				</form>
 				{{#if options.sidebar}}
 				{{else}}
+				{{#if options.titles}}<h4>شات‌ها</h4>{{/if}}
 				<table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
 					<tbody>
 					</tbody>

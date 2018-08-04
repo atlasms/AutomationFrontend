@@ -337,6 +337,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
                 return new Handlebars.SafeString(text);
             });
+            Handlebars.registerHelper('price', function (price) {
+                return Global.processPrice(price);
+            });
         }
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {

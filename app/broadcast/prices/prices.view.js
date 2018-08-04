@@ -19,6 +19,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             , 'show.bs.collapse #accordion': 'collapse'
             , 'blur input[type="text"]': 'setEdited'
             , 'change [name="State"]': 'changeState'
+            , 'input #accordion input[type="text"]': 'processPrice'
+        }
+        , processPrice: function(e) {
+            var $input  = $(e.target);
+            $input.val(Global.processPrice($input.val().replace(/\,/gi, '')));
         }
         , changeState: function(e) {
 //            var $item = $(e.target);
@@ -52,7 +57,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             var data = [];
             var $items = $(e.target).parents('form:first').find('table tbody tr');
             $items.each(function () {
-                data.push({Tree_Id: $(this).data('id'), Value: $(this).find('[data-type="value"]').val()});
+                data.push({Tree_Id: $(this).data('id'), Value: $(this).find('[data-type="value"]').val().replace(/\,/gi, '')});
             });
             var params = {
                 path: '/data'

@@ -446,7 +446,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 } else {
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate({});
+                        var output = handlebarsTemplate({item: true});
                         $container.html(output).promise().done(function () {
                             if (model.split('-')[1] === "comments")
                                 self.loadComments(params);

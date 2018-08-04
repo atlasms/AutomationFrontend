@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             , sidebar: false
             , singleMode: true
             , type: 0
+            , titles: false
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
@@ -108,7 +109,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                         {src: url, type: 'video/mp4'}
                     ]
                 }
-                , template: {seekbar: {range: true}, controls: false}
+                , template: {seekbar: {range: true}, controls: {keys: true}}
                 , duration: duration
             };
             var player = new Player('#player-container', playerConfig);
@@ -206,7 +207,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         }
         , addShot: function (e, shots, initial) {
             // Add shot to shotlist
-            console.log(e, shots, initial);
+//            console.log(e, shots, initial);
             typeof e !== "undefined" && e && e.preventDefault();
             var self = this;
             var initial = typeof initial !== "undefined" ? initial : false;
@@ -391,12 +392,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 $("#status-items .total-duration").find('.badge').html(Global.createTime2(total));
             }
         }
-        , loadTimeline: function () {
-            if (!this.options.autoLoad)
-                return false;
+        , loadTimeline: function (data) {
+//            if (!this.options.autoLoad)
+//                return false;
             // Load Timeline from service api, etc.
             // TODO: Demo!
-            var timeline = JSON.parse(demoData.replace(/[\u0000-\u0019]+/g, ""));
+            var data = (typeof data !== "undefined") ? data : demoData;
+            var timeline = JSON.parse(data.replace(/[\u0000-\u0019]+/g, ""));
             timeline['options'] = this.options;
             this.render(timeline);
         }

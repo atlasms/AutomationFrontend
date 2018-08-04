@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'newsroom.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, NewsroomModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
     var MediaEditorView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -9,7 +9,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            {'button': {cssClass: 'btn blue-sharp', text: 'ذخیره جدید', type: 'button', task: 'save-as', icon: 'fa fa-copy'}}
+//            {'button': {cssClass: 'btn blue-sharp', text: 'ذخیره جدید', type: 'button', task: 'save-as', icon: 'fa fa-copy'}}
+            {'button': {cssClass: 'btn red-thunderbird', text: 'تولید ویدیو', type: 'button', task: 'export', icon: 'fa fa-share'}}
+            , {'button': {cssClass: 'btn green-jungle', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
             , {'button': {cssClass: 'btn btn-primary', text: 'ذخیره', type: 'submit', task: 'save', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn purple', text: 'انتخاب مدیا', type: 'button', task: 'open-media-modal', icon: 'fa fa-download'}}
         ]
@@ -17,8 +19,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
         ]
         , flags: {}
+        , id: null
         , events: {
-            'click [type=submit]': 'submit'
+            'click [data-task="save"]': 'submit'
+            , 'click [data-task="new"]': 'newProject'
+            , 'click [data-task="export"]': 'exportProject'
 //            , 'click [data-task=refresh-view]': 'reLoad'
 //            , 'click [data-task=add]': 'openAddForm'
 //            , 'click [data-task=refresh]': 'reLoad'
@@ -27,6 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            , 'click [data-task="add-clip"]': 'addClip'
             , 'click [data-task="open-media-modal"]': 'openMediaModal'
             , 'click [data-task="load-media"]': 'loadMedia'
+            , 'submit #new-item-form': 'createWorkspaceItem'
 //            , 'click [data-task="delete-shot"]': 'deleteShot'
 //            , 'click .shotlist-table tbody tr': 'loadShot'
 //            , 'click [data-task="load-list"]': 'loadItemlist'
@@ -38,8 +44,40 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , defaultListLimit: Config.defalutMediaListLimit
         , timeline: {}
+        , newProject: function (e) {
+            e.preventDefault();
+            !Backbone.History.started && Backbone.history.start({pushState: true});
+            new Backbone.Router().navigate('resources/editor', {trigger: true});
+        }
         , openMediaModal: function (e) {
             $("#media-modal").modal('toggle');
+        }
+        , exportProject: function (e) {
+            e.preventDefault();
+            if (!this.getId()) {
+                toastr.warning('ابتدا پروژه را ذخبره نمایید', 'خطا در تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            var shots = this.timeline.exportShots();
+            if (!shots.length) {
+                toastr.warning('پروژه خالی است!', 'خطا در تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            var data = {
+                File1: ''
+                , File2: this.getId() + '.mp4'
+                , Cmd: 'ExportTimeline'
+                , CmdGroup: '0'
+                , Params: JSON.stringify(this.timeline.exportTimeline())
+            };
+            new MediaModel({overrideUrl: Config.api.hsm}).save(null, {
+                data: JSON.stringify([data])
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
         }
         , getMediaParams: function (skipQueries) {
             var self = this;
@@ -101,29 +139,63 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $row.remove();
             this.handleDurations($table);
         }
-        , submit: function (e) {
-            e.preventDefault();
+        , createWorkspaceItem: function (e) {
+            typeof e !== "undefined" && e.preventDefault();
             var self = this;
-//            var helper = new IngestHelper.validate();
-//            if (!helper.beforeSave())
-//                return;
-            var data = this.prepareSave();
-            data[0]['Data'] = JSON.stringify(this.timeline.exportTimeline());
-            data[0]['Cmd'] = 'concat';
-            new MediaModel().save(null, {
-                data: JSON.stringify(data)
+            var data = $("#new-item-form").serializeObject();
+            data.cmd = 'create';
+            data.sourceTable = 'workspace';
+            data.destTable = 'workspace';
+            var createNewsParams = {overrideUrl: 'nws'};
+            new NewsroomModel(createNewsParams).save(null, {
+                data: JSON.stringify([data])
                 , contentType: 'application/json'
                 , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    $(self.$modal).find("form").trigger('reset');
-                    $(self.$modal).modal('hide');
-                    $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
-                }
-                , error: function () {
-                    toastr.error('انجام نشد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                , success: function (newsItem) {
+                    toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $("#new-item-modal").modal('hide');
+                    var id = self.prepareItems(newsItem.toJSON(), createNewsParams)[0].id;
+                    var data = {externalId: id, create: 1, type: 2};
+                    var params = {overrideUrl: Config.api.shotlist + '/check'};
+                    new NewsroomModel(params).fetch({
+                        data: data
+                        , success: function (item) {
+                            items = self.prepareItems(item.toJSON(), params);
+                            var shotlistId = Object.keys(items)[0];
+                            self.id = shotlistId;
+                            self.submit(undefined, shotlistId, true);
+                        }
+                    });
                 }
             });
+            return false;
+        }
+        , submit: function (e, id, reload) {
+            typeof e !== "undefined" && e.preventDefault();
+            var self = this;
+            var id = (typeof id !== "undefined" && id) ? id : this.getId();
+            if (id && id !== "editor") {
+                // Timeline exists
+                var data = this.timeline.exportTimeline();
+                new MediaModel({overrideUrl: Config.api.shotlist, id: id}).save({key: 'timeline', value: JSON.stringify(data)}, {
+                    patch: true
+                    , error: function (e, data) {
+                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    }
+                    , success: function (model, response) {
+                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        if (typeof reload !== "undefined" && reload === true) {
+                            window.setTimeout(function () {
+                                !Backbone.History.started && Backbone.history.start({pushState: true});
+                                new Backbone.Router().navigate('resources/editor/' + self.id, {trigger: true});
+                            }, 500);
+                        }
+                    }
+                });
+            } else {
+                // Timeline doesn't exists
+                $("#new-item-modal").modal();
+            }
         }
         , seekPlayer: function (e) {
             e.preventDefault();
@@ -146,6 +218,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
             });
             $('button[data-task=add]').removeClass('disabled');
+        }
+        , getId: function () {
+            return self.id ? self.id : Backbone.history.getFragment().split("/").pop().split("?")[0];
         }
         , reLoad: function () {
             this.load();
@@ -179,9 +254,48 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
-                            self.afterRender(items, params);
+//                            self.afterRender(items, params);
                         });
                     });
+                }
+            });
+        }
+        , loadTimeline: function (id) {
+            var self = this;
+            var id = (typeof id === "undefined" || !id) ? id : this.getId();
+            this.getTimeline(id, null, function (data) {
+                self.timeline.loadTimeline(data.Data);
+                self.loadExternalObjectInfo(data.ExternalObject, data.Type);
+            });
+        }
+        , loadExternalObjectInfo: function (items, type) {
+            var self = this;
+            var tmpl = (type === 2) ? ['newsroom/workspace', 'workspace-clean.partial'] : ['resources/media', 'media.items-clean.partial'];
+            var template = Template.template.load(tmpl[0], tmpl[1]);
+            if (type === 2)
+                items = [items];
+            var $container = $('#item-info');
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({items: items});
+                $container.html(output).promise().done(function () {
+//                    self.afterRender();
+                });
+            });
+
+        }
+        , getTimeline: function (id, params, callback) {
+            if (typeof id === "undefined")
+                return false;
+            var self = this;
+            var params = (typeof params !== "undefined" && params) ? params : {overrideUrl: Config.api.shotlist, id: id};
+            var model = new MediaModel(params);
+            model.fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    typeof callback === 'function' && callback(items);
+//                    var timelineData = items.Data;
+//                    self.timeline.loadTimeline(timelineData);
                 }
             });
         }
@@ -196,10 +310,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.afterRender();
                 });
             });
-
-            // TODO: Test
-            this.timeline = new Timeline('#timeline', {singleMode: false, repository: true, buttons: false});
-            this.timeline.render();
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');
@@ -250,30 +360,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             });
         }
-//        , loadItemlist: function (e) {
-//            typeof e !== "undefined" && e.preventDefault();
-//            var self = this;
-//            var params = $(".itemlist-filter").serializeObject();
-//            var template = Template.template.load('resources/media', 'media.items-condensed.partial');
-//            var $container = $("#itemlist");
-//            var modelParams = {offset: 0, count: self.defaultListLimit};
-//            new MediaModel(modelParams).fetch({
-//                data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
-//                , success: function(items) {
-//                    items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
-//                    template.done(function (data) {
-//                        var handlebarsTemplate = Template.handlebars.compile(data);
-//                        var output = handlebarsTemplate(items);
-//                        $container.html(output).promise().done(function () {
-////                            $container.stop().fadeIn();
-//                        });
-//                    });
-//                }
-//            });
-//        }
         , afterRender: function () {
             var self = this;
             self.attachDatepickers();
+
+            // TODO: Test
+            this.timeline = new Timeline('#timeline', {singleMode: false, repository: true, buttons: false, sidebar: true, titles: true});
+            this.timeline.render();
+
+            if (this.getId() && this.getId() !== "editor") {
+                this.loadTimeline(this.getId());
+            }
+
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
 //            if (typeof this.flags.helperLoaded === "undefined") {
@@ -332,14 +430,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
             return data;
         }
-//        , handleTreeCalls: function (routes, path) {
-//            var self = this;
-//            var pathId = routes.pop().toString();
-//            var params = {overrideUrl: Config.api.media};
-//            $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
-//            $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
-//
-//        }
         , renderStatusbar: function () {
             var elements = this.statusbar;
             var statusbar = new Statusbar();
@@ -351,21 +441,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , handleStatusbar: function (time) {
             $(Config.positions.status).find('.total-duration').find("span").text(time);
         }
-//        , initSortable: function (refresh) {
-//            var refresh = (typeof refresh !== "undefined") ? refresh : false;
-//            try {
-//                $("#shotlist table tbody").sortable('refresh');
-//            } catch (e) {
-//                $("#shotlist table tbody").sortable({
-//                    items: "tr"
-//                    , cancel: 'a, button'
-//                    , axis: 'y'
-//                    , forcePlaceholderSize: true
-//                    , placeholder: ".sort-placeholder"
-//                    , containment: "parent"
-//                });
-//            }
-//        }
         , attachDatepickers: function () {
             var self = this;
             var $datePickers = $(".datepicker");

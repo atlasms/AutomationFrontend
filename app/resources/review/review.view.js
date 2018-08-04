@@ -73,6 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     } else {
                         $('#player-container').empty().append('<figure><img src="' + media.thumbnail.replace('_lq', '_hq') + '" /></figure>');
                     }
+                    $("#media-desc").append('<p>' + $row.find('small').html() + '</p>');
                     self.loadComments(params);
                 });
             });

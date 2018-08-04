@@ -1,7 +1,9 @@
 <style>
 	html, body { overflow: hidden; }
 	.page-content-wrapper .page-content { min-height: 0; }
-	.checkbox { margin: 5px; }
+	.checkbox { margin: 5px; transition: 0.2s all; }
+	select[disabled] + .checkbox { opacity: 0; visibility: hidden; }
+	.controls-to dd { height: auto; }
 </style>
 <div id="mewsroom-workspace" class="news-dashboard">
 	<div class="portlet itemlist box">
@@ -23,10 +25,11 @@
 					<thead>
 						<tr>
 							<th class="text-center">#</th>
-							<th class="col-xs-5">عنوان</th>
+							<th class="col-xs-4">عنوان</th>
 							<th class="col-xs-2 text-center">زمان</th>
 							<th class="col-xs-2 text-center">ویرایش</th>
 							<th class="col-xs-1">فرستنده</th>
+							<th class="col-xs-1"></th>
 							<th class="col-xs-1"></th>
 							<th class="col-xs-1 text-center">منبع</th>
 						</tr>
@@ -48,6 +51,9 @@
 							<td class="text-center">{{extractTime receiveDatetime}} {{extractDate receiveDatetime}}</td>
 							<td class="text-center">{{extractTime modifiedDatetime}} {{extractDate modifiedDatetime}}</td>
 							<td>{{fromUserText}}</td>
+							<td>
+								<button class="btn btn-sm blue-hoki" data-task="check-shotlist" data-toggle="tooltip" title="شات لیست"><i class="fa fa-video-camera"></i> شات لیست</button>
+							</td>
 							<td>
 								<button class="btn btn-sm red-flamingo" data-task="delete" data-toggle="tooltip" title="حذف"><i class="fa fa-trash"></i></button>
 								<button class="btn btn-sm purple" data-task="archive" data-toggle="tooltip" title="آرشیو"><i class="fa fa-file"></i></button>
@@ -103,7 +109,13 @@
 						<dt><label><input type="radio" name="to-type" data-toggle="ToUserId" value="0" checked>&nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label></dt>
 						<dd><select class="form-control" name="ToUserId"></select></dd>
 						<dt><label><input type="radio" name="to-type" data-toggle="ToWebsiteUserId" value="0">&nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> وب‌سایت</label></dt>
-						<dd><select class="form-control" name="ToWebsiteUserId" disabled></select></dd>
+						<dd>
+							<select class="form-control" name="ToWebsiteUserId" disabled></select>
+							<div class="checkbox checkbox-danger checkbox-circle">
+								<input name="sendVideo" id="sendVideo" value="1" type="checkbox">
+								<label for="sendVideo">ارسال با ویدیو</label>
+							</div>
+						</dd>
 					</dl>
 				</div>
 				<div class="modal-footer">

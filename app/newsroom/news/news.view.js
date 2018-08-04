@@ -219,9 +219,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             e.preventDefault();
         }
         , centerItem: function ($row) {
-            console.log($row.position());
-            var topPosition = $row.position().top - 65 <= 0 ? 0 : $row.position().top - 30;
-            $(".itemlist .portlet-body").animate({'scrollTop': topPosition});
+//            console.log($row.position());
+//            var topPosition = $row.position().top - 184;
+//            $(".itemlist .portlet-body").animate({'scrollTop': topPosition});
         }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');

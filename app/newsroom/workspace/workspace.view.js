@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click button[data-task="new"]': 'openItemModal'
             , 'click button[data-task="save"]': 'saveItem'
             , 'click button[data-task="send"]': 'sendItem'
+            , 'click button[data-task="check-shotlist"]': 'checkShotlist'
             , 'submit #new-item-form': 'createItem'
             , 'click #news-items tr[data-id]': 'loadItem'
             , 'change select[data-type="mode"]': 'reLoad'
@@ -72,6 +73,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             mode: 1
             , offset: 0
             , count: 50
+        }
+        , checkShotlist: function(e) {
+            e.preventDefault();
+            var self = this;
+            var $this = $(e.target);
+            var id = $this.parents("tr:first").attr('data-id');
+            var data = {externalId: id, create: 1, type: 2};
+            var params = {overrideUrl: Config.api.shotlist + '/check'};
+            new NewsroomModel(params).fetch({
+                data: data
+                , success: function(item) {
+                    items = self.prepareItems(item.toJSON(), params);
+                    var shotlistId = Object.keys(items)[0];
+                    window.open('/resources/editor/' + shotlistId);
+                }
+            });
         }
         , changeSendReceipt: function (e) {
             var $this = $(e.target);
@@ -134,8 +151,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
         }
         , getItemId: function ($el) {
-            if ($el.is('[data-id]') || $el.parent('[data-id]').length) {
-                return $el.is('[data-id]') ? $el.data('id') : $el.parent().data('id');
+            if ($el.is('[data-id]') || $el.parents('[data-id]:first').length) {
+                return $el.is('[data-id]') ? $el.data('id') : $el.parents('tr:first').data('id');
             } else {
                 return null;
             }
@@ -222,12 +239,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     data.Owner = selectedUserId;
                     data.Title = data.ShortTitle = $('[name="headline"]').val();
                     data.Fulltext = $('[name="body"]').val();
-                    $.ajax({
-                        headers: {'Authorization': "F25E893F-FAA6-43E6-AB4E-9F0A85C719D6"}
-                        , url: 'http://77.36.163.147/services/pl/contents.svc/'
-                        , data: JSON.stringify(data)
+                    data.NewsId = $('[name="NewsId"]').val();
+                    data.sendVideo = $('[name="sendVideo"]').is(':checked') ? true : false;
+                    new NewsroomModel({overrideUrl: 'nws/iktvwebsitedraft'}).save(null, {
+                        data: JSON.stringify(data)
+                        , contentType: 'application/json'
                         , processData: false
-                        , type: 'post'
                         , success: function () {
                             toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                             $("#send-item-modal").modal('hide');
@@ -357,6 +374,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     item = self.prepareItems(item.toJSON(), params);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
+                        item.id = $row.data("id");
                         var output = handlebarsTemplate(item);
                         $(self.itamContainer).html(output).promise().done(function () {
                             self.data['currentItem'] = $row.data("id");
