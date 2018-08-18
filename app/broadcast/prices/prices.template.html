@@ -15,7 +15,8 @@
 							<div class="panel-heading" role="tab" id="heading-{{math @index "+" 1}}" data-id="{{Id}}">
 								<h4 class="panel-title">
 									<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{math @index "+" 1}}">
-										{{Title}} <small class="text-muted">({{Unit}})</small>
+										{{Title}}{{#if Unit}} <small class="text-muted">({{Unit}})</small>{{/if}}
+										{{#if Ref}}&nbsp;-&nbsp;<small class="text-primary">[مرجع نرخ اعلام شده: <strong>{{Ref}}</strong>]</small>{{/if}}
 									</a>
 								</h4>
 								<div class="checkbox checkbox-success checkbox-circle">
