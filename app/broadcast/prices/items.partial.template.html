@@ -16,7 +16,12 @@
 		<tbody>
 			{{#each []}}
 			<tr data-id="{{Tree_Id}}">
-				<td>{{Tree_Id}}</td>
+				<td>
+					<div class="checkbox checkbox-primary checkbox-circle">
+						<input name="Active" value="" id="state_{{Tree_Id}}-{{@index}}" type="checkbox" {{#if State}}checked{{/if}}>
+							   <label for="state_{{Tree_Id}}-{{@index}}"></label>
+					</div>
+				</td>
 				<td class="">
 					{{Title}}
 				</td>

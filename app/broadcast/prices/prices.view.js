@@ -19,18 +19,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             , 'show.bs.collapse #accordion': 'collapse'
             , 'blur input[type="text"]': 'setEdited'
             , 'change [name="State"]': 'changeState'
+            , 'change [name="Active"]': 'changeItemState'
             , 'input #accordion input[type="text"]': 'processPrice'
         }
-        , processPrice: function(e) {
-            var $input  = $(e.target);
+        , processPrice: function (e) {
+            var $input = $(e.target);
             $input.val(Global.processPrice($input.val().replace(/\,/gi, '')));
         }
-        , changeState: function(e) {
+        , changeItemState: function(e) {
+//            , State: $(this).find('[name="Active"]')[0].checked
+            var state = e.target.checked;
+            new EconomyModel({id: 'tree/' + $(e.target).parents('tr:first').data('id')}).save({key: 'state', value: state}, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+        }
+        , changeState: function (e) {
 //            var $item = $(e.target);
             var state = e.target.checked;
             new EconomyModel({id: 'tree/' + $(e.target).parents('.panel-heading').data('id')}).save({key: 'state', value: state}, {
                 patch: true
-                , error: function(e, data) {
+                , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function (model, response) {
