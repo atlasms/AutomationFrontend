@@ -43,7 +43,9 @@
             { "title": "PDF کنداکتور", "alias": "monitoring_schedulepdf", "icon": "file-pdf-o", "link": "/monitoring/schedulepdf" },
             { "title": "اینجست", "alias": "monitoring_ingest", "icon": "arrow-circle-up", "link": "/monitoring/ingest" },
             { "title": "پلی‌لیست", "alias": "monitoring_playlist", "icon": "list-alt", "link": "/monitoring/playlist" },
-            { "title": "لاگ فعالیت‌ها", "alias": "monitoring_ualogs", "icon": "wpforms", "link": "/monitoring/ualogs" }
+            { "title": "لاگ فعالیت‌ها", "alias": "monitoring_ualogs", "icon": "wpforms", "link": "/monitoring/ualogs" },
+            { "title": "لاگ قیمت‌ها", "alias": "monitoring_prices", "icon": "wpforms", "link": "/monitoring/prices" },
+            { "title": "لاگ زیرنویس", "alias": "monitoring_crawl", "icon": "wpforms", "link": "/monitoring/crawl" }
         ]
     },
     {

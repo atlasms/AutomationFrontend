@@ -148,6 +148,8 @@ require.config({
         , "monitoring.ingest.view": ["../../app/monitoring/ingest/ingest.view"]
         , "monitoring.playlist.view": ["../../app/monitoring/playlist/playlist.view"]
         , "monitoring.ualogs.view": ["../../app/monitoring/ualogs/ualogs.view"]
+        , "monitoring.prices.view": ["../../app/monitoring/prices/prices.view"]
+        , "monitoring.crawl.view": ["../../app/monitoring/crawl/crawl.view"]
         , "stats.broadcast.view": ["../../app/stats/broadcast/broadcast.view"]
         , "stats.broadcastprint.view": ["../../app/stats/broadcast/broadcastprint.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]

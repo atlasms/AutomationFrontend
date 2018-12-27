@@ -1,0 +1,37 @@
+<div id="notifications-page" class="notifications">
+	<div class="mainbody">
+		<div class="inbox">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="inbox-body">
+						<style>
+							.alert { margin: 20px 0 10px; }
+						</style>
+						<div class="inbox-content">
+							<table class="table table-striped table-advance table-hover">
+								<thead>
+									<tr>
+										<th class="col-xs-9">شرح اعلان</th>
+										<th class="col-xs-3 text-right">زمان</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each []}}
+									<tr class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
+										<!--<td class="view-message hidden-xs"> {{FromUserText}} </td>-->
+										<td class="view-message">
+											{{Title}}
+											<div class="alert alert-info alert-borderless" style="display: none;">{{Body}}</div>
+										</td>
+										<td class="view-message text-right" title="{{extractTime SendDate}} {{extractDate SendDate}}">{{extractTime SendDate}} {{extractDate SendDate}}</td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

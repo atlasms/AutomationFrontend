@@ -117,6 +117,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "monitoring/ingest": {"private": true, "access": null, "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
             , "monitoring/playlist": {"private": true, "access": null, "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}
             , "monitoring/ualogs": {"private": true, "access": null, "action": "UserActivityLogsView", "file": "app/monitoring/ualogs/ualogs.view"}
+            , "monitoring/prices": {"private": true, "access": null, "action": "PricesLogsView", "file": "app/monitoring/prices/prices.view"}
+            , "monitoring/crawl": {"private": true, "access": null, "action": "CrawlLogsView", "file": "app/monitoring/crawl/crawl.view"}
             , "stats/broadcast": {"private": true, "access": null, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
             , "stats/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
             , "stats/ingest": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
