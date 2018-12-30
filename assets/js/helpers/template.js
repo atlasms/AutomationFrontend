@@ -337,6 +337,19 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br />');
                 return new Handlebars.SafeString(text);
             });
+            Handlebars.registerHelper('parseList', function (text) {
+                try {
+                    var data = JSON.parse(text);
+                    var html = '<ul class="parsed-list">';
+                    for (var i in data) {
+                        html += '<li>' + data[i] + '</li>';
+                    }
+                    html += '</ul>';
+                } catch (e) {
+                    html = text;
+                }
+                return html;
+            });
             Handlebars.registerHelper('price', function (price) {
                 return Global.processPrice(price);
             });
