@@ -1,12 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'pr.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'bootbox', 'jquery-ui', 'bootbox', 'bootstrap/popover', 'editable.helper', 'bootstrap/modal', 'bootstrap/tooltip'
-], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, PRModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, bootbox, ui, bootbox, $popover, Editable) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'pr.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'jquery-ui', 'bootbox', 'bootstrap/popover', 'editable.helper', 'bootstrap/modal', 'bootstrap/tooltip'
+], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, PRModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, ui, bootbox, $popover, Editable) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({
         model: 'CrawlModel'
         , playerInstance: {}
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
-            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال فایل", type: 'button', task: 'show-export-form', access: 524288}},
+            {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال به پخش", type: 'button', task: 'show-export-form', access: 524288}},
             {'button': {cssClass: 'btn blue', text: "پیامک‌ها", type: 'button', task: 'show-sms-modal', icon: 'fa fa-comment', access: 524288}}
         ]
         , statusbar: []
@@ -20,12 +20,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=load-sms]': 'loadSMSList'
             , 'click [data-task=show-sms-modal]': 'toggleSMSModal'
             , 'click [data-task=add-sms-items]': 'addSMSItems'
+//            , 'click [data-task=add-sms-repo]': 'addRepoSMS'
             , 'click #pr-sms-page table tbody tr': 'selectSMSRow'
             , 'click [data-task=add-repository]': 'addToRepository'
             , 'click [data-task=add-crawl]': 'addSingle'
             , 'change [data-type="repo-type-select"]': 'loadRepositoryItems'
             , 'change [data-type="items-type-select"], [data-type="items-group-select"]': 'loadCrawlItems'
             , 'click [data-task="add-crawls"]': 'addBatch'
+            , 'click [data-task="empty-list"]': 'emptyRepo'
             , 'click .crawl-items-select tbody tr': 'toggleRowSelection'
             , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
             , 'click [data-task=duplicate]': 'duplicateItems'
@@ -60,12 +62,45 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 document.execCommand("insertHTML", false, text);
             }
         }
+        , emptyRepo: function (e) {
+            e.preventDefault();
+            var self = this;
+            var $items = $('.repository-items tbody tr');
+            var idList = [];
+            $items.each(function () {
+                idList.push($(this).attr('data-id'));
+            });
+            if (idList.length < 1)
+                return false;
+            bootbox.confirm({
+                message: "آیا مطمئن هستید می‌خواهید همه موارد این دسته را حذف کنید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        for (var i = 0; i < idList.length; i++)
+                            self.deleteRepoItems(idList[i]);
+                        toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    }
+                }
+            });
+        }
+        , deleteRepoItems: function (id) {
+            // Used for batch delete
+            new CrawlModel({id: id}).destroy({
+                success: function () {
+                    $('.repository-items tbody tr[data-id="' + id + '"]').remove();
+                }
+            });
+        }
         , reorderRows: function (e) {
             e.preventDefault();
             var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
             var $row = $this.parents('tr:first');
             var direction = $this.data('value');
-            console.log($this, $row, direction, $row.prev().is('tr'), $row.next().is('tr'));
+//            console.log($this, $row, direction, $row.prev().is('tr'), $row.next().is('tr'));
             if (direction === 'up') {
                 if ($row.prev().is('tr')) {
                     $row.insertBefore($row.prev());
@@ -98,6 +133,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
+//        , addRepoSMS: function(e) {
+//            e.preventDefault();
+//            var self = this;
+//            $("#pr-sms-page table tbody tr").each(function () {
+//                if ($(this).find("input[name=selected]").attr("checked") === 'checked') {
+//                    self.addToRepository({content: $(this).find(".body").text()});
+//                }
+//            });
+//        }
         , loadSMSList: function (e) {
             var self = this;
             typeof e !== "undefined" && e.preventDefault();
@@ -251,7 +295,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             var editable = new Editable({simple: true, el: '.repository-items'}, self);
-                            editable.init();
+                            if (Object.keys(items).length) {
+                                editable.init();
+                                if (!$('[data-task="empty-list"]').is(':visible'))
+                                    $('[data-task="empty-list"]').show(1);
+                            } else
+                                $('[data-task="empty-list"]').hide(1);
                             typeof callback === "function" && callback(items);
 //                            $('[data-tooltip]').tooltip({title: $(this).data('created'), container: 'body'});
                         });
@@ -263,7 +312,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             new CrawlModel({id: id}).save(params, {
                 patch: true
-                , error: function(e, data) {
+                , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function (model, response) {
