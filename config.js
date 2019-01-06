@@ -18,6 +18,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "notificationsInterval": 60000,
         "notificationsCount": 10,
         "schedulePageLimit": 100,
+        "characterLimit": 250,
+        "wordLimit": 15,
         "defalutMediaListLimit": 25,
         "loginMode": "default",
         "initialRedirect": "/resources/media",
@@ -51,6 +53,19 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 , search: true
                 , showPaginationSwitch: true
                 , locale: 'fa-IR'
+            },
+            "bootpag": {
+                leaps: true,
+                firstLastUse: true,
+                first: '→',
+                last: '←',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
             },
             "cropper": {
                 aspectRatio: 16 / 9

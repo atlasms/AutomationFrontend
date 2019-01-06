@@ -279,6 +279,31 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
                 return p < 0 || i < p ? m + ',' : m;
             });
         }
+        , wordCount: function ($el, preventMore) {
+            var txtVal = $el.val();
+            var limit = CONFIG.wordLimit;
+            var words = txtVal.length === 0 ? 0 : txtVal.trim().replace(/\s+/gi, ' ').split(' ').length;
+            var remaining = limit - words;
+            var $counter = $el.parents('.form-group').find('.counter');
+            $counter.html(remaining);
+            if (Math.round(((remaining * 100) / limit)) < 10) {
+                $counter.addClass('danger');
+            } else {
+                $counter.removeClass('danger');
+            }
+        }
+        , characterCount: function ($el, preventMore) {
+            var txtVal = $el.val();
+            var limit = CONFIG.characterLimit;
+            var remaining = limit - txtVal.length;
+            var $counter = $el.parents('.form-group').find('.counter');
+            $counter.html(remaining);
+            if (Math.round(((remaining * 100) / limit)) < 10) {
+                $counter.addClass('danger');
+            } else {
+                $counter.removeClass('danger');
+            }
+        }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
         , Cache: {
