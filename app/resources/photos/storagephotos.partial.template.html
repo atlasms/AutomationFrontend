@@ -1,3 +1,7 @@
+<style>
+	.counter { font-size: 10px; color: #999; display: block; margin: 0; padding: 0; }
+	.counter.danger { color: #ed6b75; }
+</style>
 <div class="alert alert-info" id="path">
 	مسیر انتخاب شده: <strong data-type="path"></strong>
 </div>
@@ -44,9 +48,10 @@
 				</div>
 			</td>
 			<td rowspan="2">
-				<div class="form-group form-md-line-input form-md-floating-label text-area-container">
-					<textarea class="form-control" id="note_{{@index}}" name="Description" rows="3" placeholder="توضیحات"></textarea>
+				<div class="form-group form-md-line-input form-md-floating-label text-area-container has-char-counter">
+					<textarea class="form-control" id="note_{{@index}}" name="Description" rows="2" placeholder="توضیحات" maxlength="{{config 'characterLimit'}}"></textarea>
 					<label></label>
+					<span class="counter">{{config 'characterLimit'}}</span>
 				</div>
 			</td>
 			<td rowspan="2">

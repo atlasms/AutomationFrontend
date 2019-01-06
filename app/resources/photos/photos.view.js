@@ -18,9 +18,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=open-cropper]': 'openCropper'
             , 'click [data-task=crop-image]': 'setCoordinates'
             , 'click #storagefiles .checkbox': 'handleCheckboxes'
+            , 'keyup .has-char-counter textarea': 'processCharLimit'
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
+        }
+        , processCharLimit: function(e) {
+            var $el = $(e.target);
+            Global.characterCount($el);
         }
         , handleCheckboxes: function (e) {
             var $checkboxes = $("#storagefiles [type=checkbox]");
