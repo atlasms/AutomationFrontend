@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'tree.helper', 'jquery-ui', 'bootpag'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Tree, ui) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'tree.helper', 'jquery-ui', 'bootbox', 'bootpag'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Tree, ui, bootbox) {
+    bootbox.setLocale('fa');
     var BroadcastPhotosView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $itemsPlace: "#items-place"
@@ -32,6 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-type="load-items"]': 'filterItems'
             , 'click [data-task="copy"]': 'copy'
             , 'click [data-type="reload-photos"]': 'reloadPhotos'
+            , 'click [data-type="delete-photos"]': 'deletePhotos'
         }
         , submit: function (e) {
             e.preventDefault();
@@ -87,6 +89,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , reloadPhotos: function () {
             this.loadPhotos();
         }
+        , deletePhotos: function (e) {
+            e.preventDefault();
+            var self = this;
+            bootbox.confirm({
+                message: "آیا مطمئن هستید می‌خواهید همه موارد را حذف کنید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $('#photo-items table tbody').empty();
+                        self.initPhotosPaginator();
+                    }
+                }
+            });
+
+        }
         , load: function (e, extend) {
             console.info('Loading items');
             var params = {};
@@ -118,25 +138,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , initPhotosPaginator: function () {
             var self = this;
-            $(".photos-paginator").bootpag({
+            if ($("#photo-items tbody tr").length / self.defalutPhotosListLimit < 1) {
+                $(".photos-paginator").empty();
+                return false;
+            }
+            $(".photos-paginator").bootpag($.extend({}, CONFIG.settings.bootpag, {
                 total: Math.ceil($("#photo-items tbody tr").length / self.defalutPhotosListLimit),
                 page: (self.defaultPhotosListOffset / self.defalutPhotosListLimit) + 1,
-                maxVisible: self.defalutPhotosListLimit,
-                leaps: true,
-                firstLastUse: true,
-                first: '→',
-                last: '←',
-                wrapClass: 'pagination',
-                activeClass: 'active',
-                disabledClass: 'disabled',
-                nextClass: 'next',
-                prevClass: 'prev',
-                lastClass: 'last',
-                firstClass: 'first'
-            }).off("page").on("page", function (event, num) {
+                maxVisible: self.defalutPhotosListLimit
+            })).off("page").on("page", function (event, num) {
                 self.handlePhotosPagination((num - 1) * self.defalutPhotosListLimit);
-//                requestParams.offset = (num - 1) * requestParams.count;
-//                self.loadItems(requestParams);
             });
             self.handlePhotosPagination();
         }
@@ -279,6 +290,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , addItem: function (e) {
             var self = this;
             var $item = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
+            if ($("#photo-items table tbody").find('[data-id="' + $item.attr('data-id') + '"]').length) {
+                bootbox.confirm({
+                    message: "این مورد قبلاً به لیست اضافه شده است. آیا می‌خواهید دوباره آن را اضافه کنید؟"
+                    , buttons: {
+                        confirm: {className: 'btn-success'}
+                        , cancel: {className: 'btn-danger'}
+                    }
+                    , callback: function (results) {
+                        if (results) {
+                            self.addPhotoItem($item);
+                        }
+                    }
+                });
+            } else {
+                self.addPhotoItem($item);
+            }
+        }
+        , addPhotoItem: function ($item) {
+            var self = this;
             $item.parent().find(".success").removeClass('success');
             $item.addClass('success');
             var items = [{
@@ -302,7 +332,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.updateStatusbar();
                 });
             });
-
         }
         , getParams: function (skipQueries) {
             var self = this;
