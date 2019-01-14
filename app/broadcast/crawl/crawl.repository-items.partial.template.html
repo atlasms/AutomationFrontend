@@ -8,8 +8,14 @@
 	</td>
 	<td>
 		<span class="text x-editable" data-type="textarea" data-pk="{{Id}}" data-field="Text">{{{Text}}}</span>
+			<small style="display: block; font-size: 10px; margin-top: 10px;">
+			<strong>شناسه:</strong>
+			{{Id}}
+			&nbsp;&nbsp;|&nbsp;&nbsp;
+			{{UserFullName}} ({{formatJalali DateTime "dddd، DD MMMM YYYY"}} - {{extractTime DateTime}})
+		</small>
 		<button data-task="review"><i class="fa fa-edit"></i></button>
-		<button data-task="delete"><i class="fa fa-trash"></i></button>
+		<button data-task="delete"><i class="fa fa-trash"></i></button> 
 	</td>
 </tr>
 {{/each}}
