@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, Tree, bootbox, $tab, $modal, $popover, Editable) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, Tree, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -32,6 +32,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="publish-website"]': 'publishWebsite'
             , 'change [data-task="change-mediausage-mode"]': 'mediaUsageChangeMode'
             , 'click [data-task="apply-mediausage-filters"]': 'mediaUsageFilter'
+            , 'click .media-options a': 'UpdateMediaParams'
+        }
+        , UpdateMediaParams: function(e) {
+            e.preventDefault();
+            var self = this;
+            // var id = this.getId();
+            var $li = $(e.target).parents('li:first');
+            var params = {task: $li.data('task'), value: $li.data('value'), id: this.getId()};
+            MediaOptionsHelper.update(params, function(response) {
+                if (response.error !== false)
+                    toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                else {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.reLoad();
+                }
+            });
         }
         , sendTelegram: function (e) {
             e.preventDefault();

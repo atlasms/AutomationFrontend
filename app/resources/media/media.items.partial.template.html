@@ -29,6 +29,7 @@
 						<th class="text-center">#&nbsp;پخش</th>
 						<th class="col-xs-1 text-center">مدت</th>
 						<th class="col-xs-2 text-center">وضعیت</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -70,6 +71,10 @@
 						</td>
 						<td class="text-center">
 							<span class="label label-{{resolveLabel State}}">{{StateText}}</span>
+						</td>
+						<td>
+							{{#authorize 8388608}}{{>mediaOptions2}}{{/authorize}}
+							{{>mediaOptions}}
 						</td>
 					</tr>
 					{{/each}}

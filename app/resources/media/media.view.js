@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
     var MediaView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'MediaModel'
@@ -33,6 +33,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'change [data-type=change-mode]': 'changeMode'
             , 'click #tree .jstree-anchor': 'loadCategory'
+            , 'click .media-options a': 'UpdateMediaParams'
+        }
+        , UpdateMediaParams: function(e) {
+            e.preventDefault();
+            var self = this;
+            var $li = $(e.target).parents('li:first');
+            var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
+            MediaOptionsHelper.update(params, function(response) {
+                if (response.error !== false)
+                    toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                else {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.reLoad();
+                }
+            });
         }
         , print: function (e) {
             e.preventDefault();
@@ -65,6 +80,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.mode === "tree" && this.loadItems();
         }
         , selectRow: function (e) {
+            if ($(e.target).is('.media-options') || $(e.target).parents('.media-options').length)
+                return true;
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
             window.open('/resources/mediaitem/' + id);
@@ -91,17 +108,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             if (typeof skipQueries !== 'undefined' && skipQueries)
                 state = $("[name=state]").val();
-            console.log(state);
             if (mode === 'tree')
                 catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
-//            switch (mode) {
-//                case 'tree':
-//                    // TEMP
-////                    var params = {q: $.trim($("[name=q]").val()), type: $("[name=type]").val(), categoryId: catid};
-//                    var params = {categoryId: catid, offset: 0, count: self.defaultListLimit};
-//                    break;
-//                default:
-//                case 'latest':
             var params = {
                 q: $.trim($("[name=q]").val()),
                 type: $("[name=type]").val(),
@@ -112,8 +120,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00',
                 enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
-//                    break;
-//            }
             return params;
         }
         , render: function (params) {

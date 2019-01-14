@@ -249,7 +249,14 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 title: 'نسیم',
                 id: 'nasim'
             }
-        }
+        },
+        "mediaOptions": [
+            {text: "تغییر وضعیت", access: 4, source: "dfn", items: 2, task: null, value: null},
+            {text: "گزینه تستی", access: 8388608, icon: 'github', color: 'warning', items: [
+                {text: "فرزند 1", task: 'test', value: '1', icon: 'twitter'},
+                {text: "فرزند 2", task: 'test', value: '2'}
+            ]}
+        ]
         , "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
                     {Id: "2", Key: "دو خطی", Value: "2"},
