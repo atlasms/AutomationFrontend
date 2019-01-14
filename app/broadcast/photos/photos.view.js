@@ -101,6 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , callback: function (results) {
                     if (results) {
                         $('#photo-items table tbody').empty();
+                        $('[data-type="photos-count"]').text('0');
                         self.initPhotosPaginator();
                     }
                 }
