@@ -10,7 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'storage.helper'], functio
 //        return permit;
 //    };
     var Authorize = {
-        access : function (action, permissions, type) {
+        access: function (action, permissions, type) {
             var permit = false;
             var permissions = (typeof permissions !== "undefined" && permissions) ? permissions : Storage('Access');
             var type = (typeof type !== "undefined" && type) ? type : 'access';
@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'storage.helper'], functio
             });
             return permit;
         }
-        , menu : function(action, permissions) {
+        , menu: function (action, permissions) {
             var permit = false;
             var permissions = (typeof permissions === "undefined") ? Storage('Access') : permissions;
             $.each(permissions, function () {
