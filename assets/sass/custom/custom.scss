@@ -146,6 +146,21 @@ input.datepicker { direction: rtl; text-align: right; /* min-width: 200px; */ }
 .form-group.form-md-line-input .form-control:not(select):not(textarea) { font-size: 16px; }
 .rtl-date { direction: rtl; display: inline-block; }
 .pagination.bootpag { margin: -3px; }
+.btn-group > .dropdown-menu {
+    left: auto; right: 0; box-shadow: -5px 5px rgba(102,102,102,0.1);
+    &:before { left: auto; right: 8px; }
+    &:after { left: auto; right: 10px; }
+    .dropdown-submenu {
+        >a {
+            padding-left: 24px;
+            &:after { right: auto; left: 10px; }
+            i { float: right; }
+        }
+        .dropdown-menu {
+            left: auto; right: 100%; box-shadow: -5px 5px rgba(102,102,102,0.1);
+        }
+    }
+}
 // Typeahead
 .tt-cursor { background: #eee; }
 .tt-hint { color: #ccc !important }
