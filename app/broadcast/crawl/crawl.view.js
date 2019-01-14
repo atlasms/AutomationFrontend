@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , toolbar: [
 //            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
             {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال به پخش", type: 'button', task: 'show-export-form', access: 524288}},
-            {'button': {cssClass: 'btn blue', text: "پیامک‌ها", type: 'button', task: 'show-sms-modal', icon: 'fa fa-comment', access: 524288}}
+            {'button': {cssClass: 'btn blue', text: "پیامک‌ها", type: 'button', task: 'show-sms-modal', icon: 'fa fa-comment', access: 4194304}}
         ]
         , statusbar: []
         , whitelist: 'b, strong, i, font'
@@ -68,12 +68,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $items = $('.repository-items tbody tr');
             var idList = [];
             $items.each(function () {
+                if ($(this).find('input[type="checkbox"]')[0].checked)
                 idList.push($(this).attr('data-id'));
             });
             if (idList.length < 1)
                 return false;
             bootbox.confirm({
-                message: "آیا مطمئن هستید می‌خواهید همه موارد این دسته را حذف کنید؟"
+                message: "آیا مطمئن هستید می‌خواهید  موارد انتخاب شده را حذف کنید؟"
                 , buttons: {
                     confirm: {className: 'btn-success'}
                     , cancel: {className: 'btn-danger'}
@@ -92,6 +93,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             new CrawlModel({id: id}).destroy({
                 success: function () {
                     $('.repository-items tbody tr[data-id="' + id + '"]').remove();
+                    $('.repo-count').text($(".repository tbody tr").length);
                 }
             });
         }
@@ -237,6 +239,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             });
                         } else
                             $item.remove();
+                        $('.repo-count').text($(".repository-items tbody tr").length);
                     }
                 }
             });
@@ -294,6 +297,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            $('.repo-count').text(Object.keys(items).length);
                             var editable = new Editable({simple: true, el: '.repository-items'}, self);
                             if (Object.keys(items).length) {
                                 editable.init();
@@ -406,6 +410,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     $editor.empty();
                     toastr.success('با موفقیت انجام شد', 'ذخیره زیرنویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $(".crawl-items-select").find("tbody").prepend('<tr data-id="0"><td><div class="checkbox checkbox-success checkbox-circle"><input type="checkbox" /><label></label></div></td><td><span class="text">' + params.Text + '</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>');
+                    $('.repo-count').text($(".repository-items tbody tr").length);
                 }
             });
 

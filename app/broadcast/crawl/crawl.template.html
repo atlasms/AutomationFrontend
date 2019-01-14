@@ -92,13 +92,22 @@
 						<i class="fa fa-database"></i>
 						<span class="caption-subject font-dark bold uppercase">انبار زیرنویس‌ها</span>
 					</div>
-					<div class="actions">
-
+					<div class="actions form-inline">
+						<div class="form-group pull-right">
+							<div class="input-group">
+								<span class="input-group-addon">انتخاب دسته</span>
+								<select class="form-control" data-type="repo-type-select">
+									{{#select Genre}}
+									{{{getDefinitionOptions 55 'crawl'}}}
+									{{/select}}
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="portlet-body">
 					<div class="mainbody">
-						<div class="editor-toolbar row">
+						<div class="editor-toolbar row hide">
 							<div class="col-xs-6">
 								<ul class="list-inline list-unstyled">
 									{{#ifConfig "settings.crawlEditor.stylesEnabled"}}
@@ -114,22 +123,13 @@
 								</ul>
 							</div>
 							<div class="col-xs-5">
-								<div class="form-group">
-									<div class="input-group">
-										<span class="input-group-addon">انتخاب دسته</span>
-										<select class="form-control" data-type="repo-type-select">
-											{{#select Genre}}
-											{{{getDefinitionOptions 55 'crawl'}}}
-											{{/select}}
-										</select>
-									</div>
-								</div>
+
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-xs-11">
 								<div class="crawl-input form-group">
-									<div class="editable-input" contenteditable="true"></div>
+									<div class="editable-input" contenteditable="true" style="min-height: 100px;"></div>
 								</div>
 							</div>
 							<div class="col-xs-1">
@@ -141,6 +141,9 @@
 						<div class="row">
 							<div class="col-xs-11">
 								<div class="crawl-items-select repository-items">
+									<div class="alert alert-info ">
+										تعداد: <span class="repo-count">0</span>
+									</div>
 									<table class="table table-condensed table-bordered table-hover table-striped">
 										<thead class="hide fade">
 											<tr>
@@ -226,11 +229,11 @@
 					</div>
 					<div class="form-group col-xs-6">
 						<div class="pull-right">
-<!--							<button type="button" class="btn btn-default green-seagreen hide" data-task="add-sms-repo">
-								<i class="fa fa-arrow-right"></i>
-								درج موارد
-							</button>
-							&nbsp;-->
+							<!--							<button type="button" class="btn btn-default green-seagreen hide" data-task="add-sms-repo">
+															<i class="fa fa-arrow-right"></i>
+															درج موارد
+														</button>
+														&nbsp;-->
 							<button type="button" class="btn btn-default blue-hoki" data-task="add-sms-items">
 								درج موارد
 								<i class="fa fa-arrow-left"></i>
