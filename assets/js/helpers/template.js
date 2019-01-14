@@ -246,19 +246,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 }
             });
             Handlebars.registerHelper('getDefinitions', function (id, options) {
-                var items = [];
-                $.each(Config.definitions, function () {
-                    var filters = this.Children;
-                    $.each(filters, function () {
-                        if (this.Id === id) {
-                            var $this = this;
-                            for (i = 0; i < $this.Children.length; i++) {
-                                items.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
-                            }
-                        }
-                    });
-                });
-                return JSON.stringify(items);
+                return JSON.stringify(Global.getDefinitions(id));
             });
             Handlebars.registerHelper('getDefinitionOptions', function (id, accessType, options) {
                 var items = '';
@@ -357,6 +345,63 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {
                 var output = '<div class="tools"><button class="btn" data-task="add"><i class="fa fa-plus"></i></button><button class="btn" data-task="delete"><i class="fa fa-minus"></i></button></div>';
+                return output;
+            });
+            Handlebars.registerPartial('mediaOptions2', function (options) {
+                var options = typeof options !== 'undefined' && options !== '' ? options : {};
+                var output = '<div class="btn-group dropdown dropdown-dark media-options">' +
+                    '<button class="btn red btn-circle btn-icon-only dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>' +
+                    '<ul class="dropdown-menu" role="menu">';
+                Config.mediaOptions.forEach(function (menu) {
+                    if (typeof menu.items === 'undefined' || Authorize.access(menu.access)) {
+                        var menuColor = typeof menu.color !== 'undefined' && menu.color !== null ? menu.color : 'primary';
+                        output += '<li';
+                        output += (typeof menu.items !== 'undefined' && menu.items !== null) ? ' class="dropdown-submenu"' : '';
+                        output += (typeof menu.task !== 'undefined' && menu.task !== null) ? ' data-task="' + menu.task + '"' : '';
+                        output += (typeof menu.value !== 'undefined' && menu.value !== null) ? ' data-task="' + menu.value + '"' : '';
+                        output += '>';
+                        output += '<a href="javascript:;">';
+                        output += (typeof menu.icon !== 'undefined' && menu.icon !== null) ? '<span class="badge badge-' + menuColor + '"><i class="fa fa-' + menu.icon + '"></i></span>' : '';
+                        output += menu.text + '</a>';
+                        if (typeof menu.items !== 'undefined' && menu.items !== null) {
+                            menu.items = (typeof menu.source !== 'undefined' && menu.source === 'dfn') ? Global.getDefinitions(menu.items) : menu.items;
+                            output += '<ul class="dropdown-menu">';
+                            menu.items.forEach(function (submenu) {
+                                var submenuColor = typeof submenu.color !== 'undefined' && submenu.color !== null ? submenu.color : 'primary';
+                                output += '<li';
+                                output += (typeof submenu.task !== 'undefined' && submenu.task !== null) ? ' data-task="' + submenu.task + '"' : '';
+                                output += (typeof submenu.value !== 'undefined' && submenu.value !== null) ? ' data-task="' + submenu.value + '"' : '';
+                                output += '>';
+                                output += '<a href="javascript:;">';
+                                output += (typeof submenu.icon !== 'undefined' && submenu.icon !== null) ? '<span class="badge badge-' + submenuColor + '"><i class="fa fa-' + submenu.icon + '"></i></span>' : '';
+                                output += submenu.text + '</a>';
+                                output += '</li>';
+                            });
+                            output += '</ul>';
+                        }
+                        output += '</li>';
+                    }
+                });
+                output += '</ul>';
+                return output;
+            });
+            Handlebars.registerPartial('mediaOptions', function (options) {
+                var options = typeof options !== 'undefined' && options !== '' ? options : {};
+                var definitionTypes = Global.getDefinitions(2);
+                var buttonClasses = 'btn blue-hoki btn-circle btn-icon-only dropdown-toggle';
+                buttonClasses += (typeof options.small !== 'undefined') ? ' btn-sm' : "";
+                var output = '<div class="btn-group dropdown dropdown-dark media-options">' +
+                    '<button class="' + buttonClasses + '" type="button" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>' +
+                    '<ul class="dropdown-menu" role="menu">';
+                if (Authorize.access(4)) {
+                    output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
+                        '<ul class="dropdown-menu">';
+                    for (var i = 0; i < definitionTypes.length; i++)
+                        if (definitionTypes[i].value)
+                            output += '<li data-task="state" data-value="' + definitionTypes[i].value + '"><a href="#">' + definitionTypes[i].text + '</a></li>';
+                    output += '</ul></li>';
+                }
+                output += '</ul></div>';
                 return output;
             });
         }

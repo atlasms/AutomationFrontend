@@ -44,13 +44,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
     window.versionCompare = function (left, right) {
         /**
          * Simply compares two string version values.
-         * 
+         *
          * Example:
          * versionCompare('1.1', '1.2') => -1
          * versionCompare('1.1', '1.1') =>  0
          * versionCompare('1.2', '1.1') =>  1
          * versionCompare('2.23.3', '2.22.3') => 1
-         * 
+         *
          * Returns:
          * -1 = left is LOWER than right
          *  0 = they are equal
@@ -68,8 +68,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             return false;
 
         var a = left.split('.')
-                , b = right.split('.')
-                , i = 0, len = Math.max(a.length, b.length);
+            , b = right.split('.')
+            , i = 0, len = Math.max(a.length, b.length);
 
         for (; i < len; i++) {
             if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
@@ -92,14 +92,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
         }
         , convertTime: function (timestamp) {
             var d = new Date(timestamp * 1000), // Convert the passed timestamp to milliseconds
-                    yyyy = d.getFullYear(),
-                    mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
-                    dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
-                    hh = d.getHours(),
-                    h = hh,
-                    min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
-                    ampm = 'AM',
-                    time;
+                yyyy = d.getFullYear(),
+                mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
+                dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
+                hh = d.getHours(),
+                h = hh,
+                min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
+                ampm = 'AM',
+                time;
             if (hh > 12) {
                 h = hh - 12;
                 ampm = 'PM';
@@ -216,7 +216,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             }
             name = name.replace(/[\[\]]/g, "\\$&");
             var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                    results = regex.exec(url);
+                results = regex.exec(url);
             if (!results)
                 return null;
             if (!results[2])
@@ -236,32 +236,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
         }
         , getEPGMedia: function (data) {
             return typeof data === "undefined" || !data ? '' : CONFIG.epgMediaPath.replace(/{start}/, data.startMiladi.replace(' ', '/').replace(/\:/g, '/'))
-                    .replace(/{end}/, data.endMiladi.replace(' ', '/').replace(/\:/g, '/'))
-                    .replace(/{channel}/, data.channel);
+                .replace(/{end}/, data.endMiladi.replace(' ', '/').replace(/\:/g, '/'))
+                .replace(/{channel}/, data.channel);
         }
         , getQuery: function (name, url) {
             if (!url)
                 url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
             var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                    results = regex.exec(url);
+                results = regex.exec(url);
             if (!results)
                 return null;
             if (!results[2])
                 return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
-//        , getServerDate: function (jalali, datetime) {
-//            var jalali = (typeof jalali !== "undefined") ? jalali : false;
-//            var datetime = (typeof datetime !== "undefined") ? datetime : false;
-//            var d = SERVERDATE;
-//            var output = d.getFullYear() + '-' + Global.zeroFill(d.getMonth() + 1) + '-' + Global.zeroFill(d.getDate());
-//            if (jalali)
-//                output = Global.gregorianToJalali(output);
-//            if (datetime)
-//                output += ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
-//            return output;
-//        }
         , getServerDate: function (callback) {
             $.ajax({
                 type: 'HEAD'
@@ -303,6 +292,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
             } else {
                 $counter.removeClass('danger');
             }
+        }
+        , getDefinitions: function (id) {
+            var items = [];
+            $.each(CONFIG.definitions, function () {
+                if (this.Id === id) {
+                    var $this = this;
+                    for (i = 0; i < $this.Children.length; i++) {
+                        items.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
+                    }
+                }
+            });
+            return items;
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
