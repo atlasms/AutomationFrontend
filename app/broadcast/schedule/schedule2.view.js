@@ -559,7 +559,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     });
                 }
                 , error: function (e, data) {
-                    if (typeof data.responseJSON.Message !== "undefined")
+                    if (typeof data.responseJSON !== "undefined" && typeof data.responseJSON.Message !== "undefined")
                         toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     if ($("#schedule-table li").length)
                         $("#schedule-table .table-body").empty();
@@ -569,11 +569,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , afterRender: function () {
             var self = this;
-//            $("#schedule-table").bootstrapTable(Config.settings.bootstrapTable);
-//            var clusterize = new Clusterize({
-//                scrollId: 'schedule-table',
-//                contentId: 'schedule-table-container'
-//            });
             ScheduleHelper.mask("time");
 
             self.attachDatepickers();
