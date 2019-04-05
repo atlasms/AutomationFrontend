@@ -319,8 +319,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         Thumbnail: $item.find('img').attr('src')
                         , Title: $item.find('.title').text()
                         , Description: $item.find('small').text()
+                        , Type: $item.data('type')
                     }
-
                 }];
             var template = Template.template.load('broadcast/photos', 'photos.partial');
             var $container = $("#photo-items table tbody");
@@ -331,6 +331,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //                    self.initSortable(true);
 //                    self.initPhotosPaginator();
                     self.updateStatusbar();
+                    toastr.success('«' + items[0].Media.Title + '» با موفقیت اضافه شد.', 'افزودن آیتم', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 });
             });
         }
