@@ -44,25 +44,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toastr.warning('لیست خالی قابل ذخیره نیست!', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
-            var params = this.getPhotosParams();
-            $items.each(function (i) {
-                data.push({
-                    MediaId: $(this).data('id')
-                    , SectionId: params.sectionId
-                    , Sort: i + 1
-                    , DateTime: params.date
-                    , ShowMedia: $(this).find('[name="ShowMedia"]:first')[0].checked ? 1 : 0
-                    , TitleKind: $(this).find('[name=TitleKind]:first').val()
+            this.checkGroupCount(function () {
+                var params = self.getPhotosParams();
+                $items.each(function (i) {
+                    data.push({
+                        MediaId: $(this).data('id')
+                        , SectionId: params.sectionId
+                        , Sort: i + 1
+                        , DateTime: params.date
+                        , ShowMedia: $(this).find('[name="ShowMedia"]:first')[0].checked ? 1 : 0
+                        , TitleKind: $(this).find('[name=TitleKind]:first').val()
+                    });
                 });
-            });
-            params.overrideUrl = Config.api.broadcastphotos;
-            new MediaModel(params).save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function (d) {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                }
+                params.overrideUrl = Config.api.broadcastphotos;
+                new MediaModel(params).save(null, {
+                    data: JSON.stringify(data)
+                    , contentType: 'application/json'
+                    , processData: false
+                    , success: function (d) {
+                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    }
+                });
             });
         }
         , copy: function (e) {
@@ -208,6 +210,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
             $row.remove();
             this.updateStatusbar();
+            this.groupItems();
         }
         , renderToolbar: function () {
             var self = this;
@@ -313,15 +316,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $item.parent().find(".success").removeClass('success');
             $item.addClass('success');
             var items = [{
-                    MediaId: $item.data('id')
-                    , ShowMedia: 1
-                    , Media: {
-                        Thumbnail: $item.find('img').attr('src')
-                        , Title: $item.find('.title').text()
-                        , Description: $item.find('small').text()
-                        , Type: $item.data('type')
-                    }
-                }];
+                MediaId: $item.data('id')
+                , ShowMedia: 1
+                , Media: {
+                    Thumbnail: $item.find('img').attr('src')
+                    , Title: $item.find('.title').text()
+                    , Description: $item.find('small').text()
+                    , Type: $item.data('type')
+                }
+            }];
             var template = Template.template.load('broadcast/photos', 'photos.partial');
             var $container = $("#photo-items table tbody");
             template.done(function (data) {
@@ -331,6 +334,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //                    self.initSortable(true);
 //                    self.initPhotosPaginator();
                     self.updateStatusbar();
+                    self.groupItems();
                     toastr.success('«' + items[0].Media.Title + '» با موفقیت اضافه شد.', 'افزودن آیتم', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 });
             });
@@ -401,6 +405,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         $container.html(output).promise().done(function () {
                             self.updateStatusbar();
                             self.initPhotosPaginator();
+                            self.groupItems();
                             if (typeof callback === 'function')
                                 callback();
 //                            self.afterRender(items, params);
@@ -408,6 +413,42 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
             });
+        }
+        , groupItems: function () {
+            var $rows = $('#photo-items tbody tr');
+            var group = 'odd';
+            var groupCount = CONFIG.mediaScheduleGroupItems;
+            $rows.each(function (i) {
+                $(this).attr('data-group', group);
+                if ((i + 1) % groupCount === 0) {
+                    group = (group === 'odd') ? 'even' : 'odd';
+                }
+            });
+        }
+        , getItemsCount: function () {
+            return $('#photo-items tbody tr').length;
+        }
+        , checkGroupCount: function (callback) {
+            var itemsCount = this.getItemsCount();
+            var groupCount = CONFIG.mediaScheduleGroupItems;
+            if ((itemsCount % groupCount) !== 0) {
+                bootbox.confirm({
+                    message: "تعداد آیتم‌ها باید مضربی از " + groupCount + " باشد. آیا مطمئن هستید؟"
+                    , buttons: {
+                        confirm: {className: 'btn-success'}
+                        , cancel: {className: 'btn-danger'}
+                    }
+                    , callback: function (results) {
+                        if (results && typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                });
+            } else {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
         }
         , handlePhotosPagination: function (offset, count) {
             var count = typeof count !== "undefined" ? count : this.defalutPhotosListLimit;

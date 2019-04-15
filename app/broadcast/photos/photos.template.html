@@ -3,10 +3,12 @@
 	.portlet-title small { float: left; }
 	#photo-items tbody tr:first-child .ordering .btn:first-child { visibility: hidden; }
 	#photo-items tbody tr:last-child .ordering .btn:last-child { display: none; }
+    #photo-items tbody tr[data-type="0"] { background: #e2f3ff; }
+    #photo-items tbody tr[data-group="odd"] { border-right: 4px solid #ff66b5; }
+    #photo-items tbody tr[data-group="even"] { border-right: 4px solid #0b94ea; }
 	#photos-page .table { width: 100%; max-width: 100%; }
 	.clip-line { word-break: break-all; }
 	#itemlist, #photo-items { height: 550px; max-height: 550px; overflow: scroll; overflow-x: hidden; }
-	/*#photo-items { height: 593px; max-height: 593px; }*/
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
 	<div class="portlet light bg-inverse duplicate-items hidden">
@@ -203,8 +205,8 @@
 										<thead>
 											<tr>
 												<th class="">#</th>
-												<th class="col-xs-1">مدیا</th> 
-												<th class="col-xs-3"></th> 
+												<th class="col-xs-1">مدیا</th>
+												<th class="col-xs-3"></th>
 												<th class="col-xs-2">تصویر</th>
 												<th class="col-xs-5">عنوان</th>
 												<th class="col-xs-1"></th>

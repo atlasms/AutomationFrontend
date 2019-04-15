@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "characterLimit": 250,
         "wordLimit": 15,
         "defalutMediaListLimit": 25,
+        "mediaScheduleGroupItems": 4,
         "loginMode": "default",
         "initialRedirect": "/resources/media",
         "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
