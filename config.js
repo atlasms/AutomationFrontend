@@ -116,6 +116,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
             , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
             , "resources/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "BroadcastprintView", "file": "app/resources/mediaitem/broadcastprint.view"}
+            , "resources/persons": {"private": true, "access": null, "skipLayout": false, "action": "PersonsView", "file": "app/resources/persons/persons.view"}
             , "resources/live": {"private": true, "access": null, "action": "LiveView", "file": "app/resources/live/live.view"}
             , "resources/editor": {"private": true, "access": null, "action": "MediaEditorView", "file": "app/resources/editor/editor.view"}
             , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
@@ -180,6 +181,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "shotlist": "shotlist"
             , "economy": "economy"
             , "broadcastphotos": "conductormedia"
+            , "persons": "share/persons"
         },
         "channels": {
             'tv1': {

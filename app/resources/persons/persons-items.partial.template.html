@@ -1,0 +1,35 @@
+<table class="table table-bordered table-striped table-condensed flip-content table-hover">
+    <thead>
+        <tr>
+            <th class="col-xs-1">شناسه</th>
+            <th class="col-xs-3">نام خانوادگی</th>
+            <th class="col-xs-2">نام</th>
+            <th class="col-xs-2">نوع</th>
+            <th class="col-xs-4"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each []}}
+        <tr data-id="{{id}}">
+            <td>{{id}}</td>
+            <td class="">
+                {{family}}
+            </td>
+            <td>
+                {{name}}
+            </td>
+            <td class="text-right">
+                <select class="form-control disabled" disabled>
+                    {{#select type}}
+                    <option value="1">کارگردان</option>
+                    <option value="2">تهیه کننده</option>
+                    <option value="3">بازیگر</option>
+                    <option value="4">مجری</option>
+                    {{/select}}
+                </select>
+            </td>
+            <td></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
