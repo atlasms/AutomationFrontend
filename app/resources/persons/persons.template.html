@@ -33,10 +33,7 @@
 							<label class="col-sm-3 control-label">نوع</label>
 							<div class="col-sm-9">
 								<select class="form-control" name="type" required>
-									<option value="1">کارگردان</option>
-									<option value="2">تهیه کننده</option>
-									<option value="3">بازیگر</option>
-									<option value="4">مجری</option>
+									{{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
 								</select>
 							</div>
 						</div>

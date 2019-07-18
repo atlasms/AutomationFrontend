@@ -4,18 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         playerInstance: null
         , modal_add: '#person-add-modal'
         , toolbar: [
-            {
-                'select': {
-                    cssClass: 'form-control', name: 'change-type', addon: true, icon: 'fa fa-user', label: 'عوامل', options: [
-                        {value: '0', text: 'همه'}
-                        , {value: '1', text: 'کارگردان'}
-                        , {value: '2', text: 'تهیه کننده'}
-                        , {value: '3', text: 'بازیگر'}
-                        , {value: '4', text: 'مجری'}
-                    ]
-                }
-            }
-            , {'button': {cssClass: 'btn blue-sharp pull-right', text: 'مورد جدید ', type: 'button', task: 'add', icon: 'fa fa-plus'}}
+            {'button': {cssClass: 'btn blue-sharp pull-right', text: 'مورد جدید ', type: 'button', task: 'add', icon: 'fa fa-plus'}}
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
@@ -60,7 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         }
         , getParams: function () {
             return {
-                type: $('[data-type="change-type"]').val()
+                type: $('[data-type="type"]').val()
             };
         }
         , loadItems: function (params) {
@@ -102,7 +91,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         , renderToolbar: function () {
             var self = this;
             var toolbar = new Toolbar();
-            var elements = $.merge(self.toolbar, {});
+            var definedTypes = toolbar.getDefinedToolbar(135, 'type', [{Value: 0, Key: 'همه'}]);
+            // var elements = $.merge(self.toolbar, {});
+            var elements = $.merge($.merge([], self.toolbar), definedTypes);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);

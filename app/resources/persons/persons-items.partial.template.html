@@ -21,10 +21,7 @@
             <td class="text-right">
                 <select class="form-control disabled" disabled>
                     {{#select type}}
-                    <option value="1">کارگردان</option>
-                    <option value="2">تهیه کننده</option>
-                    <option value="3">بازیگر</option>
-                    <option value="4">مجری</option>
+                    {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
                     {{/select}}
                 </select>
             </td>
