@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                     $("body").removeClass('scrolled');
             });
         }
-        , getDefinedToolbar: function (id, name) {
+        , getDefinedToolbar: function (id, name, prependItems) {
             var items = [];
             $.each(Config.definitions, function () {
                 if (this.Id === id) {
@@ -39,6 +39,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                         , addon: true
                         , icon: 'fa fa-filter'
                     };
+                    if (typeof prependItems !== 'undefined')
+                        for (p = 0; p < prependItems.length; p++)
+                            item[key].options.push({value: prependItems[p].Value, text: prependItems[p].Key});
                     for (i = 0; i < $this.Children.length; i++)
                         item[key].options.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
                     items.push(item);
