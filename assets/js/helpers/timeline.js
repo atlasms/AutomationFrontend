@@ -165,7 +165,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 , template: {seekbar: {range: true}, controls: false}
                 , duration: media.duration
             };
-            console.log(playerConfig);
+            // console.log(playerConfig);
             var player = new Player('#player-container', playerConfig);
             player.render();
             self.currentMedia = media;
@@ -399,6 +399,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             // TODO: Demo!
             var data = (typeof data !== "undefined") ? data : demoData;
             var timeline = JSON.parse(data.replace(/[\u0000-\u0019]+/g, ""));
+            timeline.items.forEach(function(item) {
+                item.video = item.img.replace('.jpg', '_lq.mp4');
+            });
             timeline['options'] = this.options;
             this.render(timeline);
         }
