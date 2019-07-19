@@ -104,7 +104,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var mode = $("[data-type=change-mode]").val();
             var state = Global.getQuery('state') ? Global.getQuery('state') : $("[name=state]").val();
-            var catid = '';
+            var startDate = Global.getQuery('startdate') ? Global.getQuery('startdate') : Global.jalaliToGregorian($("[name=startdate]").val());
+            var catid = Global.getQuery('catid') ? Global.getQuery('catid') : '';
+            if (catid !== '')
+                this.cache.currentCategory = catid;
 
             if (typeof skipQueries !== 'undefined' && skipQueries)
                 state = $("[name=state]").val();
@@ -117,7 +120,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 count: self.defaultListLimit,
                 categoryId: catid,
                 state: state,
-                startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00',
+                startdate: startDate + 'T00:00:00',
                 enddate: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
             };
             return params;
@@ -148,6 +151,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadItems: function (params) {
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getParams();
+
+            // set date from url query
+            if (Global.getQuery('startdate')) {
+                $('[name="startdate"]').val(persianDate(new Date(Global.getQuery('startdate'))).format('YYYY-MM-DD'));
+            }
+
             var data = $.param(params);
             var model = new MediaModel(params);
             model.fetch({
@@ -176,6 +185,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            $("#metadata-page table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
             $('[data-type="total-count"]').html(items.count);
             $('[data-type="total-duration"]').html(Global.createTime2(items.duration));
+
+            // set category name from url query
+            if (Global.getQuery('catid') && ~~this.cache.currentCategory === ~~Global.getQuery('catid')) {
+                if (items.items.length) {
+                    var catTitle = items.items[0]['MetaCategoryName'];
+                    $('[name="cat-name"]').val(catTitle);
+                }
+            }
+
             this.renderPagination(items, requestParams);
             this.renderStatusbar();
         }
