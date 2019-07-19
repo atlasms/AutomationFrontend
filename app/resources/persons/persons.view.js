@@ -1,31 +1,39 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'resources.persons.model', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, PersonsModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'resources.persons.model', 'editable.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, PersonsModel, Editable) {
     var PersonsView = Backbone.View.extend({
         playerInstance: null
-        , modal_add: '#person-add-modal'
+        , modal_edit: '#person-edit-modal'
         , toolbar: [
             {'button': {cssClass: 'btn blue-sharp pull-right', text: 'مورد جدید ', type: 'button', task: 'add', icon: 'fa fa-plus'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'button', task: 'search'}}
+            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
         ]
         , statusbar: []
+        , cachedData: null
         , flags: {toolbarRendered: false}
         , events: {
             'click [data-task=refresh]': 'reLoad'
             , 'click [data-task=refresh-view]': 'reLoad'
-            , 'click [data-task="add"]': 'openPersonForm'
+            , 'click [data-task="search"]': 'search'
+            , 'click [data-task="add"]': 'initAdd'
+            , 'click [data-task="edit"]': 'initEdit'
+            , 'click form [type="submit"]': 'submit'
             // , 'change [data-type="change-type"]': 'reLoad'
-            , 'click [data-task="add-person"]': 'addPerson'
         }
-        , addPerson: function (e) {
+        , submit: function (e) {
             var self = this;
-            var $form = $('#person-add');
-            var $modal = $(self.modal_add);
+            var $form = $('#person-form');
+            var $modal = $(self.modal_edit);
             var data = $form.serializeObject();
-            new PersonsModel({}).save(null, {
+            var params = (~~$form.attr('data-id') > 0) ? {id: $form.attr('data-id')} : {};
+            new PersonsModel(params).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
                     toastr['success']('مورد جدید با موفقیت ایجاد شد.', 'ایجاد عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $modal.modal('hide');
+                    $form.attr('data-id', '');
+                    $form[0].reset();
                     self.reLoad();
                 }
                 , error: function (z, x, c) {
@@ -34,10 +42,53 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
             });
             e.preventDefault();
         }
-        , openPersonForm: function (e) {
-            var self = this;
+        , search: function (e) {
+            // TODO
             e.preventDefault();
-            $(self.modal_add).modal('show');
+            this.reLoad();
+            console.log('loading');
+        }
+        , openModal: function (e) {
+            var self = this;
+            if (typeof e !== "undefined" && e !== null)
+                e.preventDefault();
+            var $modal = $(self.modal_edit);
+            $modal.modal('show');
+        }
+        , initAdd: function (e) {
+            e.preventDefault();
+            var self = this;
+            var template = Template.template.load('resources/persons', 'persons-form.partial');
+            var $container = $("#person-edit-modal");
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate({});
+                $container.html(output).promise().done(function () {
+                    self.openModal();
+                });
+            });
+        }
+        , initEdit: function (e) {
+            e.preventDefault();
+            var self = this;
+            // var data = $form.serializeObject();
+            var id = $(e.target).parents('tr[data-id]:first').data('id');
+            var item = {};
+            for (var entry in this.cachedData) {
+                if (this.cachedData.hasOwnProperty(entry)) {
+                    if (~~this.cachedData[entry]['id'] === ~~id)
+                        item = this.cachedData[entry];
+                }
+            }
+            var template = Template.template.load('resources/persons', 'persons-form.partial');
+            var $container = $("#person-edit-modal");
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate(item);
+                $container.html(output).promise().done(function () {
+                    self.openModal();
+                });
+            });
         }
         , reLoad: function () {
             this.load();
@@ -50,17 +101,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         , getParams: function () {
             return {
                 type: $('[data-type="type"]').val()
+                , q: $('[name="q"]').val()
             };
         }
         , loadItems: function (params) {
             var self = this;
             var params = (typeof params !== "undefined") ? params : this.getParams();
-            var data = (typeof params.type === 'undefined' || ~~params.type === 0) ? '' : $.param(params);
+
+            // var data = (typeof params.type === 'undefined' || ~~params.type === 0) ? '' : $.param(params);
+            var data = $.param(params);
             var model = new PersonsModel(params);
             model.fetch({
                 data: data
                 , success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
+                    self.cachedData = items = self.prepareItems(items.toJSON(), params);
                     var template = Template.template.load('resources/persons', 'persons-items.partial');
                     var $container = $("#itemlist");
                     template.done(function (data) {

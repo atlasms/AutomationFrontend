@@ -1,32 +1,30 @@
-<table class="table table-bordered table-striped table-condensed flip-content table-hover">
-    <thead>
-        <tr>
-            <th class="col-xs-1">شناسه</th>
-            <th class="col-xs-3">نام خانوادگی</th>
-            <th class="col-xs-2">نام</th>
-            <th class="col-xs-2">نوع</th>
-            <th class="col-xs-4"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each []}}
-        <tr data-id="{{id}}">
-            <td>{{id}}</td>
-            <td class="">
-                {{family}}
-            </td>
-            <td>
-                {{name}}
-            </td>
-            <td class="text-right">
-                <select class="form-control disabled" disabled>
-                    {{#select type}}
-                    {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
-                    {{/select}}
-                </select>
-            </td>
-            <td></td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div data-editable="true">
+    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+        <thead>
+            <tr>
+                <th class="col-xs-1">شناسه</th>
+                <th class="col-xs-3">نام خانوادگی</th>
+                <th class="col-xs-2">نام</th>
+                <th class="col-xs-2">نوع</th>
+                <th class="col-xs-4"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each []}}
+            <tr data-id="{{id}}">
+                <td>{{id}}</td>
+                <td class="">{{family}}</td>
+                <td data-type="name">{{name}}</td>
+                <td class="text-right">
+                    <select class="form-control disabled" disabled>
+                        {{#select type}}
+                        {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                        {{/select}}
+                    </select>
+                </td>
+                <td><button class="btn btn-default" data-task="edit"><i class="fa fa-wrench"></i> ویرایش</button></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
