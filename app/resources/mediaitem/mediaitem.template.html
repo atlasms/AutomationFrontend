@@ -45,9 +45,12 @@
                                     <tr>
                                         <td>برنامه</td>
                                         <td>
-                                            <span data-type="category">{{MetaCategoryName}}</span>
-                                            <a href="#" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
-                                                    class="fa fa-pencil"></i></a>
+                                            <a href="/resources/media/?startdate=1970-01-01&catid={{MetaCategoryId}}" target="_blank">
+                                                <span data-type="category" class="label label-sm bg-dark bg-font-dark">{{MetaCategoryName}}</span>
+                                                &nbsp;<i class="fa fa-external-link"></i><small> سایر قسمت‌ها</small>
+                                            </a>
+                                            <a href="#" class="pull-right" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
+                                                    class="fa fa-pencil"></i> تغییر برنامه</a>
                                         </td>
                                     </tr>
                                     <tr>

@@ -311,6 +311,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $(self.modal_tree).modal('hide');
             var $item = $('[data-type="category"]');
             $item.text(self.treeInstance.selected.text);
+            $item.parent().is('a') && $item.parent().attr('href', '/resources/media/?startdate=1970-01-01&catid=' + params.value);
             $item.next().attr('data-id', params.value);
         }
         , submit: function () {
