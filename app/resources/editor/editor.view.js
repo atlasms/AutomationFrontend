@@ -18,6 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , statusbar: [
             {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
         ]
+        , cache: {}
         , flags: {}
         , id: null
         , events: {
