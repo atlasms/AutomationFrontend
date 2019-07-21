@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'resources.persons.model', 'editable.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, PersonsModel, Editable) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toastr', 'toolbar', 'resources.persons.model', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, toastr, Toolbar, PersonsModel) {
     var PersonsView = Backbone.View.extend({
         playerInstance: null
         , modal_edit: '#person-edit-modal'
@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         }
         , getParams: function () {
             return {
-                type: $('[data-type="type"]').val()
+                type: $('[data-type="persons-type"]').val()
                 , q: $('[name="q"]').val()
             };
         }
@@ -145,14 +145,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
         , renderToolbar: function () {
             var self = this;
             var toolbar = new Toolbar();
-            var definedTypes = toolbar.getDefinedToolbar(135, 'type', [{Value: 0, Key: 'همه'}]);
+            var definedTypes = toolbar.getDefinedToolbar(135, 'persons-type', [{Value: 0, Key: 'همه'}]);
             // var elements = $.merge(self.toolbar, {});
             var elements = $.merge($.merge([], self.toolbar), definedTypes);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
             });
-            toolbar.render();
+            toolbar.render(function() {
+                // $(document).off('change', "#toolbar select[data-type=type]");
+            });
             $(document).on('change', "#toolbar select", function () {
                 self.load();
             });
