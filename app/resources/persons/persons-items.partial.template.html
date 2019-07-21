@@ -1,4 +1,7 @@
-<div data-editable="true">
+<style>
+    select.form-control.disabled[disabled] { border: 0 none; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: transparent; cursor: default; box-shadow: none; }
+</style>
+<div>
     <table class="table table-bordered table-striped table-condensed flip-content table-hover">
         <thead>
             <tr>
@@ -12,8 +15,8 @@
         <tbody>
             {{#each []}}
             <tr data-id="{{id}}">
-                <td>{{id}}</td>
-                <td class="">{{family}}</td>
+                <td data-type="id">{{id}}</td>
+                <td data-type="family" class="">{{family}}</td>
                 <td data-type="name">{{name}}</td>
                 <td class="text-right">
                     <select class="form-control disabled" disabled>

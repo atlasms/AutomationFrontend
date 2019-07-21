@@ -33,14 +33,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'change [data-task="change-mediausage-mode"]': 'mediaUsageChangeMode'
             , 'click [data-task="apply-mediausage-filters"]': 'mediaUsageFilter'
             , 'click .media-options a': 'UpdateMediaParams'
+            , 'submit #person-search-form': 'searchPersons'
+            , 'click [data-task="search-persons"]': 'searchPersons'
+            , 'click [data-task="select-person"]': 'selectPerson'
+            , 'click [data-task="delete-person"]': 'deletePerson'
+            , 'click [data-task="submit-persons"]': 'submitPersons'
         }
-        , UpdateMediaParams: function(e) {
+        , UpdateMediaParams: function (e) {
             e.preventDefault();
             var self = this;
             // var id = this.getId();
             var $li = $(e.target).parents('li:first');
             var params = {task: $li.data('task'), value: $li.data('value'), id: this.getId()};
-            MediaOptionsHelper.update(params, function(response) {
+            MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
                     toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 else {
@@ -400,6 +405,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     tmpl = ['resources/mediaitem', 'broadcast.partial'];
                     model = new MediaitemModel(params);
                     break;
+                case 'persons':
+                    var params = {
+                        overrideUrl: Config.api.mediapersons + '/?type=1&externalid=' + self.getId()
+                    };
+                    tmpl = ['resources/mediaitem', 'persons.partial'];
+                    model = new MediaitemModel(params);
+                    break;
                 case 'metadata':
                     var catid = $('[data-task="change-category"]').attr('data-id');
                     var masterId = self.getId();
@@ -443,7 +455,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                 } else {
                                     var handlebarsTemplate = Template.handlebars.compile(data);
                                     if (service === "broadcast")
-                                        items = { items: items, params: {} };
+                                        items = {items: items, params: {}};
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
                                         if ($container.find(".scroller").length)
@@ -522,12 +534,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 file: media.video
                 , duration: media.duration
                 , playlist: [{
-                        image: media.thumbnail
-                        , sources: [
-                            {file: media.video, label: 'LQ', default: true}
-                            , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-                        ]
-                    }]
+                    image: media.thumbnail
+                    , sources: [
+                        {file: media.video, label: 'LQ', default: true}
+                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                    ]
+                }]
             });
             player.render();
             self.player = player;
@@ -576,7 +588,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var $this = $(this);
                 if ($this.data('datepicker') == undefined) {
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
-                        onSelect: function () {}
+                        onSelect: function () {
+                        }
                     }));
                 }
             });
@@ -590,7 +603,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , timePicker: {enabled: true}
                     };
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
-                        onSelect: function () {}
+                        onSelect: function () {
+                        }
                     }));
                 }
                 if (reset)
@@ -619,7 +633,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , end: Global.jalaliToGregorian($(".table-tools .datepicker[name=enddate]").val())
             } : null;
             var params = {
-                overrideUrl: Config.api.schedule + '/' + (range ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59': '')
+                overrideUrl: Config.api.schedule + '/' + (range ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59' : '')
             };
             var template = Template.template.load('resources/mediaitem', 'broadcast.partial');
             new MediaitemModel(params).fetch({
@@ -632,10 +646,92 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(d);
-                        $("#tab-schedule").html(output).promise().done(function() {
+                        $("#tab-schedule").html(output).promise().done(function () {
                             self.attachDatepickers();
                         });
                     });
+                }
+            });
+        }
+        , searchPersons: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
+            var params = {overrideUrl: Config.api.persons};
+            new MediaitemModel(params).fetch({
+                data: data
+                , success: function (items) {
+                    var items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/persons', 'person-results.partial');
+                    var $container = $('#person-search-results');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output);
+                    });
+                }
+            });
+        }
+        , getPersonResultItemParams: function ($row) {
+            return params = {
+                id: $row.data('id')
+                , name: $row.find('[data-type="name"]').text()
+                , family: $row.find('[data-type="family"]').text()
+                , type: $row.find('select').val()
+            }
+        }
+        , selectPerson: function (e) {
+            e.preventDefault();
+            var params = this.getPersonResultItemParams($(e.target).parents('tr:first'));
+            var foundDuplicate = false;
+            $('#persons-table tbody tr').each(function () {
+                if (~~$(this).attr('data-id') == ~~params.id)
+                    foundDuplicate = true;
+            });
+            if (foundDuplicate)
+                return false;
+            $clonedRow = $('#persons-table tfoot tr:first').clone();
+            $clonedRow.attr('data-id', params.id)
+            $clonedRow.find('[data-type="id"]').text(params.id);
+            $clonedRow.find('[data-type="name"]').text(params.name);
+            $clonedRow.find('[data-type="family"]').text(params.family);
+            $clonedRow.find('select').val(params.type);
+            $('#persons-table tbody').append($clonedRow);
+        }
+        , deletePerson: function (e) {
+            e.preventDefault();
+            var $row = $(e.target).parents('tr:first');
+            bootbox.confirm({
+                message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $row.remove();
+                    }
+                }
+            });
+        }
+        , submitPersons: function (e) {
+            e.preventDefault();
+            var self = this;
+            var items = [];
+            $('#persons-table tbody tr').each(function () {
+                // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
+                items.push(~~$(this).attr('data-id'));
+            });
+            new MediaitemModel({overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + self.getId()}).save(null, {
+                data: JSON.stringify(items)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
         }

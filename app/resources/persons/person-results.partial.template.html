@@ -1,0 +1,30 @@
+<table class="table table-bordered table-striped table-condensed flip-content table-hover">
+    <thead>
+        <tr>
+            <th class="col-xs-1"></th>
+            <th class="col-xs-1">شناسه</th>
+            <th class="col-xs-3">نام خانوادگی</th>
+            <th class="col-xs-3">نام</th>
+            <th class="col-xs-2">نوع</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each []}}
+        <tr data-id="{{id}}">
+            <td>
+                <button type="button" class="btn btn-default" data-task="select-person"><i class="fa fa-chevron-right"></i> انتخاب</button>
+            </td>
+            <td data-type="id">{{id}}</td>
+            <td data-type="family" class="">{{family}}</td>
+            <td data-type="name">{{name}}</td>
+            <td data-type="type" class="text-right">
+                <select class="form-control disabled" disabled>
+                    {{#select type}}
+                    {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                    {{/select}}
+                </select>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

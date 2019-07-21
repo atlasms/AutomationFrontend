@@ -1,0 +1,80 @@
+<style>
+    select.form-control.disabled[disabled] { border: 0 none; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: transparent; cursor: default; box-shadow: none; }
+</style>
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table table-bordered table-striped table-condensed flip-content table-hover" id="persons-table">
+            <thead>
+                <tr>
+                    <th class="col-xs-1">شناسه</th>
+                    <th class="col-xs-3">نام خانوادگی</th>
+                    <th class="col-xs-3">نام</th>
+                    <th class="col-xs-2">نوع</th>
+                    <th class="col-xs-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each []}}
+                <tr data-id="{{id}}">
+                    <td data-type="id">{{id}}</td>
+                    <td data-type="family" class="">{{family}}</td>
+                    <td data-type="name">{{name}}</td>
+                    <td data-type="type" class="text-right">
+                        <select class="form-control disabled" disabled>
+                            {{#select type}}
+                            {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn red btn-outline" data-task="delete-person"><i class="fa fa-trash"></i> حذف</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot style="display: none;">
+                <tr data-id="">
+                    <td data-type="id"></td>
+                    <td data-type="family" class=""></td>
+                    <td data-type="name"></td>
+                    <td data-type="type" class="text-right">
+                        <select class="form-control disabled" disabled>
+                            {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn red btn-outline" data-task="delete-person"><i class="fa fa-trash"></i> حذف</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <hr />
+        <button type="button" class="btn green-jungle" data-task="submit-persons">
+            <i class="fa fa-save"></i> ثبت تغییرات
+        </button>
+    </div>
+    <div class="col-xs-6">
+        <div class="note note-info">
+            <form class="form-inline" role="form" id="person-search-form">
+                <div class="form-group">
+                    <label for="person-q">جستجو در عوامل</label>
+                    <select class="form-control" data-type="person-type">
+                        {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="person-q" data-type="person-q" placeholder="جستجو">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" data-task="search-persons">
+                        <i class="fa fa-search"></i> جستجو
+                    </button>
+                </div>
+                <a href="/resources/persons" target="_blank" class="btn btn-info pull-right">
+                    <i class="fa fa-plus"></i> جدید
+                </a>
+            </form>
+        </div>
+        <div id="person-search-results"></div>
+    </div>
+</div>

@@ -182,6 +182,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "economy": "economy"
             , "broadcastphotos": "conductormedia"
             , "persons": "share/persons"
+            , "mediapersons": "metadata/person"
         },
         "channels": {
             'tv1': {
