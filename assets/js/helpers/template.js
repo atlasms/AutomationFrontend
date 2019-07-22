@@ -76,6 +76,14 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return (v1 && v2) ? options.fn(this) : options.inverse(this);
                     case '||':
                         return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    case 'in':
+                        var values = v2.split(',');
+                        var condition = false;
+                        for (var i = 0; i < values.length; i++) {
+                            if (v1 == values[i] || condition)
+                                condition = true;
+                        }
+                        return condition ? options.fn(this) : options.inverse(this);
                     default:
                         return options.inverse(this);
                 }
