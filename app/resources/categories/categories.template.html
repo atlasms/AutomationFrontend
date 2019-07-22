@@ -1,16 +1,29 @@
 <div id="categories-page" class="">
-	<div class="mainbody">
-		<div class="row">
-			<div class="col-xs-12 col-md-5">
-				<div class="portlet box">
-					<div id="tree" class="portlet-body"></div>
-				</div>
-			</div>
-			<div class="col-xs-12 col-md-7">
-				<div class="portlet box">
-					<div class="metadata portlet-body"></div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="mainbody">
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="portlet box">
+                    <div id="tree" class="portlet-body"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-8">
+                <div class="portlet box">
+                    <div class="portlet-body">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
+                            <li><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab-metadata">
+                                <div class="metadata portlet-body"></div>
+                            </div>
+                            <div class="tab-pane" id="tab-persons">
+                                <div id="persons-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

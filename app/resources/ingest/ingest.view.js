@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'select2', 'shared.model', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, select2, SharedModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel) {
+    bootbox.setLocale('fa');
     var IngestView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
@@ -11,6 +12,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , statusbar: []
         , flags: {}
+        , cache: {
+            currentPathId: ''
+        }
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
@@ -20,6 +24,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
+
+            , 'submit #person-search-form': 'searchPersons'
+            , 'click [data-task="search-persons"]': 'searchPersons'
+            , 'click [data-task="select-person"]': 'selectPerson'
+            , 'click [data-task="delete-person"]': 'deletePerson'
+            // , 'click [data-task="submit-persons"]': 'submitPersons'
         }
         , submit: function (e) {
             e.preventDefault();
@@ -54,14 +64,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         , contentType: 'application/json'
                         , processData: false
                         , success: function (dd) {
-                            toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                            $(self.$modal).find("form").trigger('reset');
-                            $(self.$modal).modal('hide');
-                            $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                            self.submitPersons(data.MasterId, function () {
+                                toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                $(self.$modal).find("form").trigger('reset');
+                                $(self.$modal).modal('hide');
+                                $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                            });
                         }
                     });
                 }
-				, error: function (e, data) {
+                , error: function (e, data) {
                     toastr.error(data.responseJSON, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
@@ -235,32 +247,145 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
             return data;
         }
+        , getId: function () {
+            return this.cache.currentPathId;
+        }
         , handleTreeCalls: function (routes, path) {
             var self = this;
             var pathId = routes.pop().toString();
             var params = {overrideUrl: Config.api.media};
+
+            this.cache.currentPathId = pathId;
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
 
             var template = Template.template.load('resources/ingest', 'metadata.partial');
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
+            var data = {categoryId: pathId, count: self.defaultListLimit, offset: 0};
             model.fetch({
-                data: $.param({categoryId: pathId, count: self.defaultListLimit, offset: 0})
+                data: $.param(data)
                 , success: function (data) {
-                    items = data.toJSON();
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
+                    var items = data.toJSON();
+                    template.done(function (tmplData) {
+                        var handlebarsTemplate = Template.handlebars.compile(tmplData);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $('[data-type="total-count"]').html(items.count);
 //                            self.afterRender();
+                            self.loadPersonsList(pathId);
                         });
                     });
                 }
 //                , error: function (e, data) {
 //                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
 //                }
+            });
+        }
+        , loadPersonsList: function (categoryId) {
+            if (typeof categoryId === 'undefined' || categoryId <= 0)
+                return false;
+            var self = this;
+            var params = {overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId};
+            var model = new IngestModel(params);
+            var $container = $('#persons-group');
+            $container.empty();
+            model.fetch({
+                success: function (data) {
+                    var items = self.prepareItems(data.toJSON(), params);
+                    console.log(items);
+                    var template = Template.template.load('resources/mediaitem', 'persons.partial');
+                    template.done(function (tmplData) {
+                        var handlebarsTemplate = Template.handlebars.compile(tmplData);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                        });
+                    });
+                }
+            });
+        }
+        , searchPersons: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
+            var params = {overrideUrl: Config.api.persons};
+            new IngestModel(params).fetch({
+                data: data
+                , success: function (items) {
+                    var items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/persons', 'person-results.partial');
+                    var $container = $('#person-search-results');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output);
+                    });
+                }
+            });
+        }
+        , getPersonResultItemParams: function ($row) {
+            return params = {
+                id: $row.data('id')
+                , name: $row.find('[data-type="name"]').text()
+                , family: $row.find('[data-type="family"]').text()
+                , type: $row.find('select').val()
+            }
+        }
+        , selectPerson: function (e) {
+            e.preventDefault();
+            var params = this.getPersonResultItemParams($(e.target).parents('tr:first'));
+            var foundDuplicate = false;
+            $('#persons-table tbody tr').each(function () {
+                if (~~$(this).attr('data-id') == ~~params.id)
+                    foundDuplicate = true;
+            });
+            if (foundDuplicate)
+                return false;
+            $clonedRow = $('#persons-table tfoot tr:first').clone();
+            $clonedRow.attr('data-id', params.id);
+            $clonedRow.find('[data-type="id"]').text(params.id);
+            $clonedRow.find('[data-type="name"]').text(params.name);
+            $clonedRow.find('[data-type="family"]').text(params.family);
+            $clonedRow.find('select').val(params.type);
+            $('#persons-table tbody').append($clonedRow);
+        }
+        , deletePerson: function (e) {
+            e.preventDefault();
+            var $row = $(e.target).parents('tr:first');
+            bootbox.confirm({
+                message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $row.remove();
+                    }
+                }
+            });
+        }
+        , submitPersons: function (id, callback) {
+            // typeof e !== 'undefined' && e.preventDefault();
+            var self = this;
+            var items = [];
+            $('#persons-table tbody tr').each(function () {
+                // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
+                items.push(~~$(this).attr('data-id'));
+            });
+            new IngestModel({overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + id}).save(null, {
+                data: JSON.stringify(items)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    if (typeof callback === 'function')
+                        callback();
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
             });
         }
         , renderStatusbar: function () {

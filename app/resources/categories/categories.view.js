@@ -1,15 +1,25 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap/tab', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, bootbox) {
+    bootbox.setLocale('fa');
     var CategoriesView = Backbone.View.extend({
         model: 'CategoriesModel'
         , toolbar: []
         , statusbar: []
         , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
+        , cache: {
+            currentPathId: ''
+        }
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
             , 'click #tree .jstree-anchor': 'loadData'
             , 'submit .categories-metadata-form': 'saveMetadata'
+
+            , 'submit #person-search-form': 'searchPersons'
+            , 'click [data-task="search-persons"]': 'searchPersons'
+            , 'click [data-task="select-person"]': 'selectPerson'
+            , 'click [data-task="delete-person"]': 'deletePerson'
+            , 'click [data-task="submit-persons"]': 'submitPersons'
         }
         , saveMetadata: function (e) {
             e.preventDefault();
@@ -57,8 +67,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , loadData: function (e) {
             var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
-            id = parseInt(id);
             if (typeof id !== "undefined" && id) {
+                this.cache.currentPathId = id = parseInt(id);
                 var self = this;
                 var mediaItemsParams = {query: $.param({categoryId: id, offset: 0, count: this.defaultListLimit})};
                 var itemsModel = new MediaModel(mediaItemsParams);
@@ -71,7 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var model = new MetadataModel(params);
                         model.fetch({
                             success: function (item) {
-                                item = item.toJSON();
+                                item = self.prepareItems(item.toJSON(), params);
                                 item.media = mediaItems;
                                 console.log(item);
                                 var template = Template.template.load('resources/categories', 'category.metadata.partial');
@@ -90,6 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         });
                     }
                 });
+                this.loadPersonsList(id);
             }
         }
         , attachDatepickers: function () {
@@ -226,6 +237,115 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , prepareSave: function () {
             data = null;
             return data;
+        }
+        , getId: function () {
+            return this.cache.currentPathId;
+        }
+        , loadPersonsList: function (categoryId) {
+            if (typeof categoryId === 'undefined' || categoryId <= 0)
+                return false;
+            var self = this;
+            var params = {overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId};
+            var model = new MediaModel(params);
+            var $container = $('#persons-group');
+            $container.empty();
+            model.fetch({
+                success: function (data) {
+                    var items = self.prepareItems(data.toJSON(), params);
+                    console.log(items);
+                    var template = Template.template.load('resources/mediaitem', 'persons.partial');
+                    template.done(function (tmplData) {
+                        var handlebarsTemplate = Template.handlebars.compile(tmplData);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                        });
+                    });
+                }
+            });
+        }
+        , searchPersons: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
+            var params = {overrideUrl: Config.api.persons};
+            new MediaModel(params).fetch({
+                data: data
+                , success: function (items) {
+                    var items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/persons', 'person-results.partial');
+                    var $container = $('#person-search-results');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output);
+                    });
+                }
+            });
+        }
+        , getPersonResultItemParams: function ($row) {
+            return params = {
+                id: $row.data('id')
+                , name: $row.find('[data-type="name"]').text()
+                , family: $row.find('[data-type="family"]').text()
+                , type: $row.find('select').val()
+            }
+        }
+        , selectPerson: function (e) {
+            e.preventDefault();
+            var params = this.getPersonResultItemParams($(e.target).parents('tr:first'));
+            var foundDuplicate = false;
+            $('#persons-table tbody tr').each(function () {
+                if (~~$(this).attr('data-id') == ~~params.id)
+                    foundDuplicate = true;
+            });
+            if (foundDuplicate)
+                return false;
+            $clonedRow = $('#persons-table tfoot tr:first').clone();
+            $clonedRow.attr('data-id', params.id);
+            $clonedRow.find('[data-type="id"]').text(params.id);
+            $clonedRow.find('[data-type="name"]').text(params.name);
+            $clonedRow.find('[data-type="family"]').text(params.family);
+            $clonedRow.find('select').val(params.type);
+            $('#persons-table tbody').append($clonedRow);
+        }
+        , deletePerson: function (e) {
+            e.preventDefault();
+            var $row = $(e.target).parents('tr:first');
+            bootbox.confirm({
+                message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $row.remove();
+                    }
+                }
+            });
+        }
+        , submitPersons: function (callback) {
+            // typeof e !== 'undefined' && e.preventDefault();
+            var self = this;
+            var items = [];
+            $('#persons-table tbody tr').each(function () {
+                // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
+                items.push(~~$(this).attr('data-id'));
+            });
+            new MediaModel({overrideUrl: Config.api.mediapersons + '?type=2&externalid=' + self.getId()}).save(null, {
+                data: JSON.stringify(items)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+                , success: function (model, response) {
+                    if (typeof callback === 'function')
+                        callback();
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
         }
     });
     return CategoriesView;
