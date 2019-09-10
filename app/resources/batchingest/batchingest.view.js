@@ -26,9 +26,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var self = this;
-            var helper = new IngestHelper.validate();
-            if (!helper.beforeSave())
-                return;
+            // var helper = new IngestHelper.validate();
+            // if (!helper.beforeSave())
+            //     return;
+            $fields = $('#metadata-form-modal').find('input, textarea');
+            var error = false
+            $fields.each(function() {
+                var $field = $(this);
+                if ($field.is('[required]') && (typeof $field.val() === 'undefined' || !$field.val())) {
+                    error = true;
+                    toastr.warning('اطلاعات فیلد ' + $field.attr('placeholder') + ' وارد نشده است.', 'حطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
+            if (error){
+                return false;
+            }
             var data = this.prepareSave();
             var cachedItems = self.items;
             var ingestedItems = [];

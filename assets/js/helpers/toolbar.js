@@ -68,13 +68,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var text = (typeof args.text !== "undefined") ? args.text : 'Submit';
             var type = (typeof args.type !== "undefined") ? args.type : 'submit';
             var task = (typeof args.task !== "undefined") ? args.task : '';
+            var alt = (typeof args.alt !== "undefined") ? args.alt : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i> ' : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
 
             if (!args.access || Authorize.access(args.access))
-                var output = '<button type="' + type + '" class="' + cssClass + '" data-task="' + task + '"' + style + '>' + icon + text + '</button>';
+                var output = '<button type="' + type + '" title="' + alt + '" class="' + cssClass + '" data-task="' + task + '"' + style + '>' + icon + text + '</button>';
             else
-                var output = '<button type="' + type + '" class="' + cssClass + '" disabled' + style + '>' + icon + text + '</button>';
+                var output = '<button type="' + type + '" title="' + alt + '" class="' + cssClass + '" disabled' + style + '>' + icon + text + '</button>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , input: function (args) {
@@ -86,11 +87,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
             var addon = (typeof args.addon !== "undefined") ? args.addon : false;
             var disabled = (typeof args.disabled !== "undefined") ? ' disabled' : '';
+            var style = (typeof args.style !== "undefined") ? ' style="' + args.style + '" ' : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
             var output = '<div class="form-group"><div class="input-group">';
 //            output += addon ? '<span class="input-group-addon"></span>' : '';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
-            output += '<input type="' + type + '" ' + disabled + ' class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" /></div></div>';
+            output += '<input type="' + type + '" ' + disabled + ' class="' + cssClass + '" name="' + name + '" placeholder="' + placeholder + '" value="' + value + '" ' + style + ' /></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , select: function (args) {
@@ -99,6 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var label = (typeof args.text !== "undefined") ? args.text : '';
             var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
             var addon = (typeof args.addon !== "undefined") ? args.addon : false;
+            var style = (typeof args.style !== "undefined") ? ' style="' + args.style + '" ' : '';
             var multi = (typeof args.multi !== "undefined" && args.multi) ? ' multiple="true"' : '';
             var placeholder = (typeof args.placeholder !== "undefined" && args.placeholder) ? ' placeholder="' + args.placeholder + '"' : '';
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
@@ -110,7 +113,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                     options += '<option value="' + args.options[i].value + '">' + args.options[i].text + '</option>';
             var output = '<div class="form-group"><div class="input-group">';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
-            output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '"' + multi + placeholder + '>' + options + '</select></div></div>';
+            output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '"' + multi + placeholder + style + '>' + options + '</select></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , radio: function (args) {

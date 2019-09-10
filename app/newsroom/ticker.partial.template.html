@@ -1,0 +1,14 @@
+{{#if items}}
+<small class="blink"></small>
+{{/if}}
+<ul class="ticker">
+    {{#each items}}
+    <li data-id="{{id}}">
+        <h3>
+            <span class="source">{{sourceText}}</span>
+            <span class="title">{{headline}}</span>
+            <span class="date">{{extractTime publishDate}}</span>
+        </h3>
+    </li>
+    {{/each}}
+</ul>

@@ -30,8 +30,7 @@
             { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
             { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/media?state=2" },
             { "title": "پخش زنده", "alias": "resources_live", "icon": "tv", "link": "/resources/live" },
-            { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "play-circle", "link": "/resources/editor" },
-            { "title": "اطلاعات عوامل", "alias": "resources_persons", "icon": "user", "link": "/resources/persons" }
+            { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "play-circle", "link": "/resources/editor" }
         ]
     },
     {
@@ -69,6 +68,16 @@
         ]
     },
     {
+        "title": "اطلاعات پایه",
+        "alias": "basic",
+        "icon": "globe",
+        "items": [
+            { "title": "محورها", "alias": "basic_subjects", "icon": "list", "link": "/basic/subjects" },
+            { "title": "کلیدواژه‌ها", "alias": "basic_tags", "icon": "tags", "link": "/basic/tags" },
+            { "title": "اطلاعات عوامل", "alias": "resources_persons", "icon": "user", "link": "/resources/persons" }
+        ]
+    },
+    {
         "title": "نیوزروم",
         "alias": "newsroom",
         "icon": "newspaper-o",
@@ -82,7 +91,7 @@
         "alias": "pr",
         "icon": "volume-control-phone",
         "items": [
-            { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "#" },
+            { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "/pr/recordings" },
             { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" },
             { "title": "بولتن‌ها", "alias": "pr_bulletin", "icon": "book", "link": "#" }
         ]

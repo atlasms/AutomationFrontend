@@ -67,13 +67,13 @@
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
-                                        <input type="text" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره قسمت" required/>
+                                        <input type="text" data-type="episode" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره قسمت" required/>
                                         <!--<span class="help-block">شماره قسمت</span>-->
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" name="Description" rows="6" placeholder="توضیحات قسمت"></textarea>
+                                        <textarea class="form-control" data-type="description" name="Description" rows="6" placeholder="توضیحات قسمت" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                         <label class="control-label">کلیدواژه‌ها</label>
                                     </div>
                                     <div class="col-xs-9">
-                                        <select class="form-control select2" name="Tags" multiple>
+                                        <select class="form-control select2" data-type="tags" name="Tags" multiple required>
                                             {{#each tags}}
                                             <option value="{{id}}">{{title}}</option>
                                             {{/each}}
@@ -99,7 +99,7 @@
                                         <label class="control-label">محورها</label>
                                     </div>
                                     <div class="col-xs-9">
-                                        <select class="form-control select2" name="Subjects" multiple>
+                                        <select class="form-control select2" data-type="subjects" name="Subjects" multiple required>
                                             {{#each subjects}}
                                             <option value="{{id}}">{{title}}</option>
                                             {{/each}}
@@ -122,13 +122,13 @@
                             <!--</div>-->
                             <!--</div>-->
                             <div class="form-group">
-                                <input type="text" data-type="title" class="form-control" id="media-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
+                                <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
+                                <textarea class="form-control" data-type="website_summary" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت"></textarea>
+                                <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت" required></textarea>
                             </div>
                         </div>
                     </div>

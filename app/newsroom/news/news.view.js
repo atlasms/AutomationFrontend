@@ -22,11 +22,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'موضوع', name: 'topic', text: 'موضوع', multi: true, icon: 'fa fa-filter', options: [], addon: true}}
             , {'select': {cssClass: 'form-control select2 lazy', placeholder: 'منبع', name: 'source', text: 'منبع', multi: true, icon: 'fa fa-globe', ptions: [], addon: true}}
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'
                     , value: Global.getVar("enddate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
                 }
             }
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar'
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar'
                     , value: Global.getVar("startdate") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
                 }
             }
@@ -82,8 +86,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             typeof e !== "undefined" && e.preventDefault();
             var self = this;
             var data = [{
-                    cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: 0
-                }];
+                cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: 0
+            }];
             new NewsroomModel({overrideUrl: 'nws'}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -120,8 +124,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 default:
                 case 'panel':
                     var data = [{
-                            cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: selectedUserId
-                        }];
+                        cmd: 'clonenews', sourceId: this.data.currentItem, sourceTable: 'news', destTable: 'workspace', destId: selectedUserId
+                    }];
                     new NewsroomModel({overrideUrl: 'nws'}).save(null, {
                         data: JSON.stringify(data)
                         , contentType: 'application/json'
@@ -179,10 +183,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), $.extend({}, params, {path: 'list'}));
                     template.done(function (data) {
+                        var id = Global.getVar("id");
+                        if (id) {
+                            items['items'].forEach(function (item) {
+                                if (~~item.id === ~~id)
+                                    item['selected'] = true;
+                            });
+                        }
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $(Config.positions.main).html(output).promise().done(function () {
-                            self.activateFirstItem();
+                            self.activateFirstItem(id);
                             self.afterRender(items, requestParams);
 //                            self.loadUsersList();
                         });
@@ -223,8 +234,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
 //            var topPosition = $row.position().top - 184;
 //            $(".itemlist .portlet-body").animate({'scrollTop': topPosition});
         }
-        , activateFirstItem: function () {
-            $(".box.itemlist table tbody tr:first").trigger('click');
+        , activateFirstItem: function (preSelectedId) {
+            if (preSelectedId) {
+                $('.box.itemlist table tbody tr[data-selected=true]').trigger('click');
+            } else
+                $(".box.itemlist table tbody tr:first").trigger('click');
         }
         , getToolbarParams: function () {
             return {
@@ -351,7 +365,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 });
             });
             $('select.suggest[data-type]').each(function () {
-                $(this).select2({dir: "rtl", multiple: true, width: 180, tags: false, placeholder: $(this).attr('placeholder'), ajax: {
+                $(this).select2({
+                    dir: "rtl", multiple: true, width: 180, tags: false, placeholder: $(this).attr('placeholder'), ajax: {
                         delay: 250, url: Config.api.url + Config.api.newsroom + '/keywords'
                     }
                 });

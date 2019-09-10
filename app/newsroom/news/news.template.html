@@ -33,7 +33,7 @@
 					</thead>
 					<tbody>
 						{{#each items}}
-						<tr data-id="{{id}}">
+						<tr data-id="{{id}}" {{#if selected}}data-selected="true"{{/if}}>
 							<td>
 								<!--{{math @index "+" 1}}-->
 								{{id}}

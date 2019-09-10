@@ -24,21 +24,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
-
             , 'submit #person-search-form': 'searchPersons'
             , 'click [data-task="search-persons"]': 'searchPersons'
             , 'click [data-task="select-person"]': 'selectPerson'
             , 'click [data-task="delete-person"]': 'deletePerson'
+            , 'keyup input,textarea': 'handleInputChanges'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
+        }
+        , handleInputChanges: function (e) {
+            var $target = $(e.target);
+            $target.val($target.val().replace(/^\s+/,"").replace(/\s\s+/g, ' ').replace(/ـ+/g, '').toEnglishDigits());
         }
         , submit: function (e) {
             e.preventDefault();
             var self = this;
+            if (!IngestHelper.checkFields())
+                return false;
             var helper = new IngestHelper.validate();
             if (!helper.beforeSave())
-                return;
+                return false;
             var data = this.prepareSave();
-            if (data[0].SiteTitle.length < 9) {
+            var fields = data[0];
+            if ($('#persons-table tbody tr').length < 2) {
+                toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            if (fields.SiteTitle.length < 9) {
                 toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
@@ -57,8 +68,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var items = self.prepareItems(d.toJSON(), {});
                     data.MasterId = items[0].Id;
                     data.Type = 1;
-                    for (var field in data)
-                        data.field = $.trim(data.field);
+                    // for (var field in data)
+                    //     data.field = $.trim(data.field);
                     new MetadataModel().save(null, {
                         data: JSON.stringify(data)
                         , contentType: 'application/json'
@@ -168,7 +179,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if (typeof data.responseJSON !== 'undefined' && typeof data.responseJSON.Message !== 'undefined')
+                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
         }
@@ -293,7 +305,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             model.fetch({
                 success: function (data) {
                     var items = self.prepareItems(data.toJSON(), params);
-                    console.log(items);
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);

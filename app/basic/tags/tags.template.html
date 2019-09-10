@@ -1,0 +1,81 @@
+<style>.label-block { display: block; text-align: center; }</style>
+<div id="tags-page" class="portlet box">
+    <div class="portlet-body">
+        <div class="mainbody" data-editable="true">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1">شناسه</th>
+                                <th class="col-xs-2">عنوان</th>
+                                <th class="col-xs-1">فعال</th>
+                                <th class="col-xs-2">ایجاد توسط</th>
+                                <th class="col-xs-2">تاریخ ایجاد</th>
+                                <th class="col-xs-2">ویرایش توسط</th>
+                                <th class="col-xs-2">آخرین ویرایش</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each []}}
+                            <tr data-id="{{id}}">
+                                <td data-type="id">{{id}}</td>
+                                <td data-type="title" class="">
+                                    <a href="#" class="x-editable" id="title-field" data-type="text"
+                                       data-pk="{{id}}" data-field="title"
+                                       data-original-title="عنوان">{{title}}</a>
+                                </td>
+                                <td data-type="active" class="">
+                                    <div class="checkbox checkbox-primary checkbox-circle">
+                                        <input name="IsActive" value="" id="state_{{id}}" type="checkbox" {{#if IsShow}}checked{{/if}}>
+                                        <label for="state_{{id}}"></label>
+                                    </div>
+                                </td>
+                                <td data-type="created-by" class="">{{Created_By}}</td>
+                                <td data-type="created" class="">{{extractTime Created}} {{extractDate Created}}</td>
+                                <td data-type="modified-by" class="">{{Modified_By}}</td>
+                                <td data-type="modified" class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="tags-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">مورد جدید</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="tag-form" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">عنوان</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="title" placeholder="نام" required>
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">وضعیت</label>-->
+                            <!--<div class="col-sm-9">-->
+                                <!--<select class="form-control" name="IsShow">-->
+                                    <!--<option value="1">فعال</option>-->
+                                    <!--<option value="0">غیرفعال</option>-->
+                                <!--</select>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-success" data-task="add-tag">ثبت</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
+</div>

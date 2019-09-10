@@ -65,6 +65,7 @@ require.config({
         , "select2": ["vendor/select2.full.min"]
         , "cropper": ["vendor/cropper.min"]
         , "notifications": ["helpers/notifications"]
+        , "ticker": ["helpers/ticker"]
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
         , "pace": ["vendor/pace.min"]
         , "clusterize": ["vendor/clusterize.min"]
@@ -105,6 +106,7 @@ require.config({
         , "monitoring.model": ["../../app/monitoring/monitoring.model"]
         , "newsroom.model": ["../../app/newsroom/newsroom.model"]
         , "shared.model": ["../../app/shared/shared.model"]
+        , "basic.model": ["../../app/basic/basic.model"]
 
                 // Views
         , "app.view": ["../../app/app.view"]
@@ -165,6 +167,8 @@ require.config({
         , "newsroom.news.view": ["../../app/newsroom/news/news.view"]
         , "newsroom.workspace.view": ["../../app/newsroom/workspace/workspace.view"]
         , "newsroom.itemprint.view": ["../../app/newsroom/item/itemprint.view"]
+        , "basic.subjects.view": ["../../app/basic/subjects/subjects.view"]
+        , "basic.tags.view": ["../../app/basic/tags/tags.view"]
 
                 // Helpers
         , "layout": ["app/layout"]

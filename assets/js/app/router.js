@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 'global', "layout", "user.helper", "notifications"
-], function ($, _, Backbone, Login, Template, Config, Global, Layout, UserHelper, Notifications) {
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 'global', "layout", "user.helper", "notifications", "ticker"
+], function ($, _, Backbone, Login, Template, Config, Global, Layout, UserHelper, Notifications, Ticker) {
     var Router = Backbone.Router.extend({
         routes: {
             'login': 'Login'
@@ -95,14 +95,15 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 template.done(function (data) {
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate(content);
-                    $(Config.positions.wrapper).html(output);
-                    self.loadMenu(menu);
-                    self.loadPage(actions);
-                    // Initialize Layout helpers
-                    Layout.init();
-
-                    // TODO: to replace current method with socket.io
-                    new Notifications(user);
+                    $(Config.positions.wrapper).html(output).promise().done(function() {
+                        self.loadMenu(menu);
+                        self.loadPage(actions);
+                        // Initialize Layout helpers
+                        Layout.init();
+                        new Ticker();
+                        // TODO: to replace current method with socket.io
+                        new Notifications(user);
+                    });
                 });
             });
         }

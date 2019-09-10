@@ -1,20 +1,23 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'bootstrap-table', 'bootpag'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel) {
     var MediaView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'جستجو', type: 'submit', task: 'load_metadata'}}
-            , {'button': {cssClass: 'btn btn-warning', text: 'نمایش برنامه‌ها', type: 'button', task: 'show_tree', icon: 'fa fa-sitemap'}}
-            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
-            , {'input': {cssClass: 'form-control', disabled: true, placeholder: 'برنامه', type: 'text', name: 'cat-name', value: "", text: "برنامه", addon: true, icon: 'fa fa-sitemap'}}
+            {'button': {cssClass: 'btn btn-success', text: '', type: 'submit', task: 'load_metadata', alt: 'جستجو', icon: 'fa fa-search'}}
+            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search', style: 'max-width: 120px;'}}
+            , {'button': {cssClass: 'btn btn-warning', text: '', type: 'button', task: 'show_tree', alt: 'نمایش برنامه‌ها', icon: 'fa fa-sitemap', style: 'margin-left: 20px; margin-right: 0;'}}
+            , {'input': {cssClass: 'form-control', disabled: true, placeholder: 'برنامه', type: 'text', name: 'cat-name', value: "", text: "برنامه", addon: true, icon: 'fa fa-sitemap', style: 'max-width: 120px;'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))}} //persianDate().format('YYYY-MM-DD')
+                //persianDate().format('YYYY-MM-DD')
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;'}}
+            // moment().subtract(7, 'day').format('YYYY-MM-DD')
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')), style: 'max-width: 100px;'}}
             , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
 //            , {'select': {cssClass: 'form-control', name: 'date-mode', options: [{value: 'production', text: 'تاریخ تولید'}, {value: 'broadcast', text: 'تاریخ پخش'}], addon: true, icon: 'fa fa-list'}}
-            , {'button': {cssClass: 'btn btn-default pull-right', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
+//             , {'button': {cssClass: 'btn btn-info pull-right', text: '', type: 'button', task: 'toggle-advance', alt: 'جستجوی پیشرفته', icon: 'fa fa-search-plus'}}
+            , {'button': {cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
@@ -31,9 +34,54 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=refresh]': 'reLoad'
             , 'click [data-task=show_tree]': 'showTree'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'click [data-task=toggle-advance]': 'toggleAdvancedSearch'
             , 'change [data-type=change-mode]': 'changeMode'
             , 'click #tree .jstree-anchor': 'loadCategory'
             , 'click .media-options a': 'UpdateMediaParams'
+        }
+        , toggleAdvancedSearch: function(e) {
+            e.preventDefault();
+            var $form = $('.advanced-search');
+            $form.hasClass('hidden') ? $form.removeClass('hidden') : $form.addClass('hidden');
+            if (!$form.find('form:first').length) {
+                this.loadSharedParams(function(params) {
+                    var template = Template.template.load('resources/media', 'advanced-search.partial');
+                    var $container = $('#sub-toolbar .portlet-body');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(params);
+                        $container.html(output).promise().done(function () {
+                            window.setTimeout(function () {
+                                $("select.select2").each(function () {
+                                    if ($(this).hasClass("select2-hidden-accessible"))
+                                        $(this).select2('destroy');
+                                    $(this).select2({dir: "rtl", multiple: true, tags: true, width: '100%', placeholder: $(this).parent().parent().find('label').text(), dropdownParent: $(this).parents('form:first')});
+                                });
+                            }, 500);
+                        });
+                    });
+                });
+            }
+        }
+        , loadSharedParams: function (callback) {
+            var params = {tags: [], subjects: [], persons: []};
+            new SharedModel().fetch({
+                success: function (tags) {
+                    params.tags = tags.toJSON();
+                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                        success: function (persons) {
+                            params.persons = persons.toJSON();
+                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                                success: function (subjects) {
+                                    params.subjects = subjects.toJSON();
+                                    if (typeof callback === "function")
+                                        callback(params);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
         , UpdateMediaParams: function(e) {
             e.preventDefault();
@@ -85,7 +133,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
             window.open('/resources/mediaitem/' + id);
-            return;
         }
         , reLoad: function (e) {
             if (typeof e !== "undefined")
@@ -137,7 +184,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.loadTree();
                 });
             });
-            return;
         }
         , loadTree: function () {
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();

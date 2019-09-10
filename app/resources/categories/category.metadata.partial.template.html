@@ -1,389 +1,471 @@
 <form class="categories-metadata-form form-horizontal">
-	<button type="submit" data-task="submit-form" class="btn btn-primary pull-right">ثبت اطلاعات</button>
-	<input type="hidden" name="MasterId" value="{{MasterId}}" />
-	<input type="hidden" name="Type" value="{{Type}}" />
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
-		<li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
-		<li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
-		<li><a href="#tab-social" data-toggle="tab">شبکه‌های اجتماعی</a></li>
-		<li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
-		<li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
-	</ul>
-	<div class="tab-content">
-		<div class="tab-pane fade in active" id="tab-info">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">عنوان</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control" name="PublicTitle" value="{{PublicTitle}}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">نوع برنامه</label>
-				<div class="col-sm-6">
-					<select class="form-control" name="Kind">
-						{{#select Kind}}
-						{{{getDefinitionOptions 36}}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">ژانر</label>
-				<div class="col-sm-6">
-					<select class="form-control" multiple="" name="Genre" data-validation="multiple">
-						{{#select Genre}}
-						{{{getDefinitionOptions 36}}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">کلیدواژه‌ها</label>
-				<div class="col-sm-9">
-					<input class="form-control" type="text" name="Keywords" value="{{Keywords}}" />
-					<span class="help-block">کلیدواژه‌ها می‌بایست با استفاده از کامای انگلیسی «,» از هم جدا شوند.</span>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">توضیحات</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" rows="3" name="PublicDescr">{{PublicDescr}}</textarea>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">تاریخ شروع تولید</label>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datepicker" data-validation="date" name="ProductionDate" placeholder="" value="{{ProductionDate}}">
-					</div>
-				</div>
-			</div>
-			<div class="form-group hide">
-				<label class="col-sm-3 control-label">تهیه کننده</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="Producer" value="{{Producer}}">
-				</div>
-			</div>
-			<div class="form-group hide">
-				<label class="col-sm-3 control-label">کارگردان</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="Director" value="{{Director}}">
-				</div>
-			</div>
-			<div class="form-group hide">
-				<label class="col-sm-3 control-label">تصویربردار</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="CameraMan" value="{{CameraMan}}">
-				</div>
-			</div>
-			<div class="form-group hide">
-				<label class="col-sm-3 control-label">صدابردار</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="SoundRecordist" value="{{SoundRecordist}}">
-				</div>
-			</div>
-			<div class="form-group hide">
-				<label class="col-sm-3 control-label">تدوین‌گر</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="Editor" value="{{Editor}}">
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="tab-broadcast">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">نمایش در EPG</label>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="EpgShow" id="r_e1" value="1" type="radio" {{isChecked 1 EpgShow}}>
-						<label for="r_e1">بلی</label>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="EpgShow" id="r_e2" value="0" type="radio" {{isChecked 0 EpgShow}}>
-						<label for="r_e2">خیر</label>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">عنوان</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control" name="EpgTitle" value="{{EpgTitle}}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">توضیح EPG</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" rows="3" name="EpgDescr">{{EpgDescr}}</textarea>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="tab-website">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">وضعیت نمایش</label>
-				<div class="col-sm-5">
-					<select class="form-control" name="SiteState">
-						{{#select SiteState}}
-						<option value="0">منتشر نشده</option>
-						<option value="1">منتشر شده</option>
-						<option value="-1">حذف شده</option>
-						{{/select}}
-					</select>
-				</div>
-				<div class="col-sm-4">
-					<button type="button" class="btn btn-info" data-task="publish-website">انتشار</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">شیوه ارسال</label>
-				<div class="col-sm-4">
-					<select class="form-control" name="SitePublishTrigger">
-						{{#select SitePublishTrigger}}
-						<option value="0">ارسال همزمان با کنداکتور</option>
-						<option value="1">ارسال همزمان با بازبینی</option>
-						{{/select}}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">شروع انتشار</label>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishStart" placeholder="" data-default="0000-00-00 00:00:00" value="{{extractDate SitePublishStart 1}} {{extractTime SitePublishStart}}">
-					</div>
-				</div>
-				<label class="col-sm-3 control-label">پابان انتشار</label>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishEnd" placeholder="" data-default="0000-00-00 00:00:00" value="{{extractDate SitePublishEnd 1}} {{extractTime SitePublishEnd}}">
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">دسته‌بندی</label>
-				<div class="col-sm-6">
-					<select class="form-control" name="SiteKind">
-						{{#select SiteKind}}
-						{{{getDefinitionOptions 31}}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">عنوان</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control" name="SiteTitle" value="{{SiteTitle}}">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">خلاصه</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" rows="2" name="SiteSummary">{{SiteSummary}}</textarea>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">توضیح سایت</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" rows="3" name="SiteDescr">{{SiteDescr}}</textarea>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">منتخب</label>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SiteFeatured" id="r_01" value="1" type="radio" {{isChecked 1 SiteFeatured}} />
-						<label for="r_01">بلی</label>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SiteFeatured" id="r_02" value="0" type="radio" {{isChecked 0 SiteFeatured}} />
-						<label for="r_02">خیر</label>
-					</div>
-				</div>
-			</div>
-			<hr />
-			<div class="form-group">
-				<label class="col-sm-3 control-label">نمایش در کنداکتور سایت</label>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SiteShowConductor" id="r_11" value="1" type="radio" {{isChecked 1 SiteShowConductor}} />
-						<label for="r_11">بلی</label>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SiteShowConductor" id="r_12" value="0" type="radio" {{isChecked 0 SiteShowConductor}} />
-						<label for="r_12">خیر</label>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="tab-social">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">پخش زنده</label>
-				<div class="col-sm-1">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SocialLive" id="r_sl1" value="1" type="radio" {{isChecked 1 SocialLive}} />
-						<label for="r_sl1">بلی</label>
-					</div>
-				</div>
-				<div class="col-sm-1">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="SocialLive" id="r_sl2" value="0" type="radio" {{isChecked 0 SocialLive}} />
-						<label for="r_sl2">خیر</label>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">ارسال به تلگرام</label>
-				<div class="col-sm-1">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="TelegramState" id="r_t1" value="1" type="radio" {{isChecked 1 TelegramState}} />
-						<label for="r_t1">بلی</label>
-					</div>
-				</div>
-				<div class="col-sm-1">
-					<div class="checkbox checkbox-primary checkbox-circle">
-						<input name="TelegramState" id="r_t2" value="0" type="radio" {{isChecked 0 TelegramState}} />
-						<label for="r_t2">خیر</label>
-					</div>
-				</div>
-				<label class="col-sm-2 control-label">کانال</label>
-				<div class="col-sm-2">
-					<!--<input type="text" class="form-control" name="TelegramChannel" value="{{TelegramChannel}}" placeholder="پیش فرض">-->
-					<select class="form-control" name="TelegramChannel">
-						<!--<option value="">کانال تست معاونت سیما</option>-->
-					</select>
-				</div>
-				<div class="col-sm-1">
-					<button type="button" class="btn btn-info" data-task="send-telegram">ارسال</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">توضیح تلگرام</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" rows="3" name="TelegramDescr">{{TelegramDescr}}</textarea>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="tab-videos">
-			<table class="table table-bordered table-striped table-condensed flip-content">
-				<thead>
-					<tr>
-						<th class=""></th>
-						<th class="">#</th>
-						<th class="col-xs-1"></th>
-						<th class="col-xs-5">نام برنامه</th>
-						<th class="col-xs-2 text-center">زمان ثبت</th>
-						<th class="col-xs-1 text-center">قسمت</th>
-						<th class="col-xs-1 text-center">مدت</th>
-						<th class="col-xs-2 text-center">وضعیت</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each media.items}}
-					{{#ifCond Type '==' 0}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
-						<td>
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true"{{/find}} />
-								<label for="r_v{{@index}}"></label>
-							</div>
-						</td>
-						<td>
-							<span class="idx">{{math @index "+" 1}}</span>
-							<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
-						</td>
-						<td class="text-center">
-							{{config placeholderImage}}
-							<figure>
-								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-							</figure>
-						</td>
-						<td>
-							{{Title}}
-							<small class="help-block text-muted clip-line">{{Description}}</small>
-						</td>
-						<td class="text-right">
-							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
-						</td>
-						<td class="text-center">
-							{{EpisodeNumber}}
-						</td>
-						<td class="text-center">
-							<span class="time">{{time Duration}}</span>
-						</td>
-						<td class="text-center">
-							<span class="">{{StateText}}</span>
-						</td>
-					</tr>
-					{{/ifCond}}
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-		<div class="tab-pane fade" id="tab-photos">
-			<table class="table table-bordered table-striped table-condensed flip-content">
-				<thead>
-					<tr>
-						<th class=""></th>
-						<th class="">#</th>
-						<th class="col-xs-1"></th>
-						<th class="col-xs-5">نام برنامه</th>
-						<th class="col-xs-2 text-center">زمان ثبت</th>
-						<th class="col-xs-1 text-center">قسمت</th>
-						<th class="col-xs-1 text-center">مدت</th>
-						<th class="col-xs-2 text-center">وضعیت</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each media.items}}
-					{{#ifCond Type '==' 1}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}"  data-type="{{Type}}">
-						<td>
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true"{{/find}} />
-								<label for="r_p{{@index}}"></label>
-							</div>
-						</td>
-						<td>
-							<span class="idx">{{math @index "+" 1}}</span>
-							<a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
-						</td>
-						<td class="text-center">
-							{{config placeholderImage}}
-							<figure>
-								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-							</figure>
-						</td>
-						<td>
-							{{Title}}
-							<small class="help-block text-muted clip-line">{{Description}}</small>
-						</td>
-						<td class="text-right">
-							<span class="">{{extractTime Created}} {{extractDate Created}}</span>
-						</td>
-						<td class="text-center">
-							{{EpisodeNumber}}
-						</td>
-						<td class="text-center">
-							<span class="time">{{time Duration}}</span>
-						</td>
-						<td class="text-center">
-							<span class="">{{StateText}}</span>
-						</td>
-					</tr>
-					{{/ifCond}}
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-		<div class="tab-pane fade" id="tab-photos">
-		</div>
-	</div>
+    {{#if CreatedBy}}
+    <i class="pull-right" style="margin-bottom: 10px;">
+        آخرین ویرایش توسط
+        <strong>{{CreatedByText}}</strong> در
+        <span style="display: inline-block; direction: ltr">{{extractDate Created}} {{extractTime Created}}</span>
+    </i>
+    <div class="clearfix"></div>
+    {{/if}}
+    <button type="submit" data-task="submit-form" class="btn btn-primary pull-right">ثبت اطلاعات</button>
+    <input type="hidden" name="MasterId" value="{{MasterId}}"/>
+    <input type="hidden" name="Type" value="{{Type}}"/>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
+        <li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
+        <li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
+        <li><a href="#tab-social" data-toggle="tab">شبکه‌های اجتماعی</a></li>
+        <li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
+        <li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="tab-info">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">عنوان برنامه</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="PublicTitle" value="{{PublicTitle}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">نحوه پخش</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="BroadcastMode">
+                        {{#select BroadcastMode}}
+                        {{{getDefinitionOptions 164}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">ساختار</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="Structure">
+                        {{#select Structure}}
+                        {{{getDefinitionOptions 149}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">موضوع</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="Subject">
+                        {{#select Subject}}
+                        {{{getDefinitionOptions 152}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">طبقه</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="Classification">
+                        {{#select Classification}}
+                        {{{getDefinitionOptions 154}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">نوع برنامه</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="Kind">
+                        {{#select Kind}}
+                        {{{getDefinitionOptions 36}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">جنس برنامه</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="SupplyType">
+                        {{#select SupplyType}}
+                        {{{getDefinitionOptions 160}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">رویکرد</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="Approach">
+                        {{#select Approach}}
+                        {{{getDefinitionOptions 162}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">گروه‌های تولیدی</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="ProductionGroup">
+                        {{#select ProductionGroup}}
+                        {{{getDefinitionOptions 166}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">ژانر</label>
+                <div class="col-sm-6">
+                    <select class="form-control" multiple="" name="Genre" data-validation="multiple">
+                        {{#select Genre}}
+                        {{{getDefinitionOptions 157}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">کلیدواژه‌ها</label>
+                <div class="col-sm-9">
+                    <input class="form-control" type="text" name="Keywords" value="{{Keywords}}"/>
+                    <span class="help-block">کلیدواژه‌ها می‌بایست با استفاده از کامای انگلیسی «,» از هم جدا شوند.</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">توضیحات</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="3" name="PublicDescr">{{PublicDescr}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">تاریخ شروع تولید</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" class="form-control datepicker" data-validation="date" name="ProductionDate" placeholder="" value="{{ProductionDate}}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-3 control-label">تهیه کننده</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="Producer" value="{{Producer}}">
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-3 control-label">کارگردان</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="Director" value="{{Director}}">
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-3 control-label">تصویربردار</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="CameraMan" value="{{CameraMan}}">
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-3 control-label">صدابردار</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="SoundRecordist" value="{{SoundRecordist}}">
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-3 control-label">تدوین‌گر</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="Editor" value="{{Editor}}">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab-broadcast">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">نمایش در EPG</label>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="EpgShow" id="r_e1" value="1" type="radio" {{isChecked 1 EpgShow}}>
+                        <label for="r_e1">بلی</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="EpgShow" id="r_e2" value="0" type="radio" {{isChecked 0 EpgShow}}>
+                        <label for="r_e2">خیر</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">عنوان</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="EpgTitle" value="{{EpgTitle}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">توضیح EPG</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="3" name="EpgDescr">{{EpgDescr}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab-website">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">وضعیت نمایش</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="SiteState">
+                        {{#select SiteState}}
+                        <option value="0">منتشر نشده</option>
+                        <option value="1">منتشر شده</option>
+                        <option value="-1">حذف شده</option>
+                        {{/select}}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-info" data-task="publish-website">انتشار</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">شیوه ارسال</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="SitePublishTrigger">
+                        {{#select SitePublishTrigger}}
+                        <option value="0">ارسال همزمان با کنداکتور</option>
+                        <option value="1">ارسال همزمان با بازبینی</option>
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">شروع انتشار</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishStart" placeholder="" data-default="0000-00-00 00:00:00"
+                               value="{{extractDate SitePublishStart 1}} {{extractTime SitePublishStart}}">
+                    </div>
+                </div>
+                <label class="col-sm-3 control-label">پابان انتشار</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" class="form-control datetimepicker ltr-fnum" data-validation="date-time" name="SitePublishEnd" placeholder="" data-default="0000-00-00 00:00:00"
+                               value="{{extractDate SitePublishEnd 1}} {{extractTime SitePublishEnd}}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">دسته‌بندی</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="SiteKind">
+                        {{#select SiteKind}}
+                        {{{getDefinitionOptions 31}}}
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">عنوان</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="SiteTitle" value="{{SiteTitle}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">خلاصه</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="2" name="SiteSummary">{{SiteSummary}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">توضیح سایت</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="3" name="SiteDescr">{{SiteDescr}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">منتخب</label>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SiteFeatured" id="r_01" value="1" type="radio" {{isChecked 1 SiteFeatured}}/>
+                        <label for="r_01">بلی</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SiteFeatured" id="r_02" value="0" type="radio" {{isChecked 0 SiteFeatured}}/>
+                        <label for="r_02">خیر</label>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">نمایش در کنداکتور سایت</label>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SiteShowConductor" id="r_11" value="1" type="radio" {{isChecked 1 SiteShowConductor}}/>
+                        <label for="r_11">بلی</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SiteShowConductor" id="r_12" value="0" type="radio" {{isChecked 0 SiteShowConductor}}/>
+                        <label for="r_12">خیر</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab-social">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">پخش زنده</label>
+                <div class="col-sm-1">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SocialLive" id="r_sl1" value="1" type="radio" {{isChecked 1 SocialLive}}/>
+                        <label for="r_sl1">بلی</label>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="SocialLive" id="r_sl2" value="0" type="radio" {{isChecked 0 SocialLive}}/>
+                        <label for="r_sl2">خیر</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">ارسال به تلگرام</label>
+                <div class="col-sm-1">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="TelegramState" id="r_t1" value="1" type="radio" {{isChecked 1 TelegramState}}/>
+                        <label for="r_t1">بلی</label>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="checkbox checkbox-primary checkbox-circle">
+                        <input name="TelegramState" id="r_t2" value="0" type="radio" {{isChecked 0 TelegramState}}/>
+                        <label for="r_t2">خیر</label>
+                    </div>
+                </div>
+                <label class="col-sm-2 control-label">کانال</label>
+                <div class="col-sm-2">
+                    <!--<input type="text" class="form-control" name="TelegramChannel" value="{{TelegramChannel}}" placeholder="پیش فرض">-->
+                    <select class="form-control" name="TelegramChannel">
+                        <!--<option value="">کانال تست معاونت سیما</option>-->
+                    </select>
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-info" data-task="send-telegram">ارسال</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">توضیح تلگرام</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="3" name="TelegramDescr">{{TelegramDescr}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab-videos">
+            <table class="table table-bordered table-striped table-condensed flip-content">
+                <thead>
+                    <tr>
+                        <th class=""></th>
+                        <th class="">#</th>
+                        <th class="col-xs-1"></th>
+                        <th class="col-xs-5">نام برنامه</th>
+                        <th class="col-xs-2 text-center">زمان ثبت</th>
+                        <th class="col-xs-1 text-center">قسمت</th>
+                        <th class="col-xs-1 text-center">مدت</th>
+                        <th class="col-xs-2 text-center">وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each media.items}}
+                    {{#ifCond Type '==' 0}}
+                    <tr data-id="{{Id}}" data-index="{{math @index " +
+                    " 1}}" data-type="{{Type}}">
+                    <td>
+                        <div class="checkbox checkbox-success checkbox-circle">
+                            <input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true" {{/find}} />
+                            <label for="r_v{{@index}}"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="idx">{{math @index "+" 1}}</span>
+                        <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+                    </td>
+                    <td class="text-center">
+                        {{config placeholderImage}}
+                        <figure>
+                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                        </figure>
+                    </td>
+                    <td>
+                        {{Title}}
+                        <small class="help-block text-muted clip-line">{{Description}}</small>
+                    </td>
+                    <td class="text-right">
+                        <span class="">{{extractTime Created}} {{extractDate Created}}</span>
+                    </td>
+                    <td class="text-center">
+                        {{EpisodeNumber}}
+                    </td>
+                    <td class="text-center">
+                        <span class="time">{{time Duration}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="">{{StateText}}</span>
+                    </td>
+                    </tr>
+                    {{/ifCond}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tab-photos">
+            <table class="table table-bordered table-striped table-condensed flip-content">
+                <thead>
+                    <tr>
+                        <th class=""></th>
+                        <th class="">#</th>
+                        <th class="col-xs-1"></th>
+                        <th class="col-xs-5">نام برنامه</th>
+                        <th class="col-xs-2 text-center">زمان ثبت</th>
+                        <th class="col-xs-1 text-center">قسمت</th>
+                        <th class="col-xs-1 text-center">مدت</th>
+                        <th class="col-xs-2 text-center">وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each media.items}}
+                    {{#ifCond Type '==' 1}}
+                    <tr data-id="{{Id}}" data-index="{{math @index " +
+                    " 1}}" data-type="{{Type}}">
+                    <td>
+                        <div class="checkbox checkbox-success checkbox-circle">
+                            <input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true" {{/find}} />
+                            <label for="r_p{{@index}}"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="idx">{{math @index "+" 1}}</span>
+                        <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+                    </td>
+                    <td class="text-center">
+                        {{config placeholderImage}}
+                        <figure>
+                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                        </figure>
+                    </td>
+                    <td>
+                        {{Title}}
+                        <small class="help-block text-muted clip-line">{{Description}}</small>
+                    </td>
+                    <td class="text-right">
+                        <span class="">{{extractTime Created}} {{extractDate Created}}</span>
+                    </td>
+                    <td class="text-center">
+                        {{EpisodeNumber}}
+                    </td>
+                    <td class="text-center">
+                        <span class="time">{{time Duration}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="">{{StateText}}</span>
+                    </td>
+                    </tr>
+                    {{/ifCond}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tab-photos">
+        </div>
+    </div>
 </form>

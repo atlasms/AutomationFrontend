@@ -2,21 +2,12 @@
   "devDependencies": {
     "autoprefixer": "^9.4.4",
     "gulp": "^4.0.0",
-    "gulp-add-src": "^1.0.0",
-    "gulp-coffee": "^3.0.3",
     "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.7.0",
-    "gulp-foreach": "latest",
-    "gulp-minify-css": "latest",
     "gulp-postcss": "^8.0.0",
-    "gulp-prettify": "latest",
     "gulp-rename": "latest",
     "gulp-rtlcss": "^1.3.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-touch": "latest",
-    "gulp-uglify": "^3.0.1",
-    "gulp-util": "^3.0.8"
+    "gulp-sourcemaps": "^2.6.4"
   },
   "dependencies": {
     "natives": "^1.1.6",

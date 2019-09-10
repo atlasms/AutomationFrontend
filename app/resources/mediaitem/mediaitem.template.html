@@ -86,6 +86,30 @@
                                                data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
                                         </td>
                                     </tr>
+                                        <tr>
+                                            <td>محورها</td>
+                                            <td>
+                                                {{#each ShotList}}
+                                                {{#if @first}}
+                                                {{#each Subjects}}
+                                                <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{/each}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>کلیدواژه‌ها</td>
+                                            <td>
+                                                {{#each ShotList}}
+                                                {{#if @first}}
+                                                {{#each Tags}}
+                                                <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{/each}}
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <div class="row">

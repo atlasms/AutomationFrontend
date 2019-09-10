@@ -1,0 +1,42 @@
+<form class="">
+    <div class="row">
+        <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">کلیدواژه‌ها</span>
+                    <select class="form-control select2" data-type="tags" name="Tags" multiple required>
+                        {{#each tags}}
+                        <option value="{{id}}">{{title}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">محورها</span>
+                    <select class="form-control select2" data-type="subjects" name="Subjects" multiple required>
+                        {{#each subjects}}
+                        <option value="{{id}}">{{title}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">عوامل</span>
+                    <select class="form-control select2" data-type="persons" name="Persons" multiple required>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <button class="btn btn-success pull-right mt-ladda-btn ladda-button" data-style="zoom-out" data-task="export">
+                <span class="ladda-label"><i class="fa fa-search"></i> جستجو</span>
+            </button>
+        </div>
+    </div>
+</form>

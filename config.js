@@ -16,6 +16,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "placeholderImage": "/assets/img/placeholder.png",
         "transitionSpedd": 200,
         "notificationsInterval": 60000,
+        "tickerInterval": 5000,
+        "tickerUpdateInterval": 60000,
         "notificationsCount": 10,
         "schedulePageLimit": 100,
         "characterLimit": 130, 
@@ -128,6 +130,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "pr": {"private": true, "access": null, "action": "PRView", "file": "app/pr/pr.view"}
             , "pr/sms": {"private": true, "access": null, "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
             , "pr/recordings": {"private": true, "access": null, "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
+            , "basic/subjects": {"private": true, "access": null, "action": "SubjectsView", "file": "app/basic/subjects/subjects.view"}
+            , "basic/tags": {"private": true, "access": null, "action": "TagsView", "file": "app/basic/tags/tags.view"}
             , "monitoring/schedule": {"private": true, "access": null, "action": "MonitoringScheduleView", "file": "app/monitoring/schedule/schedule.view"}
             , "monitoring/schedulefiles": {"private": true, "access": null, "action": "MonitoringScheduleFilesView", "file": "app/monitoring/schedulefiles/schedulefiles.view"}
             , "monitoring/schedulepdf": {"private": true, "access": null, "action": "MonitoringSchedulePDFView", "file": "app/monitoring/schedulepdf/schedulepdf.view"}
@@ -178,6 +182,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "social": "social"
             , "newsroom": "newssource"
             , "tags": "share/tags/"
+            , "subjects": "share/subjects"
             , "shotlist": "shotlist"
             , "economy": "economy"
             , "broadcastphotos": "conductormedia"

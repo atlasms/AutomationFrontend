@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>اتوماسیون تولید و پخش</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <style>
+        /*.login-container { position: relative; margin: 0; padding: 0; z-index: 1; }*/
+        .login-container video { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 2; }
+        .login-container:before { display: block; content: ''; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; background: rgba(255, 255, 255, 0.25); z-index: 3; }
+        .login {
+            position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); z-index: 10; background: rgba(255, 255, 255, 0.45);
+            width: 80vw; height: 80vh; max-width: 320px; max-height: 500px; padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <video src="/assets/data/video/bg_1.mp4" loop autoplay preload="metadata" muted></video>
+        <div class="login">
+            <h1>ورود به سامانه اتوماسیون</h1>
+            <form class="login-form" name="form" method="post">
+                <div class="alert alert-danger" style="display: none;">
+                    <strong>نام کاربری یا رمز عبور اشتباه است یا کاربر وجود ندارد.</strong>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-solid placeholder-no-fix form-group" name="username" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control form-control form-control-solid placeholder-no-fix form-group" name="password" required="">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

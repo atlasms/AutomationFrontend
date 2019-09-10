@@ -55,7 +55,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         return value;
                 case 'checkbox':
                     var items = [];
-                    $("[name=" + key + "]:checkbox:checked").each(function(i) {
+                    $("[name=" + key + "]:checkbox:checked").each(function (i) {
                         items[i] = $(this).val();
                     });
                     if (typeof items === "object")
@@ -66,7 +66,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return value;
         }
         , loadData: function (e) {
-            var id = (typeof e === "object") ? $(e.target).parent().attr('id') : e;
+            var $target = $(e.target);
+            if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
+                toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            var id = (typeof e === "object") ? $target.parent().attr('id') : e;
             if (typeof id !== "undefined" && id) {
                 this.cache.currentPathId = id = parseInt(id);
                 var self = this;
@@ -83,7 +88,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             success: function (item) {
                                 item = self.prepareItems(item.toJSON(), params);
                                 item.media = mediaItems;
-                                console.log(item);
+                                // console.log(item);
                                 var template = Template.template.load('resources/categories', 'category.metadata.partial');
                                 var $container = $(".metadata.portlet-body");
                                 template.done(function (data) {
@@ -110,7 +115,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var $this = $(this);
                 if ($this.data('datepicker') == undefined) {
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
-                        onSelect: function () {}
+                        onSelect: function () {
+                        }
                     }));
                 }
             });
@@ -124,7 +130,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , timePicker: {enabled: true}
                     };
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
-                        onSelect: function () {}
+                        onSelect: function () {
+                        }
                     }));
                 }
                 if (reset)
@@ -194,7 +201,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , error: function (e, data) {
                             toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                         }
-                        , success: function (d) {}
+                        , success: function (d) {
+                        }
                     });
                     break;
                 case 'ready':
@@ -252,7 +260,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             model.fetch({
                 success: function (data) {
                     var items = self.prepareItems(data.toJSON(), params);
-                    console.log(items);
+                    // console.log(items);
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
