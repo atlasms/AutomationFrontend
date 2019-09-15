@@ -1,3 +1,5 @@
+$brand-default: lighten(#b7c0ce, 1%);
+
 // Imports
 @import "../bootstrap/_variables";
 @import "../bootstrap/_mixins";
@@ -15,6 +17,7 @@
 @import "x-editable";
 */
 @import "select2";
+@import "../global/components/elements/ribbons/ribbon-1";
 // @import "../global/plugins/select2";
 // @import "../global/components/elements/cards/_card-1";
 
@@ -760,4 +763,14 @@ div#schedule-table {
         .source { display: inline-block; background: rgba(255, 255,255,0.15); line-height: 1; padding: 4px 6px; margin-right: 10px; color: #fff; font-weight: bold; }
         .date { display: inline-block; font-size: 13px; margin-left: 30px; color: #ddd; }
     }
+}
+
+// Ribbons
+.mt-element-ribbon {
+    margin-bottom: 15px;
+    .ribbon-content { padding: 15px; }
+    .ribbon { font-size: 13px; line-height: 1.2; }
+}
+.ribbon-content {
+    .form-group:last-of-type { margin-bottom: 0; }
 }
