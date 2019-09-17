@@ -137,6 +137,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var output = '<div class="clearfix"></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
+        , filters: function(args) {
+            var affix = (typeof args.affix !== "undefined") ? 'append' : 'prepend';
+            var output = '<div id="filters"></div>';
+            this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
+        }
     });
     return ToolbarHelper;
 });
