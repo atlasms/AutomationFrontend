@@ -89,10 +89,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                         //     $(this).parents(".form-group:first").removeClass('has-error');
                     }
                 });
-                if ($("[data-type=description]").val() === $("[data-type=website_desc]").val()) {
-                    toastr.warning('اطلاعات صحیح برای وب‌سایت وارد نشده', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    rquiredError = true;
-                }
+
+                // disabled description match error by request of Mr. Kasraee
+
+                // if ($("[data-type=description]").val() === $("[data-type=website_desc]").val()) {
+                //     toastr.warning('توضیحات وب‌سایت با توضیحات اتوماسیون یکی است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                //     rquiredError = true; 
+                // }
                 if ($("[data-type=website_summary]").val() === $("[data-type=website_desc]").val()) {
                     toastr.warning('توضیحات وب‌سایت نمی‌تواند با خلاصه وب‌سایت یکی باشد', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     rquiredError = true;
