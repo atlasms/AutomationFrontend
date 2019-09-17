@@ -66,12 +66,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return value;
         }
         , loadData: function (e) {
+            var id;
             var $target = $(e.target);
-            if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
-                toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                return false;
+            if (typeof e === "object") {
+                id = $target.parent().attr('id');
+                if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
+                    toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    return false;
+                }
+            } else {
+                id = e;
             }
-            var id = (typeof e === "object") ? $target.parent().attr('id') : e;
+            // var id = (typeof e === "object") ? $target.parent().attr('id') : e;
             if (typeof id !== "undefined" && id) {
                 this.cache.currentPathId = id = parseInt(id);
                 var self = this;
