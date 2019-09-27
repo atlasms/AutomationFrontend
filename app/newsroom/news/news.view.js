@@ -72,7 +72,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , render: function () {
             this.loadItems();
             this.renderStatusbar();
-            this.fillSelects();
+            this.fillSelects(function() {
+                if (Global.getVar("topic")) {
+                    var selectedTopic = Global.getVar("topic");
+                    console.log(selectedTopic, $('[data-type="topic"]').find('option[value="283"]'));
+                    $('[data-type="topic"]').find('option[value="' + selectedTopic + '"]').attr('selected', true);
+                    $('[data-type="topic"]').trigger('change.select2');
+                }
+            });
             this.attachDatepickers();
             this.initHotKeys();
 //            this.loadUsersList();
@@ -243,7 +250,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , getToolbarParams: function () {
             return {
                 keyword: $('[data-type="keyword"]').val().join(',')
-                , topic: $('[data-type="topic"]').val().join(',')
+                , topic: Global.getVar("topic") ? _.filter([$('[data-type="topic"]').val().join(','), Global.getVar("topic")]).join(',') : $('[data-type="topic"]').val().join(',')
                 , source: $('[data-type="source"]').val().join(',')
                 , q: $('[name="q"]').val()
                 , startdate: Global.jalaliToGregorian($('[name="startdate"]').val()) + 'T00:00:00'
@@ -353,14 +360,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var height = $(window).outerHeight() - $(".page-header").outerHeight() - $(".page-footer").outerHeight() - $(".toolbar-box").outerHeight() - 45;
             $(".news-dashboard").height(height);
         }
-        , fillSelects: function () {
+        , fillSelects: function (callback) {
             var self = this;
-            $('select.lazy[data-type]').each(function () {
+            $('select.lazy[data-type]').each(function (i) {
                 var params = {path: 'st', query: 'type=' + ($(this).data("type") === "source" ? 1 : 2)};
                 var $select = $(this);
                 new NewsroomModel(params).fetch({
                     success: function (items) {
                         $select.select2({data: self.prepareList(self.prepareItems(items.toJSON(), params)), dir: "rtl", multiple: true, width: 160, tags: false, placeholder: $select.attr('placeholder')});
+                        if ((i + 1) === $('select.lazy[data-type]').length) {
+                            if (typeof callback === 'function')
+                                callback();
+                        }
                     }
                 });
             });
