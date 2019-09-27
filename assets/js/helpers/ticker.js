@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'new
         , loadItem: function(e) {
             e.preventDefault();
             var id = $(e.target).is('li') ? $(e.target).data('id') : $(e.target).parents('li:first').data('id');
-            var win = window.open('/newsroom/news/?id=' + id, '_blank');
+            var win = window.open('/newsroom/news/?topic=283&id=' + id, '_blank');
         }
         , startTicker: function () {
             if (typeof this.interval !== 'undefined')
