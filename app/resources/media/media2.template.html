@@ -1,0 +1,136 @@
+<style>
+    .checkbox-circle { margin: 0; }
+</style>
+<div id="metadata-page" class="portlet box">
+    <div class="row">
+        <div class="col-xs-3 col-lg-2">
+            <form id="media-filters" class="portlet-body">
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" name="q" placeholder="جستجو" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon ribbon-color-primary uppercase">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input id="filter_1" checked type="checkbox">
+                            <label for="filter_1"><i class="fa fa-filter"></i> دسته‌بندی</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"> نوع</span>
+                                <select data-type="type" class="form-control select2" multiple name="type">
+                                    {{#select '0'}}
+                                    {{{getDefinitionOptions 47}}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"> وضعیت</span>
+                                <select data-type="state" class="form-control select2" multiple name="state">
+                                    {{#select '1'}}
+                                    {{{getDefinitionOptions 2}}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon ribbon-color-primary uppercase">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input id="filter_2" checked type="checkbox">
+                            <label for="filter_2"><i class="fa fa-calendar"></i> بازه زمانی</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon">از</span>
+                                <input type="text" class="form-control datepicker" name="startdate" placeholder="" value="2019-08-14">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon">تا</span>
+                                <input type="text" class="form-control datepicker" name="enddate" placeholder="" value="2019-08-14">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon ribbon-color-primary uppercase">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input id="filter_3" checked type="checkbox">
+                            <label for="filter_3"><i class="fa fa-sitemap"></i> برنامه‌ها</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon">انتخاب برنامه‌ها</span>
+                                <select data-type="change-mode" class="form-control" name="change-mode">
+                                    <option value="latest">همه</option>
+                                    <option value="tree">انتخابی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="tree"></div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon ribbon-color-primary uppercase">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input id="filter_4" checked type="checkbox">
+                            <label for="filter_4"><i class="fa fa-globe"></i> اطلاعات پایه</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"><i class="fa fa-list"></i> محورها</span>
+                                <select data-type="subjects" class="form-control select2" multiple name="subjects">
+                                    <option value="latest">آخرین&zwnj;ها</option>
+                                    <option value="tree">انتخابی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"><i class="fa fa-tags"></i> کلیدواژه‌ها</span>
+                                <select data-type="tags" class="form-control select2" multiple name="tags">
+                                    <option value="latest">آخرین&zwnj;ها</option>
+                                    <option value="tree">انتخابی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"><i class="fa fa-user"></i> عوامل</span>
+                                <select data-type="persons" class="form-control select2" multiple name="persons">
+                                    <option value="latest">آخرین&zwnj;ها</option>
+                                    <option value="tree">انتخابی</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-9 col-lg-10">
+            <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>
+            <div id="media-list" class="portlet-body">
+                <div id="itemlist" class="mainbody"></div>
+            </div>
+        </div>
+    </div>
+</div>

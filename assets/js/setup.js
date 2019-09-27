@@ -126,6 +126,7 @@ require.config({
         , "resources.epgdata.view": ["../../app/resources/epgdata/epgdata.view"]
         , "resources.photos.view": ["../../app/resources/photos/photos.view"]
         , "resources.media.view": ["../../app/resources/media/media.view"]
+        , "resources.media2.view": ["../../app/resources/media/media2.view"]
         , "resources.media-options.helper": ["../../app/resources/media/media-options.helper"]
         , "resources.mediaprint.view": ["../../app/resources/media/mediaprint.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]

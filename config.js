@@ -112,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/epgdata": {"private": true, "access": null, "action": "EPGDataView", "file": "app/resources/epgdata/epgdata.view"}
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
             , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
+            , "resources/media2": {"private": true, "access": null, "action": "MediaView2", "file": "app/resources/media/media2.view"}
             , "resources/mediaprint": {"private": true, "access": null, "skipLayout": true, "action": "MediaPrintView", "file": "app/resources/media/mediaprint.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
