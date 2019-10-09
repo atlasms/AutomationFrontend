@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "characterLimit": 130, 
         "wordLimit": 15,
         "defalutMediaListLimit": 25,
-        "mediaScheduleGroupItems": 4,
+        "mediaScheduleGroupItems": 1,
         "loginMode": "default",
         "initialRedirect": "/resources/media",
         "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
@@ -266,8 +266,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 {text: "فرزند 1", task: 'test', value: '1', icon: 'twitter'},
                 {text: "فرزند 2", task: 'test', value: '2'}
             ]}
-        ]
-        , "temp": {
+        ],
+        "temp": {
             "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
                     {Id: "2", Key: "دو خطی", Value: "2"},
                     {Id: "1", Key: "تک خط", Value: "1"},
