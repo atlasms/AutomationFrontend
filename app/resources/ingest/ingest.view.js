@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , handleInputChanges: function (e) {
             var $target = $(e.target);
-            $target.val($target.val().replace(/^\s+/,"").replace(/\s\s+/g, ' ').replace(/ـ+/g, '').toEnglishDigits());
+            $target.val($target.val().replace(/^\s+/, "").replace(/\s\s+/g, ' ').replace(/ـ+/g, '').toEnglishDigits());
         }
         , submit: function (e) {
             e.preventDefault();
@@ -231,6 +231,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $(this.$modal).find("input, textarea, select").each(function () {
                 var $input = $(this);
                 if (typeof $input.attr("name") !== "undefined") {
+                    // if (typeof $input.attr('data-before-save') !== "undefined") {
                     switch ($input.attr("name")) {
                         default:
                             data[0][$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
@@ -245,6 +246,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             data[0][$input.attr("name")] = metadata;
                             break;
                     }
+                    // }
                     if (typeof $input.attr('data-before-save') !== "undefined") {
                         switch ($input.attr('data-before-save')) {
                             case 'prepend-date':
@@ -308,7 +310,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate(items);
+                        var output = handlebarsTemplate({items: items, cols: true});
                         $container.html(output).promise().done(function () {
                         });
                     });
