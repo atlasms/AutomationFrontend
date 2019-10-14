@@ -456,6 +456,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     var handlebarsTemplate = Template.handlebars.compile(data);
                                     if (service === "broadcast")
                                         items = {items: items, params: {}};
+                                    if (service === 'persons')
+                                        items = {items: items, cols: true};
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
                                         if ($container.find(".scroller").length)
