@@ -8,12 +8,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search', style: 'max-width: 120px;'}}
             , {'button': {cssClass: 'btn btn-warning', text: '', type: 'button', task: 'show_tree', alt: 'نمایش برنامه‌ها', icon: 'fa fa-sitemap', style: 'margin-left: 20px; margin-right: 0;'}}
             , {'input': {cssClass: 'form-control', disabled: true, placeholder: 'برنامه', type: 'text', name: 'cat-name', value: "", text: "برنامه", addon: true, icon: 'fa fa-sitemap', style: 'max-width: 120px;'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
-                //persianDate().format('YYYY-MM-DD')
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;'}}
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
+                    //persianDate().format('YYYY-MM-DD')
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;'
+                }
+            }
             // moment().subtract(7, 'day').format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')), style: 'max-width: 100px;'}}
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')), style: 'max-width: 100px;'
+                }
+            }
             , {'select': {cssClass: 'form-control', name: 'change-mode', options: [{value: 'latest', text: 'آخرین‌ها'}, {value: 'tree', text: 'انتخابی'}], addon: true, icon: 'fa fa-list'}}
 //            , {'select': {cssClass: 'form-control', name: 'date-mode', options: [{value: 'production', text: 'تاریخ تولید'}, {value: 'broadcast', text: 'تاریخ پخش'}], addon: true, icon: 'fa fa-list'}}
 //             , {'button': {cssClass: 'btn btn-info pull-right', text: '', type: 'button', task: 'toggle-advance', alt: 'جستجوی پیشرفته', icon: 'fa fa-search-plus'}}
@@ -38,13 +46,60 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'change [data-type=change-mode]': 'changeMode'
             , 'click #tree .jstree-anchor': 'loadCategory'
             , 'click .media-options a': 'UpdateMediaParams'
+            , 'mouseenter tbody tr': 'loadWebp'
+            , 'mouseleave tbody tr': 'unloadWebp'
         }
-        , toggleAdvancedSearch: function(e) {
+        , loadWebp: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $img = $row.find('img[data-webp]');
+            $img.parent().css({ 'position': 'relative' });
+            if ($row.find('.proxy-thumb').length) {
+                if ($row.find('.proxy-thumb').not('.has-error').length) {
+                    $img.attr('src', $img.attr('data-webp'));
+                    if ($row.hasClass('video'))
+                        $row.removeClass('video').addClass('video1');
+                }
+            } else {
+                $row.append('<img class="proxy-thumb" src="' + $img.attr('data-webp') + '" style="width: 0; height: 0; padding: 0; margin: 0; visibility: hidden; display: block;" />');
+                $img.parent().append($("<div><dt/><dd/></div>").attr("class", "webp-progress"));
+                $(".webp-progress").width((50 + Math.random() * 30) + "%");
+                $('.proxy-thumb').on('load', function () {
+                    $(this).css({ 'display': 'none' });
+                    $img.attr('src', $img.attr('data-webp'));
+                    if ($row.hasClass('video'))
+                        $row.removeClass('video').addClass('video1');
+                    $(this).parent().find(".webp-progress").width("101%").delay(200).fadeOut(400, function () {
+                        $(this).remove();
+                    });
+                }).on('error', function () {
+                    if ($row.hasClass('video1'))
+                        $row.removeClass('video1').addClass('video');
+                    $(this).addClass('has-error');
+                    $(this).css({ 'display': 'none' });
+                    $(this).parent().find(".webp-progress").remove();
+                    if ($img.attr('src') !== $img.attr('data-orig'))
+                        $img.attr('src', $img.attr('data-orig'));
+                });
+            }
+        }
+        , unloadWebp: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $img = $row.find('img[data-orig]');
+            if ($row.find('.webp-progress').length) {
+                $row.find('.webp-progress').remove();
+                $row.find('.proxy-thumb').remove();
+            }
+            if ($img.length)
+                $img.attr('src', $img.attr('data-orig'));
+            if (!$row.hasClass('video') && $row.hasClass('video1'))
+                $row.removeClass('video1').addClass('video');
+        }
+        , toggleAdvancedSearch: function (e) {
             e.preventDefault();
             var $form = $('.advanced-search');
             $form.hasClass('hidden') ? $form.removeClass('hidden') : $form.addClass('hidden');
             if (!$form.find('form:first').length) {
-                this.loadSharedParams(function(params) {
+                this.loadSharedParams(function (params) {
                     var template = Template.template.load('resources/media', 'advanced-search.partial');
                     var $container = $('#sub-toolbar .portlet-body');
                     template.done(function (data) {
@@ -83,12 +138,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
         }
-        , UpdateMediaParams: function(e) {
+        , UpdateMediaParams: function (e) {
             e.preventDefault();
             var self = this;
             var $li = $(e.target).parents('li:first');
             var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
-            MediaOptionsHelper.update(params, function(response) {
+            MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
                     toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 else {
@@ -242,6 +297,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             this.renderPagination(items, requestParams);
             this.renderStatusbar();
+            this.registerWebpUrl()
+        }
+        , registerWebpUrl: function() {
+            var $rows = $('#itemlist table tbody tr');
+            $rows.each(function () {
+                var $img = $(this).find('img');
+                var webpUrl = $img.attr('src').replace('.jpg', '.webp');
+                $img.attr('data-orig') === undefined && $img.attr('data-orig', $img.attr('src'));
+                $img.attr('data-webp', webpUrl);
+            });
         }
         , renderPagination: function (items, requestParams) {
             var self = this;
