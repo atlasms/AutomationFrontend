@@ -72,6 +72,7 @@ require.config({
         , "typeahead": ["vendor/typeahead.jquery"]
         , "bloodhound": ["vendor/bloodhound.min"]
         , "bootpag": ["vendor/jquery.bootpag.min"]
+        , "rangeslider": ["vendor/ion.rangeslider/js/ion.rangeSlider.min"]
 
                 // Static files
         , "menu": ["json!../../app/menu"]
