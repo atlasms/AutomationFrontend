@@ -297,7 +297,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             this.renderPagination(items, requestParams);
             this.renderStatusbar();
-            this.registerWebpUrl()
+            this.registerWebpUrl();
         }
         , registerWebpUrl: function() {
             var $rows = $('#itemlist table tbody tr');
