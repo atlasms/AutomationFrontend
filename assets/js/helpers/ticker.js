@@ -33,8 +33,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'new
                 , q: ''
                 , offset: 0
                 , count: 10
-                , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
-                , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T00:00:00'
+                , startdate: Global.today() + 'T00:00:00'
+                // , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                , enddate: Global.today() + 'T23:59:59'
             };
         }
         , checkNewItems: function () {
