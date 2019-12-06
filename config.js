@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "defalutMediaListLimit": 25,
         "mediaScheduleGroupItems": 1,
         "loginMode": "default",
-        "initialRedirect": "/resources/media",
+        "initialRedirect": "/resources/media2",
         "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
         "settings": {
             "datepicker": {
@@ -113,6 +113,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
             , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
             , "resources/media2": {"private": true, "access": null, "action": "MediaView2", "file": "app/resources/media/media2.view"}
+            , "resources/media2print": {"private": true, "access": null, "skipLayout": true, "action": "Media2PrintView", "file": "app/resources/media/media2print.view"}
             , "resources/mediaprint": {"private": true, "access": null, "skipLayout": true, "action": "MediaPrintView", "file": "app/resources/media/mediaprint.view"}
             , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
             , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
@@ -170,6 +171,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "ingest": "ingest"
             , "metadata": "metadata"
             , "media": "media"
+            , "media2": "media/list2"
             , "mediaversions": "media/history"
             , "versionsbypid": "media/historybypid"
 //            , "review": "metadata?categoryid=11"

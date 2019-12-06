@@ -74,18 +74,18 @@ require.config({
         , "bootpag": ["vendor/jquery.bootpag.min"]
         , "rangeslider": ["vendor/ion.rangeslider/js/ion.rangeSlider.min"]
 
-                // Static files
+        // Static files
         , "menu": ["json!../../app/menu"]
 
-                // Application Dependencies
+        // Application Dependencies
 //        , "app": ["app/app"]
         , "router": ["app/router"]
 
-                // Config
+        // Config
         , "defines": ["app/defines"]
         , "config": ["../../config"]
 
-                // Models
+        // Models
         , "user": ["../../app/user/user.model"]
         , "definitions": ["../../app/shared/definitions.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
@@ -94,6 +94,7 @@ require.config({
         , "economy.model": ["../../app/shared/economy.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
         , "resources.media.model": ["../../app/resources/media/media.model"]
+        , "resources.media2.model": ["../../app/resources/media/media2.model"]
         , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]
         , "resources.categories.model": ["../../app/resources/categories/categories.model"]
         , "resources.review.model": ["../../app/resources/review/review.model"]
@@ -109,7 +110,7 @@ require.config({
         , "shared.model": ["../../app/shared/shared.model"]
         , "basic.model": ["../../app/basic/basic.model"]
 
-                // Views
+        // Views
         , "app.view": ["../../app/app.view"]
         , "login.view": ["../../app/user/login.view"]
         , "user.helper": ["../../app/user/user.helper"]
@@ -128,6 +129,7 @@ require.config({
         , "resources.photos.view": ["../../app/resources/photos/photos.view"]
         , "resources.media.view": ["../../app/resources/media/media.view"]
         , "resources.media2.view": ["../../app/resources/media/media2.view"]
+        , "resources.media2print.view": ["../../app/resources/media/media2print.view"]
         , "resources.media-options.helper": ["../../app/resources/media/media-options.helper"]
         , "resources.mediaprint.view": ["../../app/resources/media/mediaprint.view"]
         , "resources.categories.view": ["../../app/resources/categories/categories.view"]
@@ -172,7 +174,7 @@ require.config({
         , "basic.subjects.view": ["../../app/basic/subjects/subjects.view"]
         , "basic.tags.view": ["../../app/basic/tags/tags.view"]
 
-                // Helpers
+        // Helpers
         , "layout": ["app/layout"]
         , "cookie": ["helpers/cookie"]
         , "localstorage": ["helpers/localstorage"]
