@@ -3,7 +3,7 @@ define(["jquery", "underscore", "backbone", "config"
     var BroadcastModel = Backbone.Model.extend({
         initialize: function (options) {
             !Backbone.History.started && Backbone.history.start({pushState: true});
-            new Backbone.Router().navigate('broadcast/schedule', {trigger: true});
+            new Backbone.Router().navigate('broadcast/schedule2', {trigger: true});
         }
     });
     return BroadcastModel;
