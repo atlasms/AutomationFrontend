@@ -1,12 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'bootstrap-table', 'bootpag', 'rangeslider'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'bootstrap-table', 'bootpag', 'rangeslider'
+], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
     var MediaView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
-        model: 'MediaModel'
+        model: 'Media2Model'
         , toolbar: [
             {'filters': {}}
             , {'button': {cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter'}}
-            , {'button': {cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            , {'button': {cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search'}}
             , {'button': {cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , cache: {
             currentCategory: ''
         }
+        , currentPageUrl: ''
         , filters: []
         , fields: {
             q: ''
@@ -25,25 +26,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , categoryId: ''
             , state: 1
             , episode: ''
-            , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            , startdate: '1970-01-01T00:00:00'
             , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
             , subjects: ''
             , tags: ''
             , persons: ''
             , users: ''
             , duration: '0;180'
-            , broadcastCount: '0;999'
-            , broadcastStartdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            // , broadcastCount: '0;999'
+            // , broadcastStartdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            , broadcastStartdate: '1970-01-01T00:00:00'
             , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
-            , Structure: ''
-            , Subject: ''
-            , Classification: ''
-            , Kind: ''
+            , structure: ''
+            , metaSubject: ''
+            , classification: ''
+            , MetaDataProductionGroup: ''
+            , ordering: 'MediaCreated desc'
         }
         , treeInstance: {}
         , events: {
             'click [data-task=load_metadata]': 'load'
             , 'click #metadata-page tbody tr': 'selectRow'
+            , 'click [data-task=print]': 'print'
             , 'click [data-task=refresh]': 'reLoad'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click .media-options a': 'UpdateMediaParams'
@@ -51,11 +56,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'mouseleave tbody tr': 'unloadWebp'
             , 'click [data-task="toggle-sidebar"]': 'toggleSidebar'
             , 'click #filters .label a': 'removeFilter'
+            , 'popstate window': 'handleUrlChange'
             , 'click .toggle-pane': function (e) {
                 $(e.target).parents('.pane').first().toggleClass('collapsed');
             }
 
             // , 'change select.form-control': 'reLoad'
+        }
+        , print: function (e) {
+            e.preventDefault();
+            var win = window.open('/resources/media2print/' + this.currentPageUrl, '_blank');
+            win.focus();
         }
         , toggleSidebar: function (e) {
             e.preventDefault();
@@ -184,6 +195,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return false;
         }
 
+        , handleUrlChange: function (e) {
+            this.reLoad(e);
+        }
         , handleFilterLabels: function (fields) {
             var self = this;
             var $filters = $('#filters');
@@ -208,10 +222,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($relatedEl.is('select[multiple]') && value.indexOf(',') !== -1) {
                         values = value.split(',');
                         for (var i = 0; i < values.length; i++) {
-                            labels += '<span class="label label-danger" data-key="' + key + '"data-value="' + values[i] + '">' + title + ': ' + self.resolveLabel($relatedEl, values[i]) + '<a href="#">&times;</a></span>';
+                            labels += '<span class="label label-danger" data-key="' + key + '"data-value="' + values[i] + '">' + title + ': <span>' + self.resolveLabel($relatedEl, values[i]) + '</span><a href="#">&times;</a></span>';
                         }
                     } else
-                        labels += '<span class="label label-danger" data-key="' + key + '" data-value="' + value + '">' + title + ': ' + ($relatedEl.is('select') ? self.resolveLabel($relatedEl, value) : value) + '<a href="#">&times;</a></span>';
+                        labels += '<span class="label label-danger" data-key="' + key + '" data-value="' + value + '">' + title + ': <span>' + ($relatedEl.is('select') ? self.resolveLabel($relatedEl, value) : value) + '</span><a href="#">&times;</a></span>';
                 }
                 $filters.html(labels)
             });
@@ -272,8 +286,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 }
             }
-            console.error(fields);
-            fields.categoryId = this.treeInstance.get_checked().join(',');
+            if ($('[data-type="categoryId"]').parents('.pane:first').find('.checkbox input[type="checkbox"]').get(0).checked) {
+                fields.categoryId = this.treeInstance.get_checked().join(',');
+            } else {
+                fields.categoryId = '';
+            }
 
             // if query is enabled
             if (setInputValues) {
@@ -292,8 +309,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             // DEV
             $('pre.alert-danger').html(JSON.stringify(fields, null, 2));
-            var currentPageUrl = location.href.split('?')[0] + '?' + $.param(fields);
-            $('.alert-success').html('<a target="_blank" href="' + currentPageUrl + '">' + currentPageUrl + '</a>');
+            this.currentPageUrl = '?' + $.param(fields);
+            $('.alert-success').html('<a target="_blank" href="' + this.currentPageUrl + '">' + this.currentPageUrl + '</a>');
 
             return fields;
         }
@@ -363,6 +380,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , render: function (params) {
+            if (this.getStorageUrl() && typeof location.href.split('?')[1] === 'undefined') {
+                location.href = location.href.split('?')[0] + this.getStorageUrl();
+                // window.history.pushState({},"", this.getStorageUrl());
+            }
             this.renderToolbar();
             var self = this;
             var template = Template.template.load('resources/media', 'media2');
@@ -514,7 +535,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = (typeof params !== "undefined") ? params : self.getParams();
             // set date from url query
             var data = $.param(params);
-            var model = new MediaModel(params);
+            var model = new Media2Model(params);
             model.fetch({
                 data: data
                 , success: function (items) {
@@ -537,7 +558,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             params.method === "ready" && $('[name="cat-name"]').val(params.text) && self.loadItems();
         }
         , afterRender: function (items, requestParams) {
-
+            window.history.pushState({}, "", this.currentPageUrl);
             window.setTimeout(function () {
                 $("select.select2").each(function () {
                     if ($(this).hasClass("select2-hidden-accessible"))
@@ -551,6 +572,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.renderPagination(items, requestParams);
             this.renderStatusbar();
             this.registerWebpUrl();
+            this.setStorageUrl(this.currentPageUrl);
+        }
+        , setStorageUrl: function (url) {
+            STORAGE.setItem('mediaUrl', url);
+        }
+        , getStorageUrl: function () {
+            return STORAGE.getItem('mediaUrl');
         }
         , renderPagination: function (items, requestParams) {
             var self = this;

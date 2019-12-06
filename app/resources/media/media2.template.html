@@ -15,8 +15,10 @@
     #filters .label { float: right; margin: 4px 10px 0 0; }
     #filters .label:first-child { margin-right: 50px; }
 
+    .label { font-size: 12px; }
     .label a { color: #fff; text-decoration: none; padding-left: 4px; padding-right: 4px; margin-left: -2px; margin-right: 2px; }
     .label a:hover { background: rgba(0, 0, 0, 0.1) }
+    .label[data-key*="date"] span { display: inline-block; direction: ltr; }
 </style>
 <div id="metadata-page" class="portlet box">
     <div class="row">
@@ -52,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pane mt-element-ribbon bg-white">
+                <!--<div class="pane mt-element-ribbon bg-white">
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
@@ -65,30 +67,8 @@
                             <input data-type="broadcastCount" id="broadcastCount" type="text" name="broadcastCount" value="0;999" placeholder="تعداد پخش" />
                         </div>
                     </div>
-                </div>
-                <div class="pane mt-element-ribbon bg-white">
-                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
-                    <div class="ribbon ribbon-color-primary uppercase">
-                        <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_161"  type="checkbox">
-                            <label for="filter_161"><i class="fa fa-tv"></i> بازه پخش</label>
-                        </div>
-                    </div>
-                    <div class="ribbon-content">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon has-icon">از</span>
-                                <input type="text" class="form-control datepicker" name="broadcastStartdate" data-type="broadcastStartdate" placeholder="از تاریخ">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon has-icon">تا</span>
-                                <input type="text" class="form-control datepicker" name="broadcastEnddate" data-type="broadcastEnddate" placeholder="تا تاریخ">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div>-->
+
                 <div class="pane mt-element-ribbon bg-white">
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
@@ -115,7 +95,7 @@
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
                             <input id="filter_11" checked type="checkbox">
-                            <label for="filter_11"><i class="fa fa-filter"></i> دسته‌بندی</label>
+                            <label for="filter_11"><i class="fa fa-filter"></i> وضعیت بازبینی</label>
                         </div>
                     </div>
                     <div class="ribbon-content">
@@ -158,7 +138,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_21" checked type="checkbox">
+                            <input id="filter_21" type="checkbox">
                             <label for="filter_21"><i class="fa fa-sort-numeric-asc"></i> شماره قسمت</label>
                         </div>
                     </div>
@@ -175,26 +155,49 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_3" checked type="checkbox">
-                            <label for="filter_3"><i class="fa fa-sitemap"></i> برنامه‌ها</label>
+                            <input id="filter_161"  type="checkbox">
+                            <label for="filter_161"><i class="fa fa-tv"></i> بازه پخش</label>
                         </div>
                     </div>
                     <div class="ribbon-content">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon has-icon"><i class="fa fa-sitemap"></i></span>
-                                <select data-type="change-mode" class="form-control select2" name="change-mode">
-                                </select>
+                                <span class="input-group-addon has-icon">از</span>
+                                <input type="text" class="form-control datepicker" name="broadcastStartdate" data-type="broadcastStartdate" placeholder="از تاریخ">
                             </div>
                         </div>
-                        <div id="tree"></div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon">تا</span>
+                                <input type="text" class="form-control datepicker" name="broadcastEnddate" data-type="broadcastEnddate" placeholder="تا تاریخ">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="pane mt-element-ribbon bg-white collapsed">
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_4" checked type="checkbox">
+                            <input id="filter_3" type="checkbox">
+                            <label for="filter_3"><i class="fa fa-sitemap"></i> برنامه‌ها</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+<!--                        <div class="form-group">-->
+<!--                            <div class="input-group">-->
+<!--                                <span class="input-group-addon has-icon"><i class="fa fa-sitemap"></i></span>-->
+<!--                                <select data-type="change-mode" class="form-control select2" name="change-mode">-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div data-type="categoryId" id="tree"></div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white collapsed">
+                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
+                    <div class="ribbon ribbon-color-primary uppercase">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input id="filter_4" type="checkbox">
                             <label for="filter_4"><i class="fa fa-globe"></i> محورها</label>
                         </div>
                     </div>
@@ -212,7 +215,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_5" checked type="checkbox">
+                            <input id="filter_5" type="checkbox">
                             <label for="filter_5"><i class="fa fa-globe"></i> کلیدواژه‌ها</label>
                         </div>
                     </div>
@@ -230,7 +233,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_6" checked type="checkbox">
+                            <input id="filter_6" type="checkbox">
                             <label for="filter_6"><i class="fa fa-globe"></i> عوامل</label>
                         </div>
                     </div>
@@ -256,7 +259,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-globe"></i></span>
-                                <select class="form-control" name="Structure" data-type="Structure" placeholder="ساختار">
+                                <select class="form-control" name="structure" data-type="structure" placeholder="ساختار">
                                     {{#select 0}}
                                     {{{getDefinitionOptions 149}}}
                                     {{/select}}
@@ -277,7 +280,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-globe"></i></span>
-                                <select class="form-control" name="Subject" data-type="Subject" placeholder="موضوع">
+                                <select class="form-control" name="metaSubject" data-type="metaSubject" placeholder="موضوع">
                                     {{#select 0}}
                                     {{{getDefinitionOptions 152}}}
                                     {{/select}}
@@ -298,7 +301,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-globe"></i></span>
-                                <select class="form-control" name="Classification" data-type="Classification" placeholder="طبقه">
+                                <select class="form-control" name="classification" data-type="classification" placeholder="طبقه">
                                     {{#select 0}}
                                     {{{getDefinitionOptions 154}}}
                                     {{/select}}
@@ -312,16 +315,16 @@
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
                             <input id="filter_103" type="checkbox">
-                            <label for="filter_103"><i class="fa fa-globe"></i> نوع برنامه</label>
+                            <label for="filter_103"><i class="fa fa-globe"></i> گروه تولیدی</label>
                         </div>
                     </div>
                     <div class="ribbon-content">
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-globe"></i></span>
-                                <select class="form-control" name="Kind" data-type="Kind" placeholder="نوع برنامه">
+                                <select class="form-control" name="MetaDataProductionGroup" data-type="MetaDataProductionGroup" placeholder="نوع برنامه">
                                     {{#select 0}}
-                                    {{{getDefinitionOptions 36}}}
+                                    {{{getDefinitionOptions 166}}}
                                     {{/select}}
                                 </select>
                             </div>
@@ -332,7 +335,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_7" checked type="checkbox">
+                            <input id="filter_7" type="checkbox">
                             <label for="filter_7"><i class="fa fa-users"></i> کاربران</label>
                         </div>
                     </div>
@@ -363,7 +366,26 @@
                                     <option value="100">100</option>
                                     <option value="200">200</option>
                                     <option value="500">500</option>
-                                    <option value="1000">1000</option>
+<!--                                    <option value="1000">1000</option>-->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pane mt-element-ribbon bg-white">
+                    <div class="ribbon ribbon-color-primary uppercase hide">
+                        <div class="checkbox checkbox-default checkbox-circle">
+                            <input class="hide" id="filter_ordering" checked type="checkbox">
+                            <label for="filter_ordering"><i class="fa fa-sort-numeric-desc"></i> ترتیب</label>
+                        </div>
+                    </div>
+                    <div class="ribbon-content">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon has-icon"><i class="fa fa-sort-numeric-desc"></i> ترتیب</span>
+                                <select data-type="ordering" class="form-control" name="ordering" placeholder="ترتیب">
+                                    <option value="MediaCreated desc" selected>تاریخ ایجاد</option>
+                                    <option value="MediaTitle desc">نام قسمت</option>
                                 </select>
                             </div>
                         </div>
@@ -372,13 +394,16 @@
             </form>
         </div>
         <div id="media-mainbody" class="col-xs-9 col-lg-10">
+
+            <div id="media-list" class="portlet-body">
+                <div id="itemlist" class="mainbody"></div>
+            </div>
+            {{#authorize 8388608}}
             <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>
             <div class="alert alert-success ltr" style="direction: ltr; text-align: left">
 
             </div>
-            <div id="media-list" class="portlet-body">
-                <div id="itemlist" class="mainbody"></div>
-            </div>
+            {{/authorize}}
         </div>
     </div>
 </div>
