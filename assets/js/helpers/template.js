@@ -168,6 +168,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('time', function (timestamp, options) {
                 return Global.createTime(timestamp);
             });
+            Handlebars.registerHelper('percent', function (value, whole, options) {
+                return Math.round((~~value * 100) / ~~whole);
+            });
             Handlebars.registerHelper('time2', function (timestamp, options) {
                 return Global.createTime2(timestamp);
             });
