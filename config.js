@@ -97,6 +97,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         },
         "routes": {
             "/": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
+            , "dashboard": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
             , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
             , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
             , "broadcast/schedule2": {"private": true, "access": null, "action": "ScheduleView2", "file": "app/broadcast/schedule/schedule2.view"}
@@ -191,6 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "broadcastphotos": "conductormedia"
             , "persons": "share/persons"
             , "mediapersons": "metadata/person"
+            , "dashboardSystem": "share/dashboard/system"
         },
         "channels": {
             'tv1': {
