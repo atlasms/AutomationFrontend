@@ -32,12 +32,14 @@ require.config({
         , "cropper": {deps: ["jquery"]}
         , "pace": {deps: ["jquery"]}
         , "bootpag": {deps: ["jquery"]}
+        , "waypoints": {deps: ["jquery"]}
+        , "counterup2": {deps: ["waypoints"]}
 //        , "select2": {deps: ["jquery", "vendor/select2.i18n.fa"], exports: "jQuery"}
     }
     , urlArgs: "_=" + (new Date()).getTime()
     , paths: {
         // Library Dependencies
-        jquery: ["vendor/jquery-3.1.1.min"]
+        jquery: ["vendor/jquery-3.4.1.min"]
         , "jquery-ui": ["vendor/jquery-ui.min"]
         , "underscore": ["vendor/underscore-min"]
         , "backbone": ["vendor/backbone-min"]
@@ -73,6 +75,9 @@ require.config({
         , "bloodhound": ["vendor/bloodhound.min"]
         , "bootpag": ["vendor/jquery.bootpag.min"]
         , "rangeslider": ["vendor/ion.rangeslider/js/ion.rangeSlider.min"]
+        , "waypoints": ["vendor/waypoints.min"]
+        , "counterup2": ["vendor/jquery.counterup2.min"]
+        , "count-to": ["vendor/jquery.countTo"]
 
         // Static files
         , "menu": ["json!../../app/menu"]
@@ -86,6 +91,7 @@ require.config({
         , "config": ["../../config"]
 
         // Models
+        , "dashboard.model": ["../../app/dashboard/dashboard.model"]
         , "user": ["../../app/user/user.model"]
         , "definitions": ["../../app/shared/definitions.model"]
         , "broadcast.model": ["../../app/broadcast/broadcast.model"]
