@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         "defalutMediaListLimit": 25,
         "mediaScheduleGroupItems": 1,
         "loginMode": "default",
-        "initialRedirect": "/resources/media2",
+        // "initialRedirect": "/resources/media2",
         "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
         "settings": {
             "datepicker": {
@@ -193,6 +193,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "persons": "share/persons"
             , "mediapersons": "metadata/person"
             , "dashboardSystem": "share/dashboard/system"
+            , "dashboardUser": "share/dashboard/user"
         },
         "channels": {
             'tv1': {
