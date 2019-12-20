@@ -27,9 +27,8 @@
             { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
             { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
             { "title": "مدیا", "alias": "resources_media2", "icon": "database", "link": "/resources/media2" },
-            { "title": "مدیا قدیم", "alias": "resources_media", "icon": "database", "link": "/resources/media" },
             { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
-            { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/media?state=2" },
+            { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/media2?state=2" },
             { "title": "پخش زنده", "alias": "resources_live", "icon": "tv", "link": "/resources/live" },
             { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "play-circle", "link": "/resources/editor" }
         ]
