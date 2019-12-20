@@ -78,6 +78,7 @@ require.config({
         , "waypoints": ["vendor/waypoints.min"]
         , "counterup2": ["vendor/jquery.counterup2.min"]
         , "count-to": ["vendor/jquery.countTo"]
+        , "easy-pie-chart": ["vendor/jquery.easypiechart.min"]
 
         // Static files
         , "menu": ["json!../../app/menu"]
