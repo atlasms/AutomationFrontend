@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
-], function ($, _, Backbone, Config, jDate) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
+], function ($, _, Backbone, Config, jDate, Cookies) {
 //    window.formatPersian = false;
 
     var responsiveResize = (function () {
@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
     };
 
     String.prototype.toEnglishDigits = function () {
-        var id = { '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9' };
+        var id = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'};
         return this.replace(/[^0-9.]/g, function (w) {
             return id[w] || w;
         });
@@ -95,6 +95,27 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate'
 
         return 0;
     };
+
+    $(document).off('click', '.sidebar-toggler');
+    $(document).on('click', '.sidebar-toggler', function (e) {
+        var $body = $('body');
+        if ($body.hasClass("page-sidebar-closed") || $body.hasClass('page-sidebar-closed-hide-logo')) {
+            console.log('body has class page-sidebar-closed', $body.attr('class'));
+            $body.removeClass("page-sidebar-closed");
+            $body.removeClass("page-sidebar-closed-hide-logo");
+            if (Cookies) {
+                Cookies.set('sidebar_closed', '0');
+            }
+        } else {
+            console.log('body DOES NOT HAVE class page-sidebar-closed');
+            $body.addClass("page-sidebar-closed");
+            $body.addClass("page-sidebar-closed-hide-logo");
+            if (Cookies) {
+                Cookies.set('sidebar_closed', '1');
+            }
+        }
+        $(window).trigger('resize');
+    });
 
     var Global = {
         trimChar: function (string, charToRemove) {
