@@ -52,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadWebp: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
             var $img = $row.find('img[data-webp]');
-            $img.parent().css({ 'position': 'relative' });
+            $img.parent().css({'position': 'relative'});
             if ($row.find('.proxy-thumb').length) {
                 if ($row.find('.proxy-thumb').not('.has-error').length) {
                     $img.attr('src', $img.attr('data-webp'));
@@ -64,7 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $img.parent().append($("<div><dt/><dd/></div>").attr("class", "webp-progress"));
                 $(".webp-progress").width((50 + Math.random() * 30) + "%");
                 $('.proxy-thumb').on('load', function () {
-                    $(this).css({ 'display': 'none' });
+                    $(this).css({'display': 'none'});
                     $img.attr('src', $img.attr('data-webp'));
                     if ($row.hasClass('video'))
                         $row.removeClass('video').addClass('video1');
@@ -75,7 +75,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($row.hasClass('video1'))
                         $row.removeClass('video1').addClass('video');
                     $(this).addClass('has-error');
-                    $(this).css({ 'display': 'none' });
+                    $(this).css({'display': 'none'});
                     $(this).parent().find(".webp-progress").remove();
                     if ($img.attr('src') !== $img.attr('data-orig'))
                         $img.attr('src', $img.attr('data-orig'));
@@ -228,6 +228,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return params;
         }
         , render: function (params) {
+
+            // initial redirecting to new media page
+            // Initial redirect, if any
+            // if (typeof Config.initialRedirect !== "undefined" && location.pathname === '/') {
+            new Backbone.Router().navigate(Config.initialRedirect, {trigger: true});
+            return false;
+            // }
+
             this.renderToolbar();
             var self = this;
             var template = Template.template.load('resources/media', 'media');
@@ -299,7 +307,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.renderStatusbar();
             this.registerWebpUrl();
         }
-        , registerWebpUrl: function() {
+        , registerWebpUrl: function () {
             var $rows = $('#itemlist table tbody tr');
             $rows.each(function () {
                 var $img = $(this).find('img');
