@@ -1,0 +1,289 @@
+<style>
+    small { font-size: 50%; }
+</style>
+<fieldset>
+    <h5>اطلاعات اتوماسیون</h5>
+    <a href="/resources/media2" target="_blank">
+        <div class="row widget-row">
+            <!-- mediaCount -->
+            <div class="col-md-6">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">تعداد مدیا</h4>
+                    <div class="widget-thumb-wrap">
+                        <i class="widget-thumb-icon bg-blue-steel fa fa-database"></i>
+                        <div class="widget-thumb-body">
+
+                            <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{mediaCount}}">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- mediaDuration -->
+            <div class="col-md-6">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">مدت کل مدیاها</h4>
+                    <div class="widget-thumb-wrap">
+                        <i class="widget-thumb-icon bg-blue-steel fa fa-clock-o"></i>
+                        <div class="widget-thumb-body">
+
+                            <span class="widget-thumb-body-stat">{{time2 mediaDuration}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row widget-row">
+            <!-- approvedCount -->
+            <div class="col-md-3">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">
+                        تایید شده
+                        <strong class="pull-right">
+                            <span data-counter="counterup" data-value="{{approvedCount}}">0</span>
+                        </strong>
+                    </h4>
+                    <div class="widget-thumb-wrap">
+                        <div class="chart" data-percent="{{percent approvedCount mediaCount}}" data-bar-color="#26C281">
+                            <span class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- rejectedCount -->
+            <div class="col-md-3">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">
+                        رد شده
+                        <strong class="pull-right">
+                            <span data-counter="counterup" data-value="{{rejectedCount}}">0</span>
+                        </strong>
+                    </h4>
+                    <div class="widget-thumb-wrap">
+                        <div class="chart" data-percent="{{percent rejectedCount mediaCount}}" data-bar-color="#D91E18">
+                            <span class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- newCount -->
+            <div class="col-md-3">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">
+                        بررسی نشده
+                        <strong class="pull-right">
+                            <span data-counter="counterup" data-value="{{newCount}}">0</span>
+                        </strong>
+                    </h4>
+                    <div class="widget-thumb-wrap">
+                        <div class="chart" data-percent="{{percent newCount mediaCount}}" data-bar-color="#3598DC">
+                            <span class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- deletedCount -->
+            <div class="col-md-3">
+                <div class="widget-thumb widget-bg-color-white bordered">
+                    <h4 class="widget-thumb-heading">
+                        حذف شده
+                        <strong class="pull-right">
+                            <span data-counter="counterup" data-value="{{deletedCount}}">0</span>
+                        </strong>
+                    </h4>
+                    <div class="widget-thumb-wrap">
+                        <div class="chart" data-percent="{{percent deletedCount mediaCount}}" data-bar-color="#F2784B">
+                            <span class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget-thumb widget-bg-color-white bordered progress-container dashboard-stat2">
+                    <div class="progress-info">
+                        <div class="progress progress-striped">
+                            <span style="width: {{percent videoCount mediaCount}}%" class="progress-bar progress-bar-striped bg-green-meadow"></span>
+                        </div>
+                        <div class="status">
+                            <div class="status-title"><i class="fa fa-youtube-play"></i> ویدیو</div>
+                            <div class="status-number">
+                                <span data-counter="counterup" data-value="{{percent videoCount mediaCount}}">0</span>% -
+                                <strong class="text-primary" data-counter="counterup" data-value="{{videoCount}}">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress progress-striped">
+                            <span style="width: {{percent imageCount mediaCount}}%;" class="progress-bar progress-bar-striped bg-green-meadow"></span>
+                        </div>
+                        <div class="status">
+                            <div class="status-title"><i class="fa fa-photo"></i> عکس</div>
+                            <div class="status-number">
+                                <span data-counter="counterup" data-value="{{percent imageCount mediaCount}}">0</span>% -
+                                <strong class="text-primary" data-counter="counterup" data-value="{{imageCount}}">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress progress-striped">
+                            <span style="width: {{percent rushCount mediaCount}}%;" class="progress-bar progress-bar-striped bg-green-meadow"></span>
+                        </div>
+                        <div class="status">
+                            <div class="status-title"><i class="fa fa-file-video-o"></i> راش</div>
+                            <div class="status-number">
+                                <span data-counter="counterup" data-value="{{percent rushCount mediaCount}}">0</span>% -
+                                <strong class="text-primary" data-counter="counterup" data-value="{{rushCount}}">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress progress-striped">
+                            <span style="width: {{percent audioCount mediaCount}}%;" class="progress-bar progress-bar-striped bg-green-meadow"></span>
+                        </div>
+                        <div class="status">
+                            <div class="status-title"><i class="fa fa-headphones"></i> صدا</div>
+                            <div class="status-number">
+                                <span data-counter="counterup" data-value="{{percent audioCount mediaCount}}">0</span>% -
+                                <strong class="text-primary" data-counter="counterup" data-value="{{audioCount}}">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <div class="row widget-row">
+        <!-- conductorCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">آیتم‌های پخش شده</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-studio fa fa-list-alt"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{conductorCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- conductorTodayCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">آیتم‌های کنداکتور امروز</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-medium fa fa-table"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{conductorTodayCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- newsCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">اخبار موجود</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-red-haze fa fa-newspaper-o"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{newsCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row widget-row">
+        <!-- usersCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">کاربران</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-yellow-crusta fa fa-users"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{usersCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- personCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">عوامل</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-green-soft fa fa-user"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{personCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- tagsCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">تگ‌ها</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-green-dark fa fa-tags"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{tagsCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- categoriesCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">برنامه‌ها</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-green-meadow fa fa-sitemap"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{categoriesCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row widget-row">
+        <!-- smsCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">پیامک‌ها</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-blue-madison fa fa-commenting"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{smsCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- crawlItemsCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">زیرنویس</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-green fa fa-font"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{crawlItemsCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- onAirCrawlItemsCount -->
+        <div class="col-md-4">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">زیرنویس‌های در حال پخش</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-green-sharp fa fa-tv"></i>
+                    <div class="widget-thumb-body">
+
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{onAirCrawlItemsCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
