@@ -7,7 +7,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
      * Use following configurations
      */
     window.Config = {
-        "title": "اتوماسیون تولید و پخش",
+        "title": "اتوماسیون تولید و پخش اطلس",
+        "version": "1.191227.1825",
         "loginMessage": "ورود به سامانه اتوماسیون",
         "channel": "ایران‌کالا",
         "storageKey": "automation" + '_' + window.location.host.replace(/\./g, '').split(":")[0],

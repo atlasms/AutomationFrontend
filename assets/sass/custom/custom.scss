@@ -242,12 +242,34 @@ div.tooltip-inner {
     // .page-sidebar-menu.page-sidebar-menu-hover-submenu li .sub-menu { left: -235px; }
     .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:not(.heading):hover { right: -235px }
 }
+/*.page-sidebar {
+    &:after {
+        display: block; content: ''; background: url('../data/atlas-dark.png') no-repeat center center transparent;
+        position: absolute; bottom: -80px; width: 100%; height: 60px; opacity: 0.35; transition: 0.2s all;
+    }
+    &:hover:after { opacity: 1; }
+    .page-sidebar-closed &:after { background-position: right center; }
+}*/
 
 // Footer
 .page-footer-fixed .page-footer {
     background-color: #d7ddec;
 }
 .page-footer-inner { width: 100% }
+.page-footer {
+    .version {
+        position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-size: 11px; color: #8793b1;
+        direction: ltr;
+        > span {
+            display: inline-block; position: relative;
+            &:before {
+                display: block; content: ''; width: 20px; height: 20px; position: absolute; right: 104%; top: -3px;
+                background: url('../data/atlas-favicon.png') no-repeat center center transparent; background-size: contain;
+            }
+        }
+        > strong { display: inline-block; }
+    }
+}
 #status-items { float: left; }
 #server-time { float: right; color: #000 }
 .refresh-view {
