@@ -1,5 +1,6 @@
 <style>
     small { font-size: 50%; }
+    .message-title { font-size: 12px !important; }
 </style>
 <fieldset>
     <h5>اطلاعات کاربر</h5>
@@ -170,8 +171,8 @@
                             <tbody>
                             {{#each activitiesLog}}
                             <tr class="{{#if SeenDate}}read{{else}}unread{{/if}}" data-messageid="{{Id}}">
-                                <td class="view-message hidden-xs">{{FromUserText}}</td>
-                                <td class="view-message ">{{Title}}</td>
+<!--                                <td class="view-message hidden-xs">{{FromUserText}}</td>-->
+                                <td class="view-message message-title">{{Title}}</td>
                                 <td class="view-message text-right" title="{{extractTime SendDate}} {{extractDate SendDate}}">{{extractTime SendDate}} {{extractDate SendDate}}</td>
                             </tr>
                             {{/each}}

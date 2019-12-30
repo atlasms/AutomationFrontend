@@ -1,3 +1,6 @@
+<style>
+    a:not([href]) { cursor: default; }
+</style>
 <div>
     <div class="page-header navbar">
         <div class="page-header-inner ">
@@ -114,7 +117,9 @@
 
             </ul>
             <div class="version">
-                <span>اتوماسیون تولید و پخش اطلس</span>&nbsp;|&nbsp;
+                <span>
+                    <a {{#if Config.vendorLinkEnabled}}href="{{ConfigvendorLink}}"{{/if}} target="_blank" style="text-decoration: none">اتوماسیون تولید و پخش اطلس</a>
+                </span>&nbsp;|&nbsp;
                 <strong>نسخه {{Config.version}}</strong>
             </div>
             <div class="refresh-view" data-toggle="tooltip" title="Refresh View" data-task="refresh-view"><i class="fa fa-refresh"></i></div>

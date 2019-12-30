@@ -1,53 +1,116 @@
-<div class=" login">
-	<div class="user-login">
-		<div class="row bs-reset">
-			<div class="col-xs-12 col-md-6 login-container bs-reset mt-login-5-bsfix">
-				<img class="login-logo login-6" src="../assets/img/logo-light2.png" />
-				<div class="login-content">
-					<h1>{{{loginMessage}}}</h1>
-					<form class="login-form" name="form" method="post">
-						<div class="clearfix"></div>
-						<div class="alert alert-danger" style="display: none;">
-							<strong>نام کاربری یا رمز عبور اشتباه است یا کاربر وجود ندارد.</strong>
-						</div>
-						<div class="clearfix"></div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-6">
-								<div class="form-group">
-									<input type="text" class="form-control form-control-solid placeholder-no-fix form-group" name="username"  required />
-									<div class="help-block">نام کاربری الزامی است</div>
-								</div>
-							</div>
-							<div class="col-xs-12 col-sm-6">
-								<div class="form-group">
-									<input type="password" class="form-control form-control form-control-solid placeholder-no-fix form-group" name="password" required />
-									<div class="help-block">رمز عبور الزامی است</div>
-								</div>
-							</div>
-						</div>
-						<div class="row ">
-							<div class="col-sm-4">
-								<div class="hide">
-									<label class="rememberme mt-checkbox mt-checkbox-outline">
-										<input type="checkbox" name="remember" value="1" /> مرا به خاطر بسپار
-										<span></span>
-									</label>
-								</div>
-							</div>
-							<div class="col-sm-8 text-right">
-								<div class="forgot-password hide">
-									<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
-								</div>
-								<button type="submit" class="btn blue" data-task="login">ورود</a>
-								<img class="hide" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div class="col-xs-12 col-md-6 bs-reset mt-login-5-bsfix">
-				<div class="login-bg"> </div>
-			</div>
-		</div>
-	</div>
+<style>
+    /*.login-container { position: relative; margin: 0; padding: 0; z-index: 1; }*/
+    h1 {
+        color: #fff; position: absolute; right: 0; margin: 0; z-index: 79; top: -60px; line-height: 3;
+        text-align: center; width: 100%; font-size: 20px;
+    }
+
+    .logo {
+        /*width: 288px;*/ width: 100%; height: 180px; background: url('{{channelLogo}}') no-repeat center bottom transparent;
+        /*position: absolute; top: 50px; right: 50%; transform: translateX(50%);*/
+    }
+
+    h1 small { color: #fff; display: block; font-size: 50%; }
+
+    .login-container video {
+        position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 2; /*filter: blur(10px)*/
+
+    }
+
+    .login-container:before {
+        display: block; content: ''; width: 100vw; height: 100vh; position: fixed; bottom: 0; left: 0; z-index: 3;
+        background: linear-gradient(to right, #5d23f9, #0a80c0); opacity: 0.55;
+    }
+
+    .alert { direction: rtl; text-align: right; }
+
+    .login {
+        position: absolute; top: 0; left: 50%; /*transform: translateX(-50%) translateY(-50%);*/ z-index: 10;
+        transform: translateX(-50%);
+        background: #0a80c0; box-shadow: 0 -7px 40px rgba(21, 0, 133, 0.35);
+        backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; text-align: center; align-items: center;
+        width: 25vw; height: 100vh; /*max-width: 320px; max-height: 500px;*/ padding: 0 40px;
+    }
+
+    /*.login:after {
+        display: block; content: ''; background: url(/assets/data/atlas-fa.png) no-repeat center bottom transparent; position: absolute;
+        bottom: 50px; right: 50%; transform: translateX(50%); width: 200px; height: 62px; opacity: 0.65; transition: .2s all;
+    }
+    .login:hover:after { opacity: 1; }*/
+    /*.login > * { flex: 1 1 33.33333%; max-height: 33.33333%; }*/
+    .login-form {
+        width: 100%; position: relative;
+    }
+
+    .form-group { position: relative; margin-bottom: 40px; }
+
+    .login .icon {
+        color: #fff; position: absolute; top: 12px; right: 5px; z-index: 80; display: block; text-align: center; font-size: 18px; opacity: 0.65;
+        transition: .2s all;
+    }
+
+    .form-control {
+        background-color: transparent !important; color: #fff; border: 0 none; border-bottom: 2px solid rgba(255, 255, 255, 0.5); box-shadow: none !important;
+        height: 50px; line-height: 50px; font-size: 18px; padding: 0 40px 0 0;
+    }
+
+    .form-control:focus + .icon { opacity: 1 !important; }
+
+    .form-control::placeholder { color: rgba(255, 255, 255, 0.55); }
+
+    input:-internal-autofill-selected,
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        background-color: transparent !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+        -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px #0a80c0 !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px #0a80c0 !important; font-size: 18px !important;
+    }
+
+    .btn-info { background: #33b3c7; border-color: transparent; padding: 15px 0; transition: .2s all; }
+
+    .btn-info:hover { background: #51b2c1; }
+
+    .atlas-logo { margin-bottom: 20px; }
+    a:not([href]) { cursor: default; }
+</style>
+<div class="login-container">
+    <div class="login login-content">
+        <div class="logo"></div>
+        <form class="login-form" name="form" method="post">
+            <h1>
+                <!--                    <span>{{{loginMessage}}}</span>-->
+            </h1>
+            <div class="alert alert-danger" style="display: none;">
+                <strong>نام کاربری یا رمز عبور اشتباه است یا کاربر وجود ندارد.</strong>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control form-control-solid placeholder-no-fix" name="username" placeholder="نام کاربری" required="">
+                <span class="icon"><i class="fa fa-id-card"></i></span>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control form-control form-control-solid placeholder-no-fix" placeholder="رمز عبور" name="password" required="">
+                <span class="icon"><i class="fa fa-lock"></i></span>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info btn-block btn-lg" data-task="login">ورود</button>
+            </div>
+        </form>
+        {{#if vendorLinkEnabled}}
+        <a href="{{vendorLink}}" target="_blank" class="atlas-logo">
+            {{else}}
+            <a class="atlas-logo">
+                {{/if}}
+                <img src="assets/data/atlas-fa.png" alt="Atlas Media Solutions"/>
+            </a>
+    </div>
+    <script>
+        $(function () {
+            var randomNumber = Math.floor(Math.random() * 3) + 1;
+            $('.login-container').prepend('<video src="/assets/data/video/bg_' + randomNumber + '.mp4" loop autoplay preload="metadata" muted></video>');
+            $('video')[0].play();
+            // $('video').attr('src', '/assets/data/video/' + randomNumber + '.mp4');
+        });
+    </script>
 </div>
