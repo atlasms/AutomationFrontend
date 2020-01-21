@@ -4,11 +4,7 @@
         "alias": "broadcast",
         "icon": "youtube-play",
         "items": [
-            { "title": "کنداکتور قدیم", "alias": "broadcast_schedule", "icon": "table", "link": "/broadcast/schedule" },
             { "title": "کنداکتور", "alias": "broadcast_schedule2", "icon": "table", "link": "/broadcast/schedule2" },
-            { "title": "EPG", "alias": "broadcast_epg", "icon": "align-right", "link": "#" },
-            { "title": "بازبینی پخش", "alias": "broadcast_review", "icon": "play-circle", "link": "#" },
-            { "title": "فایل‌های به‌روزشونده", "alias": "broadcast_updatables", "icon": "refresh", "link": "#" },
             { "title": "مدیریت کرال", "alias": "broadcast_crawl", "icon": "font", "link": "/broadcast/crawl" },
             { "title": "قیمت‌ها", "alias": "broadcast_prices", "icon": "line-chart", "link": "/broadcast/prices" },
             { "title": "کنداکتور مدیا", "alias": "broadcast_photos", "icon": "photo", "link": "/broadcast/photos" }
@@ -49,25 +45,6 @@
         ]
     },
     {
-        "title": "آرشیو",
-        "alias": "archive",
-        "icon": "archive",
-        "items": [
-            { "title": "ذخیره", "alias": "archive_store", "icon": "hdd-o", "link": "#" },
-            { "title": "بازیابی", "alias": "archive_retrieve", "icon": "upload", "link": "#" }
-        ]
-    },
-    {
-        "title": "وب‌سایت",
-        "alias": "website",
-        "icon": "link",
-        "items": [
-            { "title": "مدیریت محتوا", "alias": "website_content", "icon": "file-text", "link": "#" },
-            { "title": "مدیریت کلیدواژه‌ها", "alias": "website_tags", "icon": "tags", "link": "#" },
-            { "title": "دسته‌بندی‌ها", "alias": "website_categories", "icon": "sitemap", "link": "#" }
-        ]
-    },
-    {
         "title": "اطلاعات پایه",
         "alias": "basic",
         "icon": "globe",
@@ -92,8 +69,7 @@
         "icon": "volume-control-phone",
         "items": [
             { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "/pr/recordings" },
-            { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" },
-            { "title": "بولتن‌ها", "alias": "pr_bulletin", "icon": "book", "link": "#" }
+            { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" }
         ]
     }, 
     {
@@ -103,11 +79,7 @@
         "items": [
             { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
             { "title": "گزارش نوع کنداکتور", "alias": "stats_broadcast", "icon": "bar-chart", "link": "/stats/broadcast" },
-            { "title": "گزارش کنداکتور", "alias": "stats_schedule", "icon": "pie-chart", "link": "/stats/schedule" },
-            { "title": "آمار منابع", "alias": "resources_stats", "icon": "bar-chart", "link": "#" },
-            { "title": "آمار آرشیو", "alias": "archive_stats", "icon": "file-video-o", "link": "#" },
-            { "title": "آمار وب‌سایت", "alias": "website_stats", "icon": "line-chart", "link": "#" },
-            { "title": "آمار روابط عمومی", "alias": "pr_stats", "icon": "bar-chart-o", "link": "#" }
+            { "title": "گزارش کنداکتور", "alias": "stats_schedule", "icon": "pie-chart", "link": "/stats/schedule" }
         ]
     },
     {
@@ -115,8 +87,7 @@
         "alias": "users",
         "icon": "user-circle-o",
         "items": [
-            { "title": "مدیریت کاربران", "alias": "users_manage", "icon": "users", "link": "/users/manage" },
-            { "title": "دسترسی‌ها", "alias": "users_acl", "icon": "user-plus", "link": "#" }
+            { "title": "مدیریت کاربران", "alias": "users_manage", "icon": "users", "link": "/users/manage" }
         ]
     }
 ]
