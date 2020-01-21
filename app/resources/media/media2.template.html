@@ -6,7 +6,7 @@
     .pane { position: relative; }
     .pane.collapsed { height: 53px; overflow: hidden; }
     .pane.collapsed .fa-expand:before { content: "\f065"; }
-    .toggle-pane { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
+    .toggle-pane, .toggle-tree-modal { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
     #tree { max-height: 300px; overflow: hidden; overflow-y: scroll; }
     .jstree-default .jstree-node { background-position-x: -2000px }
     .ribbon { min-width: 140px; }
@@ -19,6 +19,7 @@
     .label a { color: #fff; text-decoration: none; padding-left: 4px; padding-right: 4px; margin-left: -2px; margin-right: 2px; }
     .label a:hover { background: rgba(0, 0, 0, 0.1) }
     .label[data-key*="date"] span { display: inline-block; direction: ltr; }
+    .modal-content { min-height: 400px; }
 </style>
 <div id="metadata-page" class="portlet box">
     <div class="row">
@@ -175,7 +176,21 @@
                     </div>
                 </div>
                 <div class="pane mt-element-ribbon bg-white collapsed">
-                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
+<!--                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>-->
+                    <button type="button" class="toggle-tree-modal"><i class="fa fa-share-square-o"></i></button>
+                    <div class="modal fade" id="tree-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">برنامه‌ها</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div data-type="categoryId" id="tree"></div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
                             <input id="filter_3" type="checkbox">
@@ -190,7 +205,7 @@
 <!--                                </select>-->
 <!--                            </div>-->
 <!--                        </div>-->
-                        <div data-type="categoryId" id="tree"></div>
+<!--                        <div data-type="categoryId" id="tree"></div>-->
                     </div>
                 </div>
                 <div class="pane mt-element-ribbon bg-white collapsed">
@@ -394,7 +409,6 @@
             </form>
         </div>
         <div id="media-mainbody" class="col-xs-9 col-lg-10">
-
             <div id="media-list" class="portlet-body">
                 <div id="itemlist" class="mainbody"></div>
             </div>

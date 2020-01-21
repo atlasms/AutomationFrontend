@@ -57,6 +57,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="toggle-sidebar"]': 'toggleSidebar'
             , 'click #filters .label a': 'removeFilter'
             , 'popstate window': 'handleUrlChange'
+            , 'click .toggle-tree-modal': function(e) {
+                e.preventDefault();
+                $('#tree-modal').modal('show');
+            }
             , 'click .toggle-pane': function (e) {
                 $(e.target).parents('.pane').first().toggleClass('collapsed');
             }
