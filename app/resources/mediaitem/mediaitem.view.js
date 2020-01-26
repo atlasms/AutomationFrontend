@@ -532,17 +532,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , video: self.getMedia(item.Thumbnail)
                 , duration: item.Duration
             };
-            var player = new Player('#player-container', {
+            var playerConfig = {
                 file: media.video
                 , duration: media.duration
                 , playlist: [{
                     image: media.thumbnail
                     , sources: [
                         {file: media.video, label: 'LQ', default: true}
-                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
                     ]
                 }]
-            });
+            };
+            if (typeof Config.HDPlayback === 'unedfined' || Config.HDPlayback) {
+                console.log(typeof Config.HDPlayback === 'unedfined', Config.HDPlayback);
+                playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
+            }
+            var player = new Player('#player-container', playerConfig);
             player.render();
             self.player = player;
             self.playerInstance = player.instance;

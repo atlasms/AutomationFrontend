@@ -56,17 +56,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var output = handlebarsTemplate({});
                 $row.after('<tr class="preview-pane"><td colspan="100%">' + output + '</td></tr>').promise().done(function () {
                     if ($row.data('type') === 0) {
-                        var player = new Player('#player-container', {
+                        var playerConfig = {
                             duration: media.duration
                             , file: media.video
                             , playlist: [{
-                                    image: media.thumbnail
-                                    , sources: [
-                                        {file: media.video, label: 'LQ', default: true}
-                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
-                                    ]
-                                }]
-                        });
+                                image: media.thumbnail
+                                , sources: [
+                                    {file: media.video, label: 'LQ', default: true}
+                                ]
+                            }]
+                        };
+                        if (typeof Config.HDPlayback === 'unedfined' || Config.HDPlayback) {
+                            playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
+                        }
+                        var player = new Player('#player-container', playerConfig);
                         player.render();
                         self.player = player;
                         self.playerInstance = player.instance;
