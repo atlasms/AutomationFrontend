@@ -7,46 +7,47 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
      * Use following configurations
      */
     window.Config = {
-        "title": "اتوماسیون تولید و پخش اطلس",
-        "version": "1.200128.1358",
-        "loginMessage": "ورود به سامانه اتوماسیون",
-        "channel": "ایران‌کالا",
-        "channelLogo": "assets/data/iktv.png",
-        "storageKey": "automation" + '_' + window.location.host.replace(/\./g, '').split(":")[0],
-        "siteUrl": "http://localhost",
-        "vendorLink": "http://atlasms.ir",
-        "vendorLinkEnabled": false,
-        "env": "dev",
-        "placeholderImage": "/assets/img/placeholder.png",
-        "transitionSpedd": 200,
-        "notificationsInterval": 60000,
-        "tickerInterval": 5000,
-        "tickerUpdateInterval": 60000,
-        "notificationsCount": 10,
-        "schedulePageLimit": 100,
-        "characterLimit": 130, 
-        "wordLimit": 15,
-        "defalutMediaListLimit": 25,
-        "mediaScheduleGroupItems": 1,
-        "loginMode": "default",
-        "HDPlayback": true,
-        // "initialRedirect": "/resources/media2",
-        "epgMediaPath": "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
-        "settings": {
-            "datepicker": {
-                "format": 'YYYY-MM-DD'
-                , "autoClose": true
-                , "observer": true
-                , "persianDigit": false
-                , "navigator": {
-                    "enabled": true
-                    , "text": {
-                        "btnNextText": ">"
-                        , "btnPrevText": "<"
+        title: "اتوماسیون تولید و پخش اطلس",
+        version: "1.200128.1358",
+        loginMessage: "ورود به سامانه اتوماسیون",
+        channel: "ایران‌کالا",
+        channelLogo: "assets/data/iktv.png",
+        storageKey: "automation" + '_' + window.location.host.replace(/\./g, '').split(':')[0],
+        siteUrl: "http://localhost",
+        vendorLink: "http://atlasms.ir",
+        vendorLinkEnabled: false,
+        env: "dev",
+        placeholderImage: "/assets/img/placeholder.png",
+        transitionSpedd: 200,
+        notificationsInterval: 60000,
+        tickerInterval: 5000,
+        tickerUpdateInterval: 60000,
+        notificationsCount: 10,
+        schedulePageLimit: 100,
+        characterLimit: 130, 
+        wordLimit: 15,
+        defalutMediaListLimit: 25,
+        mediaScheduleGroupItems: 1,
+        loginMode: "default",
+        HDPlayback: true,
+        newsTicker: true,
+        // "initialRedirect: "/resources/media2",
+        epgMediaPath: "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
+        settings: {
+            datepicker: {
+                format: 'YYYY-MM-DD'
+                , autoClose: true
+                , observer: true
+                , persianDigit: false
+                , navigator: {
+                    enabled: true
+                    , text: {
+                        btnNextText: ">"
+                        , btnPrevText: "<"
                     }
                 }
             },
-            "bootstrapTable": {
+            bootstrapTable: {
                 icons: {
                     paginationSwitchDown: 'fa fa-arrow-down',
                     paginationSwitchUp: 'fa fa-arrow-up',
@@ -62,7 +63,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 , showPaginationSwitch: true
                 , locale: 'fa-IR'
             },
-            "bootpag": {
+            bootpag: {
                 leaps: true,
                 firstLastUse: true,
                 first: '→',
@@ -75,7 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 lastClass: 'last',
                 firstClass: 'first'
             },
-            "cropper": {
+            cropper: {
                 aspectRatio: 16 / 9
                 , movable: false
                 , rotatable: false
@@ -95,12 +96,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     $("#crop-height").length && $("#crop-height").val(Math.round(e.height));
                 }
             },
-            "crawlEditor": {
+            crawlEditor: {
                 colorsEnabled: false,
                 stylesEnabled: false
             }
         },
-        "routes": {
+        routes: {
             "/": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
             , "dashboard": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
             , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
@@ -159,48 +160,48 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "newsroom/workspace": {"private": true, "access": null, "action": "NewsroomWorkspaceView", "file": "app/newsroom/workspace/workspace.view"}
             , "newsroom/itemprint": {"private": true, "access": null, "skipLayout": true, "action": "NewsroomItemPrintView", "file": "app/newsroom/item/itemprint.view"}
         },
-        "positions": {
-            "wrapper": "body"
-            , "sidebar": "#sidebar"
-            , "main": "#main"
-            , "toolbar": "#toolbar"
-            , "status": "#status-items"
+        positions: {
+            wrapper: "body"
+            , sidebar: "#sidebar"
+            , main: "#main"
+            , toolbar: "#toolbar"
+            , status: "#status-items"
         },
-        "api": {
-            "url": (location.href.indexOf('localhost') !== -1) ? 'http://au.iktv.ir/services/api/' : "/services/api/"
-//            "url": "http://46.225.139.98:8080/api/"
-            , "login": "login"
-            , "schedule": "conductor"
-            , "crawl": "crawl"
-            , "crawlRep": "crawlRep"
-            , "tree": "metacategories"
-            , "ingest": "ingest"
-            , "metadata": "metadata"
-            , "media": "media"
-            , "media2": "media/list2"
-            , "mediaversions": "media/history"
-            , "versionsbypid": "media/historybypid"
+        api: {
+            url: (location.href.indexOf('localhost') !== -1) ? 'http://au.iktv.ir/services/api/' : "/services/api/"
+//            url": "http://46.225.139.98:8080/api/"
+            , login: "login"
+            , schedule: "conductor"
+            , crawl: "crawl"
+            , crawlRep: "crawlRep"
+            , tree: "metacategories"
+            , ingest: "ingest"
+            , metadata: "metadata"
+            , media: "media"
+            , media2: "media/list2"
+            , mediaversions: "media/history"
+            , versionsbypid: "media/historybypid"
 //            , "review": "metadata?categoryid=11"
-            , "definitions": "dfn"
-            , "comments": "comments"
-            , "users": "accounts"
-            , "acl": "accounts/access"
-            , "sms": "pr/sms"
-            , "lantv": "share/lantv/"
-            , "hsm": "hsm"
-            , "social": "social"
-            , "newsroom": "newssource"
-            , "tags": "share/tags/"
-            , "subjects": "share/subjects"
-            , "shotlist": "shotlist"
-            , "economy": "economy"
-            , "broadcastphotos": "conductormedia"
-            , "persons": "share/persons"
-            , "mediapersons": "metadata/person"
-            , "dashboardSystem": "share/dashboard/system"
-            , "dashboardUser": "share/dashboard/user"
+            , definitions: "dfn"
+            , comments: "comments"
+            , users: "accounts"
+            , acl: "accounts/access"
+            , sms: "pr/sms"
+            , lantv: "share/lantv/"
+            , hsm: "hsm"
+            , social: "social"
+            , newsroom: "newssource"
+            , tags: "share/tags/"
+            , subjects: "share/subjects"
+            , shotlist: "shotlist"
+            , economy: "economy"
+            , broadcastphotos: "conductormedia"
+            , persons: "share/persons"
+            , mediapersons: "metadata/person"
+            , dashboardSystem: "share/dashboard/system"
+            , dashboardUser: "share/dashboard/user"
         },
-        "channels": {
+        channels: {
             'tv1': {
                 title: 'یک',
                 id: 'tv1'
@@ -270,15 +271,15 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 id: 'nasim'
             }
         },
-        "mediaOptions": [
+        mediaOptions: [
             {text: "تغییر وضعیت", access: 4, source: "dfn", items: 2, task: null, value: null},
             {text: "گزینه تستی", access: 8388608, icon: 'github', color: 'warning', items: [
                 {text: "فرزند 1", task: 'test', value: '1', icon: 'twitter'},
                 {text: "فرزند 2", task: 'test', value: '2'}
             ]}
         ],
-        "temp": {
-            "titleTypes": {Key: "titletypes", Value: "subtitle_type", Children: [
+        temp: {
+            titleTypes: {Key: "titletypes", Value: "subtitle_type", Children: [
                     {Id: "2", Key: "دو خطی", Value: "2"},
                     {Id: "1", Key: "تک خط", Value: "1"},
                     {Id: "3", Key: "سه خطی", Value: "3"}
