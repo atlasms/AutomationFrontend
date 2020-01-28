@@ -1,27 +1,8 @@
 <link rel="stylesheet" href="/assets/css/vendor/select2.min.css" />
 <style>
-    figure { overflow: hidden; }
-    .checkbox-circle { margin: 0; }
-    .mt-element-ribbon { margin-bottom: 0; border-bottom: 1px solid #eee; }
-    .mt-element-ribbon:nth-child(even) { background: #f7f7f7 !important; }
-    .pane { position: relative; }
-    .pane.collapsed { height: 53px; overflow: hidden; }
-    .pane.collapsed .fa-expand:before { content: "\f065"; }
-    .toggle-pane { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
-    #tree { max-height: 300px; overflow: hidden; overflow-y: scroll; }
-    .jstree-default .jstree-node { background-position-x: -2000px }
-    .ribbon { min-width: 140px; }
-
-    #filters { height: 34px; }
-    #filters .label { float: right; margin: 4px 10px 0 0; }
-    #filters .label:first-child { margin-right: 50px; }
-
-    .label { font-size: 12px; }
-    .label a { color: #fff; text-decoration: none; padding-left: 4px; padding-right: 4px; margin-left: -2px; margin-right: 2px; }
-    .label a:hover { background: rgba(0, 0, 0, 0.1) }
-    .label[data-key*="date"] span { display: inline-block; direction: ltr; }
-
-
+    /*@page {*/
+    /*    size: A4 portrait;*/
+    /*}*/
     @font-face{
         font-family:'Vazir';font-style:normal;font-weight:normal;
         src:url(/assets/font/vazir/v4.4.0/Vazir-FD.eot);
@@ -50,24 +31,46 @@
         html, body { font-size: 12px; }
         .spinner { display: none; }
     }
+
+    figure { overflow: hidden; }
+    .checkbox-circle { margin: 0; }
+    .mt-element-ribbon { margin-bottom: 0; border-bottom: 1px solid #eee; }
+    .mt-element-ribbon:nth-child(even) { background: #f7f7f7 !important; }
+    .pane { position: relative; }
+    .pane.collapsed { height: 53px; overflow: hidden; }
+    .pane.collapsed .fa-expand:before { content: "\f065"; }
+    .toggle-pane { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
+    #tree { max-height: 300px; overflow: hidden; overflow-y: scroll; }
+    .jstree-default .jstree-node { background-position-x: -2000px }
+    .ribbon { min-width: 140px; }
+
+    #filters { height: 34px; }
+    #filters .label { float: right; margin: 4px 10px 0 0; }
+    #filters .label:first-child { margin-right: 50px; }
+
+    .label { font-size: 12px; }
+    .label a { color: #fff; text-decoration: none; padding-left: 4px; padding-right: 4px; margin-left: -2px; margin-right: 2px; }
+    .label a:hover { background: rgba(0, 0, 0, 0.1) }
+    .label[data-key*="date"] span { display: inline-block; direction: ltr; }
+
     .wrapper { width: 94%; margin: auto; }
     table { page-break-inside:auto; border-spacing: 0; border-collapse: collapse; }
     h1 { text-align: center; margin-bottom: 0; }
     tr { page-break-inside:avoid; page-break-after:auto }
     tr.highlight td { background: #eee; }
-    table { width: 100%; border-bottom: 1px solid #555; }
+    table { width: 100%; border-bottom: 1px solid #f2f2f2; }
     table + table { margin-top: 20px; }
     /*	table th { border: 0 none; width: 7%; }
         table th.title { width: 35% }*/
-    table { border-bottom: 0 none; border-top: 0 none; }
-    table tr { border-bottom: 1px solid #555; }
+    table { border-bottom: 0 none; border-top: 0 none; border-collapse: separate !important; box-shadow: 0 0 5px #ddd; border-radius: 4px; }
+    table tr { border-bottom: 1px solid #f2f2f2; }
     table thead { border-top: 0 none; }
-    table thead th { border-top: 1px solid #555; }
+    table thead th { border-top: 1px solid #f2f2f2; }
     tfoot { border-top: 1px solid; max-height: 1px; height: 0; border-right: 0 none; border-left: 0 none; }
-    th, td { border-right: 1px solid #555; padding: 2px 4px; }
-    table td { border-top: 1px solid #555; border-right: 1px solid #555; border-spacing: 0; }
+    th, td { border-right: 1px solid #f2f2f2; padding: 2px 4px; }
+    table td { border-top: 1px solid #f2f2f2; border-right: 1px solid #f2f2f2; border-spacing: 0; }
     th { padding: 4px 6px; }
-    th:last-child, td:last-child { border-left: 1px solid #555; }
+    th:last-child, td:last-child { border-left: 1px solid #f2f2f2; }
     p { margin: 0; font-size: 10.5px; text-align: justify; line-height: 16px; }
     figure { padding: 0; margin: 0; max-height: 68px; overflow: hidden; height: 68px; }
     figure img { display: block; width: 120px; height: auto; }
@@ -83,7 +86,12 @@
     [data-type="state"] { font-family: 'Vazir', 'Vazir2'; pointer-events: none; border: 0 none; }
     .btn { display: none; }
     .stats-table { width: 100%; table-layout: fixed; }
-    .stats-table td { width: 12.5%; max-width: 12.5%; }
+    .stats-table tbody tr:first-child td:first-child { border-top-right-radius: 4px; }
+    .stats-table tbody tr:first-child td:last-child { border-top-left-radius: 4px; }
+    .stats-table tbody tr:last-child td:first-child { border-bottom-right-radius: 4px; }
+    .stats-table tbody tr:last-child td:last-child { border-bottom-left-radius: 4px; }
+    table tbody tr:last-child td { border-bottom: 1px solid #f2f2f2; }
+    .stats-table td { width: 12.5%; max-width: 12.5%; padding: 2px 4px; }
     .stats-table * { pointer-events: none; }
     .box { margin-top: 20px; }
     .text-center { text-align: center; }
@@ -97,10 +105,18 @@
     select, .select2-container--default .select2-selection--multiple { border: 0 none !important; }
     .select2-selection__choice__remove { display: none !important; }
     .select2-selection__choice { border: 0 none !important; margin-top: 0; margin-bottom: 0; background: transparent !important; }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice { margin-top: 0; }
 
     /*.mainbody .table tr th:last-child, .mainbody .table tr td:last-child { display: none; }*/
     /*.mainbody .table tr th:nth-child(2), .mainbody .table tr td:nth-child(2) { display: none; }*/
     .help-block { display: none; }
+    #metadata-page { padding-left: 20px; padding-right: 20px; }
+    #metadata-page + * { padding-left: 20px; padding-right: 20px; }
+    #itemlist table { border-radius: 4px; border-collapse: separate !important; }
+    #itemlist table thead tr { background: #ccc; }
+    #itemlist table thead tr th:first-child { border-top-right-radius: 4px; }
+    #itemlist table thead tr th:last-child { border-top-left-radius: 4px; }
+    #itemlist table tbody tr:nth-child(2n) { background: #f2f2f2; }
 </style>
 <div id="metadata-page" class="portlet box">
     <table class="table stats-table">
@@ -112,7 +128,11 @@
             <td>از</td>
             <td>تا</td>
             <td>شماره قسمت</td>
-            <td>بازه پخش</td>
+            <td>
+<!--                بازه پخش-->
+                تعداد
+            </td>
+            <td>کل مدت</td>
         </tr>
         <tr>
             <td>{{$_get 'q' 0}}</td>
@@ -134,7 +154,13 @@
             <td>{{$_get 'startdate' 1}}</td>
             <td>{{$_get 'enddate' 1}}</td>
             <td>{{$_get 'number' 0}}</td>
-            <td><span style="direction: ltr; display: inline-block;">{{$_get 'broadcastStartdate' 1}}</span> تا <span style="direction: ltr; display: inline-block;">{{$_get 'broadcastEnddate' 1}}</span></td>
+            <td>
+<!--                <span style="direction: ltr; display: inline-block;">{{$_get 'broadcastStartdate' 1}}</span> تا <span style="direction: ltr; display: inline-block;">{{$_get 'broadcastEnddate' 1}}</span>-->
+                <span data-type="total-count"></span>
+            </td>
+            <td>
+                <span data-type="total-duration"></span>
+            </td>
         </tr>
         <tr class="text-bold">
             <td>برنامه‌ها</td>
@@ -145,6 +171,7 @@
             <td>موضوع</td>
             <td>طبقه</td>
             <td>گروه تولیدی</td>
+            <td>ترتیب نمایش</td>
         </tr>
         <tr>
             <td class="programs-list">{{$_get 'categoryId' 0}}</td>
@@ -182,31 +209,37 @@
                     {{/select}}
                 </select>
             </td>
-        </tr>
-        <tr class="text-bold">
-            <td colspan="3">تعداد</td>
-            <td colspan="3">کل مدت</td>
-            <td colspan="2">ترتیب نمایش</td>
-<!--            <td>عوامل</td>-->
-<!--            <td>ساختار</td>-->
-<!--            <td>موضوع</td>-->
-<!--            <td>طبقه</td>-->
-<!--            <td>گروه تولیدی</td>-->
-        </tr>
-        <tr>
-            <td colspan="3">
-                <span data-type="total-count"></span>
-            </td>
-            <td colspan="3">
-                <span data-type="total-duration"></span>
-            </td>
-            <td colspan="2">
+            <td>
                 <select data-type="ordering" class="form-control" name="ordering" placeholder="ترتیب">
                     <option value="MediaCreated desc" selected>تاریخ ایجاد</option>
                     <option value="MediaTitle desc">نام قسمت</option>
                 </select>
             </td>
         </tr>
+<!--        <tr class="text-bold">-->
+<!--            <td colspan="3">تعداد</td>-->
+<!--            <td colspan="3">کل مدت</td>-->
+<!--            <td colspan="2">ترتیب نمایش</td>-->
+<!--&lt;!&ndash;            <td>عوامل</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            <td>ساختار</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            <td>موضوع</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            <td>طبقه</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            <td>گروه تولیدی</td>&ndash;&gt;-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td colspan="3">-->
+<!--                <span data-type="total-count"></span>-->
+<!--            </td>-->
+<!--            <td colspan="3">-->
+<!--                <span data-type="total-duration"></span>-->
+<!--            </td>-->
+<!--            <td colspan="2">-->
+<!--                <select data-type="ordering" class="form-control" name="ordering" placeholder="ترتیب">-->
+<!--                    <option value="MediaCreated desc" selected>تاریخ ایجاد</option>-->
+<!--                    <option value="MediaTitle desc">نام قسمت</option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
     </table>
 </div>
     <div class="row">
