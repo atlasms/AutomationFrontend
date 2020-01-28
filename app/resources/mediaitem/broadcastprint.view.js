@@ -36,7 +36,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 $container.html(output).promise().done(function () {
                     var params = {
 //                        overrideUrl: Config.api.schedule + '/mediausecount?id=' + self.getId()
-                        overrideUrl: Config.api.schedule + '/' + (range ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59' : '')
+                        overrideUrl: Config.api.schedule + '/' + (range.start ? 'mediausecountbydate' : 'mediausecount') + '?id=' + self.getId() + (range ? '&startdate=' + range.start + 'T00:00:00&enddate=' + range.end + 'T23:59:59' : '')
                     };
                     model = new MediaitemModel(params);
                     model.fetch({
