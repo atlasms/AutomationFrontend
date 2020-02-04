@@ -1,3 +1,10 @@
+<style>
+	th span { display: block; position: relative; }
+	th span:after { display: block; content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%); color: #ccc; font-family:'FontAwesome'; font-weight: normal; }
+	.sortable { cursor: pointer; }
+	.sortable.asc span:after {content:"\f062"}
+	.sortable.desc span:after {content:"\f063"}
+</style>
 <div class="portlet itemlist box">
 	<div class="portlet-title" style="background: #3598dc">
 		<div class="caption">
@@ -17,18 +24,18 @@
 			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
 				<thead>
 					<tr>
-						<th class="">شناسه</th>
-						<th class="col-xs-1"></th>
-						<th class="col-xs-4">نام آیتم</th>
-						<th class="col-xs-2 text-center">برنامه</th>
-						<th class="col-xs-2 text-center">زمان ثبت</th>
-						<th class="col-xs-1">ایجاد کننده</th>
+						<th data-field="Id" class="sortable"><span>شناسه</span></th>
+						<th data-field="Thumbnail" class="col-xs-1"><span></span></th>
+						<th data-field="Title" class="col-xs-4 sortable"><span>عنوان</span></th>
+						<th data-field="MetaCategoryName" class="col-xs-2 text-center sortable"><span>برنامه</span></th>
+						<th data-field="Created" class="col-xs-2 text-center sortable"><span>زمان ایجاد</span></th>
+						<th data-field="CreatedByText" class="col-xs-1"><span>ایجاد کننده</span></th>
 <!--						<th class="col-xs-2 text-center">آخرین ویرایش</th>-->
 <!--						<th class="col-xs-1">ویرایش کننده</th>-->
-						<th class="text-center">قسمت</th>
-						<th class="text-center">#&nbsp;پخش</th>
-						<th class="col-xs-1 text-center">مدت</th>
-						<th class="col-xs-2 text-center">وضعیت</th>
+						<th data-field="EpisodeNumber" class="text-center sortable"><span>قسمت</span></th>
+						<th data-field="ConductorUseCount" class="text-center"><span>#&nbsp;پخش</span></th>
+						<th data-field="Duration" class="col-xs-1 text-center sortable"><span>مدت</span></th>
+						<th data-field="State" class="col-xs-2 text-center"><span>وضعیت</span></th>
 						<th></th>
 					</tr>
 				</thead>

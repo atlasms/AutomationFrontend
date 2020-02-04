@@ -57,7 +57,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="toggle-sidebar"]': 'toggleSidebar'
             , 'click #filters .label a': 'removeFilter'
             , 'popstate window': 'handleUrlChange'
-            , 'click .toggle-tree-modal': function(e) {
+            , 'click th.sortable': 'handleOrdering'
+            , 'click .toggle-tree-modal': function (e) {
                 e.preventDefault();
                 $('#tree-modal').modal('show');
             }
@@ -66,6 +67,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
 
             // , 'change select.form-control': 'reLoad'
+        }
+        , handleOrdering: function (e) {
+            e.preventDefault();
+            var $th = $(e.target).is('th') ? $(e.target) : $(e.target).parents('th:first');
+            var $headers = $th.parents('tr:first');
+            if (!$th.hasClass('active')) {
+                $headers.find('.sortable.active').removeClass('active');
+                $th.addClass('active');
+            }
+            if ($th.hasClass('desc')) {
+                $th.removeClass('desc').addClass('asc');
+            } else {
+                $th.removeClass('asc').addClass('desc');
+            }
+            var fieldTitle = $th.data('field');
+            var value = 'Media' + fieldTitle[0].toUpperCase() + fieldTitle.slice(1) + ' ' + ($th.hasClass('desc') ? 'desc' : 'asc');
+            $('[data-type="ordering"]').val(value);
+            this.reLoad();
         }
         , print: function (e) {
             e.preventDefault();
@@ -570,6 +589,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $(this).select2({dir: "rtl", multiple: true, tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first')});
                 });
             }, 500);
+
+            var params = this.getParams();
+            if (typeof params.ordering !== 'undefined' && params.ordering !== '') {
+                var ord = params.ordering.split(' ');
+                $('th.sorable').each(function () {
+                    if ($(this).hasClass('active'))
+                        $(this).removeClass('active');
+                });
+                $('th.sortable[data-field="' + ord[0].replace('Media', '') + '"]').addClass('active').addClass(ord[1]);
+            }
 
             $('[data-type="total-count"]').html(items.count);
             $('[data-type="total-duration"]').html(Global.createTime2(items.duration));

@@ -37,6 +37,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-search"></i></span>
                                 <input data-type="q" type="text" class="form-control" name="q" placeholder="جستجو" value="">
+<!--                                <input data-type="sorting" type="hidden" name="sorting" value="" />-->
                             </div>
                         </div>
                     </div>
@@ -399,8 +400,18 @@
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-sort-numeric-desc"></i> ترتیب</span>
                                 <select data-type="ordering" class="form-control" name="ordering" placeholder="ترتیب">
-                                    <option value="MediaCreated desc" selected>تاریخ ایجاد</option>
-                                    <option value="MediaTitle desc">نام قسمت</option>
+                                    <option value="MediaCreated asc">تاریخ ایجاد صعودی</option>
+                                    <option value="MediaCreated desc" selected>تاریخ ایجاد نزولی</option>
+                                    <option value="MediaTitle asc">نام قسمت صعودی</option>
+                                    <option value="MediaTitle desc">نام قسمت نزولی</option>
+                                    <option value="MediaId asc">شناسه صعودی</option>
+                                    <option value="MediaId desc">شناسه نزولی</option>
+                                    <option value="MediaMetaCategoryName asc">نام برنامه صعودی</option>
+                                    <option value="MediaMetaCategoryName desc">نام برنامه نزولی</option>
+                                    <option value="MediaEpisodeNumber asc">شماره قسمت صعودی</option>
+                                    <option value="MediaEpisodeNumber desc">شماره قسمت نزولی</option>
+                                    <option value="MediaDuration asc">مدت صعودی</option>
+                                    <option value="MediaDuration desc">مدت نزولی</option>
                                 </select>
                             </div>
                         </div>
