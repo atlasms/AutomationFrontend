@@ -299,7 +299,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         if (typeof value !== 'string') {
                             fields[field] = value.join(',');
                         } else if (field.indexOf('date') !== -1) {
-                            if (field === 'startdate')
+                        if (field === 'startdate' || field === 'broadcastStartdate')
                                 fields[field] = Global.jalaliToGregorian(value) + 'T00:00:00';
                             else
                                 fields[field] = Global.jalaliToGregorian(value) + 'T23:59:59';
