@@ -39,7 +39,7 @@ require.config({
     , urlArgs: "_=" + (new Date()).getTime()
     , paths: {
         // Library Dependencies
-        jquery: ["vendor/jquery-3.4.1.min"]
+        jquery: ["vendor/jquery-3.1.1.min"]
         , "jquery-ui": ["vendor/jquery-ui.min"]
         , "underscore": ["vendor/underscore-min"]
         , "backbone": ["vendor/backbone-min"]
