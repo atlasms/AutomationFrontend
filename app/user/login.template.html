@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width" />
 <style>
     /*.login-container { position: relative; margin: 0; padding: 0; z-index: 1; }*/
     h1 {
@@ -14,7 +15,6 @@
 
     .login-container video {
         position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 2; /*filter: blur(10px)*/
-
     }
 
     .login-container:before {
@@ -30,6 +30,10 @@
         background: #0a80c0; box-shadow: 0 -7px 40px rgba(21, 0, 133, 0.35);
         backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; text-align: center; align-items: center;
         width: 25vw; height: 100vh; /*max-width: 320px; max-height: 500px;*/ padding: 0 40px;
+    }
+
+    @media screen and (max-width: 769px) {
+        .login { width: 70vw !important; }
     }
 
     /*.login:after {
@@ -73,6 +77,7 @@
     .btn-info:hover { background: #51b2c1; }
 
     .atlas-logo { margin-bottom: 20px; }
+
     a:not([href]) { cursor: default; }
 </style>
 <div class="login-container">
