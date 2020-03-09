@@ -116,6 +116,7 @@ require.config({
         , "newsroom.model": ["../../app/newsroom/newsroom.model"]
         , "shared.model": ["../../app/shared/shared.model"]
         , "basic.model": ["../../app/basic/basic.model"]
+        , "website.model": ["../../app/website/website.model"]
 
         // Views
         , "app.view": ["../../app/app.view"]
@@ -180,6 +181,12 @@ require.config({
         , "newsroom.itemprint.view": ["../../app/newsroom/item/itemprint.view"]
         , "basic.subjects.view": ["../../app/basic/subjects/subjects.view"]
         , "basic.tags.view": ["../../app/basic/tags/tags.view"]
+        , "website.view": ["../../app/website/website.view"]
+        , "website.dashboard.view": ["../../app/website/dashboard/dashboard.view"]
+        , "website.item.view": ["../../app/website/item/item.view"]
+        , "website.items.view": ["../../app/website/items/items.view"]
+        , "website.stats.view": ["../../app/website/stats/stats.view"]
+        , "website.workspace.view": ["../../app/website/workspace/workspace.view"]
 
         // Helpers
         , "layout": ["app/layout"]
