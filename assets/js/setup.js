@@ -91,6 +91,8 @@ require.config({
         , "defines": ["app/defines"]
         , "config": ["../../config"]
 
+        , "website.service": ["../../app/website/website.service"]
+
         // Models
         , "dashboard.model": ["../../app/dashboard/dashboard.model"]
         , "user": ["../../app/user/user.model"]

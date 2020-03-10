@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolbar', 'statusbar'
-], function ($, _, Backbone, Template, Config, User, Toolbar, Statusbar) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolbar', 'statusbar', 'website.service'
+], function ($, _, Backbone, Template, Config, User, Toolbar, Statusbar, WebsiteService) {
 
     var WebsiteDashboardView = Backbone.View.extend({
         data: {}
