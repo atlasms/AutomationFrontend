@@ -159,6 +159,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "newsroom/news": {"private": true, "access": null, "action": "NewsroomNewsView", "file": "app/newsroom/news/news.view"}
             , "newsroom/workspace": {"private": true, "access": null, "action": "NewsroomWorkspaceView", "file": "app/newsroom/workspace/workspace.view"}
             , "newsroom/itemprint": {"private": true, "access": null, "skipLayout": true, "action": "NewsroomItemPrintView", "file": "app/newsroom/item/itemprint.view"}
+            , "website": {"private": true, "access": null, "action": "WebsiteView", "file": "app/website/website.view"}
+            , "website/dashboard": {"private": true, "access": null, "action": "WebsiteDashboardView", "file": "app/website/dashboard/dashboard.view"}
+            , "website/items": {"private": true, "access": null, "action": "WebsiteItemsView", "file": "app/website/items/items.view"}
+            , "website/item": {"private": true, "access": null, "action": "WebsiteItemView", "file": "app/website/item/item.view"}
+            , "website/stats": {"private": true, "access": null, "action": "WebsiteStatsView", "file": "app/website/stats/stats.view"}
+            , "website/workspace": {"private": true, "access": null, "action": "WebsiteWorkspaceView", "file": "app/website/workspace/workspace.view"}
         },
         positions: {
             wrapper: "body"
