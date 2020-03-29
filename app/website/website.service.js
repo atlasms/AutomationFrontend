@@ -123,19 +123,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'website.model
                 }
             }
         },
-        authenticate: function (callback) {
-            var url = WebsiteService.serviceUrl + 'users.svc/login';
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: {username: 'admin', password: 'Iktv@123'},
-                success: function (data) {
-                    if (typeof callback === 'function') {
-                        callback(data);
-                    }
-                }
-            });
-        },
         prepareItems: function (items, params) {
             items = items.toJSON();
             if (typeof items.query !== "undefined")
