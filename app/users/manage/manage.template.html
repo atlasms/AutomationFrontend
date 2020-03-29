@@ -1,71 +1,76 @@
 <div id="users-manage-page" class="portlet box">
-	<div class="portlet-body">
-		<div class="mainbody">
-			<table id="users-manage-table" class="table table-bordered table-striped table-condensed flip-content table-hover">
-				<thead>
-					<tr>
-						<th class="">شناسه</th>
-						<th class="col-xs-1"></th>
-						<th class="col-xs-4">نام</th>
-						<th class="col-xs-2">نام کاربری</th>
-<!--						<th class="col-xs-2">ایمیل</th>
-						<th class="col-xs-1">شماره تلفن</th>-->
-						<th class="col-xs-2">آخرین ورود</th>
-						<th class="col-xs-2">آخرین IP</th>
-						<th class="col-xs-1">دسترسی[ها]</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each []}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
-						<td>{{math @index "+" 1}}</td>
-						<td class="text-center">
-							<figure>
-								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-							</figure>
-						</td>
-						<td class="">
-							<span class="">{{Name}} {{Family}}</span>
-						</td>
-						<td class=" text-right">
-							<span class="ltr">{{UserName}}</span>
-						</td>
-<!--						<td class="text-right">
-							<span class="">{{Email}}</span>
-						</td>
-						<td class="text-right">
-							<span class="">{{Phone}}</span>
-						</td>-->
-						<td class="text-right">
-							{{extractTime LoginDate}} {{extractDate LoginDate}}
-						</td>
-						<td class="ltr text-center">
-							{{LoginIp}}
-						</td>
-						<td class="">
-							{{Roles}}
-							<a target="_blank" href="/user/acl/{{Id}}" class="btn default">
-								<i class="fa fa-cog"></i>
-							</a>
-							<button class="btn grey" data-task="reset-password">
-								<i class="fa fa-unlock-alt"></i>
-							</button>
-						</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
-		<div class="modal-dialog container" role="document">
-			<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">کاربر جدید</h4>
-			</div>
-				<div class="modal-body"></div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+    <div class="portlet-body">
+        <div class="mainbody">
+            <table id="users-manage-table" class="table table-bordered table-striped table-condensed flip-content table-hover">
+                <thead>
+                <tr>
+                    <th class="">شناسه</th>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-3">نام</th>
+                    <th class="">وضعیت</th>
+                    <th class="col-xs-2">نام کاربری</th>
+                    <!--						<th class="col-xs-2">ایمیل</th>
+                                            <th class="col-xs-1">شماره تلفن</th>-->
+                    <th class="col-xs-2">آخرین ورود</th>
+                    <th class="col-xs-2">آخرین IP</th>
+                    <th class="col-xs-1">دسترسی[ها]</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each []}}
+                <tr data-id="{{Id}}" data-index="{{math @index " + " 1}}">
+                <td>{{math @index "+" 1}}</td>
+                <td class="text-center">
+                    <figure>
+                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                    </figure>
+                </td>
+                <td class="">
+                    <span class="">{{Name}} {{Family}}</span>
+                </td>
+                <td>
+					{{#ifCond this.State '==' 1}}<span class="btn default green-stripe btn-xs btn-block" data-task="deactivate"><i class="fa fa-unlock"></i> فعال</span>{{/ifCond}}
+					{{#ifCond this.State '==' 0}}<span class="btn default red-stripe btn-xs btn-block" data-task="activate"><i class="fa fa-ban"></i> غیرفعال</span>{{/ifCond}}
+				</td>
+                <td class=" text-right">
+                    <span class="ltr">{{UserName}}</span>
+                </td>
+                <!--						<td class="text-right">
+                                            <span class="">{{Email}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span class="">{{Phone}}</span>
+                                        </td>-->
+                <td class="text-right">
+                    {{extractTime LoginDate}} {{extractDate LoginDate}}
+                </td>
+                <td class="ltr text-center">
+                    {{LoginIp}}
+                </td>
+                <td class="">
+                    {{Roles}}
+                    <a target="_blank" href="/user/acl/{{Id}}" class="btn default">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <button class="btn grey" data-task="reset-password">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog container" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">کاربر جدید</h4>
+                </div>
+                <div class="modal-body"></div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>

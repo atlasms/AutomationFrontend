@@ -15,6 +15,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=reset-password]': 'resetPassword'
             , 'submit #user-register': 'register'
+            , 'click [data-task=deactivate]': 'deactivate'
+            , 'click [data-task=activate]': 'activate'
+        }
+        , activate: function (e) {
+            this.changeState(e, 1);
+        }
+        , deactivate: function (e) {
+            this.changeState(e, 0);
+        }
+        , changeState: function (e, state) {
+            var $link = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
+            var id = $link.parents('tr:first').attr('data-id');
+            new UsersManageModel({id: 'active/' + id}).save(null, {
+                data: JSON.stringify({key: 'State', Value: state})
+                , contentType: 'application/json'
+                , success: function (d) {
+                    toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت کاربر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if (state === 1) {
+                        $link.removeClass('red-stripe').addClass('green-stripe').attr('data-task', 'deactivate')
+                            .html('<i class="fa fa-unlock"></i> فعال');
+                    } else {
+                        $link.removeClass('green-stripe').addClass('red-stripe').attr('data-task', 'activate')
+                            .html('<i class="fa fa-ban"></i> غیرفعال');
+                    }
+                }
+            });
         }
         , resetPassword: function (e) {
             e.preventDefault();

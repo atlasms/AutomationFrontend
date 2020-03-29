@@ -1,12 +1,14 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global'
-], function ($, _, Backbone, Template, Config, User, Global) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users.manage.model', 'toastr', 'global', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, User, UsersManageModel, toastr, Global) {
 
     var LoginView = Backbone.View.extend({
         data: {}
         , events: {
-            'submit .login-form': 'login'
+            'submit .login-form': 'login',
+            'submit #change-password-form': 'updatePassword'
         }
         , el: $(Config.positions.wrapper)
+        , userData: {}
         , render: function () {
             typeof STORAGE !== "unedfined" && STORAGE && STORAGE.clear();
             typeof $_GET.redirect !== "undefined" && console.log($_GET);
@@ -22,14 +24,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
         }
         , login: function (e) {
             e.preventDefault();
-            var key = STORAGEKEY;
+            var self = this;
             var form = $(".login-content").find("form:first").serializeObject();
             var userModel = new User({path: '/login'});
             userModel.save(null, {
                 data: JSON.stringify(form)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    var d = d.toJSON();
+                    d = d.toJSON();
                     delete d['path'];
 
                     var userData = {
@@ -37,9 +39,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                         , token: d.Token
                         , data: d
                     };
-                    STORAGE.setItem(key, JSON.stringify(userData));
+                    self.userData = userData;
+                    if (typeof d.ForceChangePassword !== 'undefined' && d.ForceChangePassword) {
+                        var template = Template.template.load('user', 'change-password.partial');
+                        var $container = $('#change-password-placeholder');
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(d);
+                            $container.html(output).promise().done(function () {
+                                // self.afterRender();
+                                $('#change-password-modal').modal('show');
+                            });
+                        });
+                        return false;
+                    }
+                    self.afterLogin(userData);
+                    // STORAGE.setItem(key, JSON.stringify(userData));
                     // Redirect to home/dashboard
-                    location.href = '/';
+                    // location.href = '/';
                     return false;
                 }
                 , error: function () {
@@ -47,6 +64,57 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 }
             });
             return false;
+        }
+        , afterLogin: function (userData) {
+            var key = STORAGEKEY;
+            STORAGE.setItem(key, JSON.stringify(userData));
+            // !Backbone.History.started && Backbone.history.start({pushState: true});
+            // new Backbone.Router().navigate('/', {trigger: true});
+            location.href = '/';
+        }
+        , updatePassword: function (e) {
+            e.preventDefault();
+            var self = this;
+            var msg = {error: false, message: ''};
+            var $form = $(e.target);
+            var data = $form.serializeObject();
+            if (data.Password !== data.ConfirmPassword) {
+                msg = {error: true, message: 'عبارات وارد شده با هم یکسان نیستند'};
+                this.showUpdatePasswordMessage(msg);
+                return false;
+            }
+            new User({path: '/checkpassword', query: 'pwd=' + data.Password}).fetch({
+                success: function (res) {
+                    var response = res.toJSON();
+                    delete response.path;
+                    delete response.query;
+                    // TODO
+                    if (response.Value == 'False') {
+                        msg = {error: true, message: 'لطفاً در انتخاب رمز عبور جدید به موارد بالا دقت کنید.'};
+                        self.showUpdatePasswordMessage(msg);
+                        return false;
+                    } else {
+                        new UsersManageModel({id: 'resetpassword/' + self.userData.data.Id}).save(null, {
+                            data: JSON.stringify({key: 'Password', Value: data.Password})
+                            , contentType: 'application/json'
+                            , success: function (d) {
+                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                self.afterLogin(self.userData);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        , showUpdatePasswordMessage: function (message) {
+            var $container = $('#update-message');
+            $container.addClass(message.error ? 'alert-danger' : 'alert-success');
+            $container.text(message.message);
+            $container.slideDown('fast', function () {
+                setTimeout(function () {
+                    $container.slideUp('fast');
+                }, 10000)
+            });
         }
     });
     return LoginView;
