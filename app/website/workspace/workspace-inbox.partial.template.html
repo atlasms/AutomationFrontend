@@ -1,0 +1,35 @@
+<table class="table table-striped table-advance table-hover" id="items-table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th class="title col-xs-6">عنوان</th>
+        <th class="send-date col-xs-3">دریافت</th>
+        <th class="sent-by col-xs-2">فرستنده</th>
+        <th colspan="2" class="date text-right col-xs-1"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr class="{{#if this.Flow.[0].SeenDate}}{{else}}info{{/if}}" data-id="{{this.Id}}">
+        <td class="id">
+            {{this.Id}}
+        </td>
+        <td class="title col-xs-6">
+            <a href="#dashboard/item/{{this.Id}}" class="{{#ifCond this.ItemPriority 2}}font-red-intense{{/ifCond}}">{{this.Title}}</a>
+        </td>
+        <td class="send-date col-xs-3">
+            {{this.Flow.[0].SendDate}}
+        </td>
+        <td class="sent-by col-xs-2">
+            {{this.Flow.[0].User_From}}
+        </td>
+        <td>
+            <a data-toggle="modal" data-id="{{this.Id}}" href="#send-modal" class="btn btn-xs green-haze"><i class="fa fa-mail-forward"></i> Send</a>
+        </td>
+        <td class="date text-right col-xs-1">
+            <a href="#" data-id="{{this.Id}}" data-do="delete" class="btn btn-xs red"><i class="fa fa-trash-o"></i></a>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

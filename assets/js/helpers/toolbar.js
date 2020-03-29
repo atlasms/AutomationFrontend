@@ -107,12 +107,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
             var icon = (typeof args.icon !== "undefined") ? '<i class="' + args.icon + '"></i>' : '';
             if (label && !icon)
                 icon = label;
-            var options = '';
-            if (typeof args.options !== "undefined" && args.options.length)
-                for (var i = 0; i < args.options.length; i++)
-                    options += '<option value="' + args.options[i].value + '">' + args.options[i].text + '</option>';
+
+            var options;
+            var optionsHtml = (typeof args.optionsHtml !== "undefined") ? args.optionsHtml : null;
+            if (optionsHtml !== null) {
+                options = optionsHtml;
+            } else {
+                options = '';
+                if (typeof args.options !== "undefined" && args.options.length)
+                    for (var i = 0; i < args.options.length; i++)
+                        options += '<option value="' + args.options[i].value + '">' + args.options[i].text + '</option>';
+            }
             var output = '<div class="form-group"><div class="input-group">';
-            output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + '</span>' : '';
+            output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + ' ' + label + '</span>' : '';
             output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '"' + multi + placeholder + style + '>' + options + '</select></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }

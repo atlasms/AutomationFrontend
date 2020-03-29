@@ -1,0 +1,135 @@
+<div id="item-edit">
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="portlet light box">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-newspaper-o"></i>
+                        <span class="caption-subject font-dark bold uppercase">اطلاعات</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="mainbody">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">عنوان کوتاه</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="ShortTitle" placeholder="" value="{{ShortTitle}}" required/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">عنوان</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control input-lg" name="Title" placeholder="" value="{{Title}}" required/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">خلاصه</label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control input-lg" name="Introtext" rows="4" placeholder="">{{Introtext}}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea class="form-control input-lg" name="Fulltext" placeholder="" rows="12" required>{{{Fulltext}}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="portlet light box">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>
+                        <span class="caption-subject font-dark bold uppercase">تنظیمات</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="mainbody">
+                        <form role="form">
+                            <table class="table table-bordered">
+                                <tr class="active">
+                                    <th>وضعیت انتشار</th>
+                                    <td>
+                                        <select class="form-control" name="IsPublished">
+                                            {{#select IsPublished}}
+                                            <option value="0">منتشر نشده</option>
+                                            <option value="1">منتشر شده</option>
+                                            {{/select}}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>آدرس</th>
+                                    <td>
+                                        <input type="text" class="form-control ltr" name="Alias" value="{{Alias}}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        آدرس کوتاه
+                                    </th>
+                                    <td>
+                                        <input type="url" class="form-control ltr" name="shortUrl" readonly value="{{shortUrl}}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>تلگرام</th>
+                                    <td>
+                                        <div class="checkbox checkbox-default checkbox-circle">
+                                            <input id="telegram-checkbox" {{#if Telegram}}checked{{/if}} type="checkbox" name="Telegram">
+                                            <label for="telegram-checkbox">ارسال به تلگرام</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>کلیدواژه</th>
+                                    <td>
+                                        <input type="url" class="form-control" name="shortUrl" value="{{shortUrl}}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>دسته‌بندی</th>
+                                    <td>
+                                        <input type="url" class="form-control" name="shortUrl" value="{{shortUrl}}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>الویت</th>
+                                    <td>
+                                        <select class="form-control" name="ItemPriority">
+                                            {{#select ItemPriority}}
+                                            <option value="0">کم</option>
+                                            <option value="1" selected="">عادی</option>
+                                            <option value="2">بالا</option>
+                                            {{/select}}
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet light box">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-file-image-o"></i>
+                        <span class="caption-subject font-dark bold uppercase">مدیا</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="mainbody">
+                        <button class="btn purple-medium"><i class="fa fa-plus"></i> انتخاب</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

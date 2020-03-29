@@ -1,1 +1,39 @@
-<h1>Website Items Works!</h1>
+<div class="mainbody">
+    <div class="portlet light">
+        <div class="portlet-body">
+            <table class="table table-hover table-striped table-bordered table-hover" id="items">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="col-xs-4">عنوان</th>
+                    <th class="col-xs-1">انتشار</th>
+                    <th class="col-xs-3">دسته‌بندی</th>
+                    <th class="col-xs-2">کاربر</th>
+                    <th>بازدید</th>
+                    <th class="col-xs-2">زمان ایجاد</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each []}}
+                <tr data-id="{{this.Id}}" class="priority-{{this.ItemPriority}}">
+                    <td class="item-id">{{this.Id}}</td>
+                    <td class="item-title" title="{{this.Title}}"><a href="/website/item/{{this.Id}}" class="show-item">{{this.ShortTitle}}</a></td>
+                    <td class="item-state">
+                        {{#ifCond this.IsPublished '==' 1}}<span class="btn default green-stripe btn-xs"><i class="fa fa-check"></i> منتشر شده</span>{{/ifCond}}
+                        {{#ifCond this.IsPublished '==' 0}}<span class="btn default red-stripe btn-xs"><i class="fa fa-times"></i> منتشر نشده</span>{{/ifCond}}
+                    </td>
+                    <td class="item-sections">
+                        {{#each Categories}}
+                        <span class="label label-info label-sm">{{this.Title}}</span>
+                        {{/each}}
+                    </td>
+                    <td class="item-sections">{{{this.OwnerName}}}</td>
+                    <td class="item-sections">{{this.Viewcount}}</td>
+                    <td class="item-created">{{{this.Created}}}</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

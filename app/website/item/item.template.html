@@ -1,1 +1,154 @@
-<h1>Single Item Details Works! {{#if id}}(id: {{id}}){{/if}}</h1>
+<style>
+    #item p { text-align: justify; }
+    #item .item-title { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+    #item .item-title h3 { font-weight: bold; margin-top: 0; margin-bottom: 20px; }
+    #item .intro-text { margin-bottom: 0; line-height: 1.75; }
+    #item .item-text { line-height: 1.75; font-size: 110%; }
+    .table > tbody > tr:first-child > td { border-top: 0 none; }
+</style>
+<div id="item" class="mainbody">
+    <div class="portlet light">
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-7">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                        <tr>
+                            <th>تاریخ تولید</th>
+                            <th>آخرین ویرایش</th>
+                            <th>تاریخ انتشار</th>
+                            <th>وضعیت انتشار</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{Created}}</td>
+                            <td>{{#if Modified}}{{{Modified}}}{{else}}-{{/if}}</td>
+                            <td>{{#if Published}}{{{Published}}}{{else}}-{{/if}}</td>
+                            <td>{{#if StateTitle}}{{{StateTitle}}}{{else}}-{{/if}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="well">
+                        <div class="item-title">
+                            <h3>{{Title}}</h3>
+                            <h4>{{ShortTitle}}</h4>
+                        </div>
+                        {{#if Introtext}}
+                        <p class="intro-text">
+                            {{{Introtext}}}
+                        </p>
+                        {{/if}}
+                    </div>
+                    <dl class="dl-horizontal">
+                        {{#if Youtube}}
+                        <dt>یوتیوب:</dt>
+                        <dd><a href="{{Youtube}}" target="_blank">Link</a></dd>
+                        {{/if}}
+                    </dl>
+                    <div class="item-text">{{{Fulltext}}}</div>
+                </div>
+                <div class="col-xs-12 col-md-5">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-xs-4">اولویت</th>
+                            <th class="col-xs-4">آدرس</th>
+                            <th class="col-xs-4">آدرس کوتاه</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{#if PriorityTitle}}{{PriorityTitle}}{{else}}-{{/if}}</td>
+                            <td>{{{Alias}}}</td>
+                            <td><input type="url" name="shortUrl" readonly class="form-control input-sm ltr" value="{{shortUrl}}"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <th>کلیدواژه‌ها</th>
+                            <td>
+                                {{#each Tags}}
+                                <span class="label label-success">{{this.name}}</span>
+                                {{/each}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>دسته‌بندی</th>
+                            <td>
+                                {{#each Categories}}
+                                <span class="label label-info">{{this.Title}}</span>
+                                {{/each}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="portlet box border-blue-soft" style="border: 1px solid #4C87B9">
+                        <div class="portlet-title bg-blue-soft">
+                            <div class="caption">
+                                <i class="fa fa-paperclip" style="color: #fff;"></i>
+                                پیوست‌ها
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-hover" style="margin-bottom: 0;">
+                                <tbody>
+                                {{#each Repositories}}
+                                <tr>
+                                    <td>{{math @index "+" 1}}</td>
+                                    <td>
+                                        <figure>
+                                            <img src="{{Thumbnail}}" alt="{{Description}}"/>
+                                        </figure>
+                                    </td>
+                                    <td class="col-xs-12">
+                                        <h5><strong>{{Description}}</strong></h5>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{#if Flow}}
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>گردش آیتم</h4>
+                    <table class="table table-condensed table-bordered table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>فرستنده</th>
+                            <th>گیرنده</th>
+                            <th>تاریخ ارسال</th>
+                            <th>تاریخ مشاهده</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each this.Flow}}
+                        <tr>
+                            <td>{{Version_Id}}</td>
+                            <td>{{User_From}}</td>
+                            <td>{{User_To}}</td>
+                            <td>{{SendDate}}</td>
+                            <td>{{SeenDate}}</td>
+                            <td>
+                                <!--
+                                <a href="#" data-task="submit" data-forms="null" data-method="post" data-action="send" data-results="#send-results" data-identifier="do-send" class="btn btn-xs green" data-itemid="{{Content_Id}}"><i class="fa fa-copy"></i> Draft</a>
+                                -->
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

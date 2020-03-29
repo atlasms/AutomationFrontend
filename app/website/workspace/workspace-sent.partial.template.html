@@ -1,0 +1,39 @@
+<table class="table table-striped table-advance table-hover" id="items-table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>عنوان</th>
+        <th>ارسال</th>
+        <th>دیدن گیرنده</th>
+        <th>گیرنده</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr class="" data-id="{{this.Id}}">
+        <td class="id">
+            {{this.Id}}
+        </td>
+        <td class="title col-xs-5">
+            <a href="/website/item/{{this.Id}}">{{this.Title}}</a>
+        </td>
+        <td class="send-date col-xs-3">
+            {{this.Flow.[0].SendDate}}
+        </td>
+        <td class="send-date col-xs-3">
+            {{this.Flow.[0].SeenDate}}
+        </td>
+        <td class="sent-by col-xs-1">
+            {{this.Flow.[0].User_To}}
+        </td>
+        <td>
+            <!-- <a data-toggle="modal" data-id="{{this.Id}}" href="#send-modal" class="btn btn-xs green-haze"><i class="fa fa-mail-forward"></i> Send</a> -->
+        </td>
+        <td class="date text-right col-xs-1">
+            {{{this.CreateDate}}}
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

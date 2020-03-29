@@ -8,9 +8,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'new
         }
         , initialize: function () {
             // var self = this;
-            this.checkNewItems();
+            if (Config.newsTicker)
+                this.checkNewItems();
         }
-        , loadItem: function(e) {
+        , loadItem: function (e) {
             e.preventDefault();
             var id = $(e.target).is('li') ? $(e.target).data('id') : $(e.target).parents('li:first').data('id');
             var win = window.open('/newsroom/news/?topic=283&id=' + id, '_blank');
@@ -51,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'new
                 }, Config.tickerUpdateInterval)
             });
         }
-        , getNewItems: function(requestParams, templateData) {
+        , getNewItems: function (requestParams, templateData) {
             var self = this;
             var model = new NewsroomModel({query: $.param(requestParams), path: 'list'});
             model.fetch({

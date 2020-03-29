@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         mediaScheduleGroupItems: 1,
         loginMode: "default",
         HDPlayback: true,
-        newsTicker: true,
+        newsTicker: false,
         // "initialRedirect: "/resources/media2",
         epgMediaPath: "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
         settings: {
@@ -163,6 +163,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "website/dashboard": {"private": true, "access": null, "action": "WebsiteDashboardView", "file": "app/website/dashboard/dashboard.view"}
             , "website/items": {"private": true, "access": null, "action": "WebsiteItemsView", "file": "app/website/items/items.view"}
             , "website/item": {"private": true, "access": null, "action": "WebsiteItemView", "file": "app/website/item/item.view"}
+            , "website/edit": {"private": true, "access": null, "action": "WebsiteItemEditView", "file": "app/website/item/edit.view"}
             , "website/stats": {"private": true, "access": null, "action": "WebsiteStatsView", "file": "app/website/stats/stats.view"}
             , "website/workspace": {"private": true, "access": null, "action": "WebsiteWorkspaceView", "file": "app/website/workspace/workspace.view"}
         },
@@ -206,6 +207,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , mediapersons: "metadata/person"
             , dashboardSystem: "share/dashboard/system"
             , dashboardUser: "share/dashboard/user"
+            , website: 'https://services.iktv.ir/pl/'
         },
         channels: {
             'tv1': {

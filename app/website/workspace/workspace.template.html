@@ -4,20 +4,19 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="inbox-sidebar">
-                        <a href="#compose" data-task="compose" class="btn red compose-btn btn-block">
+                        <a href="/website/edit" data-task="compose" class="btn red compose-btn btn-block">
                             <i class="fa fa-edit"></i> خبر جدید
                         </a>
                         <ul class="inbox-nav">
+                            <li data-type="draft" class="active">
+                                <a href="#draft" data-type="draft"> پیش‌نویس </a>
+                            </li>
                             <li data-type="inbox">
-                                <a href="#inbox" data-type="inbox" data-title="Inbox"> دریافتی
-                                    <!--<span class="badge badge-success">3</span>-->
+                                <a href="#inbox" data-type="inbox"> دریافتی
                                 </a>
                             </li>
                             <li data-type="sent">
-                                <a href="#sent" data-type="sent" data-title="Sent"> ارسال‌شده‌ها </a>
-                            </li>
-                            <li data-type="sent">
-                                <a href="#draft" data-type="draft" data-title="Draft"> پیش‌نویس </a>
+                                <a href="#sent" data-type="sent"> ارسال‌شده‌ها </a>
                             </li>
                         </ul>
                     </div>

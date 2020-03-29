@@ -5,6 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
         data: {}
         , events: {
             'click #items-table tbody tr': 'loadItem'
+            , 'click .inbox-nav a[data-type]': 'loadItemsByType'
         }
         , render: function () {
             var self = this;
@@ -16,15 +17,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
                 var handlebarsTemplate = Template.handlebars.compile(html);
                 var output = handlebarsTemplate(this.data);
                 $(Config.positions.main).html(output).promise().done(function () {
-                    self.loadItems();
+                    self.loadDraftItems();
                 });
             });
-
             return this;
         }
-        , loadItems: function () {
+        , loadItemsByType: function (e) {
+            e.preventDefault();
+            var $item = $(e.target);
+            $item.parents('.inbox-nav').find('li.active').removeClass('active');
+            $item.parent().addClass('active');
+            switch ($item.data('type')) {
+                case 'draft':
+                    this.loadDraftItems();
+                    break;
+                case 'sent':
+                    this.loadSentItems();
+                    break;
+                case 'inbox':
+                    this.loadInboxItems();
+                    break;
+            }
+        }
+        , loadDraftItems: function () {
             WebsiteService.getUserItems(function (items) {
-                var template = Template.template.load('website/workspace', 'workspace-item.partial');
+                var template = Template.template.load('website/workspace', 'workspace-draft.partial');
                 template.done(function (data) {
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate(items);
@@ -32,7 +49,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
                 });
             });
         }
-        , loadItem: function(e) {
+        , loadSentItems: function () {
+            WebsiteService.getSentItems(function (items) {
+                var template = Template.template.load('website/workspace', 'workspace-sent.partial');
+                template.done(function (data) {
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    var output = handlebarsTemplate(items);
+                    $('#items').html(output);
+                });
+            });
+        }
+        , loadInboxItems: function () {
+            WebsiteService.getInboxItems(function (items) {
+                var template = Template.template.load('website/workspace', 'workspace-inbox.partial');
+                template.done(function (data) {
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    console.log(items);
+                    var output = handlebarsTemplate(items);
+                    $('#items').html(output);
+                });
+            });
+        }
+        , loadItem: function (e) {
             e.preventDefault();
             var $el = $(e.target);
             var id = $el.is('tr') ? $el.attr('data-id') : $el.parents('tr:first').attr('data-id');

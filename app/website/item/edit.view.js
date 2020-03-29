@@ -1,29 +1,39 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolbar', 'statusbar', 'website.service'
 ], function ($, _, Backbone, Template, Config, User, Toolbar, Statusbar, WebsiteService) {
 
-    var WebsiteItemView = Backbone.View.extend({
+    var WebsiteItemEditView = Backbone.View.extend({
         data: {}
         , events: {
             'click [data-task="edit"]': 'loadEditPage'
         }
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle', text: 'ویرایش', type: 'button', task: 'edit', icon: 'fa fa-edit'}}
+            {'button': {cssClass: 'btn blue pull-left', text: 'ذخیره و جدید', type: 'button', task: 'submitAndNew', icon: 'fa fa-plus'}}
+            , {'button': {cssClass: 'btn green-jungle pull-left', text: 'ذخیره', type: 'submit', task: 'submit', icon: 'fa fa-check'}}
+            , {'button': {cssClass: 'btn btn-default pull-right', text: 'انصراف', type: 'button', task: 'edit'}}
         ]
         , render: function () {
             var self = this;
             var id = this.getId();
-            var template = Template.template.load('website/item', 'item');
             this.renderToolbar();
-            WebsiteService.getItem(id, function (item) {
-                template.done(function (data) {
-                    var handlebarsTemplate = Template.handlebars.compile(data);
-                    var output = handlebarsTemplate(item);
-                    $(Config.positions.main).html(output).promise().done(function () {
-                        self.afterRender();
-                    });
+            if (id) {
+                WebsiteService.getItem(id, function (item) {
+                    self.renderTemplate(item);
+                });
+            } else {
+                this.renderTemplate({});
+            }
+            return this;
+        }
+        , renderTemplate: function(item) {
+            var self = this;
+            var template = Template.template.load('website/item', 'item-form');
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate(item);
+                $(Config.positions.main).html(output).promise().done(function () {
+                    self.afterRender();
                 });
             });
-            return this;
         }
         , getId: function () {
             var lastPart = Backbone.history.getFragment().split("/").pop().split("?")[0];
@@ -52,6 +62,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'toolb
         }
     });
 
-    return WebsiteItemView;
+    return WebsiteItemEditView;
 
 });
