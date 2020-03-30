@@ -6,11 +6,12 @@
                 <tr>
                     <th class="">شناسه</th>
                     <th class="col-xs-1"></th>
-                    <th class="col-xs-3">نام</th>
+                    <th class="col-xs-2">نام</th>
                     <th class="">وضعیت</th>
-                    <th class="col-xs-2">نام کاربری</th>
+                    <th class="col-xs-1">نام کاربری</th>
                     <!--						<th class="col-xs-2">ایمیل</th>
                                             <th class="col-xs-1">شماره تلفن</th>-->
+                    <th class="col-xs-2">آخرین تغییر رمز</th>
                     <th class="col-xs-2">آخرین ورود</th>
                     <th class="col-xs-2">آخرین IP</th>
                     <th class="col-xs-1">دسترسی[ها]</th>
@@ -41,6 +42,9 @@
                                         <td class="text-right">
                                             <span class="">{{Phone}}</span>
                                         </td>-->
+                <td class="text-right">
+                    {{extractTime LastPasswordChanged}} {{extractDate LastPasswordChanged}}
+                </td>
                 <td class="text-right">
                     {{extractTime LoginDate}} {{extractDate LoginDate}}
                 </td>

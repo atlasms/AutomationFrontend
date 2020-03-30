@@ -13,19 +13,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
         , changePassword: function (e) {
             var self = this;
             var data = $("#change-pass-form").serializeObject();
-            if (typeof data.Verify !== "undefined" && typeof data.Password !== "undefined" && data.Password === data.Verify && data.Password) {
-                new UsersManageModel({id: 'resetpassword/' + self.getId()}).save(null, {
-                    data: JSON.stringify({key: 'Password', Value: data.Password})
-                    , contentType: 'application/json'
-                    , success: function (d) {
-                        toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+            if (data.Password !== data.Verify || !data.Password) {
+                toastr['warning']('لطفاً اطلاعات وارد شده را بررسی کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            new UserModel({path: '/checkpassword', query: 'pwd=' + data.Password}).fetch({
+                success: function (res) {
+                    var response = res.toJSON();
+                    delete response.path;
+                    delete response.query;
+                    if (response.Value == 'False') {
+                        toastr['warning']('لطفاً در انتخاب رمز عبور جدید به موارد بالا دقت کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        return false;
+                    } else {
+                        new UsersManageModel({id: 'resetpassword/' + self.getId()}).save(null, {
+                            data: JSON.stringify({key: 'Password', Value: data.Password})
+                            , contentType: 'application/json'
+                            , success: function (d) {
+                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                self.afterLogin(self.userData);
+                            }
+                        });
                     }
-                    , error: function (z, x, c) {
-                        console.log(z, x, c);
-                    }
-                });
-            } else
-                toastr.warning('لطفاً اطلاعات وارد شده را بررسی کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
             e.preventDefault();
         }
         , showChangePassModal: function () {
