@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'inb
             new InboxModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
-                    items = $.map(items, function(value) {
+                    items = $.map(items, function (value) {
                         return [value];
                     }).slice(0, Config.notificationsCount);
                     template.done(function (data) {

@@ -112,7 +112,6 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
         }, 900000);
 
 
-
         return true;
     };
 
