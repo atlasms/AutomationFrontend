@@ -5,7 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         model: 'CrawlModel'
         , playerInstance: {}
         , toolbar: [
-//            {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}}
+           {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form'}},
             {'button': {cssClass: 'btn red-flamingo pull-right', text: "ارسال به پخش", type: 'button', task: 'show-export-form', access: 524288}},
             {'button': {cssClass: 'btn blue', text: "پیامک‌ها", type: 'button', task: 'show-sms-modal', icon: 'fa fa-comment', access: 4194304}}
         ]
