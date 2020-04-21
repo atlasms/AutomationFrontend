@@ -4,10 +4,30 @@
         "alias": "broadcast",
         "icon": "youtube-play",
         "items": [
-            { "title": "کنداکتور", "alias": "broadcast_schedule2", "icon": "table", "link": "/broadcast/schedule2" },
-            { "title": "مدیریت کرال", "alias": "broadcast_crawl", "icon": "font", "link": "/broadcast/crawl" },
-            { "title": "قیمت‌ها", "alias": "broadcast_prices", "icon": "line-chart", "link": "/broadcast/prices" },
-            { "title": "کنداکتور مدیا", "alias": "broadcast_photos", "icon": "photo", "link": "/broadcast/photos" }
+            {
+                "title": "کنداکتور",
+                "alias": "broadcast_schedule2",
+                "icon": "table",
+                "link": "/broadcast/schedule2"
+            },
+            {
+                "title": "مدیریت کرال",
+                "alias": "broadcast_crawl",
+                "icon": "font",
+                "link": "/broadcast/crawl"
+            },
+            {
+                "title": "قیمت‌ها",
+                "alias": "broadcast_prices",
+                "icon": "line-chart",
+                "link": "/broadcast/prices"
+            },
+            {
+                "title": "کنداکتور مدیا",
+                "alias": "broadcast_photos",
+                "icon": "photo",
+                "link": "/broadcast/photos"
+            }
         ]
     },
     {
@@ -15,18 +35,78 @@
         "alias": "resources",
         "icon": "server",
         "items": [
-            { "title": "ورود اطلاعات", "alias": "resources_ingest", "icon": "circle", "link": "/resources/ingest" },
-            { "title": "ورود اطلاعات راش", "alias": "resources_batchingest", "icon": "circle-o", "link": "/resources/batchingest" },
-            { "title": "شات‌لیست", "alias": "resources_shotlist2", "icon": "arrow-circle-up", "link": "/resources/shotlist" },
-            { "title": "اینجست OTT", "alias": "resources_ottingest", "icon": "arrow-circle-up", "link": "/resources/ottingest" },
-            { "title": "مدیریت EPG", "alias": "resources_epgdata", "icon": "arrow-circle-up", "link": "/resources/epgdata" },
-            { "title": "تصاویر", "alias": "resources_photos", "icon": "camera", "link": "/resources/photos" },
-            { "title": "مدیریت برنامه‌ها", "alias": "resources_categories", "icon": "sitemap", "link": "/resources/categories" },
-            { "title": "مدیا", "alias": "resources_media2", "icon": "database", "link": "/resources/media2" },
-            { "title": "بازبینی برنامه", "alias": "resources_review", "icon": "play", "link": "/resources/review" },
-            { "title": "ردشده‌ها", "alias": "resources_returnees", "icon": "ban", "link": "/resources/media2?state=2" },
-            { "title": "پخش زنده", "alias": "resources_live", "icon": "tv", "link": "/resources/live" },
-            { "title": "ویرایشگر ویدیو", "alias": "resources_editor", "icon": "play-circle", "link": "/resources/editor" }
+            {
+                "title": "ورود اطلاعات",
+                "alias": "resources_ingest",
+                "icon": "circle",
+                "link": "/resources/ingest"
+            },
+            {
+                "title": "ورود اطلاعات راش",
+                "alias": "resources_batchingest",
+                "icon": "circle-o",
+                "link": "/resources/batchingest"
+            },
+            {
+                "title": "شات‌لیست",
+                "alias": "resources_shotlist2",
+                "icon": "arrow-circle-up",
+                "link": "/resources/shotlist"
+            },
+            {
+                "title": "اینجست OTT",
+                "alias": "resources_ottingest",
+                "icon": "arrow-circle-up",
+                "link": "/resources/ottingest"
+            },
+            {
+                "title": "مدیریت EPG",
+                "alias": "resources_epgdata",
+                "icon": "arrow-circle-up",
+                "link": "/resources/epgdata"
+            },
+            {
+                "title": "تصاویر",
+                "alias": "resources_photos",
+                "icon": "camera",
+                "link": "/resources/photos"
+            },
+            {
+                "title": "مدیریت برنامه‌ها",
+                "alias": "resources_categories",
+                "icon": "sitemap",
+                "link": "/resources/categories"
+            },
+            {
+                "title": "مدیا",
+                "alias": "resources_media2",
+                "icon": "database",
+                "link": "/resources/media2"
+            },
+            {
+                "title": "بازبینی برنامه",
+                "alias": "resources_review",
+                "icon": "play",
+                "link": "/resources/review"
+            },
+            {
+                "title": "ردشده‌ها",
+                "alias": "resources_returnees",
+                "icon": "ban",
+                "link": "/resources/media2?state=2"
+            },
+            {
+                "title": "پخش زنده",
+                "alias": "resources_live",
+                "icon": "tv",
+                "link": "/resources/live"
+            },
+            {
+                "title": "ویرایشگر ویدیو",
+                "alias": "resources_editor",
+                "icon": "play-circle",
+                "link": "/resources/editor"
+            }
         ]
     },
     {
@@ -34,14 +114,54 @@
         "alias": "monitoring",
         "icon": "desktop",
         "items": [
-            { "title": "لاگ کنداکتور", "alias": "monitoring_schedule", "icon": "file-text-o", "link": "/monitoring/schedule" },
-            { "title": "فایل‌های کنداکتور", "alias": "monitoring_schedulefiles", "icon": "file-video-o", "link": "/monitoring/schedulefiles" },
-            { "title": "PDF کنداکتور", "alias": "monitoring_schedulepdf", "icon": "file-pdf-o", "link": "/monitoring/schedulepdf" },
-            { "title": "اینجست", "alias": "monitoring_ingest", "icon": "arrow-circle-up", "link": "/monitoring/ingest" },
-            { "title": "پلی‌لیست", "alias": "monitoring_playlist", "icon": "list-alt", "link": "/monitoring/playlist" },
-            { "title": "لاگ فعالیت‌ها", "alias": "monitoring_ualogs", "icon": "wpforms", "link": "/monitoring/ualogs" },
-            { "title": "لاگ قیمت‌ها", "alias": "monitoring_prices", "icon": "wpforms", "link": "/monitoring/prices" },
-            { "title": "لاگ زیرنویس", "alias": "monitoring_crawl", "icon": "wpforms", "link": "/monitoring/crawl" }
+            {
+                "title": "لاگ کنداکتور",
+                "alias": "monitoring_schedule",
+                "icon": "file-text-o",
+                "link": "/monitoring/schedule"
+            },
+            {
+                "title": "فایل‌های کنداکتور",
+                "alias": "monitoring_schedulefiles",
+                "icon": "file-video-o",
+                "link": "/monitoring/schedulefiles"
+            },
+            {
+                "title": "PDF کنداکتور",
+                "alias": "monitoring_schedulepdf",
+                "icon": "file-pdf-o",
+                "link": "/monitoring/schedulepdf"
+            },
+            {
+                "title": "اینجست",
+                "alias": "monitoring_ingest",
+                "icon": "arrow-circle-up",
+                "link": "/monitoring/ingest"
+            },
+            {
+                "title": "پلی‌لیست",
+                "alias": "monitoring_playlist",
+                "icon": "list-alt",
+                "link": "/monitoring/playlist"
+            },
+            {
+                "title": "لاگ فعالیت‌ها",
+                "alias": "monitoring_ualogs",
+                "icon": "wpforms",
+                "link": "/monitoring/ualogs"
+            },
+            {
+                "title": "لاگ قیمت‌ها",
+                "alias": "monitoring_prices",
+                "icon": "wpforms",
+                "link": "/monitoring/prices"
+            },
+            {
+                "title": "لاگ زیرنویس",
+                "alias": "monitoring_crawl",
+                "icon": "wpforms",
+                "link": "/monitoring/crawl"
+            }
         ]
     },
     {
@@ -49,9 +169,24 @@
         "alias": "basic",
         "icon": "globe",
         "items": [
-            { "title": "محورها", "alias": "basic_subjects", "icon": "list", "link": "/basic/subjects" },
-            { "title": "کلیدواژه‌ها", "alias": "basic_tags", "icon": "tags", "link": "/basic/tags" },
-            { "title": "اطلاعات عوامل", "alias": "resources_persons", "icon": "user", "link": "/resources/persons" }
+            {
+                "title": "محورها",
+                "alias": "basic_subjects",
+                "icon": "list",
+                "link": "/basic/subjects"
+            },
+            {
+                "title": "کلیدواژه‌ها",
+                "alias": "basic_tags",
+                "icon": "tags",
+                "link": "/basic/tags"
+            },
+            {
+                "title": "اطلاعات عوامل",
+                "alias": "resources_persons",
+                "icon": "user",
+                "link": "/resources/persons"
+            }
         ]
     },
     {
@@ -59,8 +194,24 @@
         "alias": "newsroom",
         "icon": "newspaper-o",
         "items": [
-            { "title": "اخبار", "alias": "news", "icon": "th-list", "link": "/newsroom/news" },
-            { "title": "محیط ویرایش", "alias": "news", "icon": "edit", "link": "/newsroom/workspace" }
+            {
+                "title": "اخبار",
+                "alias": "news",
+                "icon": "th-list",
+                "link": "/newsroom/news"
+            },
+            {
+                "title": "محیط ویرایش",
+                "alias": "news_workspace",
+                "icon": "edit",
+                "link": "/newsroom/workspace"
+            },
+            {
+                "title": "کنداکتور خبر",
+                "alias": "news_schedule",
+                "icon": "edit",
+                "link": "/newsroom/conductor"
+            }
         ]
     },
     {
@@ -68,18 +219,43 @@
         "alias": "pr",
         "icon": "volume-control-phone",
         "items": [
-            { "title": "پیام‌گیر صوتی", "alias": "pr_messages", "icon": "microphone", "link": "/pr/recordings" },
-            { "title": "پیامک‌ها", "alias": "pr_sms", "icon": "comment", "link": "/pr/sms" }
+            {
+                "title": "پیام‌گیر صوتی",
+                "alias": "pr_messages",
+                "icon": "microphone",
+                "link": "/pr/recordings"
+            },
+            {
+                "title": "پیامک‌ها",
+                "alias": "pr_sms",
+                "icon": "comment",
+                "link": "/pr/sms"
+            }
         ]
-    }, 
+    },
     {
         "title": "آمار",
         "alias": "stats",
         "icon": "area-chart",
         "items": [
-            { "title": "ورود اطلاعات", "alias": "stats_ingest", "icon": "bar-chart-o", "link": "/stats/ingest" },
-            { "title": "گزارش نوع کنداکتور", "alias": "stats_broadcast", "icon": "bar-chart", "link": "/stats/broadcast" },
-            { "title": "گزارش کنداکتور", "alias": "stats_schedule", "icon": "pie-chart", "link": "/stats/schedule" }
+            {
+                "title": "ورود اطلاعات",
+                "alias": "stats_ingest",
+                "icon": "bar-chart-o",
+                "link": "/stats/ingest"
+            },
+            {
+                "title": "گزارش نوع کنداکتور",
+                "alias": "stats_broadcast",
+                "icon": "bar-chart",
+                "link": "/stats/broadcast"
+            },
+            {
+                "title": "گزارش کنداکتور",
+                "alias": "stats_schedule",
+                "icon": "pie-chart",
+                "link": "/stats/schedule"
+            }
         ]
     },
     {
@@ -87,7 +263,12 @@
         "alias": "users",
         "icon": "user-circle-o",
         "items": [
-            { "title": "مدیریت کاربران", "alias": "users_manage", "icon": "users", "link": "/users/manage" }
+            {
+                "title": "مدیریت کاربران",
+                "alias": "users_manage",
+                "icon": "users",
+                "link": "/users/manage"
+            }
         ]
     }
 ]

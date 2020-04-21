@@ -1,0 +1,88 @@
+<style>
+    #news-items tr:first-child .ordering .btn:first-child { visibility: hidden; }
+    #news-items tr:last-child .ordering .btn:last-child { display: none; }
+</style>
+<div class="portlet itemlist box">
+    <div class="portlet-title" style="background: #1BA39C">
+        <div class="caption">
+            تعداد:
+            <span data-type="total-count"></span>
+            <small class="blink" style="display: none" data-task="load">
+                <span></span> خبر جدید
+            </small>
+        </div>
+        <div class="actions">
+            <div class="paginator"></div>
+        </div>
+    </div>
+    <div class="portlet-body" style="border: 1px solid #1BA39C; padding: 0;">
+        <div class="mainbody">
+            <table id="news-items" class="table table-condensed table-hover table-striped">
+                <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>ترتیب</th>
+                    <th class="col-xs-4">عنوان</th>
+                    <th class="col-xs-1">ترتیب</th>
+                    <th class="col-xs-2 text-center">زمان تولید</th>
+                    <th class="col-xs-1">تولید کننده</th>
+                    <th class="col-xs-2 text-center">آخرین تغییر</th>
+                    <th class="col-xs-1">ویرایش</th>
+                    <th class="">اتوکیو</th>
+                    <th class="">چاپ‌شده</th>
+                    <th class=""></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each []}}
+                <tr data-id="{{id}}" data-type="{{sourceTableCode}}">
+                    <td>
+                        <!--{{math @index "+" 1}}-->
+                        <!--{{id}}-->
+                        <div class="checkbox checkbox-success checkbox-circle">
+                            <input type="checkbox" id="repo-check{{@index}}" name="selected"/>
+                            <label for="repo-check{{@index}}"></label>
+                        </div>
+                    </td>
+                    <td class="ordering">
+                        <div style="width: 75px;">
+                            <span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
+                            <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span>
+                        </div>
+                    </td>
+                    <td data-type="headline">
+                        <strong>{{title}}</strong>
+                    </td>
+                    <td>
+                        {{sort}}
+                    </td>
+                    <td class="text-center">{{extractTime Created}} {{extractDate Created}}</td>
+                    <td>{{CreatedByText}}</td>
+                    <td class="text-center">{{extractTime Modified}} {{extractDate Modified}}</td>
+                    <td>{{ModifiedByText}}</td>
+                    <td>
+                        {{#if autoQ}}
+                        <button class="btn btn-sm blue-hoki" data-toggle="tooltip" title="اتوکیو"><i class="fa fa-file-text"></i></button>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if isPrinted}}
+                        <button class="btn btn-sm purple" data-toggle="tooltip" title="چاپ شده"><i class="fa fa-print"></i></button>
+                        {{/if}}
+                    </td>
+                    <td>
+                        <button class="btn btn-default" data-task="delete"><i class="fa fa-trash-o"></i></button>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="portlet item box">
+    <div class="portlet-body">
+        <div class="mainbody row">
+        </div>
+    </div>
+</div>

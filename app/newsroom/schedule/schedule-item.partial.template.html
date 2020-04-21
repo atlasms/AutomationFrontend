@@ -1,0 +1,71 @@
+<style>
+    .news-dashboard .metadata-inner { display: flex; flex-direction: column; overflow: visible; }
+    .tab-content { height: 100%; }
+    .tab-pane { height: 100% }
+    .tab-pane textarea { resize: none; }
+</style>
+<div class="col-xs-12">
+    <div class="metadata-inner">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#item-body" role="tab" data-toggle="tab">متن خبر</a></li>
+            <li>
+                <a href="#item-titles" role="tab" data-toggle="tab">
+                    زیرنویس
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="#item-evaluation" role="tab" data-toggle="tab">
+                    ارزیابی
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="#item-graphics" role="tab" data-toggle="tab">
+                    گرافیک
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="#item-comments" role="tab" data-toggle="tab">
+                    نظرات
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="#item-videowall" role="tab" data-toggle="tab">
+                    ویدئووال
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+            <li>
+                <a href="#item-history" role="tab" data-toggle="tab">
+                    سابقه
+                    <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="item-body">
+                <form id="item-edit-form">
+                    <div class="form-group" style="padding-bottom: 60px;">
+                        <input type="hidden" name="NewsId" value="{{id}}"/>
+                        <input type="hidden" name="sort" value="{{sort}}"/>
+                        <button type="button" class="btn btn-default pull-right" data-id="{{id}}" data-task="print" style="position: absolute; top: 0; left: 120px;"><i class="fa fa-print"></i> چاپ (F6)</button>
+                        <button type="button" class="btn blue pull-right" data-task="save" style="position: absolute; top: 0; left: 15px;"><i class="fa fa-save"></i> ثبت (F4)</button>
+                        <input type="text" class="form-control" name="title" value="{{title}}" style="margin-bottom: 20px; padding-left: 94px;"/>
+                        <textarea class="form-control" name="body">{{#if summary}}
+{{summary}}{{/if}}
+{{body}}</textarea>
+                    </div>
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="item-titles"></div>
+            <div role="tabpanel" class="tab-pane active" id="item-evaluation"></div>
+            <div role="tabpanel" class="tab-pane active" id="item-graphics"></div>
+            <div role="tabpanel" class="tab-pane active" id="item-comments"></div>
+            <div role="tabpanel" class="tab-pane active" id="item-videowall"></div>
+            <div role="tabpanel" class="tab-pane active" id="item-history"></div>
+        </div>
+    </div>
+</div>
