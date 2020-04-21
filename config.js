@@ -102,70 +102,72 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             }
         },
         routes: {
-            "/": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
-            , "dashboard": {"private": true, "access": null, "action": "DashboardView", "file": "dashboard/dashboard.view"}
-            , "broadcast": {"private": true, "access": null, "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
-            , "broadcast/schedule": {"private": true, "access": null, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
-            , "broadcast/schedule2": {"private": true, "access": null, "action": "ScheduleView2", "file": "app/broadcast/schedule/schedule2.view"}
-            , "broadcast/prices": {"private": true, "access": null, "action": "PricesView", "file": "app/broadcast/prices/prices.view"}
-            , "broadcast/scheduleprint": {"private": false, "access": null, "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
-            , "broadcast/crawl": {"private": true, "access": null, "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
-            , "broadcast/photos": {"private": true, "access": null, "action": "BroadcastPhotosView", "file": "app/broadcast/photos/photos.view"}
-            , "resources/ingest": {"private": true, "access": null, "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
-            , "resources/batchingest": {"private": true, "access": null, "action": "BatchIngestView", "file": "app/resources/batchingest/batchingest.view"}
-//            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
-            , "resources/shotlist": {"private": true, "access": null, "action": "ShotlistView2", "file": "app/resources/shotlist/shotlist2.view"}
-            , "resources/ottingest": {"private": true, "access": null, "action": "OTTIngestView", "file": "app/resources/ingest/ottingest.view"}
-            , "resources/epgdata": {"private": true, "access": null, "action": "EPGDataView", "file": "app/resources/epgdata/epgdata.view"}
-            , "resources/photos": {"private": true, "access": null, "action": "PhotosView", "file": "app/resources/photos/photos.view"}
-            , "resources/media": {"private": true, "access": null, "action": "MediaView", "file": "app/resources/media/media.view"}
-            , "resources/media2": {"private": true, "access": null, "action": "MediaView2", "file": "app/resources/media/media2.view"}
-            , "resources/media2print": {"private": true, "access": null, "skipLayout": true, "action": "Media2PrintView", "file": "app/resources/media/media2print.view"}
-            , "resources/mediaprint": {"private": true, "access": null, "skipLayout": true, "action": "MediaPrintView", "file": "app/resources/media/mediaprint.view"}
-            , "resources/categories": {"private": true, "access": null, "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
-            , "resources/review": {"private": true, "access": null, "action": "ReviewView", "file": "app/resources/review/review.view"}
-            , "resources/returnees": {"private": true, "access": null, "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
-            , "resources/mediaitem": {"private": true, "access": null, "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
-            , "resources/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "BroadcastprintView", "file": "app/resources/mediaitem/broadcastprint.view"}
-            , "resources/persons": {"private": true, "access": null, "skipLayout": false, "action": "PersonsView", "file": "app/resources/persons/persons.view"}
-            , "resources/live": {"private": true, "access": null, "action": "LiveView", "file": "app/resources/live/live.view"}
-            , "resources/editor": {"private": true, "access": null, "action": "MediaEditorView", "file": "app/resources/editor/editor.view"}
-            , "users": {"private": true, "access": null, "action": "UsersView", "file": "app/users/users.view"}
-            , "users/manage": {"private": true, "access": null, "action": "UsersManageView", "file": "app/users/manage.view"}
-            , "user/messages": {"private": true, "access": null, "action": "InboxView", "file": "app/user/messages/inbox.view"}
-            , "user/profile": {"private": true, "access": null, "action": "ProfileView", "file": "app/user/profile/profile.view"}
-            , "user/notifications": {"private": true, "access": null, "action": "NotificationsView", "file": "app/user/notifications/notifications.view"}
-            , "user/acl": {"private": true, "access": null, "action": "UserACLView", "file": "app/user/acl/acl.view"}
-            , "pr": {"private": true, "access": null, "action": "PRView", "file": "app/pr/pr.view"}
-            , "pr/sms": {"private": true, "access": null, "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
-            , "pr/recordings": {"private": true, "access": null, "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
-            , "basic/subjects": {"private": true, "access": null, "action": "SubjectsView", "file": "app/basic/subjects/subjects.view"}
-            , "basic/tags": {"private": true, "access": null, "action": "TagsView", "file": "app/basic/tags/tags.view"}
-            , "monitoring/schedule": {"private": true, "access": null, "action": "MonitoringScheduleView", "file": "app/monitoring/schedule/schedule.view"}
-            , "monitoring/schedulefiles": {"private": true, "access": null, "action": "MonitoringScheduleFilesView", "file": "app/monitoring/schedulefiles/schedulefiles.view"}
-            , "monitoring/schedulepdf": {"private": true, "access": null, "action": "MonitoringSchedulePDFView", "file": "app/monitoring/schedulepdf/schedulepdf.view"}
-            , "monitoring/ingest": {"private": true, "access": null, "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
-            , "monitoring/playlist": {"private": true, "access": null, "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}
-            , "monitoring/ualogs": {"private": true, "access": null, "action": "UserActivityLogsView", "file": "app/monitoring/ualogs/ualogs.view"}
-            , "monitoring/prices": {"private": true, "access": null, "action": "PricesLogsView", "file": "app/monitoring/prices/prices.view"}
-            , "monitoring/crawl": {"private": true, "access": null, "action": "CrawlLogsView", "file": "app/monitoring/crawl/crawl.view"}
-            , "stats/broadcast": {"private": true, "access": null, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
-            , "stats/broadcastprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
-            , "stats/ingest": {"private": true, "access": null, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
-            , "stats/ingestprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
-            , "stats/schedule": {"private": true, "access": null, "action": "StatsScheduleView", "file": "app/stats/schedule/schedule.view"}
-            , "stats/scheduleprint": {"private": true, "access": null, "skipLayout": true, "action": "StatsSchedulePrintView", "file": "app/stats/schedule/scheduleprint.view"}
-            , "newsroom": {"private": true, "access": null, "action": "NewsroomView", "file": "app/newsroom/newsroom.view"}
-            , "newsroom/news": {"private": true, "access": null, "action": "NewsroomNewsView", "file": "app/newsroom/news/news.view"}
-            , "newsroom/workspace": {"private": true, "access": null, "action": "NewsroomWorkspaceView", "file": "app/newsroom/workspace/workspace.view"}
-            , "newsroom/itemprint": {"private": true, "access": null, "skipLayout": true, "action": "NewsroomItemPrintView", "file": "app/newsroom/item/itemprint.view"}
-            , "website": {"private": true, "access": null, "action": "WebsiteView", "file": "app/website/website.view"}
-            , "website/dashboard": {"private": true, "access": null, "action": "WebsiteDashboardView", "file": "app/website/dashboard/dashboard.view"}
-            , "website/items": {"private": true, "access": null, "action": "WebsiteItemsView", "file": "app/website/items/items.view"}
-            , "website/item": {"private": true, "access": null, "action": "WebsiteItemView", "file": "app/website/item/item.view"}
-            , "website/edit": {"private": true, "access": null, "action": "WebsiteItemEditView", "file": "app/website/item/edit.view"}
-            , "website/stats": {"private": true, "access": null, "action": "WebsiteStatsView", "file": "app/website/stats/stats.view"}
-            , "website/workspace": {"private": true, "access": null, "action": "WebsiteWorkspaceView", "file": "app/website/workspace/workspace.view"}
+            "/": {"private": true, "view": "dashboard.view", "action": "DashboardView", "file": "dashboard/dashboard.view"}
+            , "dashboard": {"private": true, "view": "dashboard.view", "action": "DashboardView", "file": "dashboard/dashboard.view"}
+            , "broadcast": {"private": true, "view": "broadcast.view", "action": "BroadcastView", "file": "app/broadcast/broadcast.view"}
+            , "broadcast/schedule": {"private": true, "view": "broadcast.schedule.view", "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
+            , "broadcast/schedule2": {"private": true, "view": "broadcast.schedule2.view", "action": "ScheduleView2", "file": "app/broadcast/schedule/schedule2.view"}
+            , "broadcast/prices": {"private": true, "view": "broadcast.prices.view", "action": "PricesView", "file": "app/broadcast/prices/prices.view"}
+            , "broadcast/scheduleprint": {"private": false, "view": "broadcast.scheduleprint.view", "skipLayout": true, "action": "ScheduleView", "file": "app/broadcast/schedule/schedule.view"}
+            , "broadcast/crawl": {"private": true, "view": "broadcast.crawl.view", "action": "CrawlView", "file": "app/broadcast/crawl/crawl.view"}
+            , "broadcast/photos": {"private": true, "view": "broadcast.photos.view", "action": "BroadcastPhotosView", "file": "app/broadcast/photos/photos.view"}
+            , "resources/ingest": {"private": true, "view": "resources.ingest.view", "action": "IngestView", "file": "app/resources/ingest/ingest.view"}
+            , "resources/batchingest": {"private": true, "view": "resources.batchingest.view", "action": "BatchIngestView", "file": "app/resources/batchingest/batchingest.view"}
+//            , "resources/shotlist": {"private": true, "view": "", "action": "ShotlistView", "file": "app/resources/shotlist/shotlist.view"}
+            , "resources/shotlist": {"private": true, "view": "resources.shotlist.view", "action": "ShotlistView2", "file": "app/resources/shotlist/shotlist2.view"}
+            , "resources/ottingest": {"private": true, "view": "resources.ottingest.view", "action": "OTTIngestView", "file": "app/resources/ingest/ottingest.view"}
+            , "resources/epgdata": {"private": true, "view": "resources.epgdata.view", "action": "EPGDataView", "file": "app/resources/epgdata/epgdata.view"}
+            , "resources/photos": {"private": true, "view": "resources.photos.view", "action": "PhotosView", "file": "app/resources/photos/photos.view"}
+            , "resources/media": {"private": true, "view": "resources.media.view", "action": "MediaView", "file": "app/resources/media/media.view"}
+            , "resources/media2": {"private": true, "view": "resources.media2.view", "action": "MediaView2", "file": "app/resources/media/media2.view"}
+            , "resources/media2print": {"private": true, "view": "resources.media2print.view", "skipLayout": true, "action": "Media2PrintView", "file": "app/resources/media/media2print.view"}
+            , "resources/mediaprint": {"private": true, "view": "resources.mediaprint.view", "skipLayout": true, "action": "MediaPrintView", "file": "app/resources/media/mediaprint.view"}
+            , "resources/categories": {"private": true, "view": "resources.categories.view", "action": "CategoriesView", "file": "app/resources/categories/categories.view"}
+            , "resources/review": {"private": true, "view": "resources.review.view", "action": "ReviewView", "file": "app/resources/review/review.view"}
+            , "resources/returnees": {"private": true, "view": "resources.returnees.view", "action": "ReturneesView", "file": "app/resources/returnees/returnees.view"}
+            , "resources/mediaitem": {"private": true, "view": "resources.mediaitem.view", "action": "MediaitemView", "file": "app/resources/mediaitem/mediaitem.view"}
+            , "resources/broadcastprint": {"private": true, "view": "resources.broadcastprint.view", "skipLayout": true, "action": "BroadcastPrintView", "file": "app/resources/mediaitem/broadcastprint.view"}
+            , "resources/persons": {"private": true, "view": "resources.persons.view", "skipLayout": false, "action": "PersonsView", "file": "app/resources/persons/persons.view"}
+            , "resources/live": {"private": true, "view": "resources.live.view", "action": "LiveView", "file": "app/resources/live/live.view"}
+            , "resources/editor": {"private": true, "view": "resources.editor.view", "action": "MediaEditorView", "file": "app/resources/editor/editor.view"}
+            , "users": {"private": true, "view": "users.view", "action": "UsersView", "file": "app/users/users.view"}
+            , "users/manage": {"private": true, "view": "users.manage.view", "action": "UsersManageView", "file": "app/users/manage.view"}
+            , "user/messages": {"private": true, "view": "user.messages.view", "action": "InboxView", "file": "app/user/messages/inbox.view"}
+            , "user/profile": {"private": true, "view": "user.profile.view", "action": "ProfileView", "file": "app/user/profile/profile.view"}
+            , "user/notifications": {"private": true, "view": "user.notifications.view", "action": "NotificationsView", "file": "app/user/notifications/notifications.view"}
+            , "user/acl": {"private": true, "view": "user.acl.view", "action": "UserACLView", "file": "app/user/acl/acl.view"}
+            , "pr": {"private": true, "view": "pr.view", "action": "PRView", "file": "app/pr/pr.view"}
+            , "pr/sms": {"private": true, "view": "pr.sms.view", "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
+            , "pr/recordings": {"private": true, "view": "pr.recordings.view", "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
+            , "basic/subjects": {"private": true, "view": "basic.subjects.view", "action": "SubjectsView", "file": "app/basic/subjects/subjects.view"}
+            , "basic/tags": {"private": true, "view": "basic.tags.view", "action": "TagsView", "file": "app/basic/tags/tags.view"}
+            , "monitoring/schedule": {"private": true, "view": "monitoring.schedule.view", "action": "MonitoringScheduleView", "file": "app/monitoring/schedule/schedule.view"}
+            , "monitoring/schedulefiles": {"private": true, "view": "monitoring.schedulefiles.view", "action": "MonitoringScheduleFilesView", "file": "app/monitoring/schedulefiles/schedulefiles.view"}
+            , "monitoring/schedulepdf": {"private": true, "view": "monitoring.schedulepdf.view", "action": "MonitoringSchedulePDFView", "file": "app/monitoring/schedulepdf/schedulepdf.view"}
+            , "monitoring/ingest": {"private": true, "view": "monitoring.ingest.view", "action": "MonitoringIngestView", "file": "app/monitoring/ingest/ingest.view"}
+            , "monitoring/playlist": {"private": true, "view": "monitoring.playlist.view", "action": "MonitoringPlaylistView", "file": "app/monitoring/playlist/playlist.view"}
+            , "monitoring/ualogs": {"private": true, "view": "monitoring.ualogs.view", "action": "UserActivityLogsView", "file": "app/monitoring/ualogs/ualogs.view"}
+            , "monitoring/prices": {"private": true, "view": "monitoring.prices.view", "action": "PricesLogsView", "file": "app/monitoring/prices/prices.view"}
+            , "monitoring/crawl": {"private": true, "view": "monitoring.crawl.view", "action": "CrawlLogsView", "file": "app/monitoring/crawl/crawl.view"}
+            , "stats/broadcast": {"private": true, "view": "stats.broadcast.view", "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
+            , "stats/broadcastprint": {"private": true, "view": "stats.broadcastprint.view", "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
+            , "stats/ingest": {"private": true, "view": "stats.ingest.view", "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
+            , "stats/ingestprint": {"private": true, "view": "stats.ingestprint.view", "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
+            , "stats/schedule": {"private": true, "view": "stats.schedule.view", "action": "StatsScheduleView", "file": "app/stats/schedule/schedule.view"}
+            , "stats/scheduleprint": {"private": true, "view": "stats.scheduleprint.view", "skipLayout": true, "action": "StatsSchedulePrintView", "file": "app/stats/schedule/scheduleprint.view"}
+            , "newsroom": {"private": true, "view": "newsroom.view", "action": "NewsroomView", "file": "app/newsroom/newsroom.view"}
+            , "newsroom/news": {"private": true, "view": "newsroom.news.view", "action": "NewsroomNewsView", "file": "app/newsroom/news/news.view"}
+            , "newsroom/workspace": {"private": true, "view": "newsroom.workspace.view", "action": "NewsroomWorkspaceView", "file": "app/newsroom/workspace/workspace.view"}
+            , "newsroom/itemprint": {"private": true, "view": "newsroom.itemprint.view", "skipLayout": true, "action": "NewsroomItemPrintView", "file": "app/newsroom/item/itemprint.view"}
+            , "newsroom/schedule": {"private": true, "view": "newsroom.schedule.view", "skipLayout": false, "action": "NewsroomScheduleView", "file": "app/newsroom/schedule/schedule.view"}
+            , "newsroom/conductor": {"private": true, "view": "newsroom.schedule.view", "skipLayout": false, "action": "NewsroomScheduleView", "file": "app/newsroom/schedule/schedule.view"}
+            , "website": {"private": true, "view": "website.view", "action": "WebsiteView", "file": "app/website/website.view"}
+            , "website/dashboard": {"private": true, "view": "website.dashboard.view", "action": "WebsiteDashboardView", "file": "app/website/dashboard/dashboard.view"}
+            , "website/items": {"private": true, "view": "website.items.view", "action": "WebsiteItemsView", "file": "app/website/items/items.view"}
+            , "website/item": {"private": true, "view": "website.item.view", "action": "WebsiteItemView", "file": "app/website/item/item.view"}
+            , "website/edit": {"private": true, "view": "website.edit.view", "action": "WebsiteItemEditView", "file": "app/website/item/edit.view"}
+            , "website/stats": {"private": true, "view": "website.stats.view", "action": "WebsiteStatsView", "file": "app/website/stats/stats.view"}
+            , "website/workspace": {"private": true, "view": "website.workspace.view", "action": "WebsiteWorkspaceView", "file": "app/website/workspace/workspace.view"}
         },
         positions: {
             wrapper: "body"
@@ -182,6 +184,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , crawl: "crawl"
             , crawlRep: "crawlRep"
             , tree: "metacategories"
+            , newsTree: "nws/conductor/tree"
             , ingest: "ingest"
             , metadata: "metadata"
             , media: "media"
@@ -198,6 +201,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , hsm: "hsm"
             , social: "social"
             , newsroom: "newssource"
+            , newsSchedule: "nws/conductor"
             , tags: "share/tags/"
             , subjects: "share/subjects"
             , shotlist: "shotlist"

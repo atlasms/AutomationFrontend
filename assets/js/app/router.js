@@ -2,19 +2,21 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
 ], function ($, _, Backbone, Login, Template, Config, Global, Layout, UserHelper, Notifications, Ticker) {
     var Router = Backbone.Router.extend({
         routes: {
-            'login': 'Login'
+            'login': 'login'
             , '*actions': 'app' // Other routes
         }
-        , Login: function () {
+        , login: function () {
             this.view && this.view.close();
             new Login().render();
         }
         , map: Config.routes
         , current: function () {
             var Router = this,
-                    fragment = Backbone.history.fragment,
-                    routes = _.pairs(Router.routes),
-                    route = null, params = null, matched;
+                fragment = Backbone.history.fragment,
+                routes = _.pairs(Router.routes),
+                route = null,
+                params = null,
+                matched;
 
             matched = _.find(routes, function (handler) {
                 route = _.isRegExp(handler[0]) ? handler[0] : Router._routeToRegExp(handler[0]);
@@ -23,7 +25,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
 
             if (matched) {
                 // NEW: Extracts the params using the internal
-                // function _extractParameters 
+                // function _extractParameters
                 params = Router._extractParameters(route, fragment);
                 route = matched[1];
             }
@@ -88,14 +90,14 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             var template = Template.template.load('', 'app');
             var user = UserHelper.getUser();
-            var content = { User: user, Config: Config };
+            var content = {User: user, Config: Config};
             this.getMenu().done(function (rawMenu) {
                 Global.Cache.saveMenu(rawMenu);
                 var menu = self.prepareMenu(rawMenu);
                 template.done(function (data) {
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate(content);
-                    $(Config.positions.wrapper).html(output).promise().done(function() {
+                    $(Config.positions.wrapper).html(output).promise().done(function () {
                         self.loadMenu(menu);
                         self.loadPage(actions);
                         // Initialize Layout helpers
@@ -133,8 +135,12 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
             // Cleaning up last view
 //            self.view && (self.view.close ? self.view.close() : self.view.remove());
             self.view && self.view.close();
+            actions = (actions === '') ? '/' : actions;
+            var request = (typeof this.map[actions] !== 'undefined')
+                ? this.map[actions].view
+                : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
 
-            var request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
+            // request = (actions === '' || actions === '/') ? 'dashboard.view' : (actions.replace(/\$/, '') + '.view').replace(/\//g, '.');
             requirejs([request], function (View) {
 
                 // Instantiating new view
