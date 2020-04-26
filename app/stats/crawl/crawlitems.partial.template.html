@@ -1,0 +1,44 @@
+<table class="table table-bordered table-striped table-condensed flip-content" id="items-table">
+    <thead>
+    <tr>
+        <th class=""></th>
+        <th class="col-xs-2 title">کاربر</th>
+        <th class="col-xs-1 text-center"># کاراکتر</th>
+        <th class="col-xs-2 text-center">زمان ایجاد</th>
+        <th class="col-xs-2 text-center">گروه</th>
+        <th class="col-xs-2 text-center">بخش</th>
+        <th class="col-xs-1 text-center">تعداد</th>
+        <th class="col-xs-1 text-center">دستور</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="{{Id}}" data-index="{{math @index " + " 1}}">
+        <td class="">
+            <span class="idx" style="display: block;">{{math @index "+" 1}}</span>
+        </td>
+        <td>
+            <strong>{{Created_By_Fullname}}</strong>
+        </td>
+        <td>
+            {{CharCount}}
+        </td>
+        <td>
+            {{extractTime Created}} {{extractDate Created}}
+        </td>
+        <td>
+            {{GroupIdText}}
+        </td>
+        <td>
+            {{SectionIdText}}
+        </td>
+        <td>
+            {{ItemsCount}}
+        </td>
+        <td>
+            {{Cmd}}
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

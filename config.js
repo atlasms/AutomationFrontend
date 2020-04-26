@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         tickerUpdateInterval: 60000,
         notificationsCount: 10,
         schedulePageLimit: 100,
-        characterLimit: 130, 
+        characterLimit: 130,
         wordLimit: 15,
         defalutMediaListLimit: 25,
         mediaScheduleGroupItems: 1,
@@ -151,6 +151,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "monitoring/crawl": {"private": true, "view": "monitoring.crawl.view", "action": "CrawlLogsView", "file": "app/monitoring/crawl/crawl.view"}
             , "stats/broadcast": {"private": true, "view": "stats.broadcast.view", "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
             , "stats/broadcastprint": {"private": true, "view": "stats.broadcastprint.view", "skipLayout": true, "action": "StatsBroadcastView", "file": "app/stats/broadcast/broadcast.view"}
+            , "stats/crawl": {"private": true, "view": "stats.crawl.view", "action": "StatsCrawlView", "file": "app/stats/crawl/crawl.view"}
             , "stats/ingest": {"private": true, "view": "stats.ingest.view", "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/ingestprint": {"private": true, "view": "stats.ingestprint.view", "skipLayout": true, "action": "StatsIngestView", "file": "app/stats/ingest/ingest.view"}
             , "stats/schedule": {"private": true, "view": "stats.schedule.view", "action": "StatsScheduleView", "file": "app/stats/schedule/schedule.view"}
@@ -285,13 +286,16 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         },
         mediaOptions: [
             {text: "تغییر وضعیت", access: 4, source: "dfn", items: 2, task: null, value: null},
-            {text: "گزینه تستی", access: 8388608, icon: 'github', color: 'warning', items: [
-                {text: "فرزند 1", task: 'test', value: '1', icon: 'twitter'},
-                {text: "فرزند 2", task: 'test', value: '2'}
-            ]}
+            {
+                text: "گزینه تستی", access: 8388608, icon: 'github', color: 'warning', items: [
+                    {text: "فرزند 1", task: 'test', value: '1', icon: 'twitter'},
+                    {text: "فرزند 2", task: 'test', value: '2'}
+                ]
+            }
         ],
         temp: {
-            titleTypes: {Key: "titletypes", Value: "subtitle_type", Children: [
+            titleTypes: {
+                Key: "titletypes", Value: "subtitle_type", Children: [
                     {Id: "2", Key: "دو خطی", Value: "2"},
                     {Id: "1", Key: "تک خط", Value: "1"},
                     {Id: "3", Key: "سه خطی", Value: "3"}

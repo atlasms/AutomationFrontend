@@ -174,6 +174,7 @@ require.config({
         , "stats.broadcast.view": ["../../app/stats/broadcast/broadcast.view"]
         , "stats.broadcastprint.view": ["../../app/stats/broadcast/broadcastprint.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
+        , "stats.crawl.view": ["../../app/stats/crawl/crawl.view"]
         , "stats.ingestprint.view": ["../../app/stats/ingest/ingestprint.view"]
         , "stats.schedule.view": ["../../app/stats/schedule/schedule.view"]
         , "stats.scheduleprint.view": ["../../app/stats/schedule/scheduleprint.view"]

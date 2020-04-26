@@ -255,6 +255,12 @@
                 "alias": "stats_schedule",
                 "icon": "pie-chart",
                 "link": "/stats/schedule"
+            },
+            {
+                "title": "گزارش زیرنویس",
+                "alias": "stats_crawl",
+                "icon": "font",
+                "link": "/stats/crawl"
             }
         ]
     },
