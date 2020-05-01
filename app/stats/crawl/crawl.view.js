@@ -36,11 +36,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
-        , loadItems: function (params) {
+        , loadItems: function () {
             var self = this;
             var template = Template.template.load('stats/crawl', 'crawlitems.partial');
             var $container = $('#items');
-            var params = typeof params !== 'undefined' ? params : this.getParams();
+            var params = this.getParams();
+            console.log(params);
             var query = $.param(params);
             var model = new CrawlModel({overrideUrl: 'crawl/log', query: query});
             model.fetch({

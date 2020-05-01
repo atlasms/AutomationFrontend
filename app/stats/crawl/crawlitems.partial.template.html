@@ -3,12 +3,12 @@
     <tr>
         <th class=""></th>
         <th class="col-xs-2 title">کاربر</th>
-        <th class="col-xs-1 text-center"># کاراکتر</th>
-        <th class="col-xs-2 text-center">زمان ایجاد</th>
+        <th class="col-xs-2 text-center">زمان</th>
         <th class="col-xs-2 text-center">گروه</th>
-        <th class="col-xs-2 text-center">بخش</th>
-        <th class="col-xs-1 text-center">تعداد</th>
-        <th class="col-xs-1 text-center">دستور</th>
+        <th class="col-xs-3 text-center">بخش</th>
+        <th class="col-xs-1 text-center">تعداد جملات</th>
+        <th class="col-xs-1 text-center">تعداد حروف</th>
+        <th class="col-xs-1 text-center">عملیات</th>
     </tr>
     </thead>
     <tbody>
@@ -18,10 +18,7 @@
             <span class="idx" style="display: block;">{{math @index "+" 1}}</span>
         </td>
         <td>
-            <strong>{{Created_By_Fullname}}</strong>
-        </td>
-        <td>
-            {{CharCount}}
+            <strong>{{Created_By_FullName}}</strong>
         </td>
         <td>
             {{extractTime Created}} {{extractDate Created}}
@@ -36,7 +33,11 @@
             {{ItemsCount}}
         </td>
         <td>
-            {{Cmd}}
+            {{CharCount}}
+        </td>
+        <td>
+            {{#ifCond Cmd '==' 'انتشار'}}<div class="label label-sm label-danger">{{Cmd}}</div>{{/ifCond}}
+            {{#ifCond Cmd '==' 'ذخیره'}}<div class="label label-success">{{Cmd}}</div>{{/ifCond}}
         </td>
     </tr>
     {{/each}}
