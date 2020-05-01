@@ -5,8 +5,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , player: null
         , model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'قبول', type: 'button', task: '1', access: '4'}} // accept
-            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: '4'}} // reject
+            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید گروه', type: 'button', task: '6', access: 16777216}} // accept
+            , {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید پخش', type: 'button', task: '1', access: 4}} // accept
+            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 16777216}} // reject
+            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 7).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}
@@ -40,7 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             };
             if ($row.hasClass('active') || $row.hasClass('preview-pane') || $row.parents(".preview-pane").length || typeof media.video === "undefined")
                 return;
-            $("#toolbar .submit").removeClass('hidden').addClass('in');
+            $("#toolbar .submit").not('[disabled]').removeClass('hidden').addClass('in');
             $el.parents("tbody").find("tr").removeClass('active');
             $row.addClass('active');
             var id = $row.attr('data-id');
@@ -183,6 +185,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             console.info('Loading items');
             $("#toolbar .submit").addClass('hidden').removeClass('in');
             var params = this.getToolbarParams();
+            if (!params.state || params.state === '') {
+                params.state = -1;
+            }
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
