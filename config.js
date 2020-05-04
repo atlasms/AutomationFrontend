@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
      */
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
-        version: "1.200128.1358",
+        version: "1.200505.0058",
         loginMessage: "ورود به سامانه اتوماسیون",
         channel: "ایران‌کالا",
         channelLogo: "assets/data/iktv.png",

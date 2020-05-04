@@ -15,7 +15,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             , 'click [data-task="delete"]': 'deleteRow'
             , 'click [data-task="save"]': 'saveItem'
             , 'click [data-task="print"]': 'printItem'
+            , 'click #item-history table tbody tr': 'showHistoryItemBody'
             , 'submit #new-item-form': 'createItem'
+            , 'click [data-task="load-history"]': 'loadHistory'
             , 'blur [data-type="new-headline"]': function (e) {
                 if ($(e.target).val() === '')
                     $(e.target).val('خبر خام');
@@ -154,27 +156,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             $.hotkeys.options.filterInputAcceptingElements = false;
             $.hotkeys.options.filterTextInputs = false;
             $(document).off('keydown', null);
-            // $(document).on('keydown', null, 'down', function (e) {
-            //     var activeRow = $("#news-items tbody").find("tr.active");
-            //     if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
-            //         if (activeRow.find("+ tr").length) {
-            //             if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
-            //                 activeRow.removeClass('active info').trigger('deactivated').next('tr').addClass('active info').trigger('activated').trigger('click');
-            //         }
-            //     }
-            // });
-            // $(document).on('keydown', null, 'up', function (e) {
-            //     var activeRow = $("#news-items tbody").find("tr.active");
-            //     if (!$('input:focus, textarea:focus, button:focus, select:focus').length) {
-            //         if (activeRow.prev('tr').length) {
-            //             if (typeof self.data.itemIsLoading !== "undefined" && self.data.itemIsLoading !== true)
-            //                 activeRow.removeClass('active info').trigger('deactivated').prev('tr').addClass('active info').trigger('activated').trigger('click');
-            //         }
-            //     }
-            // });
-            // $(document).on('keydown', null, 'f2', function () {
-            //     self.sendDraft();
-            // });
             $(document).on('keydown', null, 'f6', function () {
                 self.printItem();
                 return false;
@@ -220,8 +201,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 , success: function (response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     self.updateCurrentRowTitle(self.getId(), $('[name="title"]').val());
+                    // self.loadItems();
                 }
             });
+        }
+        , showHistoryItemBody: function(e) {
+            var $tr = $(e.target).is('tr') ? $(e.target).is('tr') : $(e.target).parents('tr:first');
+            var content = $tr.find('.body').html();
+            $('#item-history-modal').find('.modal-body').html(content);
+            $('#item-history-modal').modal('show');
         }
         , updateCurrentRowTitle: function (id, title) {
             $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
@@ -281,7 +269,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                         $(self.itamContainer).html(output).promise().done(function () {
                             self.data['currentItem'] = $row.data("id");
                             self.data['itemIsLoading'] = false;
-                            // self.loadMetadata(item.sourceId);
                         });
                     });
                 }
@@ -347,25 +334,43 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 $tree.bind("loaded.jstree", function (e, data) {
                     var instance = $tree.jstree(true);
                     self.treeInstance = instance;
-                    /* if open_all() is used, self.load() of it's event listener should be used. */
-                    // instance.open_all();
-                    self.loadItems();
+                    instance.open_all();
+                    // self.loadItems();
                 });
                 $tree.bind("open_all.jstree", function (e, data) {
-                    $tree.jstree(true).uncheck_all();
-                    $tree.jstree(true).deselect_all();
-                    var params = self.getParams();
-                    $.each(params.categoryId.split(','), function () {
-                        var node = data.instance.get_node($('#' + this));
-                        $tree.jstree(true).check_node(node);
-                    });
-                    // self.load();
+                    // $tree.jstree(true).uncheck_all();
+                    // $tree.jstree(true).deselect_all();
+                    // var params = self.getParams();
+                    // $.each(params.categoryId.split(','), function () {
+                    //     var node = data.instance.get_node($('#' + this));
+                    //     $tree.jstree(true).check_node(node);
+                    // });
+                    self.loadItems();
                 });
                 self.tree = new Tree($("#tree"), Config.api.newsTree, this, {hasCheckboxes: false});
                 self.tree.render();
                 if (typeof callback === 'function') {
                     callback();
                 }
+            }
+        }
+        , loadHistory: function (e) {
+            e.preventDefault();
+            var self = this;
+            if (!$('#item-history').children().length) {
+                var template = Template.template.load('newsroom/schedule', 'history.partial');
+                var params = {overrideUrl: 'nws/conductorlog', query: $.param({id: this.getId()})};
+                var model = new NewsroomModel(params);
+                model.fetch({
+                    success: function(data) {
+                        var items = self.prepareItems(data.toJSON(), params);
+                        template.done(function(tmpl) {
+                            var handlebarsTemplate = Template.handlebars.compile(tmpl);
+                            var output = handlebarsTemplate(items);
+                            $('#item-history').html(output);
+                        })
+                    }
+                })
             }
         }
         , handleTreeCallbacks: function (params, $tree, node) {
@@ -430,7 +435,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                         onSelect: function () {
                             if ($this.parents("#toolbar").length) {
                                 self.loadItems();
-//                                $('.datepicker.source').val($this.val());
                             }
                             $datePickers.blur();
                         }

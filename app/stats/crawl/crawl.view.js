@@ -6,7 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
-            // , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
             , {
                 'input': {
                     cssClass: 'form-control datepicker',
@@ -41,7 +41,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             var template = Template.template.load('stats/crawl', 'crawlitems.partial');
             var $container = $('#items');
             var params = this.getParams();
-            console.log(params);
             var query = $.param(params);
             var model = new CrawlModel({overrideUrl: 'crawl/log', query: query});
             model.fetch({
@@ -50,7 +49,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
-                        console.log(output);
                         $container.html(output).promise().done(function () {
                             // self.afterRender();
                             $("#items-table").bootstrapTable(Config.settings.bootstrapTable);
@@ -62,7 +60,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         , getParams: function (showDetails) {
             return {
                 start: $("[name=startdate]").val() ? Global.jalaliToGregorian($("[name=startdate]").val()) : Global.today()
-                , end: $("[name=startdate]").val() ? Global.jalaliToGregorian($("[name=startdate]").val()) : Global.today()
+                , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
                 // , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
                 , detail: typeof showDetails !== 'undefined' && showDetails ? showDetails : false
             }

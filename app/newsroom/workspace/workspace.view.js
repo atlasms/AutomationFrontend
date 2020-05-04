@@ -1,12 +1,16 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootbox', 'bootpag', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/tooltip'
-], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'bootpag', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/tooltip'
+], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr, bootbox, Tree) {
     var NewsroomWorkspaceView = Backbone.View.extend({
         data: {}
+        , currentItemId: null
+        , currentTreeNode: null
+        , treeInstance: {}
         , itamContainer: ".item.box .mainbody"
         , events: {
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
             , 'click button[data-task="open-send-modal"]': 'toggleSendModal'
+            , 'click button[data-task="open-schedule-modal"]': 'toggleScheduleModal'
             , 'click button[data-task="delete-batch"]': 'deleteBatch'
             , 'click button[data-task="delete"]': 'deleteItem'
             , 'click button[data-task="archive"]': 'archiveItem'
@@ -16,6 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click button[data-task="new"]': 'openItemModal'
             , 'click button[data-task="save"]': 'saveItem'
             , 'click button[data-task="send"]': 'sendItem'
+            , 'click button[data-task="send-schedule"]': 'sendToSchedule'
             , 'click button[data-task="check-shotlist"]': 'checkShotlist'
             , 'submit #new-item-form': 'createItem'
             , 'click #news-items tr[data-id]': 'loadItem'
@@ -34,6 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             {'button': {cssClass: 'btn btn-success pull-right', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
 //            , {'button': {cssClass: 'btn blue pull-right', text: 'ثبت (F4)', type: 'button', task: 'save', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
+            , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال کنداکتور', type: 'button', task: 'open-schedule-modal', icon: 'fa fa-share'}}
 //            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete-batch', icon: 'fa fa-trash'}}
             , {'button': {cssClass: 'btn purple-medium pull-right hide', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
             , {'button': {cssClass: 'btn yellow-gold pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
@@ -74,7 +80,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , offset: 0
             , count: 50
         }
-        , checkShotlist: function(e) {
+        , checkShotlist: function (e) {
             e.preventDefault();
             var self = this;
             var $this = $(e.target);
@@ -83,7 +89,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var params = {overrideUrl: Config.api.shotlist + '/check'};
             new NewsroomModel(params).fetch({
                 data: data
-                , success: function(item) {
+                , success: function (item) {
                     items = self.prepareItems(item.toJSON(), params);
                     var shotlistId = Object.keys(items)[0];
                     window.open('/resources/editor/' + shotlistId);
@@ -146,6 +152,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , toggleSendModal: function (e) {
             e.preventDefault();
             $("#send-item-modal").modal('toggle');
+        }
+        , toggleScheduleModal: function (e) {
+            e.preventDefault();
+            $("#schedule-tree-modal").modal('toggle');
+            this.attachDatepickers();
         }
         , updateCurrentRowTitle: function (id, title) {
             $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
@@ -214,7 +225,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
         }
-        , printItem: function(e) {
+        , printItem: function (e) {
             var self = this;
             var id = this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
             if (typeof id === "undefined" || id === "")
@@ -254,8 +265,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 default:
                 case 'panel':
                     var data = [{
-                            cmd: 'send', sourceId: this.data.currentItem, sourceTable: 'workspace', destTable: 'workspace', destId: userId
-                        }];
+                        cmd: 'send', sourceId: this.data.currentItem, sourceTable: 'workspace', destTable: 'workspace', destId: userId
+                    }];
                     new NewsroomModel(params).save(null, {
                         data: JSON.stringify(data)
                         , contentType: 'application/json'
@@ -301,8 +312,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
             var data = [{
-                    cmd: 'merge', sourceId: '', sourceTable: 'workspace', destTable: 'workspace', destId: 0, data: selectedItems.jion(',')
-                }];
+                cmd: 'merge', sourceId: '', sourceTable: 'workspace', destTable: 'workspace', destId: 0, data: selectedItems.jion(',')
+            }];
             new NewsroomModel({overrideUrl: 'nws'}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -364,6 +375,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             if ($(e.target).is("a") || $(e.target).parents("a").length)
                 return true;
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
+            this.currentItemId = $row.data("id");
             $row.parent().find(".active").removeClass('active info') && $row.addClass('active info');
             var params = {id: $row.data("id"), overrideUrl: 'nws'};
             var model = new NewsroomModel(params);
@@ -426,6 +438,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             $('[data-toggle="tooltip"]').tooltip();
             this.handleDifferCount(items, requestParams);
             this.loadUsersList();
+            this.loadTree();
         }
         , loadUsersList: function () {
             if ($("select[name=ToUserId] option").length > 1)
@@ -534,7 +547,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 });
             });
             $('select.suggest[data-type]').each(function () {
-                $(this).select2({dir: "rtl", multiple: true, width: 180, tags: false, placeholder: $(this).attr('placeholder'), ajax: {
+                $(this).select2({
+                    dir: "rtl", multiple: true, width: 180, tags: false, placeholder: $(this).attr('placeholder'), ajax: {
                         delay: 250, url: Config.api.url + Config.api.newsroom + '/keywords'
                     }
                 });
@@ -596,6 +610,66 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 for (var prop in params)
                     delete items[prop];
             return items;
+        }
+        , loadTree: function (callback) {
+            var self = this;
+            if (STORAGE.getItem('news-tree')) {
+                var storage = JSON.parse(STORAGE.getItem('news-tree'));
+                storage.state.checkbox && delete storage.state.checkbox;
+                storage.state.core.selected && delete storage.state.core.selected;
+                STORAGE.setItem('news-tree', JSON.stringify(storage));
+            }
+            if ($("#tree").length) {
+                var $tree = $("#tree");
+                $tree.bind("loaded.jstree", function (e, data) {
+                    var instance = $tree.jstree(true);
+                    self.treeInstance = instance;
+                    // self.loadItems();
+                });
+                $tree.bind("open_all.jstree", function (e, data) {
+                    $tree.jstree(true).uncheck_all();
+                    $tree.jstree(true).deselect_all();
+                    var params = self.getParams();
+                    $.each(params.categoryId.split(','), function () {
+                        var node = data.instance.get_node($('#' + this));
+                        $tree.jstree(true).check_node(node);
+                    });
+                    // self.load();
+                });
+                self.tree = new Tree($("#tree"), Config.api.newsTree, this, {hasCheckboxes: false});
+                self.tree.render();
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        }
+        , handleTreeCallbacks: function (params, $tree, node) {
+            var self = this;
+            // self.cache.currentCategory = params.id;
+            // params.method === "ready" && self.loadItems({cid: params.id});
+        }
+        , handleTreeCalls: function (routes, path) {
+            var self = this;
+            var pathId = routes.pop().toString();
+            this.currentTreeNode = pathId;
+            // self.loadItems({cid: pathId});
+        }
+        , sendToSchedule: function (e) {
+            e.preventDefault();
+            var self = this;
+            if (this.currentTreeNode && this.currentItemId) {
+                var query = {
+                    wsid: this.currentItemId,
+                    conid: this.currentTreeNode,
+                    date: Global.jalaliToGregorian($('[name="schedule-send-date"]').val())
+                };
+                new NewsroomModel({overrideUrl: Config.api.newsSchedule + '/ws2con', query: $.param(query)}).save(null, {
+                    success: function (d) {
+                        toastr.success('با موفقیت انجام شد', 'ارسال به کنداکتور خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        self.toggleScheduleModal(e);
+                    }
+                });
+            }
         }
     });
     return NewsroomWorkspaceView;

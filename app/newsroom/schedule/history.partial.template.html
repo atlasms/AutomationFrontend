@@ -1,0 +1,39 @@
+<style>
+    .table tbody tr { cursor: pointer; }
+    .label { line-height: 1; }
+</style>
+<table class="table table-condensed table-bordered table-striped table-hover">
+    <thead>
+    <tr>
+        <th>ترتیب</th>
+        <th class="col-xs-4">عنوان</th>
+        <th class="col-xs-1">چاپ‌شده</th>
+        <th class="col-xs-1">اتوکیو</th>
+        <th class="col-xs-2">زمان ایجاد</th>
+        <th class="col-xs-1">ایجاد کننده</th>
+        <th class="col-xs-2">زمان ویرایش</th>
+        <th class="col-xs-1">ویرایش کننده</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr>
+        <td>{{sort}}</td>
+        <td>
+            {{title}}
+            <div class="body" style="display: none;">{{body}}</div>
+        </td>
+        <td>
+            <div class="label text-center label-{{#if isPrinted}}primary{{else}}info{{/if}}">{{#if isPrinted}}بلی{{else}}خیر{{/if}}</div>
+        </td>
+        <td>
+            <div class="label text-center label-{{#if autoQ}}primary{{else}}info{{/if}}">{{#if autoQ}}بلی{{else}}خیر{{/if}}</div>
+        </td>
+        <td>{{extractTime Created}} {{extractDate Created}}</td>
+        <td>{{CreatedByText}}</td>
+        <td>{{extractTime Modified}} {{extractDate Modified}}</td>
+        <td>{{ModifiedByText}}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
