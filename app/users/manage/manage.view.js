@@ -48,7 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             var $button = $(e.currentTarget);
             var id = $button.parents("tr:first").attr('data-id');
             bootbox.confirm({
-                message: "رمز عبور کاربر "
+                message: "رمز عبور کاربر به 123456 تغییر می‌کند. آیا مطمئن هستید؟"
                 , buttons: {
                     confirm: {className: 'btn-success'}
                     , cancel: {className: 'btn-danger'}
