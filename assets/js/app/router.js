@@ -86,7 +86,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                 Layout.init();
                 return;
             }
-            $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-header-fixed-mobile page-sidebar-closed");
+            $("body").addClass("has-master-layout page-container-bg-solid page-sidebar-closed-hide-logo page-footer-fixed page-footer-fixed-mobile page-header-fixed-mobile page-sidebar-closed");
             typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             var template = Template.template.load('', 'app');
             var user = UserHelper.getUser();
