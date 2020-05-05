@@ -5,7 +5,7 @@
                 <thead>
                 <tr>
                     <th class="">شناسه</th>
-                    <th class="col-xs-1"></th>
+<!--                    <th class="col-xs-1"></th>-->
                     <th class="col-xs-2">نام</th>
                     <th class="">وضعیت</th>
                     <th class="col-xs-1">نام کاربری</th>
@@ -14,18 +14,18 @@
                     <th class="col-xs-2">آخرین تغییر رمز</th>
                     <th class="col-xs-2">آخرین ورود</th>
                     <th class="col-xs-2">آخرین IP</th>
-                    <th class="col-xs-1">دسترسی[ها]</th>
+                    <th class="col-xs-2">دسترسی[ها]</th>
                 </tr>
                 </thead>
                 <tbody>
                 {{#each []}}
                 <tr data-id="{{Id}}" data-index="{{math @index " + " 1}}">
                 <td>{{math @index "+" 1}}</td>
-                <td class="text-center">
-                    <figure>
-                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
-                    </figure>
-                </td>
+<!--                <td class="text-center">-->
+<!--                    <figure>-->
+<!--                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />-->
+<!--                    </figure>-->
+<!--                </td>-->
                 <td class="">
                     <span class="">{{Name}} {{Family}}</span>
                 </td>
@@ -53,11 +53,11 @@
                 </td>
                 <td class="">
                     {{Roles}}
-                    <a target="_blank" href="/user/acl/{{Id}}" class="btn default">
-                        <i class="fa fa-cog"></i>
+                    <a target="_blank" href="/user/acl/{{Id}}" class="btn default  btn-sm">
+                        <i class="fa fa-cog"></i> دسترسی‌ها
                     </a>
-                    <button class="btn grey" data-task="reset-password">
-                        <i class="fa fa-pencil-square-o"></i>
+                    <button class="btn btn-sm grey" data-task="reset-password">
+                        <i class="fa fa-pencil-square-o"></i> ریست رمزعبور
                     </button>
                 </td>
                 </tr>
