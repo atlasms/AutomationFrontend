@@ -200,12 +200,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 }
                 , success: function (response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    self.updateCurrentRowTitle(self.getId(), $('[name="title"]').val());
-                    // self.loadItems();
+                    // self.updateCurrentRowTitle(self.getId(), $('[name="title"]').val());
+                    self.loadItems(undefined, true);
                 }
             });
         }
-        , showHistoryItemBody: function(e) {
+        , showHistoryItemBody: function (e) {
             var $tr = $(e.target).is('tr') ? $(e.target).is('tr') : $(e.target).parents('tr:first');
             var content = $tr.find('.body').html();
             $('#item-history-modal').find('.modal-body').html(content);
@@ -214,11 +214,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         , updateCurrentRowTitle: function (id, title) {
             $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
         }
-        , loadItems: function (overridePrams) {
+        , loadItems: function (overridePrams, onlyUpdateList) {
             var self = this;
             var $container = $('#mewsroom-workspace');
             var overridePrams = typeof overridePrams === "object" ? overridePrams : {};
             var params = self.getParams();
+            var currentId = this.getId();
             var requestParams = {query: $.extend({}, self.defaultParams, params, overridePrams), overrideUrl: Config.api.newsSchedule};
             if (requestParams.query.cid === 0)
                 return false;
@@ -237,7 +238,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             if (items.length) {
-                                self.activateFirstItem();
+                                if (typeof onlyUpdateList !== 'undefined' && onlyUpdateList)
+                                    self.activateCurrentItem(currentId);
+                                else
+                                    self.activateFirstItem();
                             }
                             self.afterRender(items, requestParams);
                         });
@@ -296,6 +300,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
+        }
+        , activateCurrentItem: function (currentId) {
+            // var currentId = this.getId();
+            var $currentRow = $('.box.itemlist table tbody').find('[data-id="' + currentId + '"]');
+            console.log(currentId, $currentRow, $currentRow.length);
+            $currentRow.trigger('click');
+
         }
         , getParams: function () {
             return {
@@ -362,9 +373,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 var params = {overrideUrl: 'nws/conductorlog', query: $.param({id: this.getId()})};
                 var model = new NewsroomModel(params);
                 model.fetch({
-                    success: function(data) {
+                    success: function (data) {
                         var items = self.prepareItems(data.toJSON(), params);
-                        template.done(function(tmpl) {
+                        template.done(function (tmpl) {
                             var handlebarsTemplate = Template.handlebars.compile(tmpl);
                             var output = handlebarsTemplate(items);
                             $('#item-history').html(output);
