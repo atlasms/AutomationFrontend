@@ -31,7 +31,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-9">
+                        {{#authorize 16777216}}
                         <button type="submit" class="btn btn-success" data-task="add-person">ثبت</button>
+                        {{/authorize}}
                     </div>
                 </div>
             </form>
