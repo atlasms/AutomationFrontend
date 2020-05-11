@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.crawl.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'], function ($, _, Backbone, Template, Config, Global, CrawlModel, toastr, Toolbar, Statusbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.crawl.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'], function ($, _, Backbone, Template, Config, Global, CrawlModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
     var StatsCrawlView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
@@ -6,6 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
+            , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'انتخاب کاربر', name: 'userid', text: 'کاربر', icon: 'fa fa-user', multi: false, options: [], addon: true}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
             , {
                 'input': {
@@ -26,6 +27,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=show]': 'loadItems'
             , 'click [data-task=refresh]': 'reLoad'
+        }
+        , loadUsersList: function (callback) {
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+                        $("[name=userid]").append('<option value="' + this.Id + '">' + this.Name + ' ' + this.Family + '</option>');
+                    });
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            });
         }
         , reLoad: function () {
             this.load();
@@ -63,6 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
                 // , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
                 , detail: typeof showDetails !== 'undefined' && showDetails ? showDetails : false
+                , userid: $('[name="userid"]').val()
             }
         }
         , render: function (params) {
@@ -78,9 +93,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             });
         }
         , afterRender: function () {
+            var self = this;
             this.renderStatusbar();
             this.attachDatepickers();
-            this.loadItems();
+            this.loadUsersList(function () {
+                self.loadItems();
+            });
         }
         , attachDatepickers: function () {
             var self = this;
