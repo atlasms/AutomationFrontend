@@ -18,6 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             , 'click #item-history table tbody tr': 'showHistoryItemBody'
             , 'submit #new-item-form': 'createItem'
             , 'click [data-task="load-history"]': 'loadHistory'
+            , 'change [data-type="change-state"]': 'changeState'
             , 'blur [data-type="new-headline"]': function (e) {
                 if ($(e.target).val() === '')
                     $(e.target).val('خبر خام');
@@ -383,6 +384,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                     }
                 })
             }
+        }
+        , deleteItem: function(e) {
+            var params = {state: 0, id: +$(e.target).parents('tr:first').attr('data-id')};
+            this.changeState(undefined, params);
+        }
+        , changeState: function (e, params) {
+            var self = this;
+            var $select = $(e.target);
+            var params = typeof params !== 'undefined' ? params : {state: +$select.val(), id: +$select.parents('tr:first').data('id')};
+            new NewsroomModel({overrideUrl: Config.api.newsScheduleState, id: params.id + '/' + params.state}).save({}, {
+                patch: true,
+                success: function(d) {
+                    self.loadItems(undefined, true);
+                }
+            });
         }
         , handleTreeCallbacks: function (params, $tree, node) {
             var self = this;

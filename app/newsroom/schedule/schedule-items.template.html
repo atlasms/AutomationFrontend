@@ -1,6 +1,12 @@
 <style>
     #news-items tr:first-child .ordering .btn:first-child { visibility: hidden; }
     #news-items tr:last-child .ordering .btn:last-child { display: none; }
+    .state-0 { background: #E08283 !important; }
+    .state-1 { background: #36D7B7 !important; }
+    .state-2 { background: #5C9BD1 !important; }
+    [class*="state-"] .form-group { margin: 0; }
+    [data-type="change-state"] { padding: 6px 6px; }
+    .headline { max-width: 480px; white-space: nowrap; display: block; text-overflow: ellipsis; overflow: hidden; }
 </style>
 <div class="portlet itemlist box">
     <div class="portlet-title" style="background: #1BA39C">
@@ -20,30 +26,31 @@
             <table id="news-items" class="table table-condensed table-hover table-striped">
                 <thead>
                 <tr>
-                    <th class="text-center">#</th>
+<!--                    <th class="text-center">#</th>-->
                     <th>ترتیب</th>
                     <th class="col-xs-4">عنوان</th>
-                    <th class="col-xs-1">ترتیب</th>
-                    <th class="col-xs-2 text-center">زمان تولید</th>
-                    <th class="col-xs-1">تولید کننده</th>
-                    <th class="col-xs-2 text-center">آخرین تغییر</th>
-                    <th class="col-xs-1">ویرایش</th>
+<!--                    <th class="col-xs-1">ترتیب</th>-->
+                    <th class="col-xs-2 text-center">تولید</th>
+                    <th class="col-xs-1">دبیر</th>
+                    <th class="col-xs-2 text-center">انتشار</th>
+                    <th class="col-xs-1">سردبیر</th>
                     <th class="">اتوکیو</th>
-                    <th class="">چاپ‌شده</th>
+                    <th class="">چاپ‌</th>
+                    <th class="col-xs-1">وضعیت</th>
                     <th class=""></th>
                 </tr>
                 </thead>
                 <tbody>
                 {{#each []}}
                 <tr data-id="{{id}}" data-type="{{sourceTableCode}}">
-                    <td>
-                        <!--{{math @index "+" 1}}-->
-                        <!--{{id}}-->
-                        <div class="checkbox checkbox-success checkbox-circle">
-                            <input type="checkbox" id="repo-check{{@index}}" name="selected"/>
-                            <label for="repo-check{{@index}}"></label>
-                        </div>
-                    </td>
+<!--                    <td>-->
+<!--                        &lt;!&ndash;{{math @index "+" 1}}&ndash;&gt;-->
+<!--                        &lt;!&ndash;{{id}}&ndash;&gt;-->
+<!--                        <div class="checkbox checkbox-success checkbox-circle">-->
+<!--                            <input type="checkbox" id="repo-check{{@index}}" name="selected"/>-->
+<!--                            <label for="repo-check{{@index}}"></label>-->
+<!--                        </div>-->
+<!--                    </td>-->
                     <td class="ordering">
                         <div style="width: 75px;">
                             <span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
@@ -51,15 +58,15 @@
                         </div>
                     </td>
                     <td data-type="headline">
-                        <strong>{{title}}</strong>
+                        <strong class="headline">{{title}}</strong>
                     </td>
-                    <td>
-                        {{sort}}
-                    </td>
+<!--                    <td>-->
+<!--                        {{sort}}-->
+<!--                    </td>-->
                     <td class="text-center">{{extractTime Created}} {{extractDate Created}}</td>
                     <td>{{CreatedByText}}</td>
-                    <td class="text-center">{{extractTime Modified}} {{extractDate Modified}}</td>
-                    <td>{{ModifiedByText}}</td>
+                    <td class="text-center">{{extractTime Published}} {{extractDate Published}}</td>
+                    <td>{{PublishedByText}}</td>
                     <td>
                         {{#if autoQ}}
                         <button class="btn btn-sm blue-hoki" data-toggle="tooltip" title="اتوکیو"><i class="fa fa-file-text"></i></button>
@@ -70,8 +77,19 @@
                         <button class="btn btn-sm purple" data-toggle="tooltip" title="چاپ شده"><i class="fa fa-print"></i></button>
                         {{/if}}
                     </td>
+                    <td class="state-{{state}}">
+                        <div class="form-group">
+                            <select class="form-control input-sm" data-type="change-state">
+                                {{#select state}}
+<!--                                <option value="0">حذف شده</option>-->
+                                <option value="0">تایید نشده</option>
+                                <option value="1">تایید شده</option>
+                                {{/select}}
+                            </select>
+                        </div>
+                    </td>
                     <td>
-                        <button class="btn btn-default" data-task="delete"><i class="fa fa-trash-o"></i></button>
+                        <button class="btn btn-default btn-sm" data-task="delete"><i class="fa fa-trash-o"></i></button>
                     </td>
                 </tr>
                 {{/each}}
