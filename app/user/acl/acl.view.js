@@ -1,9 +1,9 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'global', 'toolbar', 'toastr', 'resources.ingest.model', 'tree.helper', 'bootstrap/tab'
 ], function ($, _, Backbone, Template, Config, UserModel, Global, Toolbar, toastr, IngestModel, Tree) {
-
     var UserACLView = Backbone.View.extend({
         data: {}
         , tree: {}
+        , newsTree: {}
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
@@ -148,9 +148,37 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                         self.tree = new Tree($("#tree"), Config.api.tree, null, {hasCheckboxes: true});
                         self.tree.render();
                     }
+
+                    // News Schedule Tree
+                    if (STORAGE.getItem('news-tree')) {
+                        var newsStorage = JSON.parse(STORAGE.getItem('news-tree'));
+                        newsStorage.state.checkbox && delete newsStorage.state.checkbox;
+                        newsStorage.state.core.selected && delete newsStorage.state.core.selected;
+                        STORAGE.setItem('news-tree', JSON.stringify(newsStorage));
+                    }
+                    if ($("#news-tree").length) {
+                        var $newsTree = $("#news-tree");
+                        $newsTree.bind("loaded.jstree", function (e, data) {
+                            var instance = $newsTree.jstree(true);
+                            self.newsTreeInstance = data.instance;
+                            instance.open_all();
+                        });
+                        $newsTree.bind("open_all.jstree", function (e, data) {
+                            $newsTree.jstree(true).uncheck_all();
+                            $newsTree.jstree(true).deselect_all();
+                            $.each(permissions, function () {
+                                if (this.Key === "news-tree") {
+                                    var node = data.instance.get_node($('#' + parseInt(this.Value)));
+                                    $newsTree.jstree(true).check_node(node);
+                                }
+                            });
+
+                        });
+                        self.newsTree = new Tree($("#news-tree"), Config.api.newsTree, null, {hasCheckboxes: true});
+                        self.newsTree.render();
+                    }
                 }
             });
-
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
@@ -195,6 +223,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
             var treeItems = this.treeInstance.get_checked();
             for (var i = 0; i < treeItems.length; i++)
                 data.push({Key: 'categories', 'Value': treeItems[i]});
+            var newsTreeItems = this.newsTreeInstance.get_checked();
+            for (var i = 0; i < newsTreeItems.length; i++)
+                data.push({Key: 'news-tree', 'Value': newsTreeItems[i]});
             return data;
         }
     });

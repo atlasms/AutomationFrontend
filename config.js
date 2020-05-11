@@ -203,6 +203,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , social: "social"
             , newsroom: "newssource"
             , newsSchedule: "nws/conductor"
+            , newsScheduleState: "nws/conductorstate"
             , tags: "share/tags/"
             , subjects: "share/subjects"
             , shotlist: "shotlist"
