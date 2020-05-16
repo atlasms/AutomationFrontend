@@ -1,11 +1,10 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.crawl.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'], function ($, _, Backbone, Template, Config, Global, CrawlModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
-    var StatsCrawlView = Backbone.View.extend({
+    var StatsCrawlPrintView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-default pull-right print-btn', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print'}}
-            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
             , {'select': {cssClass: 'form-control select2 suggest', placeholder: 'انتخاب کاربر', name: 'userid', text: 'کاربر', icon: 'fa fa-user', multi: false, options: [], addon: true}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
@@ -28,7 +27,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=show]': 'loadItems'
             , 'click [data-task=refresh]': 'reLoad'
-            , 'click [data-task=print]': 'print'
         }
         , loadUsersList: function (callback) {
             new UsersManageModel({}).fetch({
@@ -67,7 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             // self.afterRender();
-                            $("#items-table").bootstrapTable(Config.settings.bootstrapTable);
+                            // $("#items-table").bootstrapTable(Config.settings.bootstrapTable);
                         });
                     });
                 }
@@ -75,20 +73,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         }
         , getParams: function (showDetails) {
             return {
-                start: $("[name=startdate]").val() ? Global.jalaliToGregorian($("[name=startdate]").val()) : Global.today()
-                , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
+                start: Global.getVar('startdate')
+                , end: Global.getVar('enddate')
                 // , end: $("[name=enddate]").val() ? Global.jalaliToGregorian($("[name=enddate]").val()) : Global.today()
-                , detail: typeof showDetails !== 'undefined' && showDetails ? showDetails : false
-                , userid: $('[name="userid"]').val()
+                , detail: false
+                , userid: Global.getVar('userid')
             }
         }
         , render: function (params) {
             var self = this;
-            var template = Template.template.load('stats/crawl', 'crawl');
-            var $container = $(Config.positions.main);
+            var template = Template.template.load('stats/crawl', 'crawlprint');
+            var $container = $(Config.positions.wrapper);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
+                var output = handlebarsTemplate(self.getParams());
                 $container.html(output).promise().done(function () {
                     self.afterRender();
                 });
@@ -191,15 +189,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             });
             return data;
         }
-        , print: function (e) {
-            e.preventDefault();
-            var link = this.getPrintLink();
-            var win = window.open('/stats/crawlprint/' + link, '_blank');
-            win.focus();
-        }
-        , getPrintLink: function () {
-            // var $printButton = $(".print-btn");
-            return '?startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + '&userid=' + this.getParams().userid + '&username=' + $('[name="userid"] option:selected').text();
+        , updatePrintButton: function () {
+            var $printButton = $(".print-btn");
+            var dates = '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val());
+            if ($printButton.length && $printButton.attr('href').indexOf('startdate') === -1)
+                $printButton.attr('href', $printButton.attr('href') + dates);
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;
@@ -210,5 +204,5 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             statusbar.render();
         }
     });
-    return StatsCrawlView;
+    return StatsCrawlPrintView;
 });
