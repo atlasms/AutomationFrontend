@@ -442,19 +442,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var instance = $tree.jstree(true);
                     self.treeInstance = instance;
                     /* if open_all() is used, self.load() of it's event listener should be used. */
-                    // instance.open_all();
+                    instance.open_all();
                     self.load();
                 });
-                $tree.bind("open_all.jstree", function (e, data) {
-                    $tree.jstree(true).uncheck_all();
-                    $tree.jstree(true).deselect_all();
-                    var params = self.getParams();
-                    $.each(params.categoryId.split(','), function () {
-                        var node = data.instance.get_node($('#' + this));
-                        $tree.jstree(true).check_node(node);
-                    });
-                    // self.load();
-                });
+                // $tree.bind("open_all.jstree", function (e, data) {
+                //     $tree.jstree(true).uncheck_all();
+                //     $tree.jstree(true).deselect_all();
+                //     var params = self.getParams();
+                //     $.each(params.categoryId.split(','), function () {
+                //         var node = data.instance.get_node($('#' + this));
+                //         $tree.jstree(true).check_node(node);
+                //     });
+                //     // self.load();
+                // });
                 self.tree = new Tree($("#tree"), Config.api.tree, null, {hasCheckboxes: true});
                 self.tree.render();
             }
