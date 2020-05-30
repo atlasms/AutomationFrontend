@@ -29,6 +29,7 @@
 				<tr>
 					<th class="col-xs-1"></th>
 					<th class="col-xs-12"></th>
+					<th class="col-xs-1"></th>
 				</tr>
 			</thead>
 			<tbody data-editable="true">
@@ -44,6 +45,9 @@
 						<span class="text x-editable" data-type="textarea">{{{this}}}</span>
 						<!--<button data-task="review"><i class="fa fa-edit"></i></button>-->
 						<button data-task="delete"><i class="fa fa-trash"></i></button>
+					</td>
+					<td class="text-center">
+						{{math @index '+' 1}}
 					</td>
 				</tr>
 				{{/each}}

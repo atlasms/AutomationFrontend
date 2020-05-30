@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'click button[data-task="archive"]': 'archiveItem'
             , 'click button[data-task="merge"]': 'mergeItems'
             , 'click button[data-task="duplicate"]': 'duplicateItme'
+            , 'click input[type="checkbox"]': 'handleItemSelect'
             , 'click button[data-task="print"]': 'printItem'
             , 'click button[data-task="new"]': 'openItemModal'
             , 'click button[data-task="save"]': 'saveItem'
@@ -39,7 +40,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             {'button': {cssClass: 'btn btn-success pull-right', text: 'جدید', type: 'button', task: 'new', icon: 'fa fa-plus'}}
 //            , {'button': {cssClass: 'btn blue pull-right', text: 'ثبت (F4)', type: 'button', task: 'save', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
-            , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال کنداکتور', type: 'button', task: 'open-schedule-modal', icon: 'fa fa-share'}}
+            , {'button': {cssClass: 'btn blue pull-right', text: 'ارسال به کنداکتور', type: 'button', task: 'open-schedule-modal', icon: 'fa fa-share'}}
 //            , {'button': {cssClass: 'btn red pull-right', text: 'حذف', type: 'button', task: 'delete-batch', icon: 'fa fa-trash'}}
             , {'button': {cssClass: 'btn purple-medium pull-right hide', text: 'ادغام', type: 'button', task: 'merge', icon: 'fa fa-tasks'}}
             , {'button': {cssClass: 'btn yellow-gold pull-right', text: 'کپی', type: 'button', task: 'duplicate', icon: 'fa fa-clone'}}
@@ -375,8 +376,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             if ($(e.target).is("a") || $(e.target).parents("a").length)
                 return true;
             var $row = $(e.target).is("tr") ? $(e.target) : $(e.target).parents("tr:first");
-            this.currentItemId = $row.data("id");
+            // this.currentItemId = $row.data("id");
             $row.parent().find(".active").removeClass('active info') && $row.addClass('active info');
+            // $row.parent().find('input[type="checkbox"]').prop('checked', false);
+            // $row.find('input[type="checkbox"]').prop('checked', 'checked');
             var params = {id: $row.data("id"), overrideUrl: 'nws'};
             var model = new NewsroomModel(params);
             var template = Template.template.load('newsroom/workspace', 'workspace-item.partial');
@@ -396,6 +399,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                     });
                 }
             });
+        }
+        , handleItemSelect: function(e) {
+            var $rows = $(e.target).parents('tbody:first').find('tr');
+            var selected = [];
+            $rows.each(function() {
+                var $row = $(this);
+                // console.log($row.find('input[type="checkbox"]').is(':checked'));
+                if ($row.find('input[type="checkbox"]').is(':checked')) {
+                    selected.push($row.data('id'));
+                }
+            });
+            this.currentItemId = selected.join(',');
         }
         , loadMetadata: function (id) {
             var self = this;
@@ -657,13 +672,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , sendToSchedule: function (e) {
             e.preventDefault();
             var self = this;
+            console.log(this.currentItemId);
             if (this.currentTreeNode && this.currentItemId) {
                 var query = {
                     wsid: this.currentItemId,
                     conid: this.currentTreeNode,
                     date: Global.jalaliToGregorian($('[name="schedule-send-date"]').val())
                 };
-                new NewsroomModel({overrideUrl: Config.api.newsSchedule + '/ws2con', query: $.param(query)}).save(null, {
+                new NewsroomModel({overrideUrl: Config.api.newsSchedule + '/ws2con', query: decodeURIComponent($.param(query))}).save(null, {
                     success: function (d) {
                         toastr.success('با موفقیت انجام شد', 'ارسال به کنداکتور خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                         self.toggleScheduleModal(e);

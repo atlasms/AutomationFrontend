@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , statusbar: []
         , whitelist: 'b, strong, i, font'
 //        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
-        , crawlItemTmpl: '<tr><td class="ordering"><div style="width: 75px;"><span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span> <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span></div></td><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
+        , crawlItemTmpl: '<tr><td class="ordering"><div style="width: 75px;"><span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span> <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span></div></td><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td><td></td></tr>'
         , flags: {}
         , events: {
             'click [data-task="save"]': 'submit'
@@ -101,6 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             e.preventDefault();
             var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
             var $row = $this.parents('tr:first');
+            var $rows = $this.parents('tbody:first tr');
             var direction = $this.data('value');
 //            console.log($this, $row, direction, $row.prev().is('tr'), $row.next().is('tr'));
             if (direction === 'up') {
@@ -112,6 +113,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     $row.insertAfter($row.next());
                 }
             }
+        }
+        , updateRowsIndexes: function() {
+            var $rows = $('.crawl-items table tbody tr');
+            // var i = 1;
+            $rows.each(function() {
+                // console.log($(this).index());
+                $(this).find('td:last').text($(this).index() + 1);
+                // i++;
+            });
         }
         , toggleSMSModal: function (e) {
             e.preventDefault();
@@ -385,6 +395,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //                $(".crawl-items").find("tr:last")
                 var editable = new Editable({simple: true});
                 editable.init();
+                self.updateRowsIndexes();
             });
         }
         , addToRepository: function (e) {
@@ -424,6 +435,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
+                    self.updateRowsIndexes();
                     toastr.success('با موفقیت انجام شد', 'ذخیره زینویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
             });
