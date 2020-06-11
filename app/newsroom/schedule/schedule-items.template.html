@@ -26,10 +26,10 @@
             <table id="news-items" class="table table-condensed table-hover table-striped">
                 <thead>
                 <tr>
-<!--                    <th class="text-center">#</th>-->
-                    <th>ترتیب</th>
+                    <!--                    <th class="text-center">#</th>-->
+                    <th colspan="2">ترتیب</th>
                     <th class="col-xs-4">عنوان</th>
-<!--                    <th class="col-xs-1">ترتیب</th>-->
+                    <!--                    <th class="col-xs-1">ترتیب</th>-->
                     <th class="col-xs-2 text-center">تولید</th>
                     <th class="col-xs-1">دبیر</th>
                     <th class="col-xs-2 text-center">انتشار</th>
@@ -43,14 +43,19 @@
                 <tbody>
                 {{#each []}}
                 <tr data-id="{{id}}" data-type="{{sourceTableCode}}">
-<!--                    <td>-->
-<!--                        &lt;!&ndash;{{math @index "+" 1}}&ndash;&gt;-->
-<!--                        &lt;!&ndash;{{id}}&ndash;&gt;-->
-<!--                        <div class="checkbox checkbox-success checkbox-circle">-->
-<!--                            <input type="checkbox" id="repo-check{{@index}}" name="selected"/>-->
-<!--                            <label for="repo-check{{@index}}"></label>-->
-<!--                        </div>-->
-<!--                    </td>-->
+                    <!--                    <td>-->
+                    <!--                        &lt;!&ndash;{{math @index "+" 1}}&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;{{id}}&ndash;&gt;-->
+                    <!--                        <div class="checkbox checkbox-success checkbox-circle">-->
+                    <!--                            <input type="checkbox" id="repo-check{{@index}}" name="selected"/>-->
+                    <!--                            <label for="repo-check{{@index}}"></label>-->
+                    <!--                        </div>-->
+                    <!--                    </td>-->
+                    <td class="sort">
+                        <span class="text-hide">
+                            {{sort}}
+                        </span>
+                    </td>
                     <td class="ordering">
                         <div style="width: 75px;">
                             <span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
@@ -60,9 +65,9 @@
                     <td data-type="headline">
                         <strong class="headline">{{title}}</strong>
                     </td>
-<!--                    <td>-->
-<!--                        {{sort}}-->
-<!--                    </td>-->
+                    <!--                    <td>-->
+                    <!--                        {{sort}}-->
+                    <!--                    </td>-->
                     <td class="text-center">{{extractTime Created}} {{extractDate Created}}</td>
                     <td>{{CreatedByText}}</td>
                     <td class="text-center">{{extractTime Published}} {{extractDate Published}}</td>
@@ -81,7 +86,7 @@
                         <div class="form-group">
                             <select class="form-control input-sm" data-type="change-state">
                                 {{#select state}}
-<!--                                <option value="0">حذف شده</option>-->
+                                <!--                                <option value="0">حذف شده</option>-->
                                 <option value="0">تایید نشده</option>
                                 <option value="1">تایید شده</option>
                                 {{/select}}
