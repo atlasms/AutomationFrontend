@@ -184,6 +184,7 @@ require.config({
         , "newsroom.workspace.view": ["../../app/newsroom/workspace/workspace.view"]
         , "newsroom.itemprint.view": ["../../app/newsroom/item/itemprint.view"]
         , "newsroom.schedule.view": ["../../app/newsroom/schedule/schedule.view"]
+        , "newsroom.schedule.itemprint.view": ["../../app/newsroom/schedule/schedule-itemprint.view"]
         , "website.view": ["../../app/website/website.view"]
         , "website.dashboard.view": ["../../app/website/dashboard/dashboard.view"]
         , "website.items.view": ["../../app/website/items/items.view"]

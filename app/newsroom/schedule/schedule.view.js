@@ -182,7 +182,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             var id = typeof e !== 'undefined' && this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
             if (typeof id === "undefined" || id === "")
                 return false;
-            var win = window.open('/newsroom/itemprint/' + id, '_blank');
+            var win = window.open('/newsroom/scheduleitemprint/' + id, '_blank');
             win.focus();
         }
         , saveItem: function () {
