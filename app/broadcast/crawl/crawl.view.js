@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , statusbar: []
         , whitelist: 'b, strong, i, font'
 //        , crawlItemTmpl: '<tr><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
-        , crawlItemTmpl: '<tr><td class="ordering"><div style="width: 75px;"><span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span> <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span></div></td><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td><td></td></tr>'
+        , crawlItemTmpl: '<tr><td></td><td class="ordering"><div style="width: 75px;"><span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span> <span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span></div></td><td><span class="text x-editable" data-type="textarea">{content}</span><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>'
         , flags: {}
         , events: {
             'click [data-task="save"]': 'submit'
@@ -119,7 +119,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             // var i = 1;
             $rows.each(function() {
                 // console.log($(this).index());
-                $(this).find('td:last').text($(this).index() + 1);
+                $(this).find('td:first').text($(this).index() + 1);
                 // i++;
             });
         }
