@@ -1,13 +1,10 @@
 <style>
-    span.select2-container {
-        z-index: 10050;
-    }
-
+    span.select2-container { z-index: 10050; }
     [data-task="submit-persons"] { display: none; }
-
     [href="/resources/persons"] { display: none; }
     #person-search-results { max-height: 300px; overflow: hidden; overflow-y: auto; }
     #persons-table { max-height: 300px; overflow: hidden; overflow-y: auto; }
+    textarea.invisible { height: 0; padding: 0; margin: 0; }
 </style>
 <div id="ingest-page" class="portlet box">
     <div class="portlet-body">
@@ -26,7 +23,7 @@
     </div>
     <div class="modal fade zoom-out" id="metadata-form-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog container" role="document">
-            <form class="modal-content" role="form" class="">
+            <form class="modal-content" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">ورود اطلاعات برنامه</h4>
@@ -34,7 +31,6 @@
                 <div class="modal-body">
                     <input type="hidden" name="Type" value="0"/>
                     <input type="hidden" data-type="path-id" name="MetaCategoryId" value="0"/>
-
                     <input type="hidden" name="MasterId" value=""/>
                     <input type="hidden" name="Kind" value="0"/>
                     <input type="hidden" name="SiteFeatured" value="0"/>
@@ -63,19 +59,30 @@
                             <div class="row">
                                 <div class="col-xs-9">
                                     <div class="form-group">
-                                        <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت" required/>
+                                        {{#input 'ingest.Title'}}
+                                        <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت (موضوع اصلی)" required/>
+                                        {{/input}}
                                         <!--<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>-->
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
-                                        <input type="text" data-type="episode" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره قسمت" required/>
+                                        {{#input 'ingest.EpisodeNumber'}}
+                                        <input type="text" data-type="episode" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره کلاکت" required/>
+                                        {{/input}}
                                         <!--<span class="help-block">شماره قسمت</span>-->
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" data-type="description" name="Description" rows="6" placeholder="توضیحات قسمت" required></textarea>
+                                        <textarea class="form-control" data-type="description" name="Description" rows="4" placeholder="توضیحات قسمت" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        {{#input 'ingest.ArchiveDescr'}}
+                                        <textarea class="form-control" data-type="archive_description" name="ArchiveDescr" rows="2" placeholder="توضیحات آرشیو"></textarea>
+                                        {{/input}}
                                     </div>
                                 </div>
                             </div>
@@ -109,20 +116,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--<div class="form-group">-->
-                            <!--<div class="row">-->
-                            <!--<div class="col-xs-3">-->
-                            <!--<label class="control-label">عوامل</label>-->
-                            <!--</div>-->
-                            <!--<div class="col-xs-9">-->
-                            <!--<select class="form-control select2" name="Persons" multiple>-->
-                            <!--{{#each persons}}-->
-                            <!--<option value="{{id}}">{{name}} {{family}}</option>-->
-                            <!--{{/each}}-->
-                            <!--</select>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
                             <div class="form-group">
                                 <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
                             </div>
@@ -132,11 +125,32 @@
                             <div class="form-group">
                                 <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت" required></textarea>
                             </div>
+                            <div class="form-group">
+                                {{#input 'ingest.RecommendedBroadcastDate'}}
+                                <input type="text" data-type="recommended_broadcast_date" class="form-control" id="recommended_broadcast_date-title" name="RecommendedBroadcastDate" value="" placeholder="زمان مناسب برای پخش" />
+                                {{/input}}
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        {{#input 'ingest.RecommendedSubtitleTime'}}
+                                        <input type="text" data-type="recommended_subtitle_time" class="form-control" id="recommended_subtitle_time-title" name="RecommendedSubtitleTime" value="" placeholder="زمان مناسب برای زیرنویس" />
+                                        {{/input}}
+                                    </div>
+                                    <div class="col-xs-6">
+                                        {{#input 'ingest.AudioChannels'}}
+                                        <input type="text" data-type="audio_channels" class="form-control" id="audio_channels-title" name="AudioChannels" value="" placeholder="باند صدا" />
+                                        {{/input}}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr/>
                     <div>
+                        {{{personsWarning}}}
                         <h4>فهرست عوامل</h4>
+                        <div class="clearfix"></div>
                         <div id="persons-group"></div>
                     </div>
                 </div>
