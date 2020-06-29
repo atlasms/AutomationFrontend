@@ -2,6 +2,7 @@
     select.form-control.disabled[disabled] { border: 0 none; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: transparent; cursor: default; box-shadow: none; }
 </style>
 <div class="row">
+    {{persons}}
     <div class="col-xs-{{#if cols}}6{{else}}12{{/if}}">
         <table class="table table-bordered table-striped table-condensed flip-content table-hover" id="persons-table">
             <thead>

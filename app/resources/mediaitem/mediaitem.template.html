@@ -60,7 +60,10 @@
                                             {{#ifCond State '==' 2}}
                                             <button type="button" class="btn btn-default btn-xs pull-right"
                                                     data-task="return-item" data-id="{{Id}}"
-                                                    {{#authorize 32768}}{{else}}disabled{{/authorize}}>
+                                                    {{#authorize 32768}}
+                                                    {{else}}
+                                                    disabled
+                                                    {{/authorize}}>
                                             <i class="fa fa-reply"></i> بازگشت به بازبینی
                                             </button>
                                             {{/ifCond}}
@@ -86,30 +89,48 @@
                                                data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
                                         </td>
                                     </tr>
-                                        <tr>
-                                            <td>محورها</td>
-                                            <td>
-                                                {{#each ShotList}}
-                                                {{#if @first}}
-                                                {{#each Subjects}}
-                                                <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
-                                                {{/each}}
-                                                {{/if}}
-                                                {{/each}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>کلیدواژه‌ها</td>
-                                            <td>
-                                                {{#each ShotList}}
-                                                {{#if @first}}
-                                                {{#each Tags}}
-                                                <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
-                                                {{/each}}
-                                                {{/if}}
-                                                {{/each}}
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>محورها</td>
+                                        <td>
+                                            {{#each ShotList}}
+                                            {{#if @first}}
+                                            {{#each Subjects}}
+                                            <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
+                                            {{/each}}
+                                            {{/if}}
+                                            {{/each}}
+                                            <div class="pull-right">
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-subjects"><i class="fa fa-pencil"></i> ویرایش محورها</button>
+                                            </div>
+                                            <form class="subjects-form hide" style="margin-top: 20px;">
+                                                <div class="form-group">
+                                                    <select class="form-control  select2" data-type="subjects" name="Subjects" multiple required></select>
+                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-subjects"><i class="fa fa-save"></i> ثبت</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>کلیدواژه‌ها</td>
+                                        <td>
+                                            {{#each ShotList}}
+                                            {{#if @first}}
+                                            {{#each Tags}}
+                                            <span data-type="tag" class="label label-sm bg-grey-salsa">{{title}}</span>
+                                            {{/each}}
+                                            {{/if}}
+                                            {{/each}}
+                                            <div class="pull-right">
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-tags"><i class="fa fa-pencil"></i> ویرایش تگ‌ها</button>
+                                            </div>
+                                            <form class="tags-edit hide" style="margin-top: 20px;">
+                                                <div class="form-group">
+                                                    <select class="form-control select2" data-type="tags" name="Tags" multiple required></select>
+                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-tags"><i class="fa fa-save"></i> ثبت</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                                 <div class="row">
@@ -265,10 +286,10 @@
                         <div class="col-xs-2">
                             <ul class="nav nav-tabs tabs-left">
                                 <li data-service="review" class="active"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
-                                <li data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a> </li>
-                                <li data-service="persons"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a> </li>
-                                <li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a> </li>
-                                <li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a> </li>
+                                <li data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
+                                <li data-service="persons"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
+                                <li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
+                                <li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
                                 <li data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
                                 <!--<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>-->
                             </ul>

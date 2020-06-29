@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return false;
             var data = this.prepareSave();
             var fields = data[0];
-            if ($('#persons-table tbody tr').length < 2) {
+            if ($('#persons-table tbody tr').not('.placeholder').length < 2) {
                 toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
@@ -382,7 +382,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // typeof e !== 'undefined' && e.preventDefault();
             var self = this;
             var items = [];
-            $('#persons-table tbody tr').each(function () {
+            $('#persons-table tbody tr').not('.placeholder').each(function () {
                 // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
                 items.push(~~$(this).attr('data-id'));
             });

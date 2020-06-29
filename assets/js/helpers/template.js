@@ -352,6 +352,31 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('price', function (price) {
                 return Global.processPrice(price);
             });
+            Handlebars.registerHelper('input', function (value, options) {
+                var policy = Global.getInputPolicy(value);
+                var $el = $(options.fn(this));
+                if (typeof policy.required !== 'undefined' && policy.required)
+                    $el.prop('required', 'required');
+                if (typeof policy.show !== 'undefined' && !policy.show) {
+                    $el.addClass('invisible');
+                    $el.attr('type', 'hidden');
+                }
+                if (typeof policy.min !== 'undefined' && policy.min)
+                    $el.attr('data-min', policy.min);
+                return $el.wrap('<p/>').parent().html();
+            });
+            Handlebars.registerHelper('persons', function (value, options) {
+                return '';
+            });
+            Handlebars.registerHelper('personsWarning', function (value, options) {
+                var items = [];
+                var policies = Config.inputPolicies.persons.items;
+                Object.keys(policies).forEach(function (item) {
+                    if (policies[item].required)
+                        items.push(policies[item].title);
+                });
+                return items.length ? '<div class="alert alert-danger pull-right" style="margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px;">وارد کردن ' + '<strong>' + items.join('، ') + '</strong>' + ' اجباری است.</div>' : '';
+            });
         }
         , handlebarPartials: function () {
             Handlebars.registerPartial('scheduleRowTools', function () {

@@ -82,7 +82,13 @@
 									<div class="form-group">
 										<textarea class="form-control" name="Description" rows="5" placeholder="توضیحات قسمت" required></textarea>
 									</div>
+									<div class="form-group">
+										{{#input 'ingest.ArchiveDescr'}}
+										<textarea class="form-control" data-type="archive_description" name="ArchiveDescr" rows="2" placeholder="توضیحات آرشیو" required></textarea>
+										{{/input}}
+									</div>
 								</div>
+
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6">

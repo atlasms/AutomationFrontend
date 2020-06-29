@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, Tree, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -7,9 +7,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , defaultListLimit: Config.defalutMediaListLimit
         , playerInstance: {}
         , player: null
+        , currentData: {}
         , modal_storage: '#storage-modal'
         , modal_tree: '#tree-modal'
         , treeInstance: {}
+        , subjects: []
+        , tags: []
         , toolbar: [
             {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
         ]
@@ -18,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , events: {
 //            'click [type=submit]': 'submit'
             'click [data-task=load]': 'load'
+            , 'click [data-task="refresh-view"]': 'reLoad'
             , 'click [data-task=change-video]': 'changeVideo'
             , 'click #storagefiles tbody tr': 'setVideo'
             , 'click [data-task=change-category]': 'changeCatgory'
@@ -38,6 +42,123 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="select-person"]': 'selectPerson'
             , 'click [data-task="delete-person"]': 'deletePerson'
             , 'click [data-task="submit-persons"]': 'submitPersons'
+            , 'click [data-task="edit-subjects"]': 'editSubjects'
+            , 'click [data-task="edit-tags"]': 'editTags'
+            , 'click [data-task="save-subjects"]': 'saveSubjects'
+            , 'click [data-task="save-tags"]': 'saveTags'
+        }
+        , saveTags: function () {
+            var id = this.getId();
+            var self = this;
+            var data = {tags: [], subjects: []};
+            $('[name="Tags"]').find('option:selected').each(function () {
+                data.tags.push({id: ~~$(this).attr('value')});
+            });
+            new MediaitemModel({overrideUrl: 'shotlist/metadata', id: id}).save(null, {
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                processData: false,
+                success: function (res) {
+                    toastr['success']('کلیدواژه‌ها با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.reLoad();
+                }
+            });
+        }
+        , editTags: function (e) {
+            this.getTags();
+        }
+        , getTags: function (callback) {
+            var self = this;
+            if (this.tags.length) {
+                this.enableTagsEdit(this.tags);
+            } else {
+                new SharedModel().fetch({
+                    success: function (tags) {
+                        tags = tags.toJSON();
+                        self.enableTagsEdit(tags);
+                        if (typeof callback === "function")
+                            callback(tags);
+                    }
+                });
+            }
+        }
+        , saveSubjects: function () {
+            var id = this.getId();
+            var self = this;
+            var data = {tags: [], subjects: []};
+            $('[name="Subjects"]').find('option:selected').each(function () {
+                data.subjects.push({id: ~~$(this).attr('value')});
+            });
+            new MediaitemModel({overrideUrl: 'shotlist/metadata', id: id}).save(null, {
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                processData: false,
+                success: function (res) {
+                    toastr['success']('محورها با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.reLoad();
+                }
+            });
+        }
+        , enableTagsEdit: function (tags) {
+            if (!this.tags.length) {
+                this.tags = tags;
+            }
+            var self = this;
+            var $select = $('select[data-type="tags"]');
+            $select.empty();
+            $.each(tags, function () {
+                $select.append('<option value="' + this.id + '">' + this.title + '</option>');
+            });
+            $.each(this.currentData.ShotList[0].Tags, function () {
+                $select.find('[value="' + this.id + '"]').attr('selected', 'selected');
+            });
+            setTimeout(function () {
+                $select.parents('form:first').removeClass('hide');
+                self.handleSelect2Inputs($select);
+            }, 250);
+        }
+        , editSubjects: function (e) {
+            this.getSubjects();
+        }
+        , getSubjects: function (callback) {
+            var self = this;
+            if (this.subjects.length) {
+                this.enableSubjectsEdit(this.subjects);
+            } else {
+                new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                    success: function (subjects) {
+                        subjects = subjects.toJSON();
+                        self.enableSubjectsEdit(subjects);
+                        if (typeof callback === "function")
+                            callback(subjects);
+                    }
+                });
+            }
+        }
+        , enableSubjectsEdit: function (subjects) {
+            if (!this.subjects.length) {
+                this.subjects = subjects;
+            }
+            var self = this;
+            var $select = $('select[data-type="subjects"]');
+            $select.empty();
+            $.each(subjects, function () {
+                $select.append('<option value="' + this.id + '">' + this.title + '</option>');
+            });
+            $.each(this.currentData.ShotList[0].Subjects, function () {
+                $select.find('[value="' + this.id + '"]').attr('selected', 'selected');
+            });
+            setTimeout(function () {
+                $select.parents('form:first').removeClass('hide');
+                self.handleSelect2Inputs($select);
+            }, 250);
+        }
+        , handleSelect2Inputs: function ($select) {
+            // $("select.select2").each(function () {
+            if ($select.hasClass("select2-hidden-accessible"))
+                $select.select2('destroy');
+            $select.select2({dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body')});
+            // });
         }
         , UpdateMediaParams: function (e) {
             e.preventDefault();
@@ -494,18 +615,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var template = Template.template.load('resources/mediaitem', 'mediaitem');
             var $container = $(Config.positions.main);
             var id = self.getId();
-            // TODO
-//            var app = new AppView();
-//            if (+id != id) {
-//                app.load(404);
-//                return false;
-//            }
             var params = {id: +id};
             var model = new MediaitemModel(params);
             model.fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     items = (Object.keys(items).length === 1) ? items[0] : items;
+                    self.currentData = items;
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
@@ -542,8 +658,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     ]
                 }]
             };
-            if (typeof Config.HDPlayback === 'unedfined' || Config.HDPlayback) {
-                console.log(typeof Config.HDPlayback === 'unedfined', Config.HDPlayback);
+            if (typeof Config.HDPlayback === 'undefined' || Config.HDPlayback) {
                 playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
             }
             var player = new Player('#player-container', playerConfig);

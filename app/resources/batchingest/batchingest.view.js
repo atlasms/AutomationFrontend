@@ -34,7 +34,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // if (!helper.beforeSave())
             //     return;
             $fields = $('#metadata-form-modal').find('input, textarea');
-            var error = false
+            var error = false;
             $fields.each(function () {
                 var $field = $(this);
                 if ($field.is('[required]') && (typeof $field.val() === 'undefined' || !$field.val())) {

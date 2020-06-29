@@ -340,6 +340,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
             });
             return items;
         }
+        , getInputPolicy: function (key) {
+            return typeof CONFIG.inputPolicies[key] !== 'undefined' ? CONFIG.inputPolicies[key] : null;
+        }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
         , Cache: {

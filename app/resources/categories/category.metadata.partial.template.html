@@ -107,6 +107,35 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-3 control-label">میزان نگهداری</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="KeepDuration">
+                        {{#select KeepDuration}}
+                        <option value="-1">دائم</option>
+                        <option value="10">10 روز</option>
+                        <option value="14">دو هفته</option>
+                        <option value="21">سه هفته</option>
+                        <option value="30">یک ماه</option>
+                        <option value="60">دو ماه</option>
+                        <option value="90">سه ماه</option>
+                        <option value="180">شش ماه</option>
+                        <option value="360">یک سال</option>
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">نیاز به بازبینی</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="ReviewNeeded">
+                        {{#select ReviewNeeded}}
+                        <option value="1">دارد</option>
+                        <option value="0">ندارد</option>
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-3 control-label">ژانر</label>
                 <div class="col-sm-6">
                     <select class="form-control" multiple="" name="Genre" data-validation="multiple">
@@ -368,8 +397,7 @@
                 <tbody>
                     {{#each media.items}}
                     {{#ifCond Type '==' 0}}
-                    <tr data-id="{{Id}}" data-index="{{math @index " +
-                    " 1}}" data-type="{{Type}}">
+                    <tr data-id="{{Id}}" data-index="{{math @index ' + ' 1}}" data-type="{{Type}}">
                     <td>
                         <div class="checkbox checkbox-success checkbox-circle">
                             <input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true" {{/find}} />
@@ -383,7 +411,7 @@
                     <td class="text-center">
                         {{config placeholderImage}}
                         <figure>
-                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
                         </figure>
                     </td>
                     <td>
@@ -425,8 +453,7 @@
                 <tbody>
                     {{#each media.items}}
                     {{#ifCond Type '==' 1}}
-                    <tr data-id="{{Id}}" data-index="{{math @index " +
-                    " 1}}" data-type="{{Type}}">
+                    <tr data-id="{{Id}}" data-index="{{math @index ' + ' 1}}" data-type="{{Type}}">
                     <td>
                         <div class="checkbox checkbox-success checkbox-circle">
                             <input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true" {{/find}} />
@@ -464,8 +491,6 @@
                     {{/each}}
                 </tbody>
             </table>
-        </div>
-        <div class="tab-pane fade" id="tab-photos">
         </div>
     </div>
 </form>

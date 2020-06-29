@@ -2,10 +2,6 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
     /*
      * Check localStorage for any pre-processed and cached configurations
      */
-    // TODO
-    /*
-     * Use following configurations
-     */
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
         version: "1.200505.0058",
@@ -33,6 +29,42 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         newsTicker: false,
         // "initialRedirect: "/resources/media2",
         epgMediaPath: "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
+        inputPolicies: {
+            'ingest.Title': {uid: 'title', required: true, show: true, validation: 'text', min: 4},
+            'ingest.EpisodeNumber': {uid: 'episode', required: true, show: true, validation: 'text', min: 0},
+            'ingest.Description': {uid: 'description', required: true, show: true, validation: 'text', min: 9},
+            'ingest.Tags': {uid: 'tags', required: true, show: true, validation: 'select', min: 1},
+            'ingest.Subjects': {uid: 'subjects', required: true, show: true, validation: 'select', min: 1},
+            'ingest.SiteTitle': {uid: 'website_title', required: true, show: true, validation: 'text', min: 4},
+            'ingest.SiteSummary': {uid: 'website_summary', required: true, show: true, validation: 'text', min: 4},
+            'ingest.SiteDescr': {uid: 'website_desc', required: true, show: true, validation: 'text', min: 0},
+            'ingest.AudioChannels': {uid: 'audio_channels', required: false, show: false, validation: 'text', min: 0},
+            'ingest.RecommendedBroadcastDate': {uid: 'recommended_broadcast_date', required: false, show: false, validation: 'text', min: 0},
+            'ingest.RecommendedSubtitleTime': {uid: 'recommended_subtitle_time', required: false, show: false, validation: 'text', min: 0},
+            'ingest.ArchiveDescr': {uid: 'archive_description', required: false, show: true, validation: 'text', min: 0},
+            'persons': {
+                required: true, show: true, validation: 'text', min: 1, items: {
+                    '1': {title: 'تهیه کننده', required: false},
+                    '2': {title: 'کارگردان', required: false},
+                    '3': {title: 'صدابردار', required: false},
+                    '4': {title: 'تصویربردار', required: false},
+                    '5': {title: 'تدوین گر', required: false},
+                    '6': {title: 'مجری', required: false},
+                    '7': {title: 'گزارشگر', required: false},
+                    '8': {title: 'بازیگر', required: false},
+                    '9': {title: 'گرافیست', required: false},
+                    '10': {title: 'عکاس', required: false},
+                    '11': {title: 'گوینده', required: false},
+                    '12': {title: 'هماهنگی', required: false},
+                    '13': {title: 'نویسنده', required: false},
+                    '14': {title: 'دبیر مجری', required: false},
+                    '15': {title: 'سردبیر', required: false},
+                    '16': {title: 'دبیر زیرنویس', required: false},
+                    '17': {title: 'تصویریاب', required: false},
+                    '18': {title: 'آرشیو', required: false}
+                }
+            },
+        },
         settings: {
             datepicker: {
                 format: 'YYYY-MM-DD'

@@ -3,17 +3,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
     var IngestHelper = {
         flags: {}
         , fields: {
-            path: { required: true, validation: 'text' },
-            duration: { required: true, validation: 'text' },
-            filename: { required: true, validation: 'text' },
-            episode: { required: true, validation: 'number', min: 0 },
-            title: { required: true, validation: 'text', min: 4 },
-            description: { required: true, validation: 'text', min: 9 },
-            tags: { required: true, validation: 'select', min: 1 },
-            subjects: { required: true, validation: 'select', min: 1 },
-            website_title: { required: true, validation: 'text', min: 4 },
-            website_summary: { required: true, validation: 'text', min: 4 },
-            website_desc: { required: true, validation: 'text', min: 9 }
+            path: {required: true, validation: 'text'},
+            duration: {required: true, validation: 'text'},
+            filename: {required: true, validation: 'text'},
+            episode: {required: true, validation: 'number', min: 0},
+            title: {required: true, validation: 'text', min: 4},
+            description: {required: true, validation: 'text', min: 9},
+            tags: {required: true, validation: 'select', min: 1},
+            subjects: {required: true, validation: 'select', min: 1},
+            website_title: {required: true, validation: 'text', min: 4},
+            website_summary: {required: true, validation: 'text', min: 4},
+            website_desc: {required: true, validation: 'text', min: 9},
+            audio_channels: {required: false, validation: 'text', min: 0},
+            recommended_broadcast_date: {required: false, validation: 'text', min: 0},
+            recommended_subtitle_time: {required: false, validation: 'text', min: 0},
+            archive_description: {required: false, validation: 'text', min: 0}
         }
         , init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
@@ -33,7 +37,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                     break;
             }
         }
-        , checkFields: function() {
+        , checkFields: function () {
             var error = false;
             for (var field in this.fields) {
                 var description = this.fields[field];
@@ -72,6 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                     }
                 }
             }
+            console.log('error', error);
             return !error;
         }
         , validate: function () {
@@ -82,7 +87,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                     rquiredError = true;
                 }
                 $("input, select, textarea").each(function () {
-                    if ($(this).attr("required") && ($(this).val().length < 1 || (typeof $(this).val() === 'string' && $.trim($(this).val()).length < 1))) {
+                    // if ($(this).attr("required") && ($(this).val().length < 1 || (typeof $(this).val() === 'string' && $.trim($(this).val()).length < 1))) {
+                    if ($(this).attr("required") && ($(this).val().length < 1)) {
                         $(this).parents(".form-group:first").addClass('has-error');
                         rquiredError = true;
                         // } else {
@@ -106,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                 } else
                     $("#metadata-form-modal").find(".help-inline").addClass('hidden');
 
+                console.log('requiredError', rquiredError);
                 return !rquiredError;
             };
         }
