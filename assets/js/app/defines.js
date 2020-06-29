@@ -67,8 +67,14 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                         if (Backbone.history.fragment.lastIndexOf('login', 0) !== 0)
                             UserHelper.redirect(true, {msg: 'TOKEN_EXPIRED', url: Backbone.history.fragment});
                     },
-                    403: function () {
-                        toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
+                    403: function (res) {
+                        if (typeof res.responseText !== 'undefined' && res.responseText) {
+                            toastr.error(res.responseText, 'خطا');
+                        } else if (typeof res.responseJSON.Message !== 'undefined' && res.responseJSON.Message) {
+                            toastr.error(res.responseJSON.Message, 'خطا');
+                        } else {
+                            toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');
+                        }
                     },
                     404: function () {
                         toastr.error('سرویس پیدا نشد! [404]', 'خطا');
