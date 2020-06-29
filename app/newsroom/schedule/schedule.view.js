@@ -144,7 +144,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             new NewsroomModel({id: 'sort', overrideUrl: Config.api.newsSchedule}).save(data, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
@@ -197,7 +197,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             new NewsroomModel({id: self.getId(), overrideUrl: Config.api.newsSchedule}).save(data, {
                 // patch: true
                 error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , success: function (response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
