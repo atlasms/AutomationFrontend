@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'users.manage.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap-table'
+], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, UsersManageModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, bootbox) {
     bootbox.setLocale('fa');
     var CategoriesView = Backbone.View.extend({
         model: 'CategoriesModel'
@@ -20,6 +20,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="select-person"]': 'selectPerson'
             , 'click [data-task="delete-person"]': 'deletePerson'
             , 'click [data-task="submit-persons"]': 'submitPersons'
+            , 'click [data-task="revoke-access"]': 'revokeAccess'
+            , 'click [data-task="grant-access"]': 'grantAccess'
         }
         , saveMetadata: function (e) {
             e.preventDefault();
@@ -100,19 +102,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                 //     success: function (data) {
                                 //         var accessList = self.prepareItems(data.toJSON(), categoryAccessParams);
                                 //         item.accessList = accessList;
-                                        var template = Template.template.load('resources/categories', 'category.metadata.partial');
-                                        var $container = $(".metadata.portlet-body");
-                                        template.done(function (data) {
-                                            var handlebarsTemplate = Template.handlebars.compile(data);
-                                            var output = handlebarsTemplate(item);
-                                            $container.html(output).promise().done(function () {
-                                                // After Render
-                                                self.attachDatepickers();
-                                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
-                                                $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
-                                            });
-                                        });
-                                    // }
+                                var template = Template.template.load('resources/categories', 'category.metadata.partial');
+                                var $container = $(".metadata.portlet-body");
+                                template.done(function (data) {
+                                    var handlebarsTemplate = Template.handlebars.compile(data);
+                                    var output = handlebarsTemplate(item);
+                                    $container.html(output).promise().done(function () {
+                                        // After Render
+                                        self.attachDatepickers();
+                                        var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                        $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+                                    });
+                                });
+                                // }
                                 // });
                             }
                         });
@@ -264,7 +266,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , getId: function () {
             return this.cache.currentPathId;
         }
-        , loadAccessList: function(id) {
+        , loadAccessList: function (id) {
             if (typeof id === 'undefined' || id <= 0)
                 return false;
             var self = this;
@@ -273,6 +275,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var categoryAccessModel = new CategoriesModel(categoryAccessParams);
             categoryAccessModel.fetch({
                 success: function (data) {
+                    self.loadUsersList();
                     var accessList = self.prepareItems(data.toJSON(), categoryAccessParams);
                     item.accessList = accessList;
                     // #tab-access
@@ -394,6 +397,56 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         callback();
                     toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
+        }
+        , revokeAccess: function (e) {
+            e.preventDefault();
+            var self = this;
+            var uid = $(e.target).parents('tr:first').attr('data-id');
+            var cid = this.getId();
+            bootbox.confirm({
+                message: "آیا مطمئن هستید می‌خواهید  دسترسی کاربر انتخاب شده را لغو کنید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var params = {overrideUrl: Config.api.tree, id: 'users', query: 'uid=' + uid + '&cid=' + cid};
+                        new CategoriesModel(params).destroy({
+                            success: function (d) {
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                self.loadAccessList(cid);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        , grantAccess: function (e) {
+            e.preventDefault();
+            var self = this;
+            var uid = $('select[name="uid"]').val();
+            var cid = this.getId();
+            var params = {overrideUrl: Config.api.tree, path: '/users', query: 'uid=' + uid + '&cid=' + cid};
+            new CategoriesModel(params).save(null, {
+                success: function (d) {
+                    toastr.success('با موفقیت انجام شد', 'اعطای دسترسی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    self.loadAccessList(cid);
+                    $('#grant-access-modal').modal('hide');
+                }
+            });
+        }
+        , loadUsersList: function () {
+            if ($('select[name="uid"] option').length > 1)
+                return false;
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+                        $('select[name="uid"]').append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
+                    });
                 }
             });
         }
