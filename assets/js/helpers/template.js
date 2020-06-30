@@ -151,8 +151,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             });
             Handlebars.registerHelper('select', function (value, options) {
                 var $el = $('<select />').html(options.fn(this));
-                if (typeof value === "undefined" || !value || value === "")
+
+                if (typeof value === "undefined")
                     return $el.html();
+                value = "" + value;
+                if (!value || value === "") {
+                    return $el.html();
+                }
                 if (typeof value === "string" && value.indexOf(',') !== -1) {
                     var values = value.split(',');
                     $.each(values, function () {

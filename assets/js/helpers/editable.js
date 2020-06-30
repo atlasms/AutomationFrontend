@@ -30,9 +30,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'x-editable', 'b
                             , placement: options.rtl ? 'left' : 'right'
                             , rtl: options.rtl
                             , showbuttons: options.showbuttons
+                            , emptytext: 'خالی'
                             , validate: function (value) {
+                                if ($this.attr('data-optional') !== 'undefined' && $this.attr('data-optional') === 'true') {
+                                    return;
+                                }
                                 if ($.trim(value) === '')
-                                    return 'This field is required';
+                                    return 'وارد کردن اطلاعات برای این فیلد اجباری است.';
                             }
                         });
                         self.callback !== null && self.setEventListeners($this, options);

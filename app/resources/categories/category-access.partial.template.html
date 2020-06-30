@@ -1,0 +1,25 @@
+<table class="table table-bordered table-striped table-condensed flip-content">
+    <thead>
+        <tr>
+            <th class=""></th>
+            <th class="col-xs-1">شناسه</th>
+            <th class="col-xs-5">نام کاربری</th>
+            <th class="col-xs-6">نام و نام خانوادگی</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each accessList}}
+        <tr data-id="{{Id}}">
+            <td>
+                <div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+                    <input name="force" data-validation="digit" id="checkbox_{{Id}}" value="" type="checkbox" checked>
+                    <label for="checkbox_{{Id}}"></label>
+                </div>
+            </td>
+            <td>{{Id}}</td>
+            <td>{{UserName}}</td>
+            <td>{{Name}} {{Family}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -94,24 +94,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             success: function (item) {
                                 item = self.prepareItems(item.toJSON(), params);
                                 item.media = mediaItems;
-                                // console.log(item);
-                                var template = Template.template.load('resources/categories', 'category.metadata.partial');
-                                var $container = $(".metadata.portlet-body");
-                                template.done(function (data) {
-                                    var handlebarsTemplate = Template.handlebars.compile(data);
-                                    var output = handlebarsTemplate(item);
-                                    $container.html(output).promise().done(function () {
-                                        // After Render
-                                        self.attachDatepickers();
-                                        var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
-                                        $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
-                                    });
-                                });
+                                // var categoryAccessParams = {overrideUrl: Config.api.tree, path: '/users', query: 'id=' + id};
+                                // var categoryAccessModel = new CategoriesModel(categoryAccessParams);
+                                // categoryAccessModel.fetch({
+                                //     success: function (data) {
+                                //         var accessList = self.prepareItems(data.toJSON(), categoryAccessParams);
+                                //         item.accessList = accessList;
+                                        var template = Template.template.load('resources/categories', 'category.metadata.partial');
+                                        var $container = $(".metadata.portlet-body");
+                                        template.done(function (data) {
+                                            var handlebarsTemplate = Template.handlebars.compile(data);
+                                            var output = handlebarsTemplate(item);
+                                            $container.html(output).promise().done(function () {
+                                                // After Render
+                                                self.attachDatepickers();
+                                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                                $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+                                            });
+                                        });
+                                    // }
+                                // });
                             }
                         });
                     }
                 });
                 this.loadPersonsList(id);
+                this.loadAccessList(id);
             }
         }
         , attachDatepickers: function () {
@@ -157,6 +165,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             var template = Template.template.load('resources/categories', 'categories');
             var $container = $(Config.positions.main);
+
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
@@ -254,6 +263,33 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , getId: function () {
             return this.cache.currentPathId;
+        }
+        , loadAccessList: function(id) {
+            if (typeof id === 'undefined' || id <= 0)
+                return false;
+            var self = this;
+            var item = {};
+            var categoryAccessParams = {overrideUrl: Config.api.tree, path: '/users', query: 'id=' + id};
+            var categoryAccessModel = new CategoriesModel(categoryAccessParams);
+            categoryAccessModel.fetch({
+                success: function (data) {
+                    var accessList = self.prepareItems(data.toJSON(), categoryAccessParams);
+                    item.accessList = accessList;
+                    // #tab-access
+                    var template = Template.template.load('resources/categories', 'category-access.partial');
+                    var $container = $("#tab-access");
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(item);
+                        $container.html(output).promise().done(function () {
+                            // After Render
+                            self.attachDatepickers();
+                            var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                            $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
+                        });
+                    });
+                }
+            });
         }
         , loadPersonsList: function (categoryId) {
             if (typeof categoryId === 'undefined' || categoryId <= 0)
