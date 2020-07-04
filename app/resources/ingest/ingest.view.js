@@ -310,7 +310,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate({items: items, cols: true});
+                        var output = handlebarsTemplate({items: items, cols: true, placeholder: true});
                         $container.html(output).promise().done(function () {
                         });
                     });
@@ -351,6 +351,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $('#persons-table tbody tr').each(function () {
                 if (~~$(this).attr('data-id') == ~~params.id)
                     foundDuplicate = true;
+                if ($(this).hasClass('placeholder') && ~~$(this).attr('data-type') === ~~params.type)
+                    $(this).hide();
             });
             if (foundDuplicate)
                 return false;

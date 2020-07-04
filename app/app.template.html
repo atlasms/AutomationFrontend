@@ -25,10 +25,28 @@
                 <div class="top-menu">
                     <ul class="nav navbar-nav pull-right">
                         <li class="separator hide"></li>
+                        <li class="dropdown dropdown-extended dropdown-notification dropdown-dark" id="header_tasks_bar">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="fa fa-inbox"></i>
+                                <span class="badge badge-danger"> 0 </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="external">
+                                    <h3>
+                                        <span class="bold">&nbsp;</span>
+                                    </h3>
+                                    <a href="/user/tasks">همه موارد</a>
+                                </li>
+                                <li>
+                                    <ul class="dropdown-menu-list scroller tasks-list" style="height: 250px;" data-handle-color="#637283"></ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="separator hide"></li>
                         <li class="dropdown dropdown-extended dropdown-notification dropdown-dark" id="header_notification_bar">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                 <i class="fa fa-bell"></i>
-                                <span class="badge badge-danger"> 0 </span>
+                                <span class="badge badge-warning"> 0 </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="external">
@@ -83,11 +101,16 @@
 <!--                                        <span class="badge badge-danger"> 3 </span>-->
                                     </a>
                                 </li>
-                                <li class="divider"></li>
                                 <li>
-                                    <a href="#">
-                                        قفل موقت <i class="fa fa-lock"></i></a>
+                                    <a href="/user/messages#inbox">
+                                        کارتابل من<i class="fa fa-inbox"></i>
+                                    </a>
                                 </li>
+                                <li class="divider"></li>
+<!--                                <li>-->
+<!--                                    <a href="#">-->
+<!--                                        قفل موقت <i class="fa fa-lock"></i></a>-->
+<!--                                </li>-->
                                 <li>
                                     <a href="/login">
                                         خروج از سیستم<i class="fa fa-key"></i></a>

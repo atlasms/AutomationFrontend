@@ -214,8 +214,10 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return new moment(date).format(format);
             });
             Handlebars.registerHelper('getMedia', function (value, hq, options) {
-                var fix = (typeof hq !== "undefined" && hq == true) ? 'hq' : 'lq';
-                return value.replace('.jpg', '_' + fix + '.mp4');
+                var hq = typeof hq !== "undefined" && hq == true;
+                var fix = hq ? 'hq' : 'lq';
+                var suffix = hq ? Config.hqVideoFormat : 'mp4'
+                return value.replace('.jpg', '_' + fix + '.' + suffix);
             });
             Handlebars.registerHelper('replace', function (haystack, needle, replace, options) {
                 return haystack.replace(needle, replace);
@@ -257,6 +259,8 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return 'warning';
                     case 2:
                         return 'success';
+                    case 3:
+                        return 'danger';
                     default:
                         return 'info';
                 }
@@ -371,7 +375,16 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return $el.wrap('<p/>').parent().html();
             });
             Handlebars.registerHelper('persons', function (value, options) {
-                return '';
+                var items = [];
+                var output = '';
+                var policies = Config.inputPolicies.persons.items;
+                Object.keys(policies).forEach(function (item) {
+                    if (policies[item].required) {
+                        items.push(policies[item]);
+                        output += '<tr class="placeholder" data-type="' + item + '" data-id="0"><td data-type="id">-</td><td data-type="family">ندارد</td><td data-type="name">ندارد</td><td data-type="type">' + policies[item].title + '</td><td></td></tr>';
+                    }
+                });
+                return output ? output : '';
             });
             Handlebars.registerHelper('personsWarning', function (value, options) {
                 var items = [];
@@ -392,37 +405,37 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var options = typeof options !== 'undefined' && options !== '' ? options : {};
                 var output = '<div class="btn-group dropdown dropdown-dark media-options">' +
                     '<button class="btn red btn-circle btn-icon-only dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>' +
-                    '<ul class="dropdown-menu" role="menu">';
-                Config.mediaOptions.forEach(function (menu) {
-                    if (typeof menu.items === 'undefined' || Authorize.access(menu.access)) {
-                        var menuColor = typeof menu.color !== 'undefined' && menu.color !== null ? menu.color : 'primary';
-                        output += '<li';
-                        output += (typeof menu.items !== 'undefined' && menu.items !== null) ? ' class="dropdown-submenu"' : '';
-                        output += (typeof menu.task !== 'undefined' && menu.task !== null) ? ' data-task="' + menu.task + '"' : '';
-                        output += (typeof menu.value !== 'undefined' && menu.value !== null) ? ' data-task="' + menu.value + '"' : '';
-                        output += '>';
-                        output += '<a href="javascript:;">';
-                        output += (typeof menu.icon !== 'undefined' && menu.icon !== null) ? '<span class="badge badge-' + menuColor + '"><i class="fa fa-' + menu.icon + '"></i></span>' : '';
-                        output += menu.text + '</a>';
-                        if (typeof menu.items !== 'undefined' && menu.items !== null) {
-                            menu.items = (typeof menu.source !== 'undefined' && menu.source === 'dfn') ? Global.getDefinitions(menu.items) : menu.items;
-                            output += '<ul class="dropdown-menu">';
-                            menu.items.forEach(function (submenu) {
-                                var submenuColor = typeof submenu.color !== 'undefined' && submenu.color !== null ? submenu.color : 'primary';
-                                output += '<li';
-                                output += (typeof submenu.task !== 'undefined' && submenu.task !== null) ? ' data-task="' + submenu.task + '"' : '';
-                                output += (typeof submenu.value !== 'undefined' && submenu.value !== null) ? ' data-task="' + submenu.value + '"' : '';
-                                output += '>';
-                                output += '<a href="javascript:;">';
-                                output += (typeof submenu.icon !== 'undefined' && submenu.icon !== null) ? '<span class="badge badge-' + submenuColor + '"><i class="fa fa-' + submenu.icon + '"></i></span>' : '';
-                                output += submenu.text + '</a>';
-                                output += '</li>';
-                            });
-                            output += '</ul>';
+                    '<ul class="dropdown-menu" role="menu">' +
+                    Config.mediaOptions.forEach(function (menu) {
+                        if (typeof menu.items === 'undefined' || Authorize.access(menu.access)) {
+                            var menuColor = typeof menu.color !== 'undefined' && menu.color !== null ? menu.color : 'primary';
+                            output += '<li';
+                            output += (typeof menu.items !== 'undefined' && menu.items !== null) ? ' class="dropdown-submenu"' : '';
+                            output += (typeof menu.task !== 'undefined' && menu.task !== null) ? ' data-task="' + menu.task + '"' : '';
+                            output += (typeof menu.value !== 'undefined' && menu.value !== null) ? ' data-task="' + menu.value + '"' : '';
+                            output += '>';
+                            output += '<a href="javascript:;">';
+                            output += (typeof menu.icon !== 'undefined' && menu.icon !== null) ? '<span class="badge badge-' + menuColor + '"><i class="fa fa-' + menu.icon + '"></i></span>' : '';
+                            output += menu.text + '</a>';
+                            if (typeof menu.items !== 'undefined' && menu.items !== null) {
+                                menu.items = (typeof menu.source !== 'undefined' && menu.source === 'dfn') ? Global.getDefinitions(menu.items) : menu.items;
+                                output += '<ul class="dropdown-menu">';
+                                menu.items.forEach(function (submenu) {
+                                    var submenuColor = typeof submenu.color !== 'undefined' && submenu.color !== null ? submenu.color : 'primary';
+                                    output += '<li';
+                                    output += (typeof submenu.task !== 'undefined' && submenu.task !== null) ? ' data-task="' + submenu.task + '"' : '';
+                                    output += (typeof submenu.value !== 'undefined' && submenu.value !== null) ? ' data-task="' + submenu.value + '"' : '';
+                                    output += '>';
+                                    output += '<a href="javascript:;">';
+                                    output += (typeof submenu.icon !== 'undefined' && submenu.icon !== null) ? '<span class="badge badge-' + submenuColor + '"><i class="fa fa-' + submenu.icon + '"></i></span>' : '';
+                                    output += submenu.text + '</a>';
+                                    output += '</li>';
+                                });
+                                output += '</ul>';
+                            }
+                            output += '</li>';
                         }
-                        output += '</li>';
-                    }
-                });
+                    });
                 output += '</ul>';
                 return output;
             });
@@ -433,7 +446,8 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 buttonClasses += (typeof options.small !== 'undefined') ? ' btn-sm' : "";
                 var output = '<div class="btn-group dropdown dropdown-dark media-options">' +
                     '<button class="' + buttonClasses + '" type="button" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>' +
-                    '<ul class="dropdown-menu" role="menu">';
+                    '<ul class="dropdown-menu" role="menu">' +
+                    '<li><a href="#" data-task="open-assign-modal"><i class="fa fa-share"></i> ارجاع</a></li>';
                 if (Authorize.access(4)) {
                     output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
                         '<ul class="dropdown-menu">';

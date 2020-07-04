@@ -1,0 +1,36 @@
+<table class="table">
+    <tbody>
+    <tr>
+        <th>فرستنده</th>
+        <td>{{CreatedByText}}</td>
+        <th>زمان</th>
+        <td>{{extractTime CreatedDate}} {{extractDate CreatedDate}}</td>
+    </tr>
+    <tr>
+        <td>عنوان</td>
+        <td colspan="3">
+            {{Title}}
+        </td>
+    </tr>
+    <tr>
+        <td>توضیحات</td>
+        <td colspan="3">
+            {{Body}}
+        </td>
+    </tr>
+    <tr>
+        <td>سوابق</td>
+        <td colspan="3">
+            {{br Comment}}
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/resources/mediaitem/{{Media.Id}}" target="_blank" class="note note-info">
+    <figure class="pull-right">
+        <img src="{{Media.Thumbnail}}" alt="{{Media.Title}}" />
+    </figure>
+    <h4 class="block">{{Media.Title}} - [قسمت {{Media.EpisodeNumber}}]</h4>
+    <p>{{Media.Description}}</p>
+    <div class="clearfix"></div>
+</a>

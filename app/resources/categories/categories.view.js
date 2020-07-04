@@ -309,7 +309,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate({items: items, cols: true});
+                        var output = handlebarsTemplate({items: items, cols: true, placeholder: false});
                         $container.html(output).promise().done(function () {
                         });
                     });

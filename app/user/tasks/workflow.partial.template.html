@@ -1,0 +1,40 @@
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-xs-1">نوع</th>
+        <th class="col-xs-2">عنوان</th>
+        <th class="col-xs-1">مدیا</th>
+        <th class="col-xs-1">فرستنده</th>
+        <th class="col-xs-1">گیرنده</th>
+        <th class="col-xs-2">زمان ارسال</th>
+        <th class="col-xs-1">آخرین تغییر دهنده</th>
+        <th class="col-xs-2">زمان انجام</th>
+        <th class="">وضعیت</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" class="{{#if ToGroupId}}{{else}} to-user{{/if}}">
+        <td>
+            <span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
+        </td>
+        <td> {{Title}}</td>
+        <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
+        <td> {{CreatedByText}}</td>
+        <td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
+        <td class="text-right">
+            {{extractTime CreatedDate}} {{extractDate CreatedDate}}
+        </td>
+        <td>
+            {{Donebytext}}
+        </td>
+        <td class="text-right">
+            {{extractTime DoneDate}} {{extractDate DoneDate}}
+        </td>
+        <td>
+            <span class="text-center label label-block label-sm label-default">{{StatusText}}</span>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

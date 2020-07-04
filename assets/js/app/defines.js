@@ -70,7 +70,7 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                     403: function (res) {
                         if (typeof res.responseText !== 'undefined' && res.responseText) {
                             toastr.error(res.responseText, 'خطا');
-                        } else if (typeof res.responseJSON.Message !== 'undefined' && res.responseJSON.Message) {
+                        } else if (typeof res.responseJSON !== 'undefined' && typeof res.responseJSON.Message !== 'undefined' && res.responseJSON.Message) {
                             toastr.error(res.responseJSON.Message, 'خطا');
                         } else {
                             toastr.error('شما به این سرویس دسترسی ندارید. [403]', 'خطا');

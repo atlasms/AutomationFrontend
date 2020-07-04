@@ -67,6 +67,7 @@ require.config({
         , "select2": ["vendor/select2.full.min"]
         , "cropper": ["vendor/cropper.min"]
         , "notifications": ["helpers/notifications"]
+        , "tasks": ["helpers/tasks"]
         , "ticker": ["helpers/ticker"]
         , "bootstrap-table": ["vendor/bootstrap-table.min"]
         , "pace": ["vendor/pace.min"]
@@ -119,6 +120,7 @@ require.config({
         , "shared.model": ["../../app/shared/shared.model"]
         , "basic.model": ["../../app/basic/basic.model"]
         , "website.model": ["../../app/website/website.model"]
+        , "tasks.model": ["../../app/user/tasks/tasks.model"]
 
         // Views
         , "app.view": ["../../app/app.view"]
@@ -192,6 +194,7 @@ require.config({
         , "website.edit.view": ["../../app/website/item/edit.view"]
         , "website.stats.view": ["../../app/website/stats/stats.view"]
         , "website.workspace.view": ["../../app/website/workspace/workspace.view"]
+        , "user.tasks.view": ["../../app/user/tasks/tasks.view"]
 
         // Helpers
         , "toolbar": ["helpers/toolbar"]

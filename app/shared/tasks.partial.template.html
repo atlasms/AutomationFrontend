@@ -1,0 +1,19 @@
+{{#each []}}
+<li class="{{#if DoneBy}}read{{else}}unread{{/if}}" data-taskid="{{Id}}">
+	<a href="/user/tasks">
+		<span class="message clearfix">
+			{{Title}}
+			<br />
+			<strong>{{JobIdText}}</strong> {{Media.Title}} ({{Media.EpisodeNumber}})
+		</span>
+		</span>
+<!--		{{#if Body}}<span class="message clearfix">{{Body}}</span>{{/if}}-->
+		<span class="subject clearfix">
+			<span class="time" title="{{extractDate CreatedDate}} {{extractTime CreatedDate}}">
+				{{#ifIsToday CreatedDate}}{{extractDate CreatedDate}} {{extractTime CreatedDate}}{{/ifIsToday}}
+			</span>
+<!--			<span class="time">{{Media.Title}} ({{Media.EpisodeNumber}})</span>-->
+		</span>
+	</a>
+</li>
+{{/each}}

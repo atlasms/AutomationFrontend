@@ -58,11 +58,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
-            if ($('[name="Tags"]').val().length < 1){
+            if ($('[name="Tags"]').val().length < 1) {
                 toastr.warning('کلیدواژه وارد نشده.', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
-            if ($('[name="Subjects"]').val().length < 1){
+            if ($('[name="Subjects"]').val().length < 1) {
                 toastr.warning('محور وارد نشده.', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
@@ -343,7 +343,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate({items: items, cols: false});
+                        var output = handlebarsTemplate({items: items, cols: false, placeholder: true});
                         $container.html(output).promise().done(function () {
                         });
                     });

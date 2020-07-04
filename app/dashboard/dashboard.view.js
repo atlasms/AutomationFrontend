@@ -59,6 +59,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'toolbar', 'da
                     success: function (data) {
                         userData = data.toJSON();
                         userData.activitiesLog.splice(4);
+                        userData.Tasks.splice(4);
+                        userData.showWorkspaceInbox = Config.showDashboardWorkspaceInbox;
+                        userData.showTasks = Config.showDashboardTasks;
                         var output = handlebarsTemplate(userData);
                         $('#user-data').html(output).promise().done(function () {
                             if (typeof callback === 'function') {

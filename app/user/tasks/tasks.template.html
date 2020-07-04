@@ -1,0 +1,182 @@
+<style>
+	.modal-body figure { width: 200px; }
+	.modal-body figure img { max-width: 100%; height: auto; display: block; }
+	.modal-body .note { display: block; position: relative; }
+	.modal-body .note:hover { text-decoration: none; }
+    .inbox .inbox-sidebar { padding: 0; }
+    .inbox .inbox-nav { margin: 0; }
+    .inbox .inbox-nav > li { float: right; margin-bottom: 10px; }
+    .inbox .inbox-nav > li > a { border-right: 0 none; border-bottom: 4px solid transparent; }
+    .inbox .inbox-nav>li.active>a { border-right: 0 none; border-bottom: 4px solid #ed6b75 }
+    .date { white-space: nowrap; }
+</style>
+<div id="inbox-page">
+    <div class="mainbody">
+        <div class="inbox">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inbox-body">
+                        <div class="inbox-sidebar">
+                            <div class="form-group pull-right">
+                                <select data-task="filter-status" class="form-control">
+                                    <option value="0">همه</option>
+                                    {{{getDefinitionOptions 223}}}
+                                </select>
+                            </div>
+                            <ul class="inbox-nav">
+                                <li class="active">
+                                    <a href="#inbox" data-type="all"> همه</a>
+                                </li>
+                                <li>
+                                    <a href="#inbox" data-type="me"> کارتابل من</a>
+                                </li>
+                                <li>
+                                    <a href="#sent" data-type="groups"> کارتابل گروه‌های من </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="inbox-content">
+                            <table class="table table-striped table-advance table-hover">
+                                <thead>
+                                <tr>
+                                    <th>شناسه ارجاع</th>
+                                    <th class="col-xs-1">نوع</th>
+                                    <th class="col-xs-2">عنوان</th>
+                                    <th class="col-xs-1">مدیا</th>
+                                    <th class="col-xs-1">فرستنده</th>
+                                    <th class="col-xs-1">گیرنده</th>
+                                    <th class="col-xs-1">زمان ارسال</th>
+                                    <th class="col-xs-2" colspan="2">زمان انجام</th>
+                                    <th class="col-xs-1">وضعیت</th>
+                                    <th class="col-xs-2"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#each []}}
+                                <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
+                                    <td>{{Id}}</td>
+                                    <td>
+										<span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
+									</td>
+                                    <td> {{Title}}</td>
+                                    <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
+                                    <td> {{CreatedByText}}</td>
+									<td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
+                                    <td class="text-right">
+                                        <div class="date">
+                                        {{extractTime CreatedDate}} {{extractDate CreatedDate}}
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="date">
+                                        {{extractTime DoneDate}} {{extractDate DoneDate}}
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        {{DoneByText}}
+                                    </td>
+                                    <td>
+                                        <select class="form-control input-sm" data-type="change-state">
+                                            {{#select Status}}
+                                            {{{getDefinitionOptions 223}}}
+                                            {{/select}}
+                                        </select>
+                                    </td>
+                                    <td class="text-right">
+<!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
+                                        <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
+                                        <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="modal fade" id="details-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" role="form">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">جزئیات آیتم</h4>
+				</div>
+				<div class="modal-body" id="task-details">
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="modal fade" id="assign-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">ارجاع</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="MasterId" value="{{Id}}" />
+                    <label>گیرنده</label>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            <label><input type="radio" name="to-type" data-toggle="ToUserId" value="0" checked>&nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
+                        </dt>
+                        <dd>
+                            <div class="form-group">
+                                <select class="form-control" name="ToUserId"></select>
+                            </div>
+                        </dd>
+                        <dt>
+                            <label><input type="radio" name="to-type" data-toggle="ToGroupId" value="0">&nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
+                        </dt>
+                        <dd>
+                            <div class="form-group">
+                                <select class="form-control" name="ToGroupId" disabled>
+                                    {{{getDefinitionOptions 14}}}
+                                </select>
+                            </div>
+                        </dd>
+                    </dl>
+                    <hr />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="JobId">نوع ارجاع</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <select class="form-control" id="JobId" name="JobId">
+                                    {{{getDefinitionOptions 219}}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="Title">عنوان</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="Body">توضیحات</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <textarea class="form-control" id="Body" name="Body" placeholder="توضیحات"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info" data-task="assign-item">ارجاع</button>
+                </div>
+            </form><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>

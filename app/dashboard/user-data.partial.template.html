@@ -158,6 +158,34 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
+            {{#if showTasks}}
+            <a href="/user/tasks" target="_blank">
+                <div class="portlet user-messages light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-inbox font-dark"></i>
+                            <span class="caption-subject font-dark bold uppercase">کارتابل</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-advance table-hover">
+                            <tbody>
+                            {{#each Tasks}}
+                            <tr data-id="{{Id}}">
+                                <td class="view-message ">
+                                    <span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
+                                </td>
+                                <td class="view-message hidden-xs">{{Title}}</td>
+                                <td class="view-message ">{{StatusText}}</td>
+                                <td class="view-message text-right">{{extractTime CreatedDate}} {{extractDate CreatedDate}}</td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </a>
+            {{/if}}
             <a href="/user/notifications" target="_blank">
                 <div class="portlet user-messages light bordered">
                     <div class="portlet-title">
@@ -181,6 +209,7 @@
                     </div>
                 </div>
             </a>
+            {{#if showWorkspaceInbox}}
             <a href="/newsroom/workspace" target="_blank">
                 <div class="portlet user-messages light bordered">
                     <div class="portlet-title">
@@ -204,6 +233,7 @@
                     </div>
                 </div>
             </a>
+            {{/if}}
         </div>
     </div>
 </fieldset>

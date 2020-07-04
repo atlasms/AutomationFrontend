@@ -117,7 +117,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 success: function (d) {
                     var permissions = self.prepareItems(d.toJSON(), params);
                     $.each(permissions, function () {
-                        $('ul[data-type=' + this.Key + '] input[type=checkbox][value=' + this.Value + ']').prop('checked', true);
+                        var value = this.Value ? this.Value : '""';
+                        $('ul[data-type=' + this.Key + '] input[type=checkbox][value=' + value + ']').prop('checked', true);
                     });
 
                     // Tree

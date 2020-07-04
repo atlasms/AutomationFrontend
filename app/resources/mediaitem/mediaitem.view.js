@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, TasksModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
     bootbox.setLocale('fa');
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -14,7 +14,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , subjects: []
         , tags: []
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}}
+            // {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}},
+            {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'submit', icon: 'fa fa-share', task: 'open-assign-modal'}}
         ]
         , statusbar: []
         , flags: {}
@@ -46,6 +47,51 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="edit-tags"]': 'editTags'
             , 'click [data-task="save-subjects"]': 'saveSubjects'
             , 'click [data-task="save-tags"]': 'saveTags'
+            , 'click [data-task="open-assign-modal"]': 'openAssignModal'
+            , 'click [data-task="assign-item"]': 'assign'
+            , 'click [name="to-type"]': 'changeSendRecipient'
+        }
+        , assign: function (e) {
+            e.preventDefault();
+            // var defaultRecipient = {ToUserId: null, ToGroupId: null};
+            var data = $('#assign-modal form:first').serializeObject();
+            if (data['to-type'] === '0') {
+                data.ToGroupId = null;
+            } else {
+                data.ToUserId = null;
+            }
+            // var data = $.extend({}, defaultRecipient, dataObject);
+            delete data['to-type'];
+            new TasksModel({}).save(null, {
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                processData: false,
+                success: function (res) {
+                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $('#assign-modal').modal('hide');
+                }
+            });
+        }
+        , openAssignModal: function (e) {
+            e.preventDefault();
+            $('#assign-modal').modal('toggle');
+        }
+        , changeSendRecipient: function (e) {
+            var $this = $(e.target);
+            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
+        }
+        , loadUsersList: function () {
+            if ($("select[name=ToUserId] option").length > 1)
+                return false;
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
+                    });
+                }
+            });
         }
         , saveTags: function () {
             var id = this.getId();
@@ -494,7 +540,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             } else
                 var el = $(".item-forms .nav-tabs li.active");
             if (typeof force !== "undefined" && force !== true)
-//            if ((typeof force !== "undefined" && force !== true) && (!$(el.find("a").attr('href')).length || $(el.find("a").attr('href')).html() !== ""))
                 return;
             var tmpl, model, data;
             var $container = $(el.find("a").attr('href'));
@@ -510,6 +555,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     };
                     tmpl = ['resources/review', 'review.partial'];
                     model = 'sequential-comments';
+                    break;
+                case 'workflow':
+                    var params = {query: 'masterid=' + self.getId() + '&touserid=0&togroupid=0&jobid=0&status=0'};
+                    tmpl = ['user/tasks', 'workflow.partial'];
+                    model = new TasksModel(params);
                     break;
                 case 'versions':
                     var params = {
@@ -578,7 +628,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     if (service === "broadcast")
                                         items = {items: items, params: {}};
                                     if (service === 'persons')
-                                        items = {items: items, cols: true};
+                                        items = {items: items, cols: true, placeholder: false};
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
                                         if ($container.find(".scroller").length)
@@ -665,6 +715,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             player.render();
             self.player = player;
             self.playerInstance = player.instance;
+            this.loadUsersList();
         }
         , renderToolbar: function () {
             var self = this;

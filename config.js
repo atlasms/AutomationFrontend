@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
      */
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
-        version: "1.200505.0058",
+        version: "1.200704.0112",
         loginMessage: "ورود به سامانه اتوماسیون",
         channel: "ایران‌کالا",
         channelLogo: "assets/data/iktv.png",
@@ -13,6 +13,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         vendorLink: "http://atlasms.ir",
         vendorLinkEnabled: false,
         env: "dev",
+        hqVideoFormat: 'mp4',
+        showDashboardWorkspaceInbox: false,
+        showDashboardTasks: true,
         placeholderImage: "/assets/img/placeholder.png",
         transitionSpedd: 200,
         notificationsInterval: 60000,
@@ -168,6 +171,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , "user/profile": {"private": true, "view": "user.profile.view", "action": "ProfileView", "file": "app/user/profile/profile.view"}
             , "user/notifications": {"private": true, "view": "user.notifications.view", "action": "NotificationsView", "file": "app/user/notifications/notifications.view"}
             , "user/acl": {"private": true, "view": "user.acl.view", "action": "UserACLView", "file": "app/user/acl/acl.view"}
+            , "user/tasks": {"private": true, "view": "user.tasks.view", "action": "UserTasksView", "file": "app/user/tasks/tasks.view"}
             , "pr": {"private": true, "view": "pr.view", "action": "PRView", "file": "app/pr/pr.view"}
             , "pr/sms": {"private": true, "view": "pr.sms.view", "action": "PRSMSView", "file": "app/pr/sms/sms.view"}
             , "pr/recordings": {"private": true, "view": "pr.recordings.view", "action": "PRRecordingsView", "file": "app/pr/recordings/recordings.view"}
@@ -247,6 +251,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , mediapersons: "metadata/person"
             , dashboardSystem: "share/dashboard/system"
             , dashboardUser: "share/dashboard/user"
+            , tasks: 'task'
             , website: 'https://services.iktv.ir/pl/'
         },
         channels: {

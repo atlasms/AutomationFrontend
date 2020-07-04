@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 'global', "layout", "user.helper", "notifications", "ticker"
-], function ($, _, Backbone, Login, Template, Config, Global, Layout, UserHelper, Notifications, Ticker) {
+define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 'global', "layout", "user.helper", "notifications", "tasks", "ticker"
+], function ($, _, Backbone, Login, Template, Config, Global, Layout, UserHelper, Notifications, Tasks, Ticker) {
     var Router = Backbone.Router.extend({
         routes: {
             'login': 'login'
@@ -105,6 +105,7 @@ define(["jquery", "underscore", "backbone", "login.view", 'template', 'config', 
                         new Ticker();
                         // TODO: to replace current method with socket.io
                         new Notifications(user);
+                        new Tasks(user);
                     });
                 });
             });

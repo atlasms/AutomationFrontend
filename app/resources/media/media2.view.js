@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'bootstrap-table', 'bootpag', 'rangeslider'
-], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'bootstrap-table', 'bootpag', 'rangeslider'
+], function ($, _, Backbone, Template, Config, Global, Media2Model, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
     var MediaView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'Media2Model'
@@ -58,6 +58,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click #filters .label a': 'removeFilter'
             , 'popstate window': 'handleUrlChange'
             , 'click th.sortable': 'handleOrdering'
+            , 'click [data-task="open-assign-modal"]': 'openAssignModal'
+            , 'click [name="to-type"]': 'changeSendRecipient'
+            , 'click [data-task="assign-item"]': 'assign'
             , 'click .toggle-tree-modal': function (e) {
                 e.preventDefault();
                 $('#tree-modal').modal('show');
@@ -67,6 +70,48 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
 
             // , 'change select.form-control': 'reLoad'
+        }
+        , assign: function (e) {
+            e.preventDefault();
+            // var defaultRecipient = {ToUserId: null, ToGroupId: null};
+            var data = $('#assign-modal form:first').serializeObject();
+            if (data['to-type'] === 'ToUserId') {
+                data.ToGroupId = null;
+            } else {
+                data.ToUserId = null;
+            }
+            // var data = $.extend({}, defaultRecipient, dataObject);
+            delete data['to-type'];
+            new TasksModel({}).save(null, {
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                processData: false,
+                success: function (res) {
+                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $('#assign-modal').modal('hide');
+                }
+            });
+        }
+        , openAssignModal: function (e) {
+            e.preventDefault();
+            $('#assign-modal').modal('toggle');
+        }
+        , changeSendRecipient: function (e) {
+            var $this = $(e.target);
+            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
+        }
+        , loadUsersList: function () {
+            if ($("select[name=ToUserId] option").length > 1)
+                return false;
+            new UsersManageModel({}).fetch({
+                success: function (items) {
+                    var items = items.toJSON();
+                    $.each(items, function () {
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
+                    });
+                }
+            });
         }
         , handleOrdering: function (e) {
             e.preventDefault();
@@ -606,6 +651,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.renderStatusbar();
             this.registerWebpUrl();
             this.setStorageUrl(this.currentPageUrl);
+            this.loadUsersList();
         }
         , setStorageUrl: function (url) {
             STORAGE.setItem('mediaUrl', url);

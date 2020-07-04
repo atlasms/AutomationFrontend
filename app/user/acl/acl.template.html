@@ -10,6 +10,8 @@
 							<ul class="nav nav-tabs tabs-left" role="tablist">
 								<li role="presentation" class="active"><a href="#tab_menu" aria-controls="دسترسی به صفحات" role="tab" data-toggle="tab">دسترسی به صفحات</a></li>
 								<li role="presentation"><a href="#tab_permissions" aria-controls="جزئیات دسترسی" role="tab" data-toggle="tab">جزئیات دسترسی</a></li>
+								<li role="presentation"><a href="#tab_assignments" aria-controls="عملیات ارجاع" role="tab" data-toggle="tab">عملیات ارجاع</a></li>
+								<li role="presentation"><a href="#tab_media-state" aria-controls="تغییر وضعیت مدیا" role="tab" data-toggle="tab">تغییر وضعیت مدیا</a></li>
 								<li role="presentation"><a href="#tab_directories" aria-controls="مسیرهای ورود اطلاعات" role="tab" data-toggle="tab">مسیرهای ورود اطلاعات</a></li>
 								<li role="presentation"><a href="#tab_categories" aria-controls="برنامه‌ها" role="tab" data-toggle="tab">برنامه‌ها</a></li>
 								<li role="presentation"><a href="#tab_news-schedule" aria-controls="کنداکتور خبر" role="tab" data-toggle="tab">کنداکتور خبر</a></li>
@@ -33,8 +35,8 @@
 												{{#each items}}
 												<li>
 													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
-														<input name="force" data-validation="digit" id="checkbox_m{{alias}}" value="{{alias}}" type="checkbox">
-														<label for="checkbox_m{{alias}}">{{title}}</label>
+														<input name="force" data-validation="digit" id="checkbox_n{{alias}}" value="{{alias}}" type="checkbox">
+														<label for="checkbox_n{{alias}}">{{title}}</label>
 													</div>
 												</li>
 												{{/each}}
@@ -54,6 +56,16 @@
 											</div>
 										</li>
 										{{/each}}
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_assignments">
+									<ul data-type="assignment">
+										{{{getDefinitionCheckboxes 219 'checkbox' 'li'}}}
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_media-state">
+									<ul data-type="media-state">
+										{{{getDefinitionCheckboxes 2 'checkbox' 'li'}}}
 									</ul>
 								</div>
 								<div role="tabpanel" class="tab-pane fade" id="tab_directories">
