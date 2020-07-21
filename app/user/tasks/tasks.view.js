@@ -16,9 +16,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click [data-task="received"]': 'redirectToReceived'
             , 'change [data-task="filter-status"]': 'filterByStatus'
             , 'click [data-task="follow-up"]': 'followUp'
+
             , 'click [data-task="assign"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
-            , 'click [name="to-type"]': 'changeSendRecipient'
+            , 'change [name="ToGroupId"]': 'updateUserList'
+            // , 'click [name="to-type"]': 'changeSendRecipient'
+
             , 'click [data-task="load-media"]': 'loadMedia'
             , 'change [data-type="change-state"]': 'changeStatus'
             , 'click [data-type="change-state"]': function (e) {
@@ -36,17 +39,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 }
             })
         }
+
         , assign: function (e) {
-            e.stopPropagation();
             e.preventDefault();
-            // var defaultRecipient = {ToUserId: null, ToGroupId: null};
             var data = $('#assign-modal form:first').serializeObject();
-            if (data['to-type'] === '0') {
+            if (data.ToUserId !== '0') {
                 data.ToGroupId = null;
             } else {
                 data.ToUserId = null;
             }
-            // var data = $.extend({}, defaultRecipient, dataObject);
             delete data['to-type'];
             new TasksModel({}).save(null, {
                 data: JSON.stringify(data),
@@ -66,26 +67,60 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         }
         , changeSendRecipient: function (e) {
             var $this = $(e.target);
-            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
-            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
+            // $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            // $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
         }
         , loadUsersList: function () {
+            var self = this;
             if ($("select[name=ToUserId] option").length > 1)
                 return false;
             new UsersManageModel({}).fetch({
                 success: function (items) {
                     var items = items.toJSON();
+
+                    self.usersCache = [];
                     $.each(items, function () {
-                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
+                        var user = {id: this.Id, name: this.Family + '، ' + this.Name, groups: []};
+                        if (typeof this.Access !== 'undefined' && this.Access.length) {
+                            for (var i = 0; i < this.Access.length; i++) {
+                                if (this.Access[i].Key === 'groups') {
+                                    user.groups.push(this.Access[i].Value);
+                                }
+                            }
+                        }
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + this.Family + '، ' + this.Name + '</option>');
+                        self.usersCache.push(user);
                     });
                 }
             });
         }
+        , updateUserList: function (e) {
+            var value = $(e.target).val();
+            this.generateUserOptions(value);
+        }
+        , generateUserOptions: function (group) {
+            group = typeof group !== 'undefined' && group ? group : 0;
+            console.log(group);
+            var $select = $("[name=ToUserId]");
+            $select.empty();
+            if (group !== 0)
+                $select.append('<option value="0">همه‌ی اعضای گروه</option>');
+            this.usersCache.forEach(function (user) {
+                if (group !== 0) {
+                    if (user.groups.indexOf(group) !== -1) {
+                        $select.append('<option value="' + user.id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                    }
+                } else {
+                    $select.append('<option value="' + user.id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                }
+            });
+        }
+
         , loadMedia: function (e) {
             e.stopPropagation();
             e.preventDefault();
             var mediaId = $(e.target).parents('tr:first').attr('data-media-id');
-            var win = window.open('/resources/mediaitem/' + mediaId, '_blank');
+            var win = window.open('/resources/mediaitem/' + mediaId, Config.mediaLinkTarget);
             win && win.focus();
         }
         , filterByStatus: function (e) {

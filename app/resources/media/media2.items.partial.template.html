@@ -4,6 +4,7 @@
 	.sortable { cursor: pointer; }
 	.sortable.asc span:after {content:"\f062"}
 	.sortable.desc span:after {content:"\f063"}
+	.assign-checkbox { margin-top: 10px; }
 </style>
 <div class="portlet itemlist box">
 	<div class="portlet-title" style="background: #3598dc">
@@ -41,8 +42,14 @@
 				</thead>
 				<tbody>
 					{{#each items}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-type="{{Type}}">
-						<td>{{Id}}</td>
+					<tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}">
+						<td>
+							{{Id}}
+							<div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
+								<input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{@index}}" />
+								<label for="check-{{@index}}"></label>
+							</div>
+						</td>
 						<td class="text-center">
 							<figure>
 								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />

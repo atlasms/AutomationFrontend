@@ -21,7 +21,7 @@
                                             {{Id}}
                                             {{#ifCond Type '==' 3}}
                                             <a href="/resources/mediaitem/{{Pid}}" class="label label-sm label-info"
-                                               target="_blank">مدیای اصلی ({{Pid}})</a>
+                                               target="{{config 'mediaLinkTarget'}}">مدیای اصلی ({{Pid}})</a>
                                             {{/ifCond}}
                                         </td>
                                     </tr>
@@ -350,20 +350,25 @@
                     <label>گیرنده</label>
                     <dl class="dl-horizontal">
                         <dt>
-                            <label><input type="radio" name="to-type" data-toggle="ToUserId" value="0" checked>&nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
+                            <label>
+                                &nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
                         </dt>
                         <dd>
                             <div class="form-group">
-                                <select class="form-control" name="ToUserId"></select>
+                                <select class="form-control" name="ToGroupId">
+                                    <option value="0">همه‌ی کاربران</option>
+                                    {{{getDefinitionOptions 14}}}
+                                </select>
                             </div>
                         </dd>
                         <dt>
-                            <label><input type="radio" name="to-type" data-toggle="ToGroupId" value="0">&nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
+                            <label>
+                                &nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
                         </dt>
                         <dd>
                             <div class="form-group">
-                                <select class="form-control" name="ToGroupId" disabled>
-                                    {{{getDefinitionOptions 14}}}
+                                <select class="form-control" name="ToUserId">
+
                                 </select>
                             </div>
                         </dd>

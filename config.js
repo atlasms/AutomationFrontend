@@ -1,7 +1,4 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
-    /*
-     * Check localStorage for any pre-processed and cached configurations
-     */
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
         version: "1.200704.0112",
@@ -28,6 +25,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         defalutMediaListLimit: 25,
         mediaScheduleGroupItems: 1,
         loginMode: "default",
+        mediaLinkTarget: '_blank',
+        assignUserAccess: 'all', // 'all' or 'access'
+        groupsFilterId: 166, // 166: iktv or 14: qtv
         HDPlayback: true,
         newsTicker: false,
         // "initialRedirect: "/resources/media2",

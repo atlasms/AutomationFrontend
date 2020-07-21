@@ -58,7 +58,7 @@
 		<tr data-id="{{ConductorId}}" data-index="{{math @index "+" 1}}" data-duration="{{ConductorDuration}}">
 			<td class="text-center">
 				<span class="idx" style="display: block;">{{math @index "+" 1}}</span>
-				{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}#broadcast" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
+				{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}#broadcast" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>{{/if}}
 			</td>
 			<td>
 				<strong>{{ConductorTitle}}{{#if ConductorCategoryTitle}} » {{ConductorCategoryTitle}}{{/if}}</strong>

@@ -9,7 +9,7 @@
     .toggle-pane, .toggle-tree-modal { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
     #tree { max-height: 300px; overflow: hidden; overflow-y: scroll; }
     .jstree-default .jstree-node { background-position-x: -2000px }
-    .ribbon { min-width: 140px; }
+    .ribbon { min-width: 120px; }
 
     #filters { height: 34px; }
     #filters .label { float: right; margin: 4px 10px 0 0; white-space: nowrap; }
@@ -340,7 +340,7 @@
                                 <span class="input-group-addon has-icon"><i class="fa fa-globe"></i></span>
                                 <select class="form-control" name="MetaDataProductionGroup" data-type="MetaDataProductionGroup" placeholder="نوع برنامه">
                                     {{#select 0}}
-                                    {{{getDefinitionOptions 166}}}
+                                    {{{getDefinitionOptions '$groupsFilterId'}}}
                                     {{/select}}
                                 </select>
                             </div>
@@ -424,10 +424,9 @@
                 <div id="itemlist" class="mainbody"></div>
             </div>
             {{#authorize 8388608}}
-            <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>
-            <div class="alert alert-success ltr" style="direction: ltr; text-align: left">
-
-            </div>
+<!--            <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>-->
+<!--            <div class="alert alert-success ltr" style="direction: ltr; text-align: left">-->
+<!--            </div>-->
             {{/authorize}}
         </div>
     </div>
@@ -444,21 +443,24 @@
                 <label>گیرنده</label>
                 <dl class="dl-horizontal">
                     <dt>
-                        <label><input type="radio" name="to-type" data-toggle="ToUserId" value="0" checked>&nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
+                        <label>
+                            &nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
+                    </dt>
+                    <dd>
+                        <div class="form-group">
+                            <select class="form-control" name="ToGroupId">
+                                <option value="0">همه‌ی کاربران</option>
+                                {{{getDefinitionOptions 14}}}
+                            </select>
+                        </div>
+                    </dd>
+                    <dt>
+                        <label>
+                            &nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
                     </dt>
                     <dd>
                         <div class="form-group">
                             <select class="form-control" name="ToUserId"></select>
-                        </div>
-                    </dd>
-                    <dt>
-                        <label><input type="radio" name="to-type" data-toggle="ToGroupId" value="0">&nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
-                    </dt>
-                    <dd>
-                        <div class="form-group">
-                            <select class="form-control" name="ToGroupId" disabled>
-                                {{{getDefinitionOptions 14}}}
-                            </select>
                         </div>
                     </dd>
                 </dl>

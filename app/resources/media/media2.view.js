@@ -7,12 +7,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {'filters': {}}
             , {'button': {cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter'}}
             , {'button': {cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search'}}
+            , {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
         ]
         , statusbar: []
         , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
+        , usersCache: []
         , cache: {
             currentCategory: ''
         }
@@ -58,9 +60,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click #filters .label a': 'removeFilter'
             , 'popstate window': 'handleUrlChange'
             , 'click th.sortable': 'handleOrdering'
+
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
-            , 'click [name="to-type"]': 'changeSendRecipient'
+            , 'click [data-task="assign-batch"]': 'openAssignBatchModal'
             , 'click [data-task="assign-item"]': 'assign'
+            , 'change [name="ToGroupId"]': 'updateUserList'
+            , 'click [name="assign-item"]': function (e) {
+                e.stopPropagation();
+            }
+            , 'click #metadata-page tbody tr td:first': function (e) {
+                e.stopPropagation();
+            }
+            // , 'click [name="to-type"]': 'changeSendRecipient'
+
             , 'click .toggle-tree-modal': function (e) {
                 e.preventDefault();
                 $('#tree-modal').modal('show');
@@ -68,20 +80,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click .toggle-pane': function (e) {
                 $(e.target).parents('.pane').first().toggleClass('collapsed');
             }
-
             // , 'change select.form-control': 'reLoad'
         }
+
         , assign: function (e) {
             e.preventDefault();
-            // var defaultRecipient = {ToUserId: null, ToGroupId: null};
             var data = $('#assign-modal form:first').serializeObject();
-            if (data['to-type'] === 'ToUserId') {
+            if (data.ToUserId !== '0') {
                 data.ToGroupId = null;
             } else {
                 data.ToUserId = null;
             }
-            // var data = $.extend({}, defaultRecipient, dataObject);
             delete data['to-type'];
+            if (data.MasterId.indexOf('$$') !== -1) {
+                var temp = data.MasterId.split('$$');
+                for (var i = 0; i < temp.length; i++) {
+                    data.MasterId = temp[i];
+                    this.submitAssign(data);
+                }
+            } else {
+                this.submitAssign(data);
+            }
+        }
+        , submitAssign: function (data) {
             new TasksModel({}).save(null, {
                 data: JSON.stringify(data),
                 contentType: 'application/json',
@@ -94,25 +115,75 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , openAssignModal: function (e) {
             e.preventDefault();
+            $('[name="MasterId"]').val($(e.target).parents('tr:first').attr('data-id'));
+            $('#assign-modal').modal('toggle');
+        }
+        , openAssignBatchModal: function (e) {
+            e.preventDefault();
+            var selectedItems = [];
+            $('#metadata-page tbody tr').each(function () {
+                if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
+                    selectedItems.push($(this).attr('data-id'));
+                }
+            });
+            if (!selectedItems.length) {
+                toastr['error']('هیچ موردی انتخاب نشده است.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                return false;
+            }
+            $('[name="MasterId"]').val(selectedItems.join('$$'));
             $('#assign-modal').modal('toggle');
         }
         , changeSendRecipient: function (e) {
             var $this = $(e.target);
-            $this.parents('dl:first').find('select').prop('disabled', 'disabled');
-            $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
+            // $this.parents('dl:first').find('select').prop('disabled', 'disabled');
+            // $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
         }
         , loadUsersList: function () {
+            var self = this;
             if ($("select[name=ToUserId] option").length > 1)
                 return false;
             new UsersManageModel({}).fetch({
                 success: function (items) {
                     var items = items.toJSON();
+
+                    self.usersCache = [];
                     $.each(items, function () {
-                        $("[name=ToUserId]").append('<option value="' + this.Id + '">' + this.Family + '، ' + this.Name + '</option>');
+                        var user = {id: this.Id, name: this.Family + '، ' + this.Name, groups: []};
+                        if (typeof this.Access !== 'undefined' && this.Access.length) {
+                            for (var i = 0; i < this.Access.length; i++) {
+                                if (this.Access[i].Key === 'groups') {
+                                    user.groups.push(this.Access[i].Value);
+                                }
+                            }
+                        }
+                        $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + this.Family + '، ' + this.Name + '</option>');
+                        self.usersCache.push(user);
                     });
                 }
             });
         }
+        , updateUserList: function (e) {
+            var value = $(e.target).val();
+            this.generateUserOptions(value);
+        }
+        , generateUserOptions: function (group) {
+            group = typeof group !== 'undefined' && group ? group : 0;
+            console.log(group);
+            var $select = $("[name=ToUserId]");
+            $select.empty();
+            if (group !== 0)
+                $select.append('<option value="0">همه‌ی اعضای گروه</option>');
+            this.usersCache.forEach(function (user) {
+                if (group !== 0) {
+                    if (user.groups.indexOf(group) !== -1) {
+                        $select.append('<option value="' + user.id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                    }
+                } else {
+                    $select.append('<option value="' + user.id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                }
+            });
+        }
+
         , handleOrdering: function (e) {
             e.preventDefault();
             var $th = $(e.target).is('th') ? $(e.target) : $(e.target).parents('th:first');
@@ -239,7 +310,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return true;
             var $el = $(e.currentTarget);
             var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id);
+            window.open('/resources/mediaitem/' + id, Config.mediaLinkTarget);
         }
         , reLoad: function (e) {
             if (typeof e !== "undefined")
@@ -344,7 +415,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         if (typeof value !== 'string') {
                             fields[field] = value.join(',');
                         } else if (field.indexOf('date') !== -1) {
-                        if (field === 'startdate' || field === 'broadcastStartdate')
+                            if (field === 'startdate' || field === 'broadcastStartdate')
                                 fields[field] = Global.jalaliToGregorian(value) + 'T00:00:00';
                             else
                                 fields[field] = Global.jalaliToGregorian(value) + 'T23:59:59';

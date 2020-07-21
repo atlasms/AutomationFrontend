@@ -89,4 +89,77 @@
 			</div>
 		</div>
 	</div>
+    <div class="modal fade" id="assign-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">ارجاع</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="MasterId" value="{{Id}}" />
+                    <label>گیرنده</label>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            <label>
+                                &nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
+                        </dt>
+                        <dd>
+                            <div class="form-group">
+                                <select class="form-control" name="ToGroupId">
+                                    <option value="0">همه‌ی کاربران</option>
+                                    {{{getDefinitionOptions 14}}}
+                                </select>
+                            </div>
+                        </dd>
+                        <dt>
+                            <label>
+                                &nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
+                        </dt>
+                        <dd>
+                            <div class="form-group">
+                                <select class="form-control" name="ToUserId"></select>
+                            </div>
+                        </dd>
+                    </dl>
+                    <hr />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="JobId">نوع ارجاع</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <select class="form-control" id="JobId" name="JobId">
+                                    {{{getDefinitionOptions 219}}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="Title">عنوان</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <label for="Body">توضیحات</label>
+                            </div>
+                            <div class="col-xs-9">
+                                <textarea class="form-control" id="Body" name="Body" placeholder="توضیحات"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info" data-task="assign-item">ارجاع</button>
+                </div>
+            </form><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
