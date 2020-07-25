@@ -1,41 +1,75 @@
-<table id="storagefiles" class="table table-bordered table-striped table-hover flip-content">
-	<thead class=" ">
-		<tr>
-			<th class="col-xs-2 text-center">مدت</th>
-			<th class="col-xs-2 text-center">حجم</th>
-			<th class="col-xs-2 text-center">ساعت و تاریخ</th>
-			<th class="col-xs-5 text-center">نام فایل</th>
-			<th class="col-xs-1 text-center">
-				<span class="sharp">#</span>
-				<span class="select-all hide"><input type="checkbox" name="select-all" value="0" /></span>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		{{#each []}}
-		{{#ifCond Type '!=' "image"}}
-		<tr data-filename="{{FileName}}" data-duration="{{Duration}}">
-			<td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
-			<td>
-				<div class="ltr">
-					{{Size}}
-				</div>
-			</td>
-			<td>
-				<div class="text-right">
-					{{extractTime DateTime}} {{extractDate DateTime}}
-				</div>
-			</td>
-			<td>
-				<div class="ltr text-right">
-					<span data-prop="FileName">{{FileName}}</span>
-				</div>
-			</td>
-			<td class="text-center" data-type="index">
-				{{math @index "+" 1}}
-			</td>
-		</tr>
-		{{/ifCond}}
-		{{/each}}
-	</tbody>
-</table>
+<div class="portlet itemlist box" style="max-height: 450px; overflow: hidden; overflow-y: auto;">
+    <table id="storagefiles" class="table table-bordered table-striped table-condensed flip-content">
+        <thead class=" ">
+        <tr>
+            <th></th>
+            <th class="col-xs-1 text-center">مدت</th>
+            <th class="col-xs-1 text-center">حجم</th>
+            <th class="col-xs-1 text-center">اندازه</th>
+            <th class="col-xs-1 text-center">فورمت</th>
+            <th class="col-xs-1 text-center">Bitrate</th>
+            <th class="col-xs-2 text-center">ساعت و تاریخ</th>
+            <th class="col-xs-4 text-center">نام فایل</th>
+            <th class="col-xs-2">
+
+            </th>
+            <th class="text-center">
+                <span class="sharp">#</span>
+                <span class="select-all hide"><input type="checkbox" name="select-all" value="0"/></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each []}}
+        {{#ifCond Type '!=' "image"}}
+        <tr data-filename="{{FileName}}" data-duration="{{Duration}}">
+            <td>
+                <a href="{{Url}}" title="دانلود فایل اصلی" class="btn btn-default" data-task="download-original" target="_blank" download>
+                    <i class="fa fa-download"></i>
+                </a>
+            </td>
+            <td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
+            <td>
+                <div class="ltr">
+                    {{Size}}
+                </div>
+            </td>
+            <td>
+                <div class="ltr text-center small">
+                    {{Width}} &times; {{Height}}
+                </div>
+            </td>
+            <td>
+                <div class="ltr text-center">
+                    {{Format}}
+                </div>
+            </td>
+            <td>
+                <div class="ltr text-center small">
+                    {{Bitrate}}
+                </div>
+            </td>
+            <td>
+                <div class="text-right">
+                    {{extractTime DateTime}} {{extractDate DateTime}}
+                </div>
+            </td>
+            <td>
+                <div class="ltr text-right">
+                    <span data-prop="FileName">{{FileName}}</span>
+                </div>
+            </td>
+            <td class="text-center">
+                <figure>
+                    <img src="{{Thumbnail}}" data-webp="{{Webp}}" data-orig="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+                </figure>
+            </td>
+            <td class="text-center" data-type="index">
+                {{math @index "+" 1}}
+            </td>
+        </tr>
+        {{/ifCond}}
+        {{/each}}
+        </tbody>
+    </table>
+</div>

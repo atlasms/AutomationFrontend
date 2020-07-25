@@ -457,6 +457,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 data: params
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
+                    for (var key in items) {
+                        items[key].FileName = items[key].FileName.replace('\\\\192.168.1.5\\ingest$\\', '');
+                    }
                     template.done(function (params) {
                         var handlebarsTemplate = Template.handlebars.compile(params);
                         var output = handlebarsTemplate(items);

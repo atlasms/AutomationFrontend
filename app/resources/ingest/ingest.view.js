@@ -29,7 +29,68 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="select-person"]': 'selectPerson'
             , 'click [data-task="delete-person"]': 'deletePerson'
             , 'keyup input,textarea': 'handleInputChanges'
+            , 'click [data-task="download-original"]': 'downloadOriginal'
+
+            , 'mouseenter tbody tr': 'loadWebp'
+            , 'mouseleave tbody tr': 'unloadWebp'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
+        }
+        , downloadOriginal: function(e) {
+            e.stopPropagation();
+        }
+        , loadWebp: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $img = $row.find('img[data-webp]');
+            $img.parent().css({'position': 'relative'});
+            if ($row.find('.proxy-thumb').length) {
+                if ($row.find('.proxy-thumb').not('.has-error').length) {
+                    $img.attr('src', $img.attr('data-webp'));
+                    if ($row.hasClass('video'))
+                        $row.removeClass('video').addClass('video1');
+                }
+            } else {
+                $row.append('<img class="proxy-thumb" src="' + $img.attr('data-webp') + '" style="width: 0; height: 0; padding: 0; margin: 0; visibility: hidden; display: block;" />');
+                $img.parent().append($("<div><dt/><dd/></div>").attr("class", "webp-progress"));
+                $(".webp-progress").width((50 + Math.random() * 30) + "%");
+                $('.proxy-thumb').on('load', function () {
+                    $(this).css({'display': 'none'});
+                    $img.attr('src', $img.attr('data-webp'));
+                    if ($row.hasClass('video'))
+                        $row.removeClass('video').addClass('video1');
+                    $(this).parent().find(".webp-progress").width("101%").delay(200).fadeOut(400, function () {
+                        $(this).remove();
+                    });
+                }).on('error', function () {
+                    if ($row.hasClass('video1'))
+                        $row.removeClass('video1').addClass('video');
+                    $(this).addClass('has-error');
+                    $(this).css({'display': 'none'});
+                    $(this).parent().find(".webp-progress").remove();
+                    if ($img.attr('src') !== $img.attr('data-orig'))
+                        $img.attr('src', $img.attr('data-orig'));
+                });
+            }
+        }
+        , registerWebpUrl: function () {
+            var $rows = $('#storagefiles tbody tr');
+            $rows.each(function () {
+                var $img = $(this).find('img');
+                var webpUrl = $img.attr('src').replace('.jpg', '.webp');
+                $img.attr('data-orig') === undefined && $img.attr('data-orig', $img.attr('src'));
+                $img.attr('data-webp', webpUrl);
+            });
+        }
+        , unloadWebp: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $img = $row.find('img[data-orig]');
+            if ($row.find('.webp-progress').length) {
+                $row.find('.webp-progress').remove();
+                $row.find('.proxy-thumb').remove();
+            }
+            if ($img.length)
+                $img.attr('src', $img.attr('data-orig'));
+            if (!$row.hasClass('video') && $row.hasClass('video1'))
+                $row.removeClass('video1').addClass('video');
         }
         , handleInputChanges: function (e) {
             var $target = $(e.target);
@@ -170,11 +231,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 data: $.param(params)
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
+                    for (var key in items) {
+                        items[key].FileName = items[key].FileName.replace('\\\\192.168.1.5\\ingest$\\', '');
+                    }
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $container.stop().fadeIn();
+                            // self.registerWebpUrl();
                         });
                     });
                 }

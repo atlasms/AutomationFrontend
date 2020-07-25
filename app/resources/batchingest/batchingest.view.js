@@ -186,6 +186,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 data: $.param(params)
                 , success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
+                    for (var key in items) {
+                        items[key].FileName = items[key].FileName.replace('\\\\192.168.1.5\\ingest$\\', '');
+                    }
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
