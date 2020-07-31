@@ -106,7 +106,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return false;
             var data = this.prepareSave();
             var fields = data[0];
-            if ($('#persons-table tbody tr').not('.placeholder').length < 2) {
+            if ($('#persons-table tbody tr').not('.placeholder').length < Config.minimumRequiredPersons) {
                 toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }

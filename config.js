@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
-        version: "1.200704.0112",
+        version: "1.200726.0014",
         loginMessage: "ورود به سامانه اتوماسیون",
         channel: "ایران‌کالا",
         channelLogo: "assets/data/iktv.png",
@@ -32,6 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         newsTicker: false,
         // "initialRedirect: "/resources/media2",
         epgMediaPath: "http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}",
+        minimumRequiredPersons: 2,
         inputPolicies: {
             'ingest.Title': {uid: 'title', required: true, show: true, validation: 'text', min: 4},
             'ingest.EpisodeNumber': {uid: 'episode', required: true, show: true, validation: 'text', min: 0},
