@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'resources.check-info.model', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel, CheckInfoModel) {
     bootbox.setLocale('fa');
     var IngestView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
@@ -35,7 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'mouseleave tbody tr': 'unloadWebp'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
         }
-        , downloadOriginal: function(e) {
+        , downloadOriginal: function (e) {
             e.stopPropagation();
         }
         , loadWebp: function (e) {
@@ -163,18 +163,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $(this.$modal).modal('show');
         }
         , selectRow: function (e) {
+            var self = this;
             var $el = $(e.target);
             var $row = $el.parents("tr:first");
             if ($row.hasClass("disabled"))
                 return false;
-            $el.parents("tbody").find("tr").removeClass('active success');
-            $row.addClass('active success');
-            $row.find("[data-prop]").each(function () {
-                if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
-                    $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
-            });
+            var filename = $row.attr('data-filename');
+            var checkParams = {query: 'filename=' + filename};
+            new CheckInfoModel(null, checkParams).fetch({
+                success: function (data) {
+                    toastr.info(data.toJSON().content, '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    $el.parents("tbody").find("tr").removeClass('active success');
+                    $row.addClass('active success');
+                    $row.find("[data-prop]").each(function () {
+                        if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
+                            $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
+                    });
 //            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
-            $('button[data-task=add]').removeClass('disabled');
+                    $('button[data-task=add]').removeClass('disabled');
+                },
+                error: function (msg) {
+                    toastr.error(msg.toJSON().content, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                }
+            });
         }
         , reLoad: function () {
             this.load();

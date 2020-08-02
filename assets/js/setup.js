@@ -103,6 +103,7 @@ require.config({
         , "broadcast.crawl.model": ["../../app/broadcast/crawl/crawl.model"]
         , "economy.model": ["../../app/shared/economy.model"]
         , "resources.ingest.model": ["../../app/resources/ingest/ingest.model"]
+        , "resources.check-info.model": ["../../app/resources/ingest/check-info.model"]
         , "resources.media.model": ["../../app/resources/media/media.model"]
         , "resources.media2.model": ["../../app/resources/media/media2.model"]
         , "resources.metadata.model": ["../../app/resources/metadata/metadata.model"]

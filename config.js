@@ -254,6 +254,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , dashboardUser: "share/dashboard/user"
             , tasks: 'task'
             , website: 'https://services.iktv.ir/pl/'
+            , checkInfo: 'media/checkinfo'
         },
         channels: {
             'tv1': {
