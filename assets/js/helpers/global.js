@@ -234,7 +234,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
         , gregorianToJalali: function (datetime, splitter) {
             if (typeof datetime === "undefined" || !datetime)
                 return null;
-            splitter = (typeof splitter !== "undefined") ? splitter : '-';
+            splitter = (typeof splitter !== "undefined") ? splitter : (datetime.indexOf('-') !== -1 ? '-' : '/');
             var dt = (datetime.indexOf(' ') !== -1) ? datetime.split(' ') : [datetime];
             var d = dt[0].split(splitter);
             if (+d[0] === 1900)
