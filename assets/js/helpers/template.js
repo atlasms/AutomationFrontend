@@ -271,9 +271,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('getDefinitionOptions', function (id, accessType, options) {
                 var items = '';
                 var accessType = typeof accessType === "string" ? accessType : false;
-                console.log(id);
                 var id = typeof id === 'string' && id.indexOf('$') === 0 ? Config[id.slice(1)] : id;
-                console.log(id);
                 $.each(Config.definitions, function () {
                     if (this.Id === id)
                         for (i = 0; i < this.Children.length; i++)
@@ -370,7 +368,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 if (typeof policy.required !== 'undefined' && policy.required)
                     $el.prop('required', 'required');
                 if (typeof policy.show !== 'undefined' && !policy.show) {
-                    $el.addClass('invisible');
+                    $el.addClass('invisible hide');
                     $el.attr('type', 'hidden');
                 }
                 if (typeof policy.min !== 'undefined' && policy.min)

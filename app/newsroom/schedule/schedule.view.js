@@ -4,6 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         data: {}
         , itamContainer: ".item.box .mainbody"
         , treeInstance: {}
+        , defaultEditorFontSize: Config.defaultEditorFontSize
         , events: {
             'click [data-task="load"]': 'reLoad'
             , 'click button[data-task="refresh"]': 'reLoad'
@@ -27,6 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 if ($(e.target).val() === 'خبر خام')
                     $(e.target).val('');
             }
+            , 'click .font-resize': 'resizeFont'
         }
         , toolbar: [
             // {'button': {cssClass: 'btn blue pull-right', text: 'ارسال', type: 'button', task: 'open-send-modal', icon: 'fa fa-share'}}
@@ -47,6 +49,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         }
         , currentItems: []
         , currentTreeNode: 0
+        , resizeFont: function (e) {
+            e.preventDefault();
+            var $button = $(e.currentTarget);
+            var $editor = $('textarea[name="body"]');
+            var type = $button.data('type');
+            switch (type) {
+                case 'increase':
+                    $editor.css('font-size', (parseInt($editor.css('font-size')) + 2) + 'px');
+                    break;
+                case 'decrease':
+                    if (parseInt($editor.css('font-size')) > 10)
+                        $editor.css('font-size', (parseInt($editor.css('font-size')) - 2) + 'px');
+                    break;
+                case 'reset':
+                    $editor.css('font-size', this.defaultEditorFontSize + 'px');
+                    break;
+            }
+        }
         , render: function () {
             var self = this;
             this.renderTemplate(function () {

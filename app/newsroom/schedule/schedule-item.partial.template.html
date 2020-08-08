@@ -3,7 +3,7 @@
     .tab-content { height: 100%; padding-bottom: 20px; position: relative; }
     .tab-pane { height: 100% }
     .tab-pane textarea { resize: none; }
-    .item-state { height: 20px; position: absolute; bottom: 0; right: 0; }
+    .item-state { height: 20px; position: absolute; bottom: 0; right: 0; width: 100%; }
     .item-state  strong { display: inline-block; }
 </style>
 <div class="col-xs-12">
@@ -87,6 +87,11 @@
                 توسط
                 <strong>{{PublishedByText}}</strong>
                 {{/if}}
+                <div class="font-size-helper" style="float: left;">
+                    <button class="btn btn-xs btn-default font-resize" data-type="increase"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-xs btn-default font-resize" data-type="reset"><i class="fa fa-font"></i></button>
+                    <button class="btn btn-xs btn-default font-resize" data-type="decrease"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
         </div>
     </div>

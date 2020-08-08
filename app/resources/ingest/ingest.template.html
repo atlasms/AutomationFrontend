@@ -5,6 +5,8 @@
     #person-search-results { max-height: 300px; overflow: hidden; overflow-y: auto; }
     #persons-table { max-height: 300px; overflow: hidden; overflow-y: auto; }
     textarea.invisible { height: 0; padding: 0; margin: 0; }
+    .enable-recommended-checkbox { display: inline-block; }
+    #storagefiles th { position: sticky; top: 0; background: #fff; }
 </style>
 <div id="ingest-page" class="portlet box">
     <div class="portlet-body">
@@ -58,12 +60,19 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-9">
-                                    <div class="form-group">
-                                        {{#input 'ingest.Title'}}
-                                        <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت (موضوع اصلی)" required/>
-                                        {{/input}}
-                                        <!--<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>-->
+                                    {{#input 'ingest.Title'}}
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <label class="control-label">نام قسمت</label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <div class="form-group">
+                                                <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت (موضوع اصلی)" required/>
+                                                <!--<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>-->
+                                            </div>
+                                        </div>
                                     </div>
+                                    {{/input}}
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
@@ -74,15 +83,29 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" data-type="description" name="Description" rows="4" placeholder="توضیحات قسمت" required></textarea>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <label class="control-label">توضیحات قسمت</label>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <textarea class="form-control" data-type="description" name="Description" rows="4" placeholder="توضیحات قسمت" required></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
-                                    <div class="form-group">
-                                        {{#input 'ingest.ArchiveDescr'}}
-                                        <textarea class="form-control" data-type="archive_description" name="ArchiveDescr" rows="2" placeholder="توضیحات آرشیو"></textarea>
-                                        {{/input}}
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <label class="control-label">توضیحات آرشیو</label>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                {{#input 'ingest.ArchiveDescr'}}
+                                                <textarea class="form-control" data-type="archive_description" name="ArchiveDescr" rows="2" placeholder="توضیحات آرشیو"></textarea>
+                                                {{/input}}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -117,36 +140,82 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <label class="control-label">عنوان وب‌سایت</label>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" data-type="website_summary" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <label class="control-label">خلاصه وب‌سایت</label>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <textarea class="form-control" data-type="website_summary" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت" required></textarea>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <label class="control-label">توضیحات وب‌سایت</label>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت" required></textarea>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 {{#input 'ingest.RecommendedBroadcastDate'}}
-                                <input type="text" data-type="recommended_broadcast_date" class="form-control" id="recommended_broadcast_date-title" name="RecommendedBroadcastDate" value="" placeholder="زمان مناسب برای پخش" />
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <label class="control-label">
+                                            <div class="checkbox checkbox-primary checkbox-circle enable-recommended-checkbox">
+                                                <input type="checkbox" name="enable-recommended" title="تاریخ پیشنهادی پخش" id="check-recommended_broadcast_date"/>
+                                                <label for="check-recommended_broadcast_date"></label>
+                                            </div>
+                                            تاریخ پیشنهادی پخش
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <input type="text" data-type="recommended_broadcast_date" class="form-control datepicker" id="recommended_broadcast_date-title" name="RecommendedBroadcastDate" value="" disabled
+                                               placeholder="زمان پیشنهادی پخش"/>
+                                    </div>
+                                </div>
                                 {{/input}}
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-6">
                                         {{#input 'ingest.RecommendedSubtitleTime'}}
-                                        <input type="text" data-type="recommended_subtitle_time" class="form-control" id="recommended_subtitle_time-title" name="RecommendedSubtitleTime" value="" placeholder="زمان مناسب برای زیرنویس" />
+                                        <input type="text" data-type="recommended_subtitle_time" class="form-control" id="recommended_subtitle_time-title" name="RecommendedSubtitleTime" value="" placeholder="زمان مناسب برای زیرنویس"/>
                                         {{/input}}
                                     </div>
                                     <div class="col-xs-6">
                                         {{#input 'ingest.AudioChannels'}}
-                                        <input type="text" data-type="audio_channels" class="form-control" id="audio_channels-title" name="AudioChannels" value="" placeholder="باند صدا" />
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">باند صدا</label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <select data-type="audio_channels" class="form-control" id="audio_channels-title" name="AudioChannels">
+                                                    <option value="LR">استریو L+R</option>
+                                                    <option value="R">مونو R</option>
+                                                    <option value="L">مونو L</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         {{/input}}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr/>
+                    <hr style="margin: 0;" />
                     <div>
                         {{{personsWarning}}}
                         <h4>فهرست عوامل</h4>

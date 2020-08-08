@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'resources.check-info.model', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel, CheckInfoModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'resources.check-info.model', 'pdatepicker', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel, CheckInfoModel, pDatepicker) {
     bootbox.setLocale('fa');
     var IngestView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
@@ -30,10 +30,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="delete-person"]': 'deletePerson'
             , 'keyup input,textarea': 'handleInputChanges'
             , 'click [data-task="download-original"]': 'downloadOriginal'
+            , 'click [name="enable-recommended"]': 'toggleRecommendedDate'
 
             , 'mouseenter tbody tr': 'loadWebp'
             , 'mouseleave tbody tr': 'unloadWebp'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
+        }
+        , toggleRecommendedDate: function (e) {
+            var state = e.target.checked;
+            if (state) {
+                $('[name="RecommendedBroadcastDate"]').removeAttr('disabled');
+                this.attachDatepickers();
+            } else {
+                $('[name="RecommendedBroadcastDate"]').attr('disabled', 'disabled');
+                this.detachDatepickers();
+            }
         }
         , downloadOriginal: function (e) {
             e.stopPropagation();
@@ -151,6 +162,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , openAddForm: function (e) {
+            var self = this;
+            var $datePickers = $(".datepicker");
             $(this.$modal).on('shown.bs.modal', function () {
                 window.setTimeout(function () {
                     $("select.select2").each(function () {
@@ -159,6 +172,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         $(this).select2({dir: "rtl", multiple: true, tags: false, width: '100%', placeholder: $(this).parent().parent().find('label').text(), dropdownParent: $(this).parents('.modal-body')});
                     });
                 }, 500);
+                $('[name="enable-recommended"]').prop('checked', false);
+                $('[name="RecommendedBroadcastDate"]').attr('disabled', 'disabled');
+                if ($datePickers.data('datepicker') !== undefined) {
+                    $datePickers.data('datepicker').destroy();
+                    $datePickers.val('');
+                }
             });
             $(this.$modal).modal('show');
         }
@@ -320,6 +339,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                                 metadata.push({id: ~~this});
                             });
                             data[0][$input.attr("name")] = metadata;
+                            break;
+                        case 'RecommendedBroadcastDate':
+                            data[0][$input.attr("name")] = $input.val().indexOf('-') !== -1
+                                ? Global.jalaliToGregorian($input.val()) + 'T00:00:00'
+                                : '0000-00-00T00:00:00';
                             break;
                     }
                     // }
@@ -486,6 +510,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 statusbar.addItem(this);
             });
             statusbar.render();
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {
+                            $datePickers.blur();
+                        },
+                        destroy: function () {
+                            $datePickers.val('');
+                        }
+                    }));
+                }
+            });
+        }
+        , detachDatepickers: function () {
+            var $datePickers = $(".datepicker");
+            $datePickers.data('datepicker').destroy();
         }
     });
     return IngestView;

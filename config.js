@@ -22,6 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         schedulePageLimit: 100,
         characterLimit: 130,
         wordLimit: 15,
+        defaultEditorFontSize: 18,
         defalutMediaListLimit: 25,
         mediaScheduleGroupItems: 1,
         loginMode: "default",
@@ -43,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             'ingest.SiteSummary': {uid: 'website_summary', required: true, show: true, validation: 'text', min: 4},
             'ingest.SiteDescr': {uid: 'website_desc', required: true, show: true, validation: 'text', min: 0},
             'ingest.AudioChannels': {uid: 'audio_channels', required: false, show: false, validation: 'text', min: 0},
-            'ingest.RecommendedBroadcastDate': {uid: 'recommended_broadcast_date', required: false, show: false, validation: 'text', min: 0},
+            'ingest.RecommendedBroadcastDate': {uid: 'recommended_broadcast_date', required: false, show: true, validation: 'text', min: 0},
             'ingest.RecommendedSubtitleTime': {uid: 'recommended_subtitle_time', required: false, show: false, validation: 'text', min: 0},
             'ingest.ArchiveDescr': {uid: 'archive_description', required: false, show: true, validation: 'text', min: 0},
             'persons': {
