@@ -7,6 +7,8 @@
     .pane.collapsed { height: 53px; overflow: hidden; }
     .pane.collapsed .fa-expand:before { content: "\f065"; }
     .toggle-pane, .toggle-tree-modal { position: absolute; top: 15px; left: 10px; background: transparent; border: 0 none; box-shadow: none; color: gray; cursor: pointer; outline: 0 none; }
+    #tree-modal .modal-body { height: 75vh; }
+    #tree-modal .modal-body > * { max-height: 100%; }
     #tree { max-height: 300px; overflow: hidden; overflow-y: scroll; }
     .jstree-default .jstree-node { background-position-x: -2000px }
     .ribbon { min-width: 120px; }
@@ -180,7 +182,7 @@
 <!--                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>-->
                     <button type="button" class="toggle-tree-modal"><i class="fa fa-share-square-o"></i></button>
                     <div class="modal fade" id="tree-modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog container" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
