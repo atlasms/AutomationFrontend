@@ -29,6 +29,9 @@ $brand-default: lighten(#b7c0ce, 1%);
 // @import "../global/plugins/select2";
 // @import "../global/components/elements/cards/_card-1";
 
+.row { margin-left: -5px !important; margin-right: -5px !important; }
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 { padding-left: 5px !important; padding-right: 5px !important; }
+
 @keyframes blink {
     0% {opacity: 1}
     50% {opacity: 0}
@@ -97,6 +100,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Vazir', Tahoma; direction: ltr; text-alig
 }
 
 // Toolbar
+.toolbar-box { margin-bottom: 10px !important; }
 #toolbar:empty { visibility: hidden; height: 0; margin-top: -50px; transition: 0.2s all; }
 #toolbar {
     .datepicker { width: 110px; }
@@ -690,6 +694,19 @@ div#schedule-table {
 // Newsroom
 .news-dashboard {
     display: flex; flex-direction: column; min-height: 400px;
+    &.grid {
+        display: grid; grid-template-columns: 1fr; grid-template-rows: 0.8fr 1.2fr;grid-column-gap: 0px; grid-row-gap: 10px;
+        padding-bottom: 70px; flex: none;
+        .portlet {
+            height: 100%;
+            .portlet-body { height: 100%; }
+        }
+        .metadata-inner {
+            display: flex; flex-direction: column;
+            > .nav { flex: 0 0 100%; max-height: 40px; }
+            > .tab-content { height: 100%; flex: 0 1 100%; max-height: calc(100% - 40px); }
+        }
+    }
     .portlet {
         flex: 1 1 auto; display: flex; flex-direction: column; height: 0; overflow: hidden;
         .portlet-body { flex: 1 1 auto; display: flex; }
@@ -899,3 +916,7 @@ div#schedule-table {
 
 
 #player, .jwplayer { border: 3px solid #f00; }
+
+
+* .page-container { padding: 10px !important; }
+* .page-content-wrapper .page-content { padding-left: 10px !important; }

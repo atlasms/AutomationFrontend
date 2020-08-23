@@ -4,53 +4,64 @@
     .tab-pane { height: 100% }
     .tab-pane textarea { resize: none; }
     .item-state { height: 20px; position: absolute; bottom: 0; right: 0; width: 100%; }
-    .item-state  strong { display: inline-block; }
+    .item-state strong { display: inline-block; }
+    .font-size-helper { margin-top: 10px; position: relative; z-index: 777; }
+    #editor-modal .modal-body { height: 75vh; padding-bottom: 30px; }
+    #editor-modal .modal-body #item-edit-form { height: 100%; }
+    #editor-modal #item-editor > .btn { top: 15px !important; }
+    #itemlist tbody tr { cursor: pointer; }
 </style>
 <div class="col-xs-12">
     <div class="metadata-inner">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="active"><a href="#item-body" role="tab" data-toggle="tab">متن خبر</a></li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-body'}}active{{/ifCond}}"><a href="#item-body" role="tab" data-toggle="tab">متن خبر</a></li>
+            <li class="{{#ifCond activeTab '==' 'item-titles'}}active{{/ifCond}}">
                 <a href="#item-titles" role="tab" data-toggle="tab">
                     زیرنویس
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-evaluation'}}active{{/ifCond}}">
                 <a href="#item-evaluation" role="tab" data-toggle="tab">
                     ارزیابی
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-graphics'}}active{{/ifCond}}">
                 <a href="#item-graphics" role="tab" data-toggle="tab">
                     گرافیک
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-comments'}}active{{/ifCond}}">
                 <a href="#item-comments" role="tab" data-toggle="tab">
                     نظرات
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-videowall'}}active{{/ifCond}}">
                 <a href="#item-videowall" role="tab" data-toggle="tab">
                     ویدئووال
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
-            <li>
+            <li class="{{#ifCond activeTab '==' 'item-history'}}active{{/ifCond}}">
                 <a href="#item-history" role="tab" data-toggle="tab" data-task="load-history">
                     سابقه
                     <span class="badge badge-{{#if relatedItems.length}}primary{{else}}default{{/if}}">{{relatedItems.length}}</span>
                 </a>
             </li>
+            <li class="{{#ifCond activeTab '==' 'item-attachments'}}active{{/ifCond}}">
+                <a href="#item-attachments" role="tab" data-toggle="tab" data-task="load-attachments">
+                    مدیا
+                    <span class="badge badge-{{#if attachments.length}}primary{{else}}default{{/if}}">{{attachments.length}}</span>
+                </a>
+            </li>
         </ul>
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="item-body">
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-body'}}active{{/ifCond}}" id="item-body">
                 <form id="item-edit-form">
-                    <div class="form-group" style="padding-bottom: 60px;">
+                    <div class="form-group" id="item-editor" style="padding-bottom: 60px;">
                         <input type="hidden" name="NewsId" value="{{id}}"/>
                         <input type="hidden" name="sort" value="{{sort}}"/>
                         <button type="button" class="btn btn-default pull-right" data-id="{{id}}" data-task="print" style="position: absolute; top: 0; left: 120px;"><i class="fa fa-print"></i> چاپ (F6)</button>
@@ -59,15 +70,55 @@
                         <textarea class="form-control" name="body">{{#if summary}}
 {{summary}}{{/if}}
 {{body}}</textarea>
+                        <div class="font-size-helper" style="float: left;">
+                            <button class="btn btn-xs btn-default font-resize" data-type="increase"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-xs btn-default font-resize" data-type="reset"><i class="fa fa-font"></i></button>
+                            <button class="btn btn-xs btn-default font-resize" data-type="decrease"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-xs btn-default expand" data-type="expand"><i class="fa fa-expand"></i></button>
+                        </div>
                     </div>
+                    <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog container" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">ویرایش خبر</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
                 </form>
             </div>
-            <div role="tabpanel" class="tab-pane active" id="item-titles"></div>
-            <div role="tabpanel" class="tab-pane active" id="item-evaluation"></div>
-            <div role="tabpanel" class="tab-pane active" id="item-graphics"></div>
-            <div role="tabpanel" class="tab-pane active" id="item-comments"></div>
-            <div role="tabpanel" class="tab-pane active" id="item-videowall"></div>
-            <div role="tabpanel" class="tab-pane active" id="item-history"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-titles'}}active{{/ifCond}}" id="item-titles"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-evaluation'}}active{{/ifCond}}" id="item-evaluation"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-graphics'}}active{{/ifCond}}" id="item-graphics"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-comments'}}active{{/ifCond}}" id="item-comments"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-videowall'}}active{{/ifCond}}" id="item-videowall"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-history'}}active{{/ifCond}}" id="item-history"></div>
+            <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-attachments'}}active{{/ifCond}}" id="item-attachments">
+                <button class="btn btn-primary" data-task="search-media" style="float: left; clear: both">
+                    <i class="fa fa-plus"></i> افزودن مدیا
+                </button>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="2">ترتیب</th>
+                        <th></th>
+                        <th class="col-xs-3">عنوان</th>
+                        <th class="col-xs-1 text-center">قسمت</th>
+                        <th class="col-xs-1 text-center">مدت</th>
+                        <th class="col-xs-1 text-center">وضعیت</th>
+                        <th colspan="2" class="col-xs-2 text-center">زمان ایجاد</th>
+                        <th colspan="2" class="col-xs-2 text-center">انتشار</th>
+                        <th class="col-xs-1">وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody id="item-attachments-table"></tbody>
+                </table>
+            </div>
             <div class="item-state">
                 تولید شده در
                 <strong>{{extractDate Created}} {{extractTime Created}}</strong>
@@ -87,10 +138,70 @@
                 توسط
                 <strong>{{PublishedByText}}</strong>
                 {{/if}}
-                <div class="font-size-helper" style="float: left;">
-                    <button class="btn btn-xs btn-default font-resize" data-type="increase"><i class="fa fa-plus"></i></button>
-                    <button class="btn btn-xs btn-default font-resize" data-type="reset"><i class="fa fa-font"></i></button>
-                    <button class="btn btn-xs btn-default font-resize" data-type="decrease"><i class="fa fa-minus"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade zoom-out" id="media-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content" class="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <form class="media-filters form-inline" role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
+                            <select data-type="state" class="form-control" name="state">
+                                {{{getDefinitionOptions 2}}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
+                            <select data-type="type" class="form-control" name="type">
+                                {{{getDefinitionOptions 47}}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-list"></i></span>
+                            <select data-type="change-mode" class="form-control" name="change-mode">
+                                <option value="latest">آخرین‌ها</option>
+                                <option value="tree">انتخابی</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control datepicker" name="startdate" placeholder="" style="width: 110px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control datepicker" name="enddate" placeholder="" style="width: 110px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon has-icon"><i class="fa fa-search"></i></span>
+                            <input type="text" class="form-control" name="q" placeholder="جستجو" value="" style="width: 120px;"/>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success" data-task="load-media">جستجو</button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div id="media-tree"></div>
+                    </div>
+                    <div class="col-xs-9">
+                        <div id="itemlist"></div>
+                    </div>
                 </div>
             </div>
         </div>

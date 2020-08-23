@@ -2,6 +2,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
 ], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr, bootbox, Tree) {
     var NewsroomWorkspaceView = Backbone.View.extend({
         data: {}
+        , defaultEditorFontSize: Config.defaultEditorFontSize
         , currentItemId: null
         , currentTreeNode: null
         , treeInstance: {}
@@ -34,6 +35,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             , 'focus [data-type="new-headline"]': function (e) {
                 if ($(e.target).val() === 'خبر خام')
                     $(e.target).val('');
+            }
+            , 'click .font-resize': 'resizeFont'
+            , 'click [data-type="expand"]': 'expandEditor'
+            , 'hide.bs.modal': function (e) {
+                if ($(e.target).is('#editor-modal')) {
+                    var $modal = $('#editor-modal .modal-body');
+                    var $editor = $('#item-editor');
+                    $editor.detach().appendTo('#item-edit-form');
+                }
             }
         }
         , toolbar: [
@@ -80,6 +90,37 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             mode: 1
             , offset: 0
             , count: 50
+        }
+        , expandEditor: function (e) {
+            e.preventDefault();
+            var $modal = $('#editor-modal .modal-body');
+            var $editor = $('#item-editor');
+
+            if ($modal.is(':hidden') || !$modal.children().length) {
+                $editor.detach().appendTo($modal);
+                $('#editor-modal').modal('show');
+            } else {
+                $editor.detach().appendTo('#item-edit-form');
+                $('#editor-modal').modal('hide');
+            }
+        }
+        , resizeFont: function (e) {
+            e.preventDefault();
+            var $button = $(e.currentTarget);
+            var $editor = $('textarea[name="body"]');
+            var type = $button.data('type');
+            switch (type) {
+                case 'increase':
+                    $editor.css('font-size', (parseInt($editor.css('font-size')) + 2) + 'px');
+                    break;
+                case 'decrease':
+                    if (parseInt($editor.css('font-size')) > 10)
+                        $editor.css('font-size', (parseInt($editor.css('font-size')) - 2) + 'px');
+                    break;
+                case 'reset':
+                    $editor.css('font-size', this.defaultEditorFontSize + 'px');
+                    break;
+            }
         }
         , checkShotlist: function (e) {
             e.preventDefault();

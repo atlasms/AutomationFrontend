@@ -69,8 +69,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , loadData: function (e) {
             var id;
-            var $target = $(e.target);
             if (typeof e === "object") {
+                var $target = $(e.target);
                 id = $target.parent().attr('id');
                 if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
                     toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
@@ -192,6 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         success: function (d) {
                             var node = $tree.jstree(true).get_node(params.id, true);
                             node.attr('deleted', 'true');
+                            $tree.jstree(true).disable_node(node);
                         }
                     });
                     break;
@@ -208,6 +209,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         }
                         , success: function (model, response) {
                             $tree.jstree(true).set_id(node, response);
+                        }
+                    });
+                    break;
+                case 'undelete':
+                    new CategoriesModel({path: 'active', id: params.id}).save({}, {
+                        patch: true
+                        , pid: params.parent
+                        , error: function (e, data) {
+                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        }
+                        , success: function (d) {
+                            var node = $tree.jstree(true).get_node(params.id, true);
+                            node.attr('deleted', 'false');
+                            $tree.jstree(true).enable_node(node);
                         }
                     });
                     break;

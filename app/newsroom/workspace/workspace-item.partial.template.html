@@ -1,12 +1,37 @@
-<div class="col-xs-12 col-sm-7">
-	<div class="form-group" style="padding-bottom: 60px;">
+<style>
+	.font-size-helper { margin-top: 10px; position: relative; z-index: 777; }
+	#editor-modal .modal-body { height: 75vh; padding-bottom: 30px; }
+	#editor-modal .modal-body #item-edit-form { height: 100%; }
+	#editor-modal #item-editor > .btn { top: 15px !important; }
+</style>
+<div class="col-xs-12 col-sm-7" id="item-edit-form">
+	<div class="form-group" id="item-editor" style="padding-bottom: 80px;">
 		<input type="hidden" name="NewsId" value="{{id}}" />
 		<button type="button" class="btn blue pull-right" data-task="save" style="position: absolute; top: 0; left: 15px;"><i class="fa fa-save"></i> ثبت (F4)</button>
 		<input type="text" class="form-control" name="headline" value="{{headline}}" style="margin-bottom: 20px; padding-left: 94px;" />
 		<textarea class="form-control" name="body">{{#if summary}}
 {{summary}}{{/if}}
 {{body}}</textarea>
+		<div class="font-size-helper" style="float: left;">
+			<button class="btn btn-xs btn-default font-resize" data-type="increase"><i class="fa fa-plus"></i></button>
+			<button class="btn btn-xs btn-default font-resize" data-type="reset"><i class="fa fa-font"></i></button>
+			<button class="btn btn-xs btn-default font-resize" data-type="decrease"><i class="fa fa-minus"></i></button>
+			<button class="btn btn-xs btn-default expand" data-type="expand"><i class="fa fa-expand"></i></button>
+		</div>
 	</div>
+	<div class="modal fade" id="editor-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog container" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">ویرایش خبر</h4>
+				</div>
+				<div class="modal-body">
+
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>
 <div class="col-xs-12 col-sm-5" id="metadata-tabs">
 </div>

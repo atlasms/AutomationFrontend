@@ -1,0 +1,49 @@
+{{#each []}}
+<tr data-id="{{Id}}" data-media-id="{{MediaId}}">
+    <td class="sort">
+        <span class="">
+            {{Sort}}
+        </span>
+    </td>
+    <td class="ordering">
+        <div style="width: 75px;">
+            <span data-task="reorder-attachment" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
+            <span data-task="reorder-attachment" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span>
+        </div>
+    </td>
+    <td class="text-center">
+        {{config placeholderImage}}
+        <figure>
+            <img src="{{Media.Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+        </figure>
+    </td>
+    <td>
+        <a class="item-link" href="/resources/mediaitem/{{MediaId}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>
+        <span class="title">{{Media.Title}}</span>
+        <small class="help-block text-muted clip-line">{{Media.Description}}</small>
+    </td>
+    <td class="text-center">
+        {{Media.EpisodeNumber}}
+    </td>
+    <td class="text-center">
+        <span class="time">{{time Media.Duration}}</span>
+    </td>
+    <td class="text-center">
+        <span class="label lable-{{resolveLabel Media.State}}">{{Media.StateText}}</span>
+    </td>
+    <td class="text-center">{{extractTime Created}} {{extractDate Created}}</td>
+    <td>{{CreatedByText}}</td>
+    <td class="text-center">{{extractTime Published}} {{extractDate Published}}</td>
+    <td>{{PublishedByText}}</td>
+    <td class="state-{{Status}}">
+        <div class="form-group">
+            <select class="form-control input-sm" data-type="change-attachment-state">
+                {{#select Status}}
+                <option value="0">منتشر نشده</option>
+                <option value="1">منتشر شده</option>
+                {{/select}}
+            </select>
+        </div>
+    </td>
+</tr>
+{{/each}}

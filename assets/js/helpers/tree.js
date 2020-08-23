@@ -49,6 +49,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                                             $this.callback['handleTreeCallbacks'](params, $($this.$el));
                                 }
                             });
+                        },
+                        undelete: function (node) {
+                            var params = {method: 'undelete', id: node.id.toString()};
+                            bootbox.confirm({
+                                message: "آیا مطمئن هستید مورد انتخاب شده برگردانده شود؟"
+                                , buttons: {
+                                    confirm: {className: 'btn-success'}
+                                    , cancel: {className: 'btn-danger'}
+                                }
+                                , callback: function (results) {
+                                    if ($this.callback && typeof $this.callback['handleTreeCallbacks'] !== "undefined")
+                                        if (results)
+                                            $this.callback['handleTreeCallbacks'](params, $($this.$el));
+                                }
+                            });
                         }
                     };
                     var contextItems = {};
@@ -85,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             , icon: 'fa fa-trash'
                             , "action": function (data) {
                                 var ref = $.jstree.reference(data.reference),
-                                        sel = ref.get_selected();
+                                    sel = ref.get_selected();
                                 if (!sel.length || ref.is_closed(sel) || node.children.length)
                                     return false;
                                 Callees.destroy(sel);
@@ -99,8 +114,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                         contextItems.Acticate = {
                             "label": "un-delete"
                             , icon: "fa fa-check"
-                            , "action": function(data) {
-                                alert('UNDELETE!')
+                            , "action": function (data) {
+                                // alert('UNDELETE!')
+                                var ref = $.jstree.reference(data.reference),
+                                    obj = ref.get_node(data.reference);
+                                console.log(!obj.length, ref.is_closed(obj), node.children.length);
+                                // if (!obj.length || ref.is_closed(obj) || node.children.length)
+                                //     return false;
+                                // alert();
+                                Callees.undelete(obj);
                             }
                         }
                     } else {
@@ -118,7 +140,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             this.defaults.plugins.push("checkbox");
 
         this.options = $.extend({}
-        , this.defaults, options);
+            , this.defaults, options);
     };
     _.extend(Tree.prototype, {
         render: function () {

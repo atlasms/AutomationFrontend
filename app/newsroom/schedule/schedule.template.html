@@ -8,27 +8,28 @@
     #tree { background: #fff; padding: 10px; height: 100%; }
     .tree-holder { height: 100%; }
     #item-edit-form { height: 100%; }
+    #item-attachments { max-height: 100%; overflow: hidden; overflow-y: auto; }
 </style>
 <div class="row">
     <div class="col-xs-2 tree-holder">
         <div id="tree"></div>
     </div>
     <div class="col-xs-10">
-        <div id="mewsroom-workspace" class="news-dashboard">
+        <div id="newsroom-workspace" class="news-dashboard grid">
 
         </div>
     </div>
 </div>
 <div class="modal fade zoom-out" id="new-item-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form class="modal-content"  role="form" class="" id="new-item-form">
+        <form class="modal-content" role="form" class="" id="new-item-form">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">خبر جدید</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="title" value="خبر خام" data-type="new-headline" />
+                    <input type="text" class="form-control" name="title" value="خبر خام" data-type="new-headline"/>
                 </div>
                 <div class="form-group">
                     <textarea class="form-control" name="body" rows="10"></textarea>
