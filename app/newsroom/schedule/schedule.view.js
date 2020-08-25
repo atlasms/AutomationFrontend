@@ -102,7 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                     items = Object.entries(items).map(function (e) {
                         return e[1];
                     });
-                    console.log(items);
+                    // console.log(items);
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
@@ -112,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             });
         }
         , openMediaModal: function (e) {
+            e.stopPropagation();
             e.preventDefault();
             var self = this;
             var $datePickers = $('.datepicker:not([name="date"])');
@@ -120,14 +121,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                     new Tree($("#media-tree"), Config.api.tree, this).render();
                 }
                 window.setTimeout(function () {
-                    if ($datePickers.data('datepicker') !== undefined) {
-                        try {
-                            $datePickers.data('datepicker').destroy();
-                        } catch (e) {
-                        }
-                        $datePickers.val('');
-                    }
+                    // if ($datePickers.data('datepicker') !== undefined) {
+                    //     try {
+                    //         $datePickers.data('datepicker').destroy();
+                    //     } catch (e) {
+                    //     }
+                    //     $datePickers.val('');
+                    // }
                     self.attachDatepickers();
+                    if ($('#itemlist').is(':empty')) {
+                        self.loadMedia();
+                    }
                 }, 500);
             });
             $('#media-modal').modal('toggle');
@@ -143,11 +147,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    self.loadItemAttachments();
+                    self.reorderAttachmentRows(function () {
+                        self.loadItemAttachments();
+                    });
                     toastr['success']('مدیا با موفقیت ثبت شد', 'افزودن مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 }
                 , error: function (z, x, c) {
-                    console.log(z, x, c);
+                    // console.log(z, x, c);
                 }
             })
         }
@@ -264,9 +270,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 });
             });
         }
-        , reLoad: function (e) {
+        , reLoad: function (e, loadCallback) {
             typeof e !== 'undefined' && e.preventDefault();
-            this.loadItems();
+            this.loadItems(undefined, undefined, loadCallback);
         }
         , deleteRow: function (e) {
             e.preventDefault();
@@ -312,29 +318,33 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 , success: function () {
                     toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $("#new-item-modal").modal('hide');
-                    self.reLoad();
+                    self.reLoad(undefined, function () {
+                        self.reorderRows();
+                    });
                 }
             });
             return false;
         }
         , reorderRows: function (e) {
-            e.preventDefault();
             var self = this;
-            var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
-            var $row = $this.parents('tr:first');
-            var direction = $this.data('value');
-            if (direction === 'up') {
-                if ($row.prev().is('tr')) {
-                    $row.insertBefore($row.prev());
-                }
-            } else {
-                if ($row.next().is('tr')) {
-                    $row.insertAfter($row.next());
+            if (typeof e === 'object') {
+                e.preventDefault();
+                var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
+                var $row = $this.parents('tr:first');
+                var direction = $this.data('value');
+                if (direction === 'up') {
+                    if ($row.prev().is('tr')) {
+                        $row.insertBefore($row.prev());
+                    }
+                } else {
+                    if ($row.next().is('tr')) {
+                        $row.insertAfter($row.next());
+                    }
                 }
             }
             var data = [];
             $('#news-items tbody tr').each(function (i, row) {
-                data.push({key: $(row).attr('data-id'), value: i});
+                data.push({key: $(row).attr('data-id'), value: (i + 1)});
             });
             new NewsroomModel({id: 'sort', overrideUrl: Config.api.newsSchedule}).save(data, {
                 patch: true
@@ -343,28 +353,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    self.reLoad();
+                    if (typeof e === 'function') {
+                        e();
+                    } else {
+                        self.reLoad();
+                    }
                 }
             });
         }
         , reorderAttachmentRows: function (e) {
-            e.preventDefault();
             var self = this;
-            var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
-            var $row = $this.parents('tr:first');
-            var direction = $this.data('value');
-            if (direction === 'up') {
-                if ($row.prev().is('tr')) {
-                    $row.insertBefore($row.prev());
-                }
-            } else {
-                if ($row.next().is('tr')) {
-                    $row.insertAfter($row.next());
+            if (typeof e === 'object') {
+                e.preventDefault();
+                var $this = $(e.target).is('.btn') ? $(e.target) : $(e.target).parents('.btn:first');
+                var $row = $this.parents('tr:first');
+                var direction = $this.data('value');
+                if (direction === 'up') {
+                    if ($row.prev().is('tr')) {
+                        $row.insertBefore($row.prev());
+                    }
+                } else {
+                    if ($row.next().is('tr')) {
+                        $row.insertAfter($row.next());
+                    }
                 }
             }
             var data = [];
             $('#item-attachments-table tr').each(function (i, row) {
-                data.push({key: $(row).attr('data-id'), value: i});
+                data.push({key: $(row).attr('data-id'), value: (i + 1)});
             });
             new NewsroomModel({id: this.getId(), overrideUrl: Config.api.newsSchedule + '/attachments/sort'}).save(data, {
                 patch: true
@@ -373,7 +389,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    self.loadItemAttachments();
+                    if (typeof e === 'function') {
+                        e();
+                    } else {
+                        self.loadItemAttachments();
+                    }
                 }
             });
         }
@@ -440,7 +460,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         , updateCurrentRowTitle: function (id, title) {
             $("#news-items tr[data-id=" + id + "]").find('[data-type="headline"] strong').text(title);
         }
-        , loadItems: function (overridePrams, onlyUpdateList) {
+        , loadItems: function (overridePrams, onlyUpdateList, loadCallback) {
             var self = this;
             var $container = $('#newsroom-workspace');
             var overridePrams = typeof overridePrams === "object" ? overridePrams : {};
@@ -470,6 +490,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                                     self.activateFirstItem();
                             }
                             self.afterRender(items, requestParams);
+                            if (typeof loadCallback === 'function') {
+                                loadCallback();
+                            }
                         });
                     });
                 }

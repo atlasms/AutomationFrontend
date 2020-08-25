@@ -1,5 +1,6 @@
 {{#each []}}
 <tr data-id="{{Id}}" data-media-id="{{MediaId}}">
+    <td>{{MediaId}}</td>
     <td class="sort">
         <span class="">
             {{Sort}}
@@ -29,7 +30,7 @@
         <span class="time">{{time Media.Duration}}</span>
     </td>
     <td class="text-center">
-        <span class="label lable-{{resolveLabel Media.State}}">{{Media.StateText}}</span>
+        <div class="label label-{{resolveLabel Media.State}}">{{Media.StateText}}</div>
     </td>
     <td class="text-center">{{extractTime Created}} {{extractDate Created}}</td>
     <td>{{CreatedByText}}</td>

@@ -10,6 +10,9 @@
     #editor-modal .modal-body #item-edit-form { height: 100%; }
     #editor-modal #item-editor > .btn { top: 15px !important; }
     #itemlist tbody tr { cursor: pointer; }
+    #attachment-table-wrapper th { position: sticky; top: 0; background: #fff; }
+    .nav-tabs li .btn { display: none !important; }
+    .nav-tabs li.active .btn { display: block !important; float: left; margin: -5px 20px 0 -5px; }
 </style>
 <div class="col-xs-12">
     <div class="metadata-inner">
@@ -55,6 +58,9 @@
                 <a href="#item-attachments" role="tab" data-toggle="tab" data-task="load-attachments">
                     مدیا
                     <span class="badge badge-{{#if attachments.length}}primary{{else}}default{{/if}}">{{attachments.length}}</span>
+                    <button class="btn btn-primary btn-sm" data-task="search-media">
+                        <i class="fa fa-plus"></i> افزودن
+                    </button>
                 </a>
             </li>
         </ul>
@@ -99,15 +105,16 @@
             <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-videowall'}}active{{/ifCond}}" id="item-videowall"></div>
             <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-history'}}active{{/ifCond}}" id="item-history"></div>
             <div role="tabpanel" class="tab-pane {{#ifCond activeTab '==' 'item-attachments'}}active{{/ifCond}}" id="item-attachments">
-                <button class="btn btn-primary" data-task="search-media" style="float: left; clear: both">
-                    <i class="fa fa-plus"></i> افزودن مدیا
-                </button>
-                <table class="table table-striped table-bordered">
+<!--                <button class="btn btn-primary" data-task="search-media" style="float: left; clear: both">-->
+<!--                    <i class="fa fa-plus"></i> افزودن مدیا-->
+<!--                </button>-->
+                <table class="table table-striped table-bordered" id="attachment-table-wrapper">
                     <thead>
                     <tr>
+                        <th>#</th>
                         <th colspan="2">ترتیب</th>
                         <th></th>
-                        <th class="col-xs-3">عنوان</th>
+                        <th class="col-xs-2">عنوان</th>
                         <th class="col-xs-1 text-center">قسمت</th>
                         <th class="col-xs-1 text-center">مدت</th>
                         <th class="col-xs-1 text-center">وضعیت</th>
