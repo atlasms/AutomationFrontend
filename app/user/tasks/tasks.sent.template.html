@@ -20,10 +20,11 @@
                             <table class="table table-striped table-advance table-hover">
                                 <thead>
                                 <tr>
-                                    <th>شناسه ارجاع</th>
+                                    <th>شناسه</th>
                                     <th class="col-xs-1">نوع</th>
                                     <th class="col-xs-2">عنوان</th>
                                     <th class="col-xs-1">مدیا</th>
+                                    <th class="col-xs-1">تاریخ پخش</th>
                                     <th class="col-xs-1">فرستنده</th>
                                     <th class="col-xs-1">گیرنده</th>
                                     <th class="col-xs-1">زمان ارسال</th>
@@ -41,6 +42,7 @@
 									</td>
                                     <td> {{Title}}</td>
                                     <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
+                                    <td> {{extractDate Media.RecommendedBroadcastDate}}</td>
                                     <td> {{CreatedByText}}</td>
 									<td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
                                     <td class="text-right">
