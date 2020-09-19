@@ -45,8 +45,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="delete-person"]': 'deletePerson'
             , 'click [data-task="submit-persons"]': 'submitPersons'
             , 'click [data-task="edit-subjects"]': 'editSubjects'
+            , 'click [data-task="edit-broadcast-date"]': 'editBroadcastDate'
+            , 'click [data-task="edit-allowed-broadcast-count"]': 'editAllowedBroadcastCount'
             , 'click [data-task="edit-tags"]': 'editTags'
             , 'click [data-task="save-subjects"]': 'saveSubjects'
+            , 'click [data-task="save-broadcast-date"]': 'saveBroadcastDate'
+            , 'click [data-task="save-allowed-broadcast-count"]': 'saveAllowedBroadcastCount'
             , 'click [data-task="save-tags"]': 'saveTags'
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
@@ -162,6 +166,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 });
             }
         }
+        , editAllowedBroadcastCount: function () {
+            var $form = $('form.allowed-broadcast-count-form');
+            $form.toggleClass('hide');
+        }
+        , saveAllowedBroadcastCount: function () {
+            var self = this;
+            var id = this.getId();
+            var $form = $('form.allowed-broadcast-count-form');
+            var params = {
+                key: 'AllowedBroadcastCount',
+                value: +$form.find('input[data-type="allowed-broadcast-count"]').val()
+            };
+            this.handleEditables(id, params, function () {
+                toastr['success']('تعداد مجاز پخش با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                self.reLoad();
+            });
+        }
         , saveSubjects: function () {
             var id = this.getId();
             var self = this;
@@ -177,6 +198,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     toastr['success']('محورها با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     self.reLoad();
                 }
+            });
+        }
+        , saveBroadcastDate: function () {
+            var self = this;
+            var id = this.getId();
+            var $form = $('form.broadcast-date-form');
+            var $datePicker = $form.find(".datepicker");
+            var params = {
+                key: 'RecommendedBroadcastDate',
+                value: Global.jalaliToGregorian($datePicker.val()) + 'T00:00:00'
+            };
+            this.handleEditables(id, params, function () {
+                toastr['success']('تاریخ پخش با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                self.reLoad();
             });
         }
         , enableTagsEdit: function (tags) {
@@ -199,6 +234,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , editSubjects: function (e) {
             this.getSubjects();
+        }
+        , editBroadcastDate: function (e) {
+            e.preventDefault();
+            var $form = $('form.broadcast-date-form');
+            var $datePicker = $form.find(".datepicker");
+            $form.toggleClass('hide');
+            if ($datePicker.data('datepicker') == undefined) {
+                $datePicker.pDatepicker(CONFIG.settings.datepicker);
+            }
         }
         , getSubjects: function (callback) {
             var self = this;
