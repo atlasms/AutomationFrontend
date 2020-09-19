@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: "اتوماسیون تولید و پخش اطلس",
-        version: "1.200726.0014",
+        version: "1.200920.0028",
         loginMessage: "ورود به سامانه اتوماسیون",
         channel: "ایران‌کالا",
         channelLogo: "assets/data/iktv.png",
@@ -43,6 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             'ingest.SiteTitle': {uid: 'website_title', required: true, show: true, validation: 'text', min: 4},
             'ingest.SiteSummary': {uid: 'website_summary', required: true, show: true, validation: 'text', min: 4},
             'ingest.SiteDescr': {uid: 'website_desc', required: true, show: true, validation: 'text', min: 0},
+            'ingest.AllowedBroadcastCount': {uid: 'allowed_broadcast_count', required: false, show: true, validation: 'text', min: 0},
             'ingest.AudioChannels': {uid: 'audio_channels', required: false, show: false, validation: 'text', min: 0},
             'ingest.RecommendedBroadcastDate': {uid: 'recommended_broadcast_date', required: false, show: true, validation: 'text', min: 0},
             'ingest.RecommendedSubtitleTime': {uid: 'recommended_subtitle_time', required: false, show: false, validation: 'text', min: 0},

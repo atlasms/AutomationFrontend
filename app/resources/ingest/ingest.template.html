@@ -191,8 +191,15 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        {{#input 'ingest.RecommendedSubtitleTime'}}
-                                        <input type="text" data-type="recommended_subtitle_time" class="form-control" id="recommended_subtitle_time-title" name="RecommendedSubtitleTime" value="" placeholder="زمان مناسب برای زیرنویس"/>
+                                        {{#input 'ingest.AllowedBroadcastCount'}}
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <label class="control-label" title="0 یعنی بدون محدودیت">تعداد مجاز پخش</label>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <input type="text" data-type="allowed_broadcast_count" class="form-control" id="allowed_broadcast_count-title" name="AllowedBroadcastCount" value="0" placeholder="تعداد مجاز پخش"/>
+                                            </div>
+                                        </div>
                                         {{/input}}
                                     </div>
                                     <div class="col-xs-6">
@@ -213,9 +220,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        {{#input 'ingest.RecommendedSubtitleTime'}}
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">زمان زیرنویس</label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <input type="text" data-type="recommended_subtitle_time" class="form-control" id="recommended_subtitle_time-title" name="RecommendedSubtitleTime" value=""
+                                                       placeholder="زمان مناسب برای زیرنویس"/>
+                                            </div>
+                                        </div>
+                                        {{/input}}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <hr style="margin: 0;" />
+                    <hr style="margin: 0;"/>
                     <div>
                         {{{personsWarning}}}
                         <h4>فهرست عوامل</h4>
