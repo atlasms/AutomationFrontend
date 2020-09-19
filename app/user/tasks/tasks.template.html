@@ -1,14 +1,16 @@
 <style>
-	.modal-body figure { width: 200px; }
-	.modal-body figure img { max-width: 100%; height: auto; display: block; }
-	.modal-body .note { display: block; position: relative; }
-	.modal-body .note:hover { text-decoration: none; }
+    .modal-body figure { width: 200px; }
+    .modal-body figure img { max-width: 100%; height: auto; display: block; }
+    .modal-body .note { display: block; position: relative; }
+    .modal-body .note:hover { text-decoration: none; }
     .inbox .inbox-sidebar { padding: 0; }
     .inbox .inbox-nav { margin: 0; }
     .inbox .inbox-nav > li { float: right; margin-bottom: 10px; }
     .inbox .inbox-nav > li > a { border-right: 0 none; border-bottom: 4px solid transparent; }
-    .inbox .inbox-nav>li.active>a { border-right: 0 none; border-bottom: 4px solid #ed6b75 }
+    .inbox .inbox-nav > li.active > a { border-right: 0 none; border-bottom: 4px solid #ed6b75 }
     .date { white-space: nowrap; }
+    .datepicker-group { display: flex; flex-direction: row; margin-left: 10px; }
+    .datepicker-group label[for="filter-date"] { white-space: nowrap; line-height: 35px; margin-left: 10px; }
 </style>
 <div id="inbox-page">
     <div class="mainbody">
@@ -22,6 +24,14 @@
                                     <option value="0">همه</option>
                                     {{{getDefinitionOptions 223}}}
                                 </select>
+                            </div>
+                            <div class="form-group pull-right datepicker-group">
+                                <div class="checkbox checkbox-primary checkbox-circle enable-recommended-checkbox">
+                                    <input type="checkbox" name="enable-recommended" title="تاریخ پیشنهادی پخش" id="check-recommended_broadcast_date"/>
+                                    <label for="check-recommended_broadcast_date"></label>
+                                </div>
+                                <label for="filter-date">تاریخ پخش</label>
+                                <input type="text" id="filter-date" data-task="filter-date" class="form-control datepicker" disabled />
                             </div>
                             <ul class="inbox-nav">
                                 <li class="active">
@@ -54,24 +64,24 @@
                                 </thead>
                                 <tbody>
                                 {{#each []}}
-                                <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
+                                <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
                                     <td>{{Id}}</td>
                                     <td>
-										<span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
-									</td>
+                                        <span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
+                                    </td>
                                     <td> {{Title}}</td>
                                     <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
                                     <td> {{extractDate Media.RecommendedBroadcastDate}}</td>
                                     <td> {{CreatedByText}}</td>
-									<td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
+                                    <td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
                                     <td class="text-right">
                                         <div class="date">
-                                        {{extractTime CreatedDate}} {{extractDate CreatedDate}}
+                                            {{extractTime CreatedDate}} {{extractDate CreatedDate}}
                                         </div>
                                     </td>
                                     <td class="text-right">
                                         <div class="date">
-                                        {{extractTime DoneDate}} {{extractDate DoneDate}}
+                                            {{extractTime DoneDate}} {{extractDate DoneDate}}
                                         </div>
                                     </td>
                                     <td class="">
@@ -85,7 +95,7 @@
                                         </select>
                                     </td>
                                     <td class="text-right">
-<!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
+                                        <!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
                                         <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
                                         <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
                                     </td>
@@ -99,18 +109,18 @@
             </div>
         </div>
     </div>
-	<div class="modal fade" id="details-modal" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content" role="form">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">جزئیات آیتم</h4>
-				</div>
-				<div class="modal-body" id="task-details">
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal fade" id="details-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">جزئیات آیتم</h4>
+                </div>
+                <div class="modal-body" id="task-details">
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="assign-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <form class="modal-content" role="form">
@@ -119,7 +129,7 @@
                     <h4 class="modal-title">ارجاع</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="MasterId" value="{{Id}}" />
+                    <input type="hidden" name="MasterId" value="{{Id}}"/>
                     <label>گیرنده</label>
                     <dl class="dl-horizontal">
                         <dt>
@@ -144,7 +154,7 @@
                             </div>
                         </dd>
                     </dl>
-                    <hr />
+                    <hr/>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-xs-3">
@@ -163,7 +173,7 @@
                                 <label for="Title">عنوان</label>
                             </div>
                             <div class="col-xs-9">
-                                <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان" />
+                                <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان"/>
                             </div>
                         </div>
                     </div>

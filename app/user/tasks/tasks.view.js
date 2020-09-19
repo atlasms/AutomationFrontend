@@ -14,12 +14,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click [data-task="refresh-view"]': 'reLoad'
             , 'click [data-task="sent"]': 'redirectToSent'
             , 'click [data-task="received"]': 'redirectToReceived'
-            , 'change [data-task="filter-status"]': 'filterByStatus'
+            , 'change [data-task="filter-status"]': 'filter'
             , 'click [data-task="follow-up"]': 'followUp'
 
             , 'click [data-task="assign"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
             , 'change [name="ToGroupId"]': 'updateUserList'
+
+            , 'click .enable-recommended-checkbox input[type="checkbox"]': 'enableRecommendedDate'
             // , 'click [name="to-type"]': 'changeSendRecipient'
 
             , 'click [data-task="load-media"]': 'loadMedia'
@@ -123,19 +125,40 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             var win = window.open('/resources/mediaitem/' + mediaId, Config.mediaLinkTarget);
             win && win.focus();
         }
-        , filterByStatus: function (e) {
-            var status = ~~$(e.target).val();
+        , filter: function (e, forcedState) {
+            var status = typeof forcedState !== 'undefined' && forcedState ? forcedState : ~~$(e.target).val();
             var $rows = $('.inbox-body table:first tbody tr');
+            var filterByDate = $('.enable-recommended-checkbox input[type="checkbox"]')[0].checked;
+            var dateFilterValue = $('#filter-date').val();
+            console.log(filterByDate, dateFilterValue)
             if (status === 0) {
                 $rows.show(0);
             } else {
                 $rows.hide(0);
                 $rows.each(function () {
-                    if ($(this).is('[data-status="' + status + '"]')) {
-                        $(this).show();
+                    if (filterByDate) {
+                        if ($(this).is('[data-status="' + status + '"]') && $(this).is('[data-date="' + dateFilterValue + '"]')) {
+                            $(this).show();
+                        }
+                    } else {
+                        if ($(this).is('[data-status="' + status + '"]')) {
+                            $(this).show();
+                        }
                     }
                 });
             }
+        }
+        , enableRecommendedDate: function (e) {
+            var self = this;
+            var $input = $('#filter-date');
+            setTimeout(function () {
+                if (e.target.checked) {
+                    $input.prop('disabled', false);
+                } else {
+                    $input.prop('disabled', 'disabled');
+                }
+                self.filter(undefined, $('[data-task="filter-status"]').val());
+            }, 100);
         }
         , redirectToSent: function (e) {
             e.preventDefault();
@@ -248,7 +271,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 }
             });
         }
-        , loadReceivedItems: function () {
+        , loadReceivedItems: function (callback) {
             var self = this;
             var template = Template.template.load('user/tasks', 'tasks');
             var $container = $(Config.positions.main);
@@ -262,15 +285,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             self.afterRender();
+
+                            $('[data-task="filter-status"]').val('1');
+                            self.filter(undefined, 1);
                         });
                     });
                 }
             });
         }
         , afterRender: function () {
-            // this.handleHash();
-//            $(".select2").select2();
             this.loadUsersList();
+            this.attachDatepickers();
+        }
+        , attachDatepickers: function () {
+            var self = this;
+            var $datePickers = $(".datepicker");
+            $.each($datePickers, function () {
+                var $this = $(this);
+                if ($this.data('datepicker') == undefined) {
+                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                        onSelect: function () {
+                            self.filter(undefined, $('[data-task="filter-status"]').val());
+                        }
+                    }));
+                }
+            });
         }
         , renderToolbar: function () {
             var self = this;
