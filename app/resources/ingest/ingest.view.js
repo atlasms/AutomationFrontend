@@ -17,6 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , events: {
             'click [type=submit]': 'submit'
+            , 'submit #ingest-page .modal form': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=add]': 'openAddForm'
             , 'click [data-task=refresh]': 'loadStorageFiles'
@@ -27,7 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'submit #person-search-form': 'searchPersons'
             , 'click [data-task="search-persons"]': 'searchPersons'
             , 'click [data-task="select-person"]': 'selectPerson'
-            , 'click [data-task="delete-person"]': 'deletePerson'
+            , 'click tbody [data-task="delete-person"]': 'deletePerson'
             , 'keyup input,textarea': 'handleInputChanges'
             , 'click [data-task="download-original"]': 'downloadOriginal'
             , 'click [name="enable-recommended"]': 'toggleRecommendedDate'
