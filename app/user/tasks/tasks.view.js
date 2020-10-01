@@ -8,6 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         ]
         , flags: {}
         , cachedItems: []
+        , currentAssigningItem: null
         , events: {
             'click .inbox-sidebar [data-type]': 'filterItems'
             , 'click .inbox-content table tr': 'loadTask'
@@ -30,20 +31,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 e.stopPropagation();
             }
         }
-        , changeStatus: function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var params = {id: $(e.target).parents('tr:first').attr('data-id'), query: 'status=' + $(e.target).val()}
+        , changeStatus: function (e, givenParams, reload) {
+            var $target = null;
+            if (typeof e === 'object') {
+                e.stopPropagation();
+                e.preventDefault();
+                $target = $(e.target);
+            }
+            var self = this;
+            var params = {
+                id: typeof givenParams !== 'undefined' && givenParams.id ? givenParams.id : $target.parents('tr:first').attr('data-id'),
+                query: 'status=' + (typeof givenParams !== 'undefined' && givenParams.status ? givenParams.status : $target.val())
+            };
             new TasksModel(params).save(null, {
                 patch: true,
                 success: function (res) {
                     toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    if (typeof reload !== 'undefined' && reload) {
+                        self.reLoad();
+                    }
                 }
             })
         }
 
         , assign: function (e) {
             e.preventDefault();
+            var self = this;
             var data = $('#assign-modal form:first').serializeObject();
             if (data.ToUserId !== '0') {
                 data.ToGroupId = null;
@@ -58,13 +71,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 success: function (res) {
                     toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                     $('#assign-modal').modal('hide');
+                    self.changeStatus(undefined, {id: self.currentAssigningItem, status: 3}, true);
                 }
             });
         }
         , openAssignModal: function (e) {
             e.stopPropagation();
             e.preventDefault();
-            $('[name="MasterId"]').val($(e.target).parents('tr:first').attr('data-media-id'));
+            var $row = $(e.target).parents('tr:first');
+            this.currentAssigningItem = $row.attr('data-id');
+            $('[name="MasterId"]').val($row.attr('data-media-id'));
             $('#assign-modal').modal('toggle');
         }
         , changeSendRecipient: function (e) {
@@ -130,7 +146,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             var $rows = $('.inbox-body table:first tbody tr');
             var filterByDate = $('.enable-recommended-checkbox input[type="checkbox"]')[0].checked;
             var dateFilterValue = $('#filter-date').val();
-            console.log(filterByDate, dateFilterValue)
             if (status === 0) {
                 $rows.show(0);
             } else {
