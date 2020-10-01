@@ -139,36 +139,42 @@
                                     </div>
                                 </div>
                             </div>
+                            {{#input 'ingest.SiteTitle'}}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <label class="control-label">عنوان وب‌سایت</label>
                                     </div>
                                     <div class="col-xs-9">
-                                        <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت" required/>
+                                        <input type="text" data-type="website_title" class="form-control" id="website-title" name="SiteTitle" value="" placeholder="عنوان وب‌سایت"/>
                                     </div>
                                 </div>
                             </div>
+                            {{/input}}
+                            {{#input 'ingest.SiteSummary'}}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <label class="control-label">خلاصه وب‌سایت</label>
                                     </div>
                                     <div class="col-xs-9">
-                                        <textarea class="form-control" data-type="website_summary" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت" required></textarea>
+                                        <textarea class="form-control" data-type="website_summary" name="SiteSummary" rows="2" placeholder="خلاصه وب‌سایت"></textarea>
                                     </div>
                                 </div>
                             </div>
+                            {{/input}}
+                            {{#input 'ingest.SiteDescr'}}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <label class="control-label">توضیحات وب‌سایت</label>
                                     </div>
                                     <div class="col-xs-9">
-                                        <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت" required></textarea>
+                                        <textarea class="form-control" data-type="website_desc" name="SiteDescr" rows="3" placeholder="توضیحات وب‌سایت"></textarea>
                                     </div>
                                 </div>
                             </div>
+                            {{/input}}
                             <div class="form-group">
                                 {{#input 'ingest.RecommendedBroadcastDate'}}
                                 <div class="row">
