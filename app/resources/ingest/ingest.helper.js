@@ -3,21 +3,80 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
     var IngestHelper = {
         flags: {}
         , fields: {
-            path: {required: true, validation: 'text'},
-            duration: {required: true, validation: 'text'},
-            filename: {required: true, validation: 'text'},
-            episode: {required: true, validation: 'number', min: 0},
-            title: {required: true, validation: 'text', min: 4},
-            description: {required: true, validation: 'text', min: 9},
-            tags: {required: true, validation: 'select', min: 1},
-            subjects: {required: true, validation: 'select', min: 1},
-            website_title: {required: Config.inputPolicies['ingest.SiteTitle'].required, validation: 'text', min: Config.inputPolicies['ingest.SiteTitle'].min},
-            website_summary: {required: Config.inputPolicies['ingest.SiteSummary'].required, validation: 'text', min: Config.inputPolicies['ingest.SiteTitle'].min},
-            website_desc: {required: Config.inputPolicies['ingest.SiteDescr'].required, validation: 'text', min: Config.inputPolicies['ingest.SiteTitle'].min},
-            audio_channels: {required: false, validation: 'text', min: 0},
-            recommended_broadcast_date: {required: false, validation: 'text', min: 0},
-            recommended_subtitle_time: {required: false, validation: 'text', min: 0},
-            archive_description: {required: false, validation: 'text', min: 0}
+            // Fixed fields
+            path: {
+                required: true,
+                validation: 'text'
+            },
+            duration: {
+                required: true,
+                validation: 'text'
+            },
+            filename: {
+                required: true,
+                validation: 'text'
+            },
+            // Variable Fields
+            episode: {
+                required: Config.inputPolicies['ingest.EpisodeNumber'].required,
+                validation: 'number',
+                min: Config.inputPolicies['ingest.EpisodeNumber'].min
+            },
+            title: {
+                required: Config.inputPolicies['ingest.Title'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.Title'].min
+            },
+            description: {
+                required: Config.inputPolicies['ingest.Description'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.Description'].min
+            },
+            tags: {
+                required: Config.inputPolicies['ingest.Tags'].required,
+                validation: 'select',
+                min: Config.inputPolicies['ingest.Tags'].min
+            },
+            subjects: {
+                required: Config.inputPolicies['ingest.Subjects'].required,
+                validation: 'select',
+                min: Config.inputPolicies['ingest.Subjects'].min
+            },
+            website_title: {
+                required: Config.inputPolicies['ingest.SiteTitle'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.SiteTitle'].min
+            },
+            website_summary: {
+                required: Config.inputPolicies['ingest.SiteSummary'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.SiteSummary'].min
+            },
+            website_desc: {
+                required: Config.inputPolicies['ingest.SiteDescr'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.SiteDescr'].min
+            },
+            audio_channels: {
+                required: Config.inputPolicies['ingest.AudioChannels'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.AudioChannels'].min
+            },
+            recommended_broadcast_date: {
+                required: Config.inputPolicies['ingest.RecommendedBroadcastDate'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.RecommendedBroadcastDate'].min
+            },
+            recommended_subtitle_time: {
+                required: Config.inputPolicies['ingest.RecommendedSubtitleTime'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.RecommendedSubtitleTime'].min
+            },
+            archive_description: {
+                required: Config.inputPolicies['ingest.ArchiveDescr'].required,
+                validation: 'text',
+                min: Config.inputPolicies['ingest.ArchiveDescr'].min
+            }
         }
         , init: function (reinit) {
             if (typeof reinit !== "undefined" && reinit === true) {
