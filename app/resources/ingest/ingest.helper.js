@@ -161,9 +161,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                 //     toastr.warning('توضیحات وب‌سایت با توضیحات اتوماسیون یکی است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 //     rquiredError = true; 
                 // }
-                if ($("[data-type=website_summary]").val() === $("[data-type=website_desc]").val()) {
-                    toastr.warning('توضیحات وب‌سایت نمی‌تواند با خلاصه وب‌سایت یکی باشد', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
-                    rquiredError = true;
+                if (this.fields.website_summary.required === true && this.fields.website_desc.required) {
+                    if ($("[data-type=website_summary]").val() === $("[data-type=website_desc]").val()) {
+                        toastr.warning('توضیحات وب‌سایت نمی‌تواند با خلاصه وب‌سایت یکی باشد', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        rquiredError = true;
+                    }
                 }
                 if ($("[data-type=path]").legnth && $("[data-type=path]").val() === "") {
                     $("#metadata-form-modal").find(".help-inline").removeClass('hidden');
