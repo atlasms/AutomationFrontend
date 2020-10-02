@@ -153,6 +153,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="tab-website">
+            {{#authorize 67108864}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">وضعیت نمایش</label>
                 <div class="col-sm-5">
@@ -168,6 +169,7 @@
                     <button type="button" class="btn btn-info" data-task="publish-website">انتشار</button>
                 </div>
             </div>
+            {{/authorize}}
             <div class="form-group hide">
                 <label class="col-sm-3 control-label">شیوه ارسال</label>
                 <div class="col-sm-4">
@@ -308,114 +310,114 @@
         <div class="tab-pane fade" id="tab-videos">
             <table class="table table-bordered table-striped table-condensed flip-content">
                 <thead>
-                    <tr>
-                        <th class=""></th>
-                        <th class="">#</th>
-                        <th class="col-xs-1"></th>
-                        <th class="col-xs-5">نام برنامه</th>
-                        <th class="col-xs-2 text-center">زمان ثبت</th>
-                        <th class="col-xs-1 text-center">قسمت</th>
-                        <th class="col-xs-1 text-center">مدت</th>
-                        <th class="col-xs-2 text-center">وضعیت</th>
-                    </tr>
+                <tr>
+                    <th class=""></th>
+                    <th class="">#</th>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-5">نام برنامه</th>
+                    <th class="col-xs-2 text-center">زمان ثبت</th>
+                    <th class="col-xs-1 text-center">قسمت</th>
+                    <th class="col-xs-1 text-center">مدت</th>
+                    <th class="col-xs-2 text-center">وضعیت</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {{#each media.items}}
-                    {{#ifCond Type '==' 0}}
-                    <tr data-id="{{Id}}" data-index="{{math @index " +
-                    " 1}}" data-type="{{Type}}">
-                    <td>
-                        <div class="checkbox checkbox-success checkbox-circle">
-                            <input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true" {{/find}} />
-                            <label for="r_v{{@index}}"></label>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="idx">{{math @index "+" 1}}</span>
-                        <a class="item-link" href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>
-                    </td>
-                    <td class="text-center">
-                        {{config placeholderImage}}
-                        <figure>
-                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
-                        </figure>
-                    </td>
-                    <td>
-                        {{Title}}
-                        <small class="help-block text-muted clip-line">{{Description}}</small>
-                    </td>
-                    <td class="text-right">
-                        <span class="">{{extractTime Created}} {{extractDate Created}}</span>
-                    </td>
-                    <td class="text-center">
-                        {{EpisodeNumber}}
-                    </td>
-                    <td class="text-center">
-                        <span class="time">{{time Duration}}</span>
-                    </td>
-                    <td class="text-center">
-                        <span class="">{{StateText}}</span>
-                    </td>
-                    </tr>
-                    {{/ifCond}}
-                    {{/each}}
+                {{#each media.items}}
+                {{#ifCond Type '==' 0}}
+                <tr data-id="{{Id}}" data-index="{{math @index " +
+                " 1}}" data-type="{{Type}}">
+                <td>
+                    <div class="checkbox checkbox-success checkbox-circle">
+                        <input name="Video" id="r_v{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Video}}checked="true" {{/find}} />
+                        <label for="r_v{{@index}}"></label>
+                    </div>
+                </td>
+                <td>
+                    <span class="idx">{{math @index "+" 1}}</span>
+                    <a class="item-link" href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>
+                </td>
+                <td class="text-center">
+                    {{config placeholderImage}}
+                    <figure>
+                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                    </figure>
+                </td>
+                <td>
+                    {{Title}}
+                    <small class="help-block text-muted clip-line">{{Description}}</small>
+                </td>
+                <td class="text-right">
+                    <span class="">{{extractTime Created}} {{extractDate Created}}</span>
+                </td>
+                <td class="text-center">
+                    {{EpisodeNumber}}
+                </td>
+                <td class="text-center">
+                    <span class="time">{{time Duration}}</span>
+                </td>
+                <td class="text-center">
+                    <span class="">{{StateText}}</span>
+                </td>
+                </tr>
+                {{/ifCond}}
+                {{/each}}
                 </tbody>
             </table>
         </div>
         <div class="tab-pane fade" id="tab-photos">
             <table class="table table-bordered table-striped table-condensed flip-content">
                 <thead>
-                    <tr>
-                        <th class=""></th>
-                        <th class="">#</th>
-                        <th class="col-xs-1"></th>
-                        <th class="col-xs-5">نام برنامه</th>
-                        <th class="col-xs-2 text-center">زمان ثبت</th>
-                        <th class="col-xs-1 text-center">قسمت</th>
-                        <th class="col-xs-1 text-center">مدت</th>
-                        <th class="col-xs-2 text-center">وضعیت</th>
-                    </tr>
+                <tr>
+                    <th class=""></th>
+                    <th class="">#</th>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-5">نام برنامه</th>
+                    <th class="col-xs-2 text-center">زمان ثبت</th>
+                    <th class="col-xs-1 text-center">قسمت</th>
+                    <th class="col-xs-1 text-center">مدت</th>
+                    <th class="col-xs-2 text-center">وضعیت</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {{#each media.items}}
-                    {{#ifCond Type '==' 1}}
-                    <tr data-id="{{Id}}" data-index="{{math @index " +
-                    " 1}}" data-type="{{Type}}">
-                    <td>
-                        <div class="checkbox checkbox-success checkbox-circle">
-                            <input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true" {{/find}} />
-                            <label for="r_p{{@index}}"></label>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="idx">{{math @index "+" 1}}</span>
-                        <a class="item-link" href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>
-                    </td>
-                    <td class="text-center">
-                        {{config placeholderImage}}
-                        <figure>
-                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
-                        </figure>
-                    </td>
-                    <td>
-                        {{Title}}
-                        <small class="help-block text-muted clip-line">{{Description}}</small>
-                    </td>
-                    <td class="text-right">
-                        <span class="">{{extractTime Created}} {{extractDate Created}}</span>
-                    </td>
-                    <td class="text-center">
-                        {{EpisodeNumber}}
-                    </td>
-                    <td class="text-center">
-                        <span class="time">{{time Duration}}</span>
-                    </td>
-                    <td class="text-center">
-                        <span class="">{{StateText}}</span>
-                    </td>
-                    </tr>
-                    {{/ifCond}}
-                    {{/each}}
+                {{#each media.items}}
+                {{#ifCond Type '==' 1}}
+                <tr data-id="{{Id}}" data-index="{{math @index " +
+                " 1}}" data-type="{{Type}}">
+                <td>
+                    <div class="checkbox checkbox-success checkbox-circle">
+                        <input name="Images" id="r_p{{@index}}" value="{{Id}}" type="checkbox" data-validation="checkbox" {{#find Id @root.Images}}checked="true" {{/find}} />
+                        <label for="r_p{{@index}}"></label>
+                    </div>
+                </td>
+                <td>
+                    <span class="idx">{{math @index "+" 1}}</span>
+                    <a class="item-link" href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>
+                </td>
+                <td class="text-center">
+                    {{config placeholderImage}}
+                    <figure>
+                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                    </figure>
+                </td>
+                <td>
+                    {{Title}}
+                    <small class="help-block text-muted clip-line">{{Description}}</small>
+                </td>
+                <td class="text-right">
+                    <span class="">{{extractTime Created}} {{extractDate Created}}</span>
+                </td>
+                <td class="text-center">
+                    {{EpisodeNumber}}
+                </td>
+                <td class="text-center">
+                    <span class="time">{{time Duration}}</span>
+                </td>
+                <td class="text-center">
+                    <span class="">{{StateText}}</span>
+                </td>
+                </tr>
+                {{/ifCond}}
+                {{/each}}
                 </tbody>
             </table>
         </div>
