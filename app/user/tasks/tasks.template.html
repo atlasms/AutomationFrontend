@@ -19,31 +19,17 @@
                 <div class="col-md-12">
                     <div class="inbox-body">
                         <div class="inbox-sidebar">
-                            <div class="form-group pull-right">
-                                <select data-task="filter-status" class="form-control">
-                                    <option value="0">همه</option>
-                                    {{{getDefinitionOptions 223}}}
-                                </select>
-                            </div>
-                            <div class="form-group pull-right datepicker-group">
-                                <div class="checkbox checkbox-primary checkbox-circle enable-recommended-checkbox">
-                                    <input type="checkbox" name="enable-recommended" title="تاریخ پیشنهادی پخش" id="check-recommended_broadcast_date"/>
-                                    <label for="check-recommended_broadcast_date"></label>
-                                </div>
-                                <label for="filter-date">تاریخ پخش</label>
-                                <input type="text" id="filter-date" data-task="filter-date" class="form-control datepicker" disabled />
-                            </div>
-                            <ul class="inbox-nav">
-                                <li class="active">
-                                    <a href="#inbox" data-type="all"> همه</a>
-                                </li>
-                                <li>
-                                    <a href="#inbox" data-type="me"> کارتابل من</a>
-                                </li>
-                                <li>
-                                    <a href="#sent" data-type="groups"> کارتابل گروه‌های من </a>
-                                </li>
-                            </ul>
+<!--                            <ul class="inbox-nav">-->
+<!--                                <li class="active">-->
+<!--                                    <a href="#inbox" data-type="all"> همه</a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#inbox" data-type="me"> کارتابل من</a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#sent" data-type="groups"> کارتابل گروه‌های من </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
                         </div>
                         <div class="inbox-content">
                             <table class="table table-striped table-advance table-hover">
@@ -51,8 +37,9 @@
                                 <tr>
                                     <th>شناسه</th>
                                     <th class="col-xs-1">نوع</th>
-                                    <th class="col-xs-2">عنوان</th>
-                                    <th class="col-xs-1">مدیا</th>
+<!--                                    <th class="col-xs-1">عنوان</th>-->
+                                    <th class="col-xs-2">مدیا</th>
+                                    <th class="col-xs-1">وضعیت مدیا</th>
                                     <th class="col-xs-1">تاریخ پخش</th>
                                     <th class="col-xs-1">فرستنده</th>
                                     <th class="col-xs-1">گیرنده</th>
@@ -62,45 +49,7 @@
                                     <th class="col-xs-2"></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {{#each []}}
-                                <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
-                                    <td>{{Id}}</td>
-                                    <td>
-                                        <span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
-                                    </td>
-                                    <td> {{Title}}</td>
-                                    <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
-                                    <td> {{extractDate Media.RecommendedBroadcastDate}}</td>
-                                    <td> {{CreatedByText}}</td>
-                                    <td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
-                                    <td class="text-right">
-                                        <div class="date">
-                                            {{extractTime CreatedDate}} {{extractDate CreatedDate}}
-                                        </div>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="date">
-                                            {{extractTime DoneDate}} {{extractDate DoneDate}}
-                                        </div>
-                                    </td>
-                                    <td class="">
-                                        {{DoneByText}}
-                                    </td>
-                                    <td>
-                                        <select class="form-control input-sm" data-type="change-state">
-                                            {{#select Status}}
-                                            {{{getDefinitionOptions 223}}}
-                                            {{/select}}
-                                        </select>
-                                    </td>
-                                    <td class="text-right">
-                                        <!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
-                                        <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
-                                        <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
-                                    </td>
-                                </tr>
-                                {{/each}}
+                                <tbody id="task-items">
                                 </tbody>
                             </table>
                         </div>
