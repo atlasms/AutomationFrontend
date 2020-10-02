@@ -36,13 +36,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
 //                return (parseInt(time) !== 0) ? time : '';
             });
             Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
-                if (value && (+value.split('-')[0] === 1900 || +value.split('-')[0] === 0))
-                    return '';
-                var convert = typeof bypassConvert !== "undefined" && bypassConvert == true ? false : true;
-                if (value && value.indexOf("T") !== -1)
-                    return (convert) ? Global.gregorianToJalali(value.split('T')[0]) : value.split('T')[0];
-                else
-                    return (convert) ? Global.gregorianToJalali(value) : value;
+                Global.extractDate(value, bypassConvert);
             });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';

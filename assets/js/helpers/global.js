@@ -167,6 +167,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
             }
             return seconds;
         }
+        , extractDate: function(value, bypassConvert) {
+            if (value && (+value.split('-')[0] === 1900 || +value.split('-')[0] === 0))
+                return '';
+            var convert = !(typeof bypassConvert !== "undefined" && bypassConvert === true);
+            if (value && value.indexOf("T") !== -1)
+                return (convert) ? Global.gregorianToJalali(value.split('T')[0]) : value.split('T')[0];
+            else
+                return (convert) ? Global.gregorianToJalali(value) : value;
+        }
         , createTime2: function (timestamp) {
             if (typeof timestamp !== 'undefined') {
                 var hours = Global.zeroFill(parseInt(timestamp / 3600));
