@@ -36,7 +36,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
 //                return (parseInt(time) !== 0) ? time : '';
             });
             Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
-                Global.extractDate(value, bypassConvert);
+                return Global.extractDate(value, bypassConvert);
             });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';
