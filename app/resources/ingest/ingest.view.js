@@ -122,7 +122,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
-            if (fields.SiteTitle.length < 9) {
+            if (fields.SiteTitle.length < Config.inputPolicies['ingest.SiteTitle'].min) {
                 toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
                 return false;
             }
