@@ -1,6 +1,30 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars', 'user.helper'
 ], function ($, _, Backbone, Config, Global, moment, jDate, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars, UserHelper) {
-    'use strict';
+    var keysMap = {
+        down: {key: 'down', title: 'بعدی'},
+        up: {key: 'up', title: 'قبلی'},
+        insert: {key: 'insert', title: 'سطر جدید'},
+        focus: {key: 'space', title: 'تغییر'},
+        remove: {key: 'shift+del', title: 'حذف سطر'},
+        moveUp: {key: 'shift+up', title: 'جابجایی به بالا'},
+        moveDown: {key: 'shift+down', title: 'جابجایی به پایین'},
+        showDuplicateForm: {key: 'ctrl+f2', title: 'نمایش فرم کپی'},
+        showExportForm: {key: 'ctrl+f3', title: 'ارسال پلی‌لیست'},
+        custom: [
+            {
+                key: 'alt+1', title: 'آرم استیشن 27 ثانیه', value: {
+                    'episode-title': 'آرم استیشن',
+                    'duration': '00:00:27'
+                }
+            },
+            {
+                key: 'alt+2', title: 'اعلام‌برنامه 43 ثانیه', value: {
+                    'episode-title': 'اعلام برنامه',
+                    'duration': '00:00:43'
+                }
+            }
+        ]
+    };
     var ScheduleHelper = {
         flags: {}
         , init: function (reinit) {
@@ -25,7 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $(document).mouseup(function (e) {
                 var container = $("#schedule-table .table-body");
                 if (!container.is(e.target) // if the target of the click isn't the container...
-                        && container.has(e.target).length === 0) // ... nor a descendant of the container
+                    && container.has(e.target).length === 0) // ... nor a descendant of the container
                 {
                     container.find("li.active").removeClass('active').trigger('deactivated');
                 }
@@ -105,63 +129,134 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     return false;
                 }
             }); //
-            $(document).on('keydown', null, 'down', function (e) {
-                var activeRow = $("#schedule-table .table-body li.active");
-                if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus")))
-                    if (activeRow.find("+ li").length) {
-                        activeRow.removeClass('active').trigger('deactivated').next('li').addClass('active').trigger('activated');
-                        if ($(e.target).is("input")) {
-                            var cellIndex = $(e.target).parents(".td:first").index();
-                            activeRow.find("+ li").find(">div").eq(cellIndex).find("input")[0].focus();
-                        }
-                    }
-            });
-            $(document).on('keydown', null, 'up', function (e) {
-                var activeRow = $("#schedule-table .table-body li.active");
-                if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
-                    if (activeRow.prev('li').length) {
-                        activeRow.removeClass('active').trigger('deactivated').prev('li').addClass('active').trigger('activated');
-                        if ($(e.target).is("input")) {
-                            var cellIndex = $(e.target).parents(".td:first").index();
-                            activeRow.prev('li').find(">div").eq(cellIndex).find("input")[0].focus();
-                        }
-                    }
-                }
-            });
-            $(document).on('keydown', null, 'insert', function (e) {
-                var activeRow = $("#schedule-table .table-body li.active");
-                if (activeRow.attr('data-readonly') === "true")
-                    return false;
-                ScheduleHelper.duplicateRow(activeRow);
-                e.preventDefault();
-            });
-            $(document).on('keydown', null, 'space', function (e) {
-                if ($(e.target).is("input, textarea, select"))
-                    return;
-                var activeRow = $("#schedule-table .table-body li.active");
-                if (activeRow.length) {
-                    activeRow.find("input.time:first").focus();
-                }
-            });
             $(document).on('click', ".tools [data-task=add]", function (e) {
                 var row = $(this).parents("li:first");
                 ScheduleHelper.duplicateRow(row);
-                e.preventDefault();
-            });
-            $(document).on('keydown', null, 'shift+del', function (e) {
-                if ($("#schedule-table .table-body li.selected").length) {
-                    console.log('items to delete: ' + $("#schedule-table .table-body li.selected").length);
-                    $("#schedule-table .table-body li.selected").each(function() {
-                        ScheduleHelper.deleteRow($(this));
-                    });
-                } else
-                    ScheduleHelper.deleteRow();
                 e.preventDefault();
             });
             $(document).on('click', ".tools [data-task=delete]", function (e) {
                 ScheduleHelper.deleteRow();
                 e.preventDefault();
             });
+
+            for (var key of Object.keys(keysMap)) {
+                ScheduleHelper.initShortCutKey(key);
+            }
+        }
+        , initShortCutKey: function (type) {
+            switch (type) {
+                case 'down':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus")))
+                            if (activeRow.find("+ li").length) {
+                                activeRow.removeClass('active').trigger('deactivated').next('li').addClass('active').trigger('activated');
+                                if ($(e.target).is("input")) {
+                                    var cellIndex = $(e.target).parents(".td:first").index();
+                                    activeRow.find("+ li").find(">div").eq(cellIndex).find("input")[0].focus();
+                                }
+                            }
+                    });
+                    break;
+                case 'up':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            if (activeRow.prev('li').length) {
+                                activeRow.removeClass('active').trigger('deactivated').prev('li').addClass('active').trigger('activated');
+                                if ($(e.target).is("input")) {
+                                    var cellIndex = $(e.target).parents(".td:first").index();
+                                    activeRow.prev('li').find(">div").eq(cellIndex).find("input")[0].focus();
+                                }
+                            }
+                        }
+                    });
+                    break;
+                case 'insert':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.attr('data-readonly') === "true")
+                            return false;
+                        ScheduleHelper.duplicateRow(activeRow);
+                        e.preventDefault();
+                    });
+                    break;
+                case 'focus':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        if ($(e.target).is("input, textarea, select"))
+                            return;
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length) {
+                            activeRow.find("input.time:first").focus();
+                        }
+                    });
+                    break;
+                case 'remove':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        if ($("#schedule-table .table-body li.selected").length) {
+                            console.log('items to delete: ' + $("#schedule-table .table-body li.selected").length);
+                            $("#schedule-table .table-body li.selected").each(function () {
+                                ScheduleHelper.deleteRow($(this));
+                            });
+                        } else
+                            ScheduleHelper.deleteRow();
+                        e.preventDefault();
+                    });
+                    break;
+                case 'moveDown':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var $next = activeRow.find("+ li");
+                            if (typeof $next !== 'undefined' && $next && $next.length) {
+                                activeRow.insertAfter($next);
+                                ScheduleHelper.generateTimeArray();
+                                e.preventDefault();
+                            }
+                        }
+                    });
+                    break;
+                case 'moveUp':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var $prev = activeRow.prev('li');
+                            if (typeof $prev !== 'undefined' && $prev && $prev.length) {
+                                activeRow.insertBefore($prev);
+                                ScheduleHelper.generateTimeArray();
+                                e.preventDefault();
+                            }
+                        }
+                    });
+                    break;
+                case 'showDuplicateForm':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        $('[data-task="show-duplicate-form"]')[0].click();
+                    });
+                    break;
+                case 'showExportForm':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        $('[data-task="show-export-form"]')[0].click();
+                    });
+                    break;
+                case 'custom':
+                    var custom = $.extend([], keysMap[type]);
+                    if (custom.length) {
+                        $.each(custom, function () {
+                            var item = $.extend({}, this);
+                            $(document).on('keydown', null, item.key, function (e) {
+                                var activeRow = $("#schedule-table .table-body li.active");
+                                if (activeRow.attr('data-readonly') === "true")
+                                    return false;
+                                ScheduleHelper.duplicateRow(activeRow, false, item.value);
+                                e.preventDefault();
+                            });
+                        });
+                    }
+                    break;
+            }
         }
         , deleteRow: function ($row, skipUpdate) {
             var $rows = $("#schedule-table .table-body li");
@@ -189,7 +284,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , insertGap: function ($next) {
             var $gap = ScheduleHelper.duplicateRow($next, true);
         }
-        , duplicateRow: function (row, isGap) {
+        , duplicateRow: function (row, isGap, data) {
             console.log('------------------- ROW DUPLICATION -------------------');
             var isGap = (typeof isGap !== "undefined" && isGap === true) ? true : false;
             var rows = $("#schedule-table .table-body li");
@@ -212,6 +307,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             clone.find('input[data-suggestion="true"]').parent().find("label").text('');
             clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
             clone.find('.item-link, .remove-meta').remove();
+            if (typeof data !== 'undefined' && data) {
+                for (var key of Object.keys(data)) {
+                    clone.find('[data-type="' + key + '"]').val(data[key]);
+                }
+            }
             if (isGap) {
                 clone.addClass('gap');
                 var prevEnd = Global.processTime(row.find("[data-type=start]").val()) + Global.processTime(row.find("[data-type=duration]").val());
@@ -270,8 +370,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 var $this = $(this);
                 // Found a gap => mark it as gap!
                 if ($this.find('[data-type="title"]').val() === "" && $this.find('[name=ConductorMetaCategoryId]').val() === ""
-                        && $this.find('[data-type="episode-title"]').val() === "" && $this.find('[name=ConductorMediaId]').val() === ""
-                        && +$this.find('[data-type="episode-number"]').val() <= 0 && $this.next().length) {
+                    && $this.find('[data-type="episode-title"]').val() === "" && $this.find('[name=ConductorMediaId]').val() === ""
+                    && +$this.find('[data-type="episode-number"]').val() <= 0 && $this.next().length) {
                     $this.addClass('gap');
                 }
                 if (i === 0) // First items: use start value as stack
