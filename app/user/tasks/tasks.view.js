@@ -284,20 +284,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         }
         , afterRender: function () {
             this.loadUsersList();
-            this.attachDatepickers();
+            // this.attachDatepickers();
         }
         , attachDatepickers: function () {
             // var self = this;
             var $datePickers = $(".datepicker");
             $.each($datePickers, function () {
                 var $this = $(this);
-                if ($this.data('datepicker') == undefined) {
-                    $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
-                        // onSelect: function () {
-                        //     // self.filter(undefined, $('[data-task="status"]').val());
-                        // }
-                    }));
-                }
+                // if ($this.data('datepicker') == undefined) {
+                $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
+                    // onSelect: function () {
+                    //     // self.filter(undefined, $('[data-task="status"]').val());
+                    // }
+                }));
+                // }
             });
         }
         , renderToolbar: function () {
@@ -315,6 +315,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             });
             toolbar.render();
             self.flags.toolbarRendered = true;
+            setTimeout(function() {
+                self.attachDatepickers();
+            }, 0);
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
