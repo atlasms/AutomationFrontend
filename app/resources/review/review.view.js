@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox, tab) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -11,7 +11,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 7).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker',
+                    placeholder: '',
+                    type: 'text',
+                    name: 'startdate',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 7).format('YYYY-MM-DD')),
+                    addon: true,
+                    icon: 'fa fa-calendar'
+                }
+            }
         ]
         , statusbar: []
         , flags: {}
@@ -22,7 +32,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'submit .chat-form': 'insertComment'
             , 'click #review-table tbody tr td': 'collapseRow'
             , 'click [data-seek]': 'seekPlayer'
-            , 'click #review-table tbody tr td a': function (e) {
+            , 'click [href="#chats-history"]': 'loadHistory'
+            , 'click #review-table tbody tr td a:not([role])': function (e) {
                 e.stopPropagation();
             }
         }
@@ -30,6 +41,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             var $el = $(e.currentTarget);
             this.player.seek($el.attr('data-seek'), this.playerInstance);
+        }
+        , loadHistory: function (e) {
+            var self = this;
+            var $target = $('#chats-history');
+            if ($('#chats-history').is(':empty')) {
+                var params = {
+                    id: $target.parents('tr:first').prev().attr('data-id')
+                    , overrideUrl: Config.api.mediaversions
+                };
+                var model = new MediaModel(params);
+                model.fetch({
+                    success: function (data) {
+                        var items = self.prepareItems(data.toJSON(), params);
+                        var template = Template.template.load('resources/mediaitem', 'versions.partial');
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(items);
+                            $('#chats-history').html(output);
+                        });
+                    }
+                });
+            }
         }
         , collapseRow: function (e) {
             var self = this;
@@ -115,11 +148,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             new MediaModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
-                    var template = Template.template.load('resources/review', 'comments.partial');
+                    var template = Template.template.load('resources/review', 'comments-with-history.partial');
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
-                        $("#comments-container").html(output);
+                        $("#chats").html(output);
                         // After render
                         if ($("table").find(".scroller").length)
                             $("table").find(".scroller").slimScroll({
@@ -201,6 +234,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return params;
         }
         , render: function (params) {
+            /*$(document).on('click', '[data-toggle="tab"]', function (e) {
+                alert();
+                e.preventDefault();
+                $($(this).attr('href')).tab('show');
+            });*/
             if (typeof params === "undefined")
                 var params = this.getToolbarParams();
             var template = Template.template.load('resources/review', 'review');

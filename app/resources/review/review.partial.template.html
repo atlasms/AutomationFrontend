@@ -1,31 +1,43 @@
 <style>
-	/*.portlet .portlet-title { padding: 12px 20px 0; border-bottom: 1px solid #e7ecf1 !important; margin-bottom: 12px; }*/
-	#media-desc { height: 411px; overflow: hidden; overflow-y: auto; padding-left: 15px; }
-	#media-description-portlet .portlet-body { padding-left: 0; }
+    /*.portlet .portlet-title { padding: 12px 20px 0; border-bottom: 1px solid #e7ecf1 !important; margin-bottom: 12px; }*/
+    #media-desc { height: 411px; overflow: hidden; overflow-y: auto; padding-left: 15px; }
+    #media-description-portlet .portlet-body { padding-left: 0; }
 </style>
 <table class="table">
-	<tr>
-		{{#if item}}{{else}}
-		<td class="col-xs-3">
-			<div id="media-description-portlet" class="portlet box blue-hoki" style="border: 1px solid #869ab3; background-color: #67809F;">
-				<div class="portlet-title">
-					<div class="caption">
-						توضیحات
-					</div>
-				</div>
-				<div class="portlet-body">
-					<div class="mainbody">
-						<div id="media-desc"></div>
-					</div>
-				</div>
-			</div>
-		</td>
-		{{/if}}
-		<td class="{{#if item}}col-xs-5{{else}}col-xs-4{{/if}}">
-			<div id="comments-container"></div>
-		</td>
-		<td class="{{#if item}}col-xs-7{{else}}col-xs-5{{/if}}">
-			<div id="player-container"></div>
-		</td>
-	</tr>
+    <tr>
+        {{#if item}}{{else}}
+        <td class="col-xs-3">
+            <div id="media-description-portlet" class="portlet box blue-hoki" style="border: 1px solid #869ab3; background-color: #67809F;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        توضیحات
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="mainbody">
+                        <div id="media-desc"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        {{/if}}
+        <td class="{{#if item}}col-xs-5{{else}}col-xs-4{{/if}}">
+            <div class="portlet light">
+                <div class="portlet-body">
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="active"><a href="#chats" role="tab" data-toggle="tab">نظرات</a></li>
+						<li><a href="#chats-history" role="tab" data-toggle="tab">تاریخچه نظرات</a></li>
+					</ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="chats">
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="chats-history"></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="{{#if item}}col-xs-7{{else}}col-xs-5{{/if}}">
+            <div id="player-container"></div>
+        </td>
+    </tr>
 </table>
