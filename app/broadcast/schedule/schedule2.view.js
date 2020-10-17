@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'bootstrap/modal', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree) {
     'use strict';
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
@@ -12,7 +12,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             , {'button': {cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128'}}
             , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
                     , value: Global.getVar("date") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
                 }
             }
@@ -24,7 +26,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
         , $toolbarPortlets: "#sub-toolbar .portlet"
         , $duplicatePortlet: "#sub-toolbar .duplicate-schedule"
         , $exportPortlet: "#sub-toolbar .export-schedule"
+        , defaultListLimit: Config.defalutMediaListLimit
         , timeArrays: {}
+        , cache: {}
         , flags: {toolbarRendered: false}
         , events: {
             'click [type=submit]': 'submit'
@@ -50,6 +54,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             , 'click [data-task=delete-subtitle]': 'deleteSubtitle'
             , 'click [data-task=truncate-table]': 'truncateTable'
             , 'click .remove-meta': 'removeMetaId'
+            , 'click .advanced-search': 'showAdvancedSearchModal'
+            , 'click [data-task="load-media"]': 'loadMedia'
+            , 'click [data-task="load-broadcast-media"]': 'loadBroadcastMedia'
+            , 'click #media-modal table tbody tr': 'setMedia'
+        }
+        , showAdvancedSearchModal: function (e) {
+            e.preventDefault();
+            $('#media-modal').modal('show');
+        }
+        , setMedia: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $activeRow = $('#schedule-table').find('.table-row.active');
+            $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
+            $activeRow.find('[data-type="duration"]').val($row.data('duration'));
+            $activeRow.find('[data-type="title"]').val($row.data('program-title'));
+            $activeRow.find('[name="ConductorMetaCategoryId"]').val($row.data('program-id'));
+            $activeRow.find('[data-type="episode-title"]').val($row.find('span.title').text());
+            $activeRow.find('[name="ConductorMediaId"]').val($row.data('id'));
+            $activeRow.find('[data-type="episode-number"]').val($row.find('[data-field="EpisodeNumber"]').text());
+            $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
+            ScheduleHelper.updateTimes($activeRow);
+            toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
         }
         , truncateTable: function (e) {
             e.preventDefault();
@@ -64,9 +90,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     if (results) {
                         var params = {
                             startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00'
-                            , enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
-                            , id: 0
-                            , path: '/?startdate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
+                            ,
+                            enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
+                            ,
+                            id: 0
+                            ,
+                            path: '/?startdate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
                         };
                         new ScheduleModel(params).destroy({
                             data: params
@@ -234,6 +263,89 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     break;
             }
         }
+        , getBroadcastMediaParams: function () {
+            return {
+                RecommendedBroadcastDateStart: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val()),
+                RecommendedBroadcastDateEnd: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val())
+            }
+        }
+        , getMediaParams: function (skipQueries) {
+            var self = this;
+            var mode = $("[data-type=change-mode]").val();
+            var state = Global.getQuery('state') ? Global.getQuery('state') : $("[name=state]").val();
+            var catid = '';
+            if (typeof skipQueries !== 'undefined' && skipQueries)
+                state = $("[name=state]").val();
+            if (mode === 'tree')
+                catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+            var params = {
+                q: $.trim($("[name=q]").val()),
+                type: $("[name=type]").val(),
+                offset: 0,
+                count: self.defaultListLimit,
+                categoryId: catid,
+                state: state,
+                startdate: Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
+                enddate: Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T23:59:59'
+            };
+            return params;
+        }
+        , loadBroadcastMedia: function (e) {
+            if (typeof e !== "undefined")
+                e.preventDefault();
+            var params = this.getBroadcastMediaParams();
+            this.loadBroadcastMediaItems(params);
+        }
+        , loadBroadcastMediaItems: function (params) {
+            var self = this;
+            var params = (typeof params !== "undefined") ? params : self.getBroadcastMediaParams();
+            var data = $.param(params);
+            var model = new MediaModel(params);
+            model.fetch({
+                data: data
+                , success: function (items) {
+                    var items = {items: self.prepareItems(items.toJSON(), params)};
+                    var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+                    var $container = $("#broadcast-itemlist");
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender(items, params);
+                        });
+                    });
+                }
+            });
+        }
+        , loadMedia: function (e, extend) {
+            if (typeof e !== "undefined")
+                e.preventDefault();
+            var params = this.getMediaParams();
+            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            this.loadMediaItems(params);
+            return false;
+        }
+        , loadMediaItems: function (params) {
+            var self = this;
+            var params = (typeof params !== "undefined") ? params : self.getParams();
+            var data = $.param(params);
+            var model = new MediaModel(params);
+            model.fetch({
+                data: data
+                , success: function (items) {
+                    items = items.toJSON();
+                    var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+                    var $container = $("#itemlist");
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender(items, params);
+                        });
+                    });
+                }
+            });
+        }
         , saveTitles: function (e) {
             e.preventDefault();
             var $form = $("#titles-form form:first");
@@ -255,6 +367,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             // Append data to table
             var $table = $("#titles-form table");
             var lastRow = $table.find("li:last");
+            var html = '';
             if (typeof data.editing !== "undefined" && data.editing !== "") {
                 for (var prop in data) {
 //                    delete html;
@@ -367,13 +480,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                             file: media.video
                             , duration: media.duration
                             , playlist: [{
-                                    image: media.thumbnail
-                                    , sources: [
-                                        {file: media.video, label: 'LQ', default: true}
-                                        , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                                image: media.thumbnail
+                                , sources: [
+                                    {file: media.video, label: 'LQ', default: true}
+                                    , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
 //                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
-                                    ]
-                                }]
+                                ]
+                            }]
                         }, $this.handlePlayerCallbacks);
                         player.render();
                         $this.player = player;
@@ -399,11 +512,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
 //                    $this.reLoad();
                 }
-                , error: function() {
+                , error: function () {
                     alert('error');
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
                 }
-                , fail: function() {
+                , fail: function () {
                     alert('fail');
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
                 }
@@ -626,7 +739,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                     $items.addClass('hide');
                     console.timeEnd('hiding-all-items');
                     console.time('showing-requested-page-items');
-                    $items.parent().find("[data-page=" + page + "]").removeClass('hide').promise().done(function() {
+                    $items.parent().find("[data-page=" + page + "]").removeClass('hide').promise().done(function () {
                         console.timeEnd('showing-requested-page-items');
                     });
                     e.preventDefault();
@@ -636,6 +749,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             }
 
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
+
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
         }
         , renderToolbar: function () {
             var self = this;

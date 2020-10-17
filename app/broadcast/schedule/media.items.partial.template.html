@@ -1,0 +1,53 @@
+<table class="table table-bordered table-striped table-condensed flip-content">
+    <thead>
+    <tr>
+        <th class="col-xs-1">#</th>
+        <th class="col-xs-1"></th>
+        <th class="col-xs-4">نام برنامه</th>
+        <th class="col-xs-1 text-center">قسمت</th>
+        <th class="col-xs-2 text-center">زمان ثبت</th>
+        <th class="col-xs-2 text-center">آخرین پخش</th>
+        <th class="col-xs-1 text-center"># مجاز</th>
+        <th class="col-xs-1 text-center"># پخش</th>
+        <th class="col-xs-1 text-center">مدت</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each items}}
+    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
+        <td>
+            <span class="idx">{{Id}}</span>
+            <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+        </td>
+        <td class="text-center">
+            {{config placeholderImage}}
+            <figure>
+                <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+            </figure>
+        </td>
+        <td>
+            <span class="title">{{Title}}</span>
+            <small class="help-block text-muted clip-line">{{Description}}</small>
+        </td>
+        <td class="text-center" data-field="EpisodeNumber">
+            {{EpisodeNumber}}
+        </td>
+        <td class="text-right">
+            <span class="nowrap">{{extractTime Created}}&nbsp;{{extractDate Created}}</span>
+        </td>
+        <td class="text-right">
+            <span class="nowrap">{{extractTime LastCondcutorUse}}&nbsp;{{extractDate LastCondcutorUse}}</span>
+        </td>
+        <td class="text-center" data-field="allowed-broadcast-count">
+            <span class="">{{#if AllowedBroadcastCount}}{{AllowedBroadcastCount}}{{else}}ندارد{{/if}}</span>
+        </td>
+        <td class="text-center" data-field="broadcast-count">
+            <span class="">{{{checkAllowedBroadcastCount AllowedBroadcastCount ConductorUseCount}}}</span>
+        </td>
+        <td class="text-center" data-field="Duration">
+            <span class="time">{{time Duration}}</span>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

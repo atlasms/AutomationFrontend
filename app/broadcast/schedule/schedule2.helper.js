@@ -48,7 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
             $(document).mouseup(function (e) {
                 var container = $("#schedule-table .table-body");
-                if (!container.is(e.target) // if the target of the click isn't the container...
+                if (!container.is(e.target) && !$(e.target).parents('#media-modal').length // if the target of the click isn't the container...
                     && container.has(e.target).length === 0) // ... nor a descendant of the container
                 {
                     container.find("li.active").removeClass('active').trigger('deactivated');

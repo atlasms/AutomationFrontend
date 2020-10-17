@@ -1,239 +1,337 @@
 <style>
-	.table-header { white-space: nowrap; }
+    .table-header { white-space: nowrap; }
+    .advanced-search { display: block; position: absolute; top: 0; left: 0; font-size: 11px; text-decoration: none; opacity: 0; visibility: hidden; transition: 0.2s all; }
+    .advanced-search:hover { text-decoration: none; }
+    .table-row.active .advanced-search { opacity: 1; visibility: visible; }
+    .table.table-bordered thead > tr > th { white-space: nowrap; }
+    .modal .modal-header { border-bottom: 0 none; }
+    .modal .media-filters { padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #efefef; }
+    .modal .modal-body { padding-top: 0; }
+    .nowrap { white-space: nowrap; }
+    #media-modal table tbody tr { cursor: pointer; }
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
-	<div class="portlet light bg-inverse duplicate-schedule hidden">
-		<div class="portlet-body">
-			<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
-				<strong>اخطار!</strong>
-				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
-			</div>
-			<form class="" id="duplicate-schedule">
-				<div class="row">
-					<div class="col-xs-12 col-sm-9">
-						<div class="row">
-							<div class="col-xs-12 col-sm-6">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="form-group">
-											<div class="input-group">
-												<span class="input-group-addon">تاریخ مبدا</span>
-												<input type="text" name="startdate" class="form-control datepicker source" />
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-6">
-										<div class="form-group">
-											<div class="input-group">
-												<span class="input-group-addon">از</span>
-												<select class="form-control source" name="starttime" data-type="itemlist"></select>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-6">
-										<div class="form-group">
-											<div class="input-group">
-												<span class="input-group-addon">تا</span>
-												<select class="form-control source" name="endtime" data-type="itemlist" data-selected="last"></select>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-12 col-sm-5">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="form-group">
-											<div class="input-group">
-												<span class="input-group-addon">تاریخ مقصد</span>
-												<input type="text" name="destinationdate" class="form-control datepicker destination" />
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="form-group">
-											<div class="input-group">
-												<span class="input-group-addon">از</span>
-												<select class="form-control destination" name="starttime" data-type="itemlist"></select>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-12 col-sm-1">
-								<button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export" style="margin-top: 50px"><i class="fa fa-refresh"></i></button>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-2">
-						<div class="checkbox checkbox-danger checkbox-circle col-xs-12">
-							<input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
-							<label for="checkbox_2_0">جایگزین کردن در مقصد</label>
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-1">
-						<button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="portlet light bg-inverse export-schedule hidden">
-		<div class="portlet-body">
-			<div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
-				<strong>اخطار!</strong>
-				توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
-			</div>
-			<form class="" id="export-schedule">
-				<div class="row">
-					<div class="col-xs-12 col-sm-3">
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon">زمان شروع</span>
-								<select class="form-control" name="startdate" data-type="itemlist"></select>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-3">
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon">زمان پایان</span>
-								<select class="form-control" name="enddate" data-type="itemlist"></select>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-1">
-						<button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export"><i class="fa fa-refresh"></i></button>
-					</div>
-					<div class="col-xs-12 col-sm-5">
-						<button class="btn btn-primary pull-right mt-ladda-btn ladda-button" data-style="zoom-out" data-task="export"><span class="ladda-label">ارسال</span></button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="portlet light bg-inverse duplicate-schedule hidden">
+        <div class="portlet-body">
+            <div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+                <strong>اخطار!</strong>
+                توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
+            </div>
+            <form class="" id="duplicate-schedule">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-9">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">تاریخ مبدا</span>
+                                                <input type="text" name="startdate" class="form-control datepicker source"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">از</span>
+                                                <select class="form-control source" name="starttime" data-type="itemlist"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">تا</span>
+                                                <select class="form-control source" name="endtime" data-type="itemlist" data-selected="last"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-5">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">تاریخ مقصد</span>
+                                                <input type="text" name="destinationdate" class="form-control datepicker destination"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">از</span>
+                                                <select class="form-control destination" name="starttime" data-type="itemlist"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-1">
+                                <button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export" style="margin-top: 50px"><i class="fa fa-refresh"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-2">
+                        <div class="checkbox checkbox-danger checkbox-circle col-xs-12">
+                            <input name="force" data-validation="digit" id="checkbox_2_0" value="" type="checkbox">
+                            <label for="checkbox_2_0">جایگزین کردن در مقصد</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <button class="btn btn-primary pull-right" data-task="duplicate">ثبت</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="portlet light bg-inverse export-schedule hidden">
+        <div class="portlet-body">
+            <div class="alert alert-danger alert-dismissable collapse" id="schedule-overwrite-alert" role="alert">
+                <strong>اخطار!</strong>
+                توجه داشته باشید موارد روز مقصد حذف شده و با موارد مبدا جایگزین خواهد شد.
+            </div>
+            <form class="" id="export-schedule">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">زمان شروع</span>
+                                <select class="form-control" name="startdate" data-type="itemlist"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">زمان پایان</span>
+                                <select class="form-control" name="enddate" data-type="itemlist"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <button class="btn btn-circle blue-hoki" type="button" data-task="refresh" data-target="export"><i class="fa fa-refresh"></i></button>
+                    </div>
+                    <div class="col-xs-12 col-sm-5">
+                        <button class="btn btn-primary pull-right mt-ladda-btn ladda-button" data-style="zoom-out" data-task="export"><span class="ladda-label">ارسال</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <div id="schedule-page" class="portlet box">
-	<div class="portlet-body">
-		<div class="mainbody">
-			<div class="text-right">
-				<ul class="pagination"></ul>
-			</div>
-			<div id="schedule-table" class="table table-bordered table-striped table-condensed flip-content">
-				<nav class="table-header clearfix">
-					<div class="id"><span>#</span></div>
-					<div class="c1"><span>تصویر</span></div>
-					<div class="r"><span>فیکس</span></div>
-					<div class="c1"><span>شروع</span></div>
-					<div class="c1"><span>مدت</span></div>
-					<div class="c2"><span>برنامه</span></div>
-					<div class="c2"><span>عنوان قسمت</span></div>
-					<div class="id"><span>قسمت</span></div>
-					<div class="co"><span># پخش</span></div>
-					<div class="c4"><span>توضیحات</span></div>
-					<div class="c1"><span>نوع آیتم</span></div>
-					<div class="r"><span>تکرار</span></div>
-					<div class="r"><span>منتخب</span></div>
-				</nav>
-				<ul class="table-body">
-					{{#each []}}
-					<li class="table-row" data-id="{{ConductorId}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}{{#ifCond 200 '>' @index}} hide{{/ifCond}}">
-						<div class="td id">
-							<input type="hidden" name="titles" value="" />
-							<input type="hidden" name="subtitles" value="" />
-							<input type="text" class="focus-helper" />
-							<span class="idx">{{math @index "+" 1}}</span>
-							{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>{{/if}}
-							{{#authorize 2}}
-							{{> scheduleRowTools}}
-							{{/authorize}}
-						</div>
-						<div class="img td c1">
-							<figure>
-								<img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-							</figure>
-						</div>
-						<div class="td r text-center">
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="fx{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
-									   <label for="fx{{@index}}"></label>
-							</div>
-						</div>
-						<div class="c1 td text-center">
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="st{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
-								<label for="st{{@index}}">{{extractDate CondcutorStartTime}}</label>
-							</div>
-						</div>
-						<div class="c1 td text-center">
-							<div class="form-group form-md-line-input">
-								<input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
-								<label></label>
-							</div>
-						</div>
-						<div class="c2 td">
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}" />
-								{{#if ConductorMetaCategoryId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="pr{{@index}}" name="ConductorCategoryTitle" value="{{ConductorCategoryTitle}}" required />
-								<label for="pr{{@index}}">
-									{{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}
-								</label>
-							</div>
-						</div>
-						<div class="c2 td">
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}" />
-								{{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
-								<input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="ep{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}" >
-								<label for="ep{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
-							</div>
-						</div>
-						<div class="id td ep">
-							<div class="">
-								<input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
-							</div>
-						</div>
-						<div class="co td">
-							<div class="form-group form-md-line-input fixed-label">
-								<input type="text" readonly class="form-control text-center" data-type="broadcast-count" name="ConductorUseCount" value="{{ConductorUseCount}}">
-							</div>
-						</div>
-						<div class="c4 td">
-							<textarea class="form-control" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
-						</div>
-						<div class="c1 td">
-							<div class="form-group form-md-line-input fixed-label">
-								<select class="form-control" name="ConductorType">
-									{{#select ConductorType}}
-									{{{getDefinitionOptions 71}}}
-									{{/select}}
-								</select>
-							</div>
-						</div>
-						<div class="r td text-center">
-							<div class="checkbox checkbox-success checkbox-circle">
-								<input name="ConductorRepeat" data-validation="digit" id="rp{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="rp{{@index}}"></label>
-							</div>
-						</div>
-						<div class="r td text-center">
-							<div class="checkbox checkbox-primary checkbox-circle">
-								<input name="CondcutorFeatured" data-validation="digit" id="ft{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
-									   <label for="ft{{@index}}"></label>
-							</div>
-						</div>
-					</li>
-					{{/each}}
-				</ul>
-			</div>
-			<div class="text-right">
-				<ul class="pagination"></ul>
-			</div>
-		</div>
-	</div>
+    <div class="portlet-body">
+        <div class="mainbody">
+            <div class="text-right">
+                <ul class="pagination"></ul>
+            </div>
+            <div id="schedule-table" class="table table-bordered table-striped table-condensed flip-content">
+                <nav class="table-header clearfix">
+                    <div class="id"><span>#</span></div>
+                    <div class="c1"><span>تصویر</span></div>
+                    <div class="r"><span>فیکس</span></div>
+                    <div class="c1"><span>شروع</span></div>
+                    <div class="c1"><span>مدت</span></div>
+                    <div class="c2"><span>برنامه</span></div>
+                    <div class="c2"><span>عنوان قسمت</span></div>
+                    <div class="id"><span>قسمت</span></div>
+                    <div class="co"><span># پخش</span></div>
+                    <div class="c4"><span>توضیحات</span></div>
+                    <div class="c1"><span>نوع آیتم</span></div>
+                    <div class="r"><span>تکرار</span></div>
+                    <div class="r"><span>منتخب</span></div>
+                </nav>
+                <ul class="table-body">
+                    {{#each []}}
+                    <li class="table-row" data-id="{{ConductorId}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}{{#ifCond 200 '>' @index}} hide{{/ifCond}}">
+                        <div class="td id">
+                            <input type="hidden" name="titles" value=""/>
+                            <input type="hidden" name="subtitles" value=""/>
+                            <input type="text" class="focus-helper"/>
+                            <span class="idx">{{math @index "+" 1}}</span>
+                            {{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>{{/if}}
+                            {{#authorize 2}}
+                            {{> scheduleRowTools}}
+                            {{/authorize}}
+                        </div>
+                        <div class="img td c1">
+                            <figure>
+                                <img class="thumbnail" src="{{#if Thumbnail}}{{Thumbnail}}{{else}}{{config placeholderImage}}{{/if}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                            </figure>
+                        </div>
+                        <div class="td r text-center">
+                            <div class="checkbox checkbox-success checkbox-circle">
+                                <input type="checkbox" data-validation="digit" name="CondcutorIsFixed" id="fx{{@index}}" value="{{#if CondcutorIsFixed}}1{{/if}}" {{#if CondcutorIsFixed}}checked{{/if}} />
+                                <label for="fx{{@index}}"></label>
+                            </div>
+                        </div>
+                        <div class="c1 td text-center">
+                            <div class="form-group form-md-line-input fixed-label">
+                                <input type="text" class="time form-control" data-before-save="prepend-date" data-type="start" step="1" id="st{{@index}}" name="CondcutorStartTime" value="{{extractTime CondcutorStartTime}}" required>
+                                <label for="st{{@index}}">{{extractDate CondcutorStartTime}}</label>
+                            </div>
+                        </div>
+                        <div class="c1 td text-center">
+                            <div class="form-group form-md-line-input">
+                                <input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
+                                <label></label>
+                            </div>
+                        </div>
+                        <div class="c2 td">
+                            <div class="form-group form-md-line-input fixed-label">
+                                <input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}"/>
+                                {{#if ConductorMetaCategoryId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
+                                <input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="title" data-suggestion-type="cat" step="3" id="pr{{@index}}" name="ConductorCategoryTitle"
+                                       value="{{ConductorCategoryTitle}}" required/>
+                                <label for="pr{{@index}}">
+                                    {{#if ConductorCategoryTitleOriginal}}{{ConductorCategoryTitleOriginal}}{{/if}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="c2 td">
+                            <div class="form-group form-md-line-input fixed-label">
+                                {{#authorize 8388608}}
+                                <a href="#" class="advanced-search"><i class="fa fa-search-plus"></i> جستجوی پیشرفته</a>
+                                {{/authorize}}
+                                <input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}"/>
+                                {{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
+                                <input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="ep{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
+                                <label for="ep{{@index}}">{{#if ConductorMediaTitle}}{{ConductorMediaTitle}}{{/if}}</label>
+                            </div>
+                        </div>
+                        <div class="id td ep">
+                            <div class="">
+                                <input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
+                            </div>
+                        </div>
+                        <div class="co td">
+                            <div class="form-group form-md-line-input fixed-label">
+                                <input type="text" readonly class="form-control text-center" data-type="broadcast-count" name="ConductorUseCount" value="{{ConductorUseCount}}">
+                            </div>
+                        </div>
+                        <div class="c4 td">
+                            <textarea class="form-control" name="ConductorNote" rows="3">{{ConductorNote}}</textarea>
+                        </div>
+                        <div class="c1 td">
+                            <div class="form-group form-md-line-input fixed-label">
+                                <select class="form-control" name="ConductorType">
+                                    {{#select ConductorType}}
+                                    {{{getDefinitionOptions 71}}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="r td text-center">
+                            <div class="checkbox checkbox-success checkbox-circle">
+                                <input name="ConductorRepeat" data-validation="digit" id="rp{{@index}}" value="{{#if ConductorRepeat}}1{{/if}}" {{#if ConductorRepeat}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+                                <label for="rp{{@index}}"></label>
+                            </div>
+                        </div>
+                        <div class="r td text-center">
+                            <div class="checkbox checkbox-primary checkbox-circle">
+                                <input name="CondcutorFeatured" data-validation="digit" id="ft{{@index}}" value="{{#if CondcutorFeatured}}1{{/if}}" {{#if CondcutorFeatured}}checked{{/if}} type="checkbox" id="checkbox_{{@index}}">
+                                <label for="ft{{@index}}"></label>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="text-right">
+                <ul class="pagination"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade zoom-out" id="media-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content" class="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#media-search" data-toggle="tab">جستجوی مدیا</a></li>
+                    <li><a href="#broadcast-date" data-toggle="tab">انتخاب تاریخ پخش</a></li>
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="media-search">
+                        <form class="media-filters form-inline" role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
+                                    <select data-type="state" class="form-control" disabled name="state">
+                                        {{{getDefinitionOptions 2}}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
+                                    <select data-type="type" class="form-control" disabled name="type">
+                                        {{{getDefinitionOptions 47}}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-list"></i></span>
+                                    <select data-type="change-mode" class="form-control" name="change-mode">
+                                        <option value="latest">آخرین‌ها</option>
+                                        <option value="tree">انتخابی</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control datepicker" name="media-search-startdate" placeholder="" style="width: 110px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control datepicker" name="media-search-enddate" placeholder="" style="width: 110px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-search"></i></span>
+                                    <input type="text" class="form-control" name="q" placeholder="جستجو" value="" style="width: 120px;"/>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" data-task="load-media">جستجو</button>
+                        </form>
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div id="tree"></div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div id="itemlist"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="broadcast-date">
+                        <form class="media-filters form-inline" role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control datepicker" name="media-broadcast-date" placeholder="" style="width: 110px;"/>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" data-task="load-broadcast-media">جستجو</button>
+                        </form>
+                        <div id="broadcast-itemlist"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

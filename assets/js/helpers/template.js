@@ -35,6 +35,11 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return time = value.split(splitter)[1];
 //                return (parseInt(time) !== 0) ? time : '';
             });
+            Handlebars.registerHelper('checkAllowedBroadcastCount', function (allowedCount, useCount, options) {
+                return (~~allowedCount !== 0 && ~~allowedCount <= ~~useCount)
+                    ? '<span class="bg-red-mint bg-font-red-mint show">' + useCount + '</span>'
+                    : useCount;
+            });
             Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
                 return Global.extractDate(value, bypassConvert);
             });
