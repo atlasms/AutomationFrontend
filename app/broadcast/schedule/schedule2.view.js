@@ -89,12 +89,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , callback: function (results) {
                     if (results) {
                         var params = {
-                            startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00'
-                            ,
-                            enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
-                            ,
-                            id: 0
-                            ,
+                            startdate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00',
+                            enddate: Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59',
+                            id: 0,
                             path: '/?startdate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("#duplicate-schedule [name=startdate]").val()) + 'T23:59:59'
                         };
                         new ScheduleModel(params).destroy({
@@ -276,8 +273,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var catid = '';
             if (typeof skipQueries !== 'undefined' && skipQueries)
                 state = $("[name=state]").val();
-            if (mode === 'tree')
+            // var startDate = '1970-01-01' + 'T00:00:00';
+            // var endDate = Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00';
+            if (mode === 'tree') {
                 catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+            }
             var params = {
                 q: $.trim($("[name=q]").val()),
                 type: $("[name=type]").val(),
@@ -286,7 +286,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 categoryId: catid,
                 state: state,
                 startdate: Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
-                enddate: Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T23:59:59'
+                enddate: Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
             };
             return params;
         }
