@@ -84,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(".preview-pane").remove();
             }
             // Loading review partial template
-            var template = Template.template.load('resources/review', 'review.partial');
+            var template = Template.template.load('resources/review', 'review-tabs.partial');
             var params = {query: 'externalid=' + id + '&kind=1', overrideUrl: Config.api.comments};
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
