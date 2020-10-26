@@ -58,10 +58,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="load-media"]': 'loadMedia'
             , 'click [data-task="load-broadcast-media"]': 'loadBroadcastMedia'
             , 'click #media-modal table tbody tr': 'setMedia'
+            , 'change [data-type="change-mode"]': 'toggleAdvancedSearchDatepickers'
+            , 'keyup #media-broadcast-date-search': 'searchInMediaList'
+            , 'click .item-link': function (e) {
+                e.stopPropagation();
+            }
+        }
+        , searchInMediaList: function (e) {
+            var query = $(e.target).val();
+            var $list = $('#broadcast-itemlist tbody tr');
+            if (query === '') {
+                $list.show();
+            } else {
+                $list.hide();
+                $list.each(function () {
+                    if ($(this).find('.title-holder').text().indexOf(query) !== -1) {
+                        $(this).show();
+                    }
+                });
+            }
         }
         , showAdvancedSearchModal: function (e) {
             e.preventDefault();
             $('#media-modal').modal('show');
+        }
+        , toggleAdvancedSearchDatepickers: function (e) {
+            var value = $(e.target).val();
+            if (value === 'tree') {
+                $('[name="media-search-startdate"]').attr('disabled', true);
+                $('[name="media-search-enddate"]').attr('disabled', true);
+            } else {
+                $('[name="media-search-startdate"]').attr('disabled', false);
+                $('[name="media-search-enddate"]').attr('disabled', false);
+            }
         }
         , setMedia: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
@@ -75,7 +104,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $activeRow.find('[data-type="episode-number"]').val($row.find('[data-field="EpisodeNumber"]').text());
             $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
             ScheduleHelper.updateTimes($activeRow);
-            toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+            toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', Config.settings.toastr);
         }
         , truncateTable: function (e) {
             e.preventDefault();
@@ -97,11 +126,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         new ScheduleModel(params).destroy({
                             data: params
                             , error: function (e, data) {
-                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                             }
                             , success: function () {
                                 $this.reLoad();
-                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                             }
                         });
                     }
@@ -285,8 +314,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 count: self.defaultListLimit,
                 categoryId: catid,
                 state: state,
-                startdate: Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
-                enddate: Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
+                startdate: $("[name=media-search-startdate]").is('[disabled]')
+                    ? '1970-01-01T00:00:00'
+                    : Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
+                enddate: $("[name=media-search-enddate]").is('[disabled]')
+                    ? Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                    : Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
             };
             return params;
         }
@@ -311,6 +344,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
+                            $('#media-broadcast-date-search').val('');
 //                            self.afterRender(items, params);
                         });
                     });
@@ -508,7 +542,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', Config.settings.toastr);
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
 //                    $this.reLoad();
                 }
@@ -547,10 +581,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', Config.settings.toastr);
                     $("#sub-toolbar .duplicate-schedule").removeClass("in");
                 }
             });
@@ -561,11 +595,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // Validation
             if (Global.processTime(params.startdate) > Global.processTime(params.enddate)) {
                 $("#export-schedule").find("select").addClass('has-error');
-                toastr.warning('زمان شروع از زمان پایان بزرگتر است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('زمان شروع از زمان پایان بزرگتر است.', 'خطا', Config.settings.toastr);
                 return false;
             }
             if ($("#schedule-table tbody").find('.edited, .new, .error').length) {
-                toastr.error('تغییرات ذخیره نشده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.error('تغییرات ذخیره نشده است.', 'خطا', Config.settings.toastr);
                 return false;
             }
             params.startdate = Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T' + params.startdate;
@@ -585,11 +619,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             , contentType: 'application/json'
                             , processData: false
                             , error: function (e, data) {
-                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                                 l.stop();
                             }
                             , success: function () {
-                                toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', Config.settings.toastr);
                                 $("#sub-toolbar .export-schedule").removeClass("in");
                                 l.stop();
                             }
@@ -673,7 +707,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 , error: function (e, data) {
                     if (typeof data.responseJSON !== "undefined" && typeof data.responseJSON.Message !== "undefined")
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     if ($("#schedule-table li").length)
                         $("#schedule-table .table-body").empty();
                 }
