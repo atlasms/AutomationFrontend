@@ -1,0 +1,18 @@
+<table class="table table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+        <th class="col-xs-2">کاربر</th>
+        <th class="col-xs-4">تاریخ</th>
+        <th class="col-xs-6">توضیحات</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="{{ExternalId}}">
+        <td>{{#ifCond Owner '==' 1}}سیستم{{/ifCond}}{{#ifCond Owner '!=' 1}}{{FromUserText}}{{/ifCond}}</td>
+        <td>{{extractDate SendDate}} {{extractTime SendDate}}</td>
+        <td>{{#ifCond Owner '==' 1}}{{FromUserText}} {{/ifCond}}{{Body}}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

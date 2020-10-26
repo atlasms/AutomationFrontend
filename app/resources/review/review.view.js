@@ -27,12 +27,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , flags: {}
         , events: {
             'click .submit': 'submit'
+            , 'change #toolbar select': 'load'
             , 'click [data-task=load_review]': 'load'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'submit .chat-form': 'insertComment'
             , 'click #review-table tbody tr td': 'collapseRow'
             , 'click [data-seek]': 'seekPlayer'
             , 'click [href="#chats-history"]': 'loadHistory'
+            , 'click #chats-history tr[data-id]': 'loadHistoryItem'
             , 'click #review-table tbody tr td a:not([role])': function (e) {
                 e.stopPropagation();
             }
@@ -42,19 +44,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $el = $(e.currentTarget);
             this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
+        , loadHistoryItem: function (e) {
+            e.preventDefault();
+            var $tr = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr[data-id]:first');
+            if (Config.mediaLinkTarget === '_blank') {
+                var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', '_blank');
+                win && win.focus();
+            } else {
+                !Backbone.History.started && Backbone.history.start({pushState: true});
+                new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', {trigger: true});
+            }
+        }
         , loadHistory: function (e) {
             var self = this;
-            var $target = $('#chats-history');
+            var $target = $(e.target);
             if ($('#chats-history').is(':empty')) {
                 var params = {
-                    id: $target.parents('tr:first').prev().attr('data-id')
+                    path: 'comments/' + $target.parents('tr.preview-pane:first').prev().attr('data-id')
                     , overrideUrl: Config.api.mediaversions
                 };
                 var model = new MediaModel(params);
                 model.fetch({
                     success: function (data) {
                         var items = self.prepareItems(data.toJSON(), params);
-                        var template = Template.template.load('resources/mediaitem', 'versions.partial');
+                        items = Object.keys(items).map(function (k) {
+                            return items[k];
+                        });
+                        items = items.reverse();
+                        var template = Template.template.load('resources/review', 'comments-history.partial');
                         template.done(function (data) {
                             var handlebarsTemplate = Template.handlebars.compile(data);
                             var output = handlebarsTemplate(items);
@@ -132,10 +149,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('success', 'saved', Config.settings.toastr);
                     // TODO: reload comments
                     var params = {query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments};
                     self.loadComments(params);
@@ -185,10 +202,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             }, {
                                 patch: true
                                 , error: function (e, data) {
-                                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                                 }
                                 , success: function (model, response) {
-                                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
                                     self.reLoad();
                                 }
                             });
@@ -202,10 +219,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }, {
                     patch: true
                     , error: function (e, data) {
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     }
                     , success: function (model, response) {
-                        toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
                         self.reLoad();
                     }
                 });
@@ -259,7 +276,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     if ($("#review-table tbody tr").length)
                         $("#review-table tbody").empty();
                 }
@@ -280,9 +297,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toolbar[method](this[method]);
             });
             toolbar.render();
-            $(document).on('change', "#toolbar select", function () {
-                self.load();
-            });
+            $('[data-type="state"]').val('0');
             var $datePickers = $(".datepicker");
             var datepickerConf = {
                 onSelect: function () {
