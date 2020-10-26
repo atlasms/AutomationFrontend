@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             var self = this;
             var data = $("#change-pass-form").serializeObject();
             if (data.Password !== data.Verify || !data.Password) {
-                toastr['warning']('لطفاً اطلاعات وارد شده را بررسی کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr['warning']('لطفاً اطلاعات وارد شده را بررسی کنید.', 'خطا', Config.settings.toastr);
                 return false;
             }
             new UserModel({path: '/checkpassword', query: 'pwd=' + data.Password}).fetch({
@@ -23,14 +23,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                     delete response.path;
                     delete response.query;
                     if (response.Value == 'False') {
-                        toastr['warning']('لطفاً در انتخاب رمز عبور جدید به موارد بالا دقت کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr['warning']('لطفاً در انتخاب رمز عبور جدید به موارد بالا دقت کنید.', 'خطا', Config.settings.toastr);
                         return false;
                     } else {
                         new UsersManageModel({id: 'resetpassword/' + self.getId()}).save(null, {
                             data: JSON.stringify({key: 'Password', Value: data.Password})
                             , contentType: 'application/json'
                             , success: function (d) {
-                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', Config.settings.toastr);
                                 self.afterLogin(self.userData);
                             }
                         });

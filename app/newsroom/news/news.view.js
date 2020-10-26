@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ارسال به پیش‌نویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ارسال به پیش‌نویس', Config.settings.toastr);
                 }
             });
         }
@@ -123,7 +123,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         , processData: false
                         , type: 'post'
                         , success: function () {
-                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', Config.settings.toastr);
                             $("#send-item-modal").modal('hide');
                         }
                     });
@@ -138,7 +138,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         , contentType: 'application/json'
                         , processData: false
                         , success: function () {
-                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', Config.settings.toastr);
                             $("#send-item-modal").modal('hide');
 //                    self.loadItems();
                         }

@@ -214,10 +214,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             new NewsroomModel(params).save(data, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', message, {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', message, Config.settings.toastr);
                     if (typeof callback === "function")
                         callback();
                 }
@@ -299,7 +299,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         , contentType: 'application/json'
                         , processData: false
                         , success: function () {
-                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', Config.settings.toastr);
                             $("#send-item-modal").modal('hide');
                         }
                     });
@@ -314,7 +314,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                         , contentType: 'application/json'
                         , processData: false
                         , success: function () {
-                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.success('با موفقیت انجام شد', 'ارسال خبر', Config.settings.toastr);
                             $("#send-item-modal").modal('hide');
                             self.loadItems();
                         }
@@ -338,7 +338,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'خبر جدید', Config.settings.toastr);
                     $("#new-item-modal").modal('hide');
                     self.loadItems();
                 }
@@ -361,7 +361,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ادغام اخبار', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ادغام اخبار', Config.settings.toastr);
                     self.loadItems();
                 }
             });
@@ -379,10 +379,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
             new NewsroomModel({id: self.getId(), overrideUrl: 'nws'}).save(params, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', Config.settings.toastr);
                     self.updateCurrentRowTitle(self.getId(), $('[name="headline"]').val());
                 }
             });
@@ -722,7 +722,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 };
                 new NewsroomModel({overrideUrl: Config.api.newsSchedule + '/ws2con', query: decodeURIComponent($.param(query))}).save(null, {
                     success: function (d) {
-                        toastr.success('با موفقیت انجام شد', 'ارسال به کنداکتور خبر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.success('با موفقیت انجام شد', 'ارسال به کنداکتور خبر', Config.settings.toastr);
                         self.toggleScheduleModal(e);
                     }
                 });

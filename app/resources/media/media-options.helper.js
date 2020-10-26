@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'toastr', 'resou
                     }
                 });
             } else {
-                toastr.warning('شما دسترسی این تغییر وضعیت را ندارید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('شما دسترسی این تغییر وضعیت را ندارید.', 'خطا', Config.settings.toastr);
             }
         }
     };

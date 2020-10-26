@@ -38,6 +38,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , duration: '0;180'
             // , broadcastCount: '0;999'
             // , broadcastStartdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            , recommendedBroadcastStartDate: ''
+            , recommendedBroadcastEndDate: ''
             , broadcastStartdate: '1970-01-01T00:00:00'
             , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
             , structure: ''
@@ -108,7 +110,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 contentType: 'application/json',
                 processData: false,
                 success: function (res) {
-                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', Config.settings.toastr);
                     $('#assign-modal').modal('hide');
                 }
             });
@@ -127,7 +129,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
             if (!selectedItems.length) {
-                toastr['error']('هیچ موردی انتخاب نشده است.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr['error']('هیچ موردی انتخاب نشده است.', 'ارجاع مدیا', Config.settings.toastr);
                 return false;
             }
             $('[name="MasterId"]').val(selectedItems.join('$$'));
@@ -298,9 +300,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
             MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
-                    toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(response.error, 'خطا', Config.settings.toastr);
                 else {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
             });
@@ -355,6 +357,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         case 'enddate':
                         case 'broadcastStartdate':
                         case 'broadcastEnddate':
+                        case 'recommendedBroadcastStartDate':
+                        case 'recommendedBroadcastEndDate':
                             value = Global.gregorianToJalali(value.split('T')[0]);
                             break;
                     }
@@ -414,8 +418,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var value = $element.val();
                         if (typeof value !== 'string') {
                             fields[field] = value.join(',');
-                        } else if (field.indexOf('date') !== -1) {
-                            if (field === 'startdate' || field === 'broadcastStartdate')
+                        } else if (field.indexOf('date') !== -1 || field.indexOf('Date') !== -1) {
+                            if (field === 'startdate' || field === 'broadcastStartdate' || field === 'recommendedBroadcastStartDate')
                                 fields[field] = Global.jalaliToGregorian(value) + 'T00:00:00';
                             else
                                 fields[field] = Global.jalaliToGregorian(value) + 'T23:59:59';
@@ -468,8 +472,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $.each(content.split(","), function (i, e) {
                         $element.find("option[value='" + e + "']").prop("selected", true);
                     });
-                } else if (field.indexOf('date') !== -1) {
-                    $element.val(Global.gregorianToJalali(content.split('T')[0]));
+                } else if (field.indexOf('date') !== -1 || field.indexOf('Date') !== -1) {
+                    if (content !== '') {
+                        $element.val(Global.gregorianToJalali(content.split('T')[0]));
+                    }
                 } else {
                     $element.val(content);
                 }
@@ -514,6 +520,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 if ($(this).attr('name') === 'broadcastEnddate') {
                     $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')));
+                }
+                if ($(this).attr('name') === 'recommendedBroadcastStartDate') {
+                    $(this).val('1970-01-01');
+                }
+                if ($(this).attr('name') === 'recommendedBroadcastEndDate') {
+                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).add('day', 10).format('YYYY-MM-DD')));
                 }
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });

@@ -31,7 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 data: JSON.stringify({key: 'State', Value: state})
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت کاربر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت کاربر', Config.settings.toastr);
                     if (state === 1) {
                         $link.removeClass('red-stripe').addClass('green-stripe').attr('data-task', 'deactivate')
                             .html('<i class="fa fa-unlock"></i> فعال');
@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                             data: JSON.stringify({key: 'Password', Value: 123456})
                             , contentType: 'application/json'
                             , success: function (d) {
-                                toastr['success']('با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr['success']('با موفقیت انجام شد.', 'تغییر رمز عبور', Config.settings.toastr);
                             }
                             , error: function (z, x, c) {
                                 console.log(z, x, c);
@@ -95,7 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('کاربر جدید با موفقیت ایجاد شد.', 'ایجاد کاربر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('کاربر جدید با موفقیت ایجاد شد.', 'ایجاد کاربر', Config.settings.toastr);
                     $modal.modal('hide');
                     self.reLoad();
                 }
@@ -125,7 +125,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
                 }
             });
             if (error) {
-                toastr[error.type](error.msg, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr[error.type](error.msg, 'خطا', Config.settings.toastr);
                 return false;
             }
             return true;

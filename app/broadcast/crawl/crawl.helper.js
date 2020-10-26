@@ -82,7 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 if ($("#crawl-page tbody tr.error").length) {
                     var idx = $("#crawl-page tbody tr.error:first .idx").text();
                     var msg = 'Please fix the error in row [' + idx + ']';
-                    toastr.error(msg, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(msg, 'خطا', Config.settings.toastr);
                     return false;
                 }
                 return true;

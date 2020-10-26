@@ -56,12 +56,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , exportProject: function (e) {
             e.preventDefault();
             if (!this.getId()) {
-                toastr.warning('ابتدا پروژه را ذخبره نمایید', 'خطا در تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('ابتدا پروژه را ذخبره نمایید', 'خطا در تولید ویدیو', Config.settings.toastr);
                 return false;
             }
             var shots = this.timeline.exportShots();
             if (!shots.length) {
-                toastr.warning('پروژه خالی است!', 'خطا در تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('پروژه خالی است!', 'خطا در تولید ویدیو', Config.settings.toastr);
                 return false;
             }
             var data = {
@@ -76,7 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'تولید ویدیو', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'تولید ویدیو', Config.settings.toastr);
                 }
             });
         }
@@ -153,7 +153,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (newsItem) {
-                    toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'خبر جدید', Config.settings.toastr);
                     $("#new-item-modal").modal('hide');
                     var id = self.prepareItems(newsItem.toJSON(), createNewsParams)[0].id;
                     var data = {externalId: id, create: 1, type: 2};
@@ -181,10 +181,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 new MediaModel({overrideUrl: Config.api.shotlist, id: id}).save({key: 'timeline', value: JSON.stringify(data)}, {
                     patch: true
                     , error: function (e, data) {
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     }
                     , success: function (model, response) {
-                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', Config.settings.toastr);
                         if (typeof reload !== "undefined" && reload === true) {
                             window.setTimeout(function () {
                                 !Backbone.History.started && Backbone.history.start({pushState: true});

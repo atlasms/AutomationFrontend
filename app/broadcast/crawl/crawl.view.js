@@ -83,7 +83,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     if (results) {
                         for (var i = 0; i < idList.length; i++)
                             self.deleteRepoItems(idList[i]);
-                        toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                     }
                 }
             });
@@ -188,7 +188,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 data: $.param(data)
                 , success: function (d) {
                     console.log(d);
-                    toastr.success('با موفقیت انجام شد', 'ارسال زیرنویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ارسال زیرنویس', Config.settings.toastr);
                 }
             });
             console.log(data);
@@ -205,7 +205,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'کپی زیرنویس‌ها', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'کپی زیرنویس‌ها', Config.settings.toastr);
                 }
             });
         }
@@ -244,7 +244,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             new CrawlModel({id: params.id}).destroy({
                                 success: function () {
                                     $item.remove();
-//                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                                 }
                             });
                         } else
@@ -327,10 +327,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             new CrawlModel({id: id}).save(params, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
                 }
             });
         }
@@ -419,7 +419,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , processData: false
                 , success: function (d) {
                     $editor.empty();
-                    toastr.success('با موفقیت انجام شد', 'ذخیره زیرنویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره زیرنویس', Config.settings.toastr);
                     $(".crawl-items-select").find("tbody").prepend('<tr data-id="0"><td><div class="checkbox checkbox-success checkbox-circle"><input type="checkbox" /><label></label></div></td><td><span class="text">' + params.Text + '</span><button data-task="review"><i class="fa fa-edit"></i></button><button data-task="delete"><i class="fa fa-trash"></i></button></td></tr>');
                     $('.repo-count').text($(".repository-items tbody tr").length);
                 }
@@ -436,7 +436,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , processData: false
                 , success: function () {
                     self.updateRowsIndexes();
-                    toastr.success('با موفقیت انجام شد', 'ذخیره زینویس', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره زینویس', Config.settings.toastr);
                 }
             });
         }

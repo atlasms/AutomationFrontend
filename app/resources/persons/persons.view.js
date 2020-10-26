@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toa
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('مورد جدید با موفقیت ایجاد شد.', 'ایجاد عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مورد جدید با موفقیت ایجاد شد.', 'ایجاد عوامل', Config.settings.toastr);
                     $modal.modal('hide');
                     $form.attr('data-id', '');
                     $form[0].reset();

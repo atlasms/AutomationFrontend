@@ -41,7 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var data = [];
             var $items = $("#photo-items table tbody tr");
             if (!$items.length) {
-                toastr.warning('لیست خالی قابل ذخیره نیست!', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('لیست خالی قابل ذخیره نیست!', 'ذخیره اطلاعات', Config.settings.toastr);
                 return false;
             }
             this.checkGroupCount(function () {
@@ -62,7 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     , contentType: 'application/json'
                     , processData: false
                     , success: function (d) {
-                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', Config.settings.toastr);
                     }
                 });
             });
@@ -77,7 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (d) {
-                    toastr.success('با موفقیت انجام شد', 'کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'کپی', Config.settings.toastr);
                 }
             });
 
@@ -335,7 +335,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //                    self.initPhotosPaginator();
                     self.updateStatusbar();
                     self.groupItems();
-                    toastr.success('«' + items[0].Media.Title + '» با موفقیت اضافه شد.', 'افزودن آیتم', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('«' + items[0].Media.Title + '» با موفقیت اضافه شد.', 'افزودن آیتم', Config.settings.toastr);
                 });
             });
         }

@@ -56,10 +56,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
             new Model(this.getParams(id)).save(params, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
                 }
             });
         }
@@ -81,7 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('مورد جدید با موفقیت ایجاد شد.', 'محور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مورد جدید با موفقیت ایجاد شد.', 'محور', Config.settings.toastr);
                     $modal.modal('hide');
                     $form[0].reset();
                 }

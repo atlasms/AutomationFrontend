@@ -83,9 +83,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
             MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
-                    toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(response.error, 'خطا', Config.settings.toastr);
                 else {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
             });

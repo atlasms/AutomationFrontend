@@ -102,7 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                 var description = this.fields[field];
                 var $field = $('[data-type="' + field + '"]');
                 if (!$field.length) {
-                    toastr.warning('لطفا صفحه را ریفرش کنید و اطلاعات را مجدد وارد کنید.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.warning('لطفا صفحه را ریفرش کنید و اطلاعات را مجدد وارد کنید.', 'خطا', Config.settings.toastr);
                     error = true;
                 }
                 if (typeof description.required !== 'undefined' && description.required) {
@@ -129,7 +129,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                 }
                 if (description.validation === 'number') {
                     if (isNaN($field.val()) || ~~$field.val() <= 0) {
-                        toastr.warning('شماره قسمت فقط می‌تواند یک مقدار عددی بزرگتر از صفر باشد', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.warning('شماره قسمت فقط می‌تواند یک مقدار عددی بزرگتر از صفر باشد', 'خطا', Config.settings.toastr);
                         $field.parents(".form-group:first").addClass('has-error');
                         error = true;
                     }
@@ -142,7 +142,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
             this.beforeSave = function () {
                 var rquiredError = false;
                 if ($("#path").val() === "") {
-                    toastr.warning('مسیر برنامه مشخص نشده است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.warning('مسیر برنامه مشخص نشده است', 'خطا', Config.settings.toastr);
                     rquiredError = true;
                 }
                 $("input, select, textarea").each(function () {
@@ -158,7 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
                 // disabled description match error by request of Mr. Kasraee
 
                 // if ($("[data-type=description]").val() === $("[data-type=website_desc]").val()) {
-                //     toastr.warning('توضیحات وب‌سایت با توضیحات اتوماسیون یکی است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                //     toastr.warning('توضیحات وب‌سایت با توضیحات اتوماسیون یکی است', 'خطا', Config.settings.toastr);
                 //     rquiredError = true; 
                 // }
 
@@ -166,7 +166,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'mask', 'toastr'
 
                 // if (this.fields.website_summary.required === true && this.fields.website_desc.required) {
                 //     if ($("[data-type=website_summary]").val() === $("[data-type=website_desc]").val()) {
-                //         toastr.warning('توضیحات وب‌سایت نمی‌تواند با خلاصه وب‌سایت یکی باشد', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                //         toastr.warning('توضیحات وب‌سایت نمی‌تواند با خلاصه وب‌سایت یکی باشد', 'خطا', Config.settings.toastr);
                 //         rquiredError = true;
                 //     }
                 // }

@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             this.beforeSave = function () {
                 var rquiredError = false;
                 if ($("#path").val() === "") {
-                    toastr.warning('مسیر برنامه مشخص نشده است', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.warning('مسیر برنامه مشخص نشده است', 'خطا', Config.settings.toastr);
                     rquiredError = true;
                 }
                 $("input, select, textarea").each(function() {

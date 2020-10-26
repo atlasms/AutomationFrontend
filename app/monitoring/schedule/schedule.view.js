@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'انتقال کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'انتقال کنداکتور', Config.settings.toastr);
                     $this.reLoad();
                 }
             });

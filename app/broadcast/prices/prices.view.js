@@ -32,10 +32,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             new EconomyModel({id: 'tree/' + $(e.target).parents('tr:first').data('id')}).save({key: 'state', value: state}, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
                 }
             });
         }
@@ -45,10 +45,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
             new EconomyModel({id: 'tree/' + $(e.target).parents('.panel-heading').data('id')}).save({key: 'state', value: state}, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
                 }
             });
         }

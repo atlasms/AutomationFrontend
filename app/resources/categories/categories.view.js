@@ -37,7 +37,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 }
             });
         }
@@ -73,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var $target = $(e.target);
                 id = $target.parent().attr('id');
                 if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
-                    toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', Config.settings.toastr);
                     return false;
                 }
             } else {
@@ -205,7 +205,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , contentType: 'application/json'
                         , processData: false
                         , error: function (e, data) {
-                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                         }
                         , success: function (model, response) {
                             $tree.jstree(true).set_id(node, response);
@@ -217,7 +217,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         patch: true
                         , pid: params.parent
                         , error: function (e, data) {
-                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                         }
                         , success: function (d) {
                             var node = $tree.jstree(true).get_node(params.id, true);
@@ -231,7 +231,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         text: params.text
                         , pid: params.parent
                         , error: function (e, data) {
-                            toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                            toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                         }
                         , success: function (d) {
                         }
@@ -405,12 +405,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
                     if (typeof callback === 'function')
                         callback();
-                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', Config.settings.toastr);
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
@@ -431,7 +431,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var params = {overrideUrl: Config.api.tree, id: 'users', query: 'uid=' + uid + '&cid=' + cid};
                         new CategoriesModel(params).destroy({
                             success: function (d) {
-                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                                 self.loadAccessList(cid);
                             }
                         });
@@ -447,7 +447,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var params = {overrideUrl: Config.api.tree, path: '/users', query: 'uid=' + uid + '&cid=' + cid};
             new CategoriesModel(params).save(null, {
                 success: function (d) {
-                    toastr.success('با موفقیت انجام شد', 'اعطای دسترسی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'اعطای دسترسی', Config.settings.toastr);
                     self.loadAccessList(cid);
                     $('#grant-access-modal').modal('hide');
                 }

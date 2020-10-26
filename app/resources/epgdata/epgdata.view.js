@@ -44,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                     $(self.$modal).find("form").trigger('reset');
                     $(self.$modal).modal('hide');
                     $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
@@ -213,7 +213,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
             });
         }

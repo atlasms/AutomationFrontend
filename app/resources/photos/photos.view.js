@@ -54,7 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var $input = $(this);
                 $row.find("[name=" + $input.attr('name') + "]").val($input.val());
             });
-            toastr.info('اطلاعات برش تصویر ثبت شد.', 'برش تصویر', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+            toastr.info('اطلاعات برش تصویر ثبت شد.', 'برش تصویر', Config.settings.toastr);
             $(this.$modal).modal('hide');
         }
         , openCropper: function (e) {
@@ -84,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات', Config.settings.toastr);
                     $("#storagefiles tr.active [type=checkbox]").prop('disabled', true).parents("tr:first").removeClass('active').addClass('disabled');
 //                    self.loadStorageFiles();
                 }
@@ -133,7 +133,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
             });
         }
@@ -215,7 +215,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
 //                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
 //                }
             });
         }

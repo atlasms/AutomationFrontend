@@ -98,7 +98,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
                             data: JSON.stringify({key: 'Password', Value: data.Password})
                             , contentType: 'application/json'
                             , success: function (d) {
-                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', Config.settings.toastr);
                                 self.afterLogin(self.userData);
                             }
                         });

@@ -647,7 +647,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 if ($("#schedule-table .table-body li.error").length) {
                     var idx = $("#schedule-table .table-body li.error:first .idx").text();
                     var msg = 'Please fix the error in row [' + idx + ']';
-                    toastr.error(msg, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(msg, 'خطا', Config.settings.toastr);
                     return false;
                 }
                 return true;

@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'globa
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (d) {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره دسترسی‌ها', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره دسترسی‌ها', Config.settings.toastr);
                 }
             });
         }

@@ -119,11 +119,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var data = this.prepareSave();
             var fields = data[0];
             if ($('#persons-table tbody tr').not('.placeholder').length < Config.minimumRequiredPersons) {
-                toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
             if (fields.SiteTitle.length < Config.inputPolicies['ingest.SiteTitle'].min) {
-                toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
             new IngestModel({overrideUrl: Config.api.media}).save(null, {
@@ -149,7 +149,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         , processData: false
                         , success: function (dd) {
                             self.submitPersons(data.MasterId, function () {
-                                toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                                 $(self.$modal).find("form").trigger('reset');
                                 $(self.$modal).modal('hide');
                                 $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
@@ -158,7 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON, 'خطا', Config.settings.toastr);
                 }
             });
         }
@@ -192,7 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var checkParams = {query: 'filename=' + filename};
             new CheckInfoModel(null, checkParams).fetch({
                 success: function (data) {
-                    toastr.info(data.toJSON().content, '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.info(data.toJSON().content, '', Config.settings.toastr);
                     $el.parents("tbody").find("tr").removeClass('active success');
                     $row.addClass('active success');
                     $row.find("[data-prop]").each(function () {
@@ -203,7 +203,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $('button[data-task=add]').removeClass('disabled');
                 },
                 error: function (msg) {
-                    toastr.error(msg.toJSON().content, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(msg.toJSON().content, 'خطا', Config.settings.toastr);
                 }
             });
         }
@@ -276,7 +276,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 , error: function (e, data) {
                     if (typeof data.responseJSON !== 'undefined' && typeof data.responseJSON.Message !== 'undefined')
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
             });
         }
@@ -393,7 +393,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
 //                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
 //                }
             });
         }
@@ -494,12 +494,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
                     if (typeof callback === 'function')
                         callback();
-                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', Config.settings.toastr);
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });

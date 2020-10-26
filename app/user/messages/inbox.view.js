@@ -111,7 +111,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 , contentType: 'application/json'
                 , processData: false
                 , success: function (model, response) {
-                    toastr.success('پیام با موفقیت ارسال شد.', 'ارسال پیام', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('پیام با موفقیت ارسال شد.', 'ارسال پیام', Config.settings.toastr);
                     // TODO: reload comments
                 }
             });

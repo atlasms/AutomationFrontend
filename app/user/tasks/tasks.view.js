@@ -78,7 +78,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             new TasksModel(params).save(null, {
                 patch: true,
                 success: function (res) {
-                    toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('با موفقیت انجام شد.', 'تغییر وضعیت', Config.settings.toastr);
                     if (typeof reload !== 'undefined' && reload) {
                         self.reLoad();
                     }
@@ -101,7 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 contentType: 'application/json',
                 processData: false,
                 success: function (res) {
-                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', Config.settings.toastr);
                     $('#assign-modal').modal('hide');
                     self.changeStatus(undefined, {id: self.currentAssigningItem, status: 3}, true);
                 }

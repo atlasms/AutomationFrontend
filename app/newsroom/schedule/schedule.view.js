@@ -74,7 +74,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('با موفقیت انجام شد', 'ارسال به پخش', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('با موفقیت انجام شد', 'ارسال به پخش', Config.settings.toastr);
                 }
                 , error: function (z, x, c) {
                     console.log(z, x, c);
@@ -150,7 +150,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                     self.reorderAttachmentRows(function () {
                         self.loadItemAttachments();
                     });
-                    toastr['success']('مدیا با موفقیت ثبت شد', 'افزودن مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مدیا با موفقیت ثبت شد', 'افزودن مدیا', Config.settings.toastr);
                 }
                 , error: function (z, x, c) {
                     // console.log(z, x, c);
@@ -288,7 +288,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                     if (results) {
                         new NewsroomModel({id: id, overrideUrl: Config.api.newsSchedule}).destroy({
                             success: function (d) {
-                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                                 self.reLoad();
                             }
                         });
@@ -316,7 +316,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'خبر جدید', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'خبر جدید', Config.settings.toastr);
                     $("#new-item-modal").modal('hide');
                     self.reLoad(undefined, function () {
                         self.reorderRows();
@@ -349,10 +349,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             new NewsroomModel({id: 'sort', overrideUrl: Config.api.newsSchedule}).save(data, {
                 patch: true
                 , error: function (e, data) {
-                    // toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', Config.settings.toastr);
                     if (typeof e === 'function') {
                         e();
                     } else {
@@ -385,10 +385,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             new NewsroomModel({id: this.getId(), overrideUrl: Config.api.newsSchedule + '/attachments/sort'}).save(data, {
                 patch: true
                 , error: function (e, data) {
-                    // toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر چیدمان', Config.settings.toastr);
                     if (typeof e === 'function') {
                         e();
                     } else {
@@ -442,10 +442,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             new NewsroomModel({id: self.getId(), overrideUrl: Config.api.newsSchedule}).save(data, {
                 // patch: true
                 error: function (e, data) {
-                    // toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'ثبت اطلاعات', Config.settings.toastr);
                     // self.updateCurrentRowTitle(self.getId(), $('[name="title"]').val());
                     self.loadItems(undefined, true);
                 }
@@ -583,7 +583,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 data: JSON.stringify('')
                 , contentType: 'application/json'
                 , success: function (d) {
-                    toastr['success']('با موفقیت ایجاد شد.', 'چینش', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('با موفقیت ایجاد شد.', 'چینش', Config.settings.toastr);
                     self.reLoad();
                 }
                 , error: function (z, x, c) {

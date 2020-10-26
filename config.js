@@ -138,6 +138,11 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             crawlEditor: {
                 colorsEnabled: false,
                 stylesEnabled: false
+            },
+            toastr: {
+                positionClass: 'toast-bottom-left',
+                progressBar: true,
+                closeButton: true
             }
         },
         routes: {

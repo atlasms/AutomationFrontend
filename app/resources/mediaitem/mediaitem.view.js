@@ -73,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 contentType: 'application/json',
                 processData: false,
                 success: function (res) {
-                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', Config.settings.toastr);
                     $('#assign-modal').modal('hide');
                 }
             });
@@ -143,7 +143,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 contentType: 'application/json',
                 processData: false,
                 success: function (res) {
-                    toastr['success']('کلیدواژه‌ها با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('کلیدواژه‌ها با موفقیت تغییر کرد.', '', Config.settings.toastr);
                     self.reLoad();
                 }
             });
@@ -179,7 +179,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 value: +$form.find('input[data-type="allowed-broadcast-count"]').val()
             };
             this.handleEditables(id, params, function () {
-                toastr['success']('تعداد مجاز پخش با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr['success']('تعداد مجاز پخش با موفقیت تغییر کرد.', '', Config.settings.toastr);
                 self.reLoad();
             });
         }
@@ -195,7 +195,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 contentType: 'application/json',
                 processData: false,
                 success: function (res) {
-                    toastr['success']('محورها با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr['success']('محورها با موفقیت تغییر کرد.', '', Config.settings.toastr);
                     self.reLoad();
                 }
             });
@@ -210,7 +210,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 value: Global.jalaliToGregorian($datePicker.val()) + 'T00:00:00'
             };
             this.handleEditables(id, params, function () {
-                toastr['success']('تاریخ پخش با موفقیت تغییر کرد.', '', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr['success']('تاریخ پخش با موفقیت تغییر کرد.', '', Config.settings.toastr);
                 self.reLoad();
             });
         }
@@ -292,9 +292,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var params = {task: $li.data('task'), value: $li.data('value'), id: this.getId()};
             MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
-                    toastr.error(response.error, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(response.error, 'خطا', Config.settings.toastr);
                 else {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
             });
@@ -313,10 +313,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('با موفقیت انجام شد', 'ارسال به تلگرام', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ارسال به تلگرام', Config.settings.toastr);
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
@@ -335,10 +335,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('با موفقیت انجام شد', 'انتشار روی وب‌سایت', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'انتشار روی وب‌سایت', Config.settings.toastr);
                 }
             });
         }
@@ -356,7 +356,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 }
             });
         }
@@ -425,10 +425,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('success', 'saved', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('success', 'saved', Config.settings.toastr);
                     self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
@@ -473,12 +473,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     if (results) {
                         new IngestModel({id: self.getId(), overrideUrl: Config.api.media}).save({FileName: $item.attr('data-filename'), Duration: $item.attr('data-duration')}, {
                             error: function (e, data) {
-                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                             }
                             , success: function (d) {
                                 var id = d.toJSON()[0]["Id"];
                                 if (+id == id) {
-                                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                    toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                                     $(self.modal_storage).find("form").trigger('reset');
                                     $(self.modal_storage).modal('hide');
                                     !Backbone.History.started && Backbone.history.start({pushState: true});
@@ -577,7 +577,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', Config.settings.toastr);
                     $this.reLoad();
                 }
             });
@@ -592,10 +592,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             new MediaitemModel({id: id}).save(params, {
                 patch: true
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
                     self.loadTab(null, true);
                     // reset editable field
                     if (typeof callback !== "undefined")
@@ -980,10 +980,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', Config.settings.toastr);
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });

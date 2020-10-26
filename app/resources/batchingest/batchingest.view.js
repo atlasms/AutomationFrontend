@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var $field = $(this);
                 if ($field.is('[required]') && (typeof $field.val() === 'undefined' || !$field.val())) {
                     error = true;
-                    toastr.warning('اطلاعات فیلد ' + $field.attr('placeholder') + ' وارد نشده است.', 'حطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.warning('اطلاعات فیلد ' + $field.attr('placeholder') + ' وارد نشده است.', 'حطا', Config.settings.toastr);
                 }
             });
             if (error) {
@@ -55,15 +55,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (!data.length)
                 return false;
             if ($('#persons-table tbody tr').length < 2) {
-                toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('تعداد عوامل کافی نیست', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
             if ($('[name="Tags"]').val().length < 1) {
-                toastr.warning('کلیدواژه وارد نشده.', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('کلیدواژه وارد نشده.', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
             if ($('[name="Subjects"]').val().length < 1) {
-                toastr.warning('محور وارد نشده.', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('محور وارد نشده.', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
 
@@ -79,7 +79,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         self.submitPersons(items[idx].Id, function () {
                             // var idxx = ~~idx;
                             if (($(self.$modal).data('bs.modal') || {}).isShown) {
-                                toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                                 $(self.$modal).find("form").trigger('reset');
                                 $(self.$modal).modal('hide');
                                 $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
@@ -200,7 +200,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     });
                 }
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
             });
         }
@@ -427,12 +427,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
                     if (typeof callback === 'function')
                         callback();
-                    // toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    // toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', Config.settings.toastr);
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });

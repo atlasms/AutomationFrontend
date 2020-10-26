@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
                 , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+//                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     if ($("#schedule-page tbody tr").length)
                         $("#schedule-page tbody").empty();
                 }

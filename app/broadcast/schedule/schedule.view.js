@@ -71,11 +71,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                         new ScheduleModel(params).destroy({
                             data: params
                             , error: function (e, data) {
-                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                             }
                             , success: function () {
                                 $this.reLoad();
-                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
                             }
                         });
                     }
@@ -394,7 +394,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', Config.settings.toastr);
                     $this.reLoad();
                 }
             });
@@ -424,10 +424,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 , contentType: 'application/json'
                 , processData: false
                 , error: function (e, data) {
-                    toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                    toastr.success('با موفقیت انجام شد', 'عملیات کپی', Config.settings.toastr);
                     $("#sub-toolbar .duplicate-schedule").removeClass("in");
                 }
             });
@@ -438,11 +438,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
             // Validation
             if (Global.processTime(params.startdate) > Global.processTime(params.enddate)) {
                 $("#export-schedule").find("select").addClass('has-error');
-                toastr.warning('زمان شروع از زمان پایان بزرگتر است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.warning('زمان شروع از زمان پایان بزرگتر است.', 'خطا', Config.settings.toastr);
                 return false;
             }
             if ($("#schedule-page table tbody").find('.edited, .new, .error').length) {
-                toastr.error('تغییرات ذخیره نشده است.', 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                toastr.error('تغییرات ذخیره نشده است.', 'خطا', Config.settings.toastr);
                 return false;
             }
             params.startdate = Global.jalaliToGregorian($("#toolbar [name=startdate]").val()) + 'T' + params.startdate;
@@ -462,11 +462,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                             , contentType: 'application/json'
                             , processData: false
                             , error: function (e, data) {
-                                toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                                 l.stop();
                             }
                             , success: function () {
-                                toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                                toastr.success('با موفقیت انجام شد', 'ارسال پلی‌لیست', Config.settings.toastr);
                                 $("#sub-toolbar .export-schedule").removeClass("in");
                                 l.stop();
                             }
@@ -550,7 +550,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bro
                 }
                 , error: function (e, data) {
                     if (typeof data.responseJSON.Message !== "undefined")
-                        toastr.error(data.responseJSON.Message, 'خطا', {positionClass: 'toast-bottom-left', progressBar: true, closeButton: true});
+                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                     if ($("#schedule-page tbody tr").length)
                         $("#schedule-page tbody").empty();
                 }
