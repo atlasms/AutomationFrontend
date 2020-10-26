@@ -25,18 +25,21 @@
                 <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
             </figure>
         </td>
-        <td>
+        <td class="title-holder">
             <span class="title">{{Title}}</span>
             <small class="help-block text-muted clip-line">{{Description}}</small>
+            {{#if RecommendedBroadcastDate}}
+            <small><strong><i class="help-block text-muted clip-line">تاریخ پخش: {{extractDate RecommendedBroadcastDate}}</i></strong></small>
+            {{/if}}
         </td>
         <td class="text-center" data-field="EpisodeNumber">
             {{EpisodeNumber}}
         </td>
         <td class="text-right">
-            <span class="nowrap">{{extractTime Created}}&nbsp;{{extractDate Created}}</span>
+            <span class="nowrap">{{extractDate Created}}&nbsp;{{extractTime Created}}</span>
         </td>
         <td class="text-right">
-            <span class="nowrap">{{extractTime LastCondcutorUse}}&nbsp;{{extractDate LastCondcutorUse}}</span>
+            <span class="nowrap">{{extractDate LastCondcutorUse}}&nbsp;{{extractTime LastCondcutorUse}}</span>
         </td>
         <td class="text-center" data-field="allowed-broadcast-count">
             <span class="">{{#if AllowedBroadcastCount}}{{AllowedBroadcastCount}}{{else}}ندارد{{/if}}</span>

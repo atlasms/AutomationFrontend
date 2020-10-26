@@ -58,6 +58,9 @@
 						<td>
 							{{Title}}
 							<small class="help-block text-muted clip-line">{{Description}}</small>
+							{{#if RecommendedBroadcastDate}}
+							<small><strong><i class="help-block text-muted clip-line">تاریخ پخش: {{extractDate RecommendedBroadcastDate}}</i></strong></small>
+							{{/if}}
 						</td>
 						<td class="text-left">
 							<span class="">{{MetaCategoryName}}</span>

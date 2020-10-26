@@ -163,9 +163,11 @@
                                     <tr>
                                         <td>تاریخ پیشنهادی پخش</td>
                                         <td>
-                                            {{#if RecommendedBroadcastDate}}
+                                            {{#ifDate RecommendedBroadcastDate}}
                                             {{extractDate RecommendedBroadcastDate}}
-                                            {{/if}}
+                                            {{else}}
+                                            <span class="label label-warning">ندارد</span>
+                                            {{/ifDate}}
                                             <div class="pull-right">
                                                 <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-broadcast-date"><i class="fa fa-pencil"></i> ویرایش تاریخ پخش</button>
                                             </div>

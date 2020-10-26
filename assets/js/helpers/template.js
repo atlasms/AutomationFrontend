@@ -87,6 +87,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return options.inverse(this);
                 }
             });
+            Handlebars.registerHelper('ifDate', function (value, options) {
+                return (value && value.indexOf('1970-01') === -1) ? options.fn(this) : options.inverse(this);
+            });
             Handlebars.registerHelper('ifIsToday', function (value, options) {
                 var givenDate = (value && value.indexOf("T") !== -1) ? value.split('T')[0] : value;
                 var today = moment().format('YYYY-MM-DD');
