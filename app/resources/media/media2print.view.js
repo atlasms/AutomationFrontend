@@ -30,6 +30,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , duration: '0;180'
             // , broadcastCount: '0;999'
             // , broadcastStartdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')) + 'T00:00:00'
+            , recommendedBroadcastStartDate: ''
+            , recommendedBroadcastEndDate: ''
             , broadcastStartdate: '1970-01-01T00:00:00'
             , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
             , structure: ''
