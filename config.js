@@ -32,6 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         groupsFilterId: 166, // 166: iktv or 14: qtv
         HDPlayback: true,
         newsTicker: false,
+        showVideoAspectRatio: false,
         // 'initialRedirect: '/resources/media2',
         epgMediaPath: 'http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}',
         minimumRequiredPersons: 2,
@@ -71,6 +72,50 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     '18': {title: 'آرشیو', required: false}
                 }
             },
+        },
+        shortcuts: {
+            schedule: {
+                down: {key: 'down', title: 'بعدی'},
+                up: {key: 'up', title: 'قبلی'},
+                insert: {key: 'insert', title: 'سطر جدید'},
+                focus: {key: 'space', title: 'تغییر'},
+                remove: {key: 'shift+del', title: 'حذف سطر'},
+                moveUp: {key: 'shift+up', title: 'جابجایی به بالا'},
+                moveDown: {key: 'shift+down', title: 'جابجایی به پایین'},
+                showDuplicateForm: {key: 'ctrl+f2', title: 'نمایش فرم کپی'},
+                showExportForm: {key: 'ctrl+f3', title: 'ارسال پلی‌لیست'},
+                fix: {key: 'alt+f', title: 'فیکس آیتم'},
+                advancedSearchTab1: {key: 'alt+m', title: 'جستجوی مدیا / جستجوی پیشرفته'},
+                advancedSearchTab2: {key: 'alt+a', title: 'انتخاب تاریخ پخش / جستجوی پیشرفته'},
+                custom: [
+                    {
+                        key: 'alt+1', title: 'آرم استیشن 25 ثانیه', value: {
+                            'episode-title': 'آرم استیشن',
+                            'duration': '00:00:25'
+                        }
+                    },
+                    {
+                        key: 'alt+2', title: 'اعلام‌برنامه 66 ثانیه', value: {
+                            'episode-title': 'اعلام برنامه',
+                            'duration': '00:01:06',
+                            counter$: 10
+                        }
+                    },
+                    {
+                        key: 'alt+3', title: 'بعدی 50 ثانیه', value: {
+                            'episode-title': 'بعدی',
+                            'duration': '00:00:50',
+                            counter$: 10
+                        }
+                    },
+                    {
+                        key: 'alt+4', title: 'اخبار قرآنی 15 دقیقه', value: {
+                            'episode-title': 'اخبار قرآنی',
+                            'duration': '00:15:00'
+                        }
+                    }
+                ]
+            }
         },
         settings: {
             datepicker: {
