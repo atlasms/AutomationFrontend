@@ -167,7 +167,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
             }
             return seconds;
         }
-        , extractDate: function(value, bypassConvert) {
+        , extractDate: function (value, bypassConvert) {
             if (value && (+value.split('-')[0] === 1900 || +value.split('-')[0] === 0))
                 return '';
             var convert = !(typeof bypassConvert !== "undefined" && bypassConvert === true);
@@ -351,6 +351,32 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
         }
         , getInputPolicy: function (key) {
             return typeof CONFIG.inputPolicies[key] !== 'undefined' ? CONFIG.inputPolicies[key] : null;
+        }
+        , calculateAspectRatio: function (val, lim) {
+            var lower = [0, 1];
+            var upper = [1, 0];
+            while (true) {
+                var mediant = [lower[0] + upper[0], lower[1] + upper[1]];
+                if (val * mediant[1] > mediant[0]) {
+                    if (lim < mediant[1]) {
+                        return upper;
+                    }
+                    lower = mediant;
+                } else if (val * mediant[1] == mediant[0]) {
+                    if (lim >= mediant[1]) {
+                        return mediant;
+                    }
+                    if (lower[1] < upper[1]) {
+                        return lower;
+                    }
+                    return upper;
+                } else {
+                    if (lim < mediant[1]) {
+                        return lower;
+                    }
+                    upper = mediant;
+                }
+            }
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class

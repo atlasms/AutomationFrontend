@@ -58,10 +58,30 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate($this.options);
                 $container.html(output).promise().done(function () {
-                        var instance = $this.instance = jwplayer('player').setup($this.options);
+                    var instance = $this.instance = jwplayer('player').setup($this.options);
                     $this.instance.onReady(function () {
                         $this.setEvents();
                         $this.setUI($this, instance);
+                    });
+                    $this.instance.onBeforePlay(function () {
+                        if (Config.showVideoAspectRatio) {
+                            // detect video aspect radio
+                            var aspectInterval = setInterval(function () {
+                                if (!$('video').length) {
+                                    clearInterval(aspectInterval);
+                                    return false;
+                                }
+                                var videoTag = document.getElementsByTagName('video')[0];
+                                var w = videoTag.videoWidth;
+                                var h = videoTag.videoHeight;
+                                var ratio = Global.calculateAspectRatio(w / h, 50);
+                                if (!$('.aspect-guide').length) {
+                                    $('.jw-video').after('<div class="aspect-guide">' + ratio[0] + ':' + ratio[1] + '</div>');
+                                } else {
+                                    $('.aspect-guide').text(ratio[0] + ':' + ratio[1]);
+                                }
+                            }, 1000);
+                        }
                     });
                 });
             });
