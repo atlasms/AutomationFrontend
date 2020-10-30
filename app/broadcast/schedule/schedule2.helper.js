@@ -1,38 +1,15 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-locales', 'jdate', 'hotkeys', 'toastr', 'bloodhound', 'typeahead', 'handlebars', 'user.helper'
 ], function ($, _, Backbone, Config, Global, moment, jDate, Hotkeys, toastr, Bloodhound, Typeahead, Handlebars, UserHelper) {
-    var keysMap = {
-        down: {key: 'down', title: 'بعدی'},
-        up: {key: 'up', title: 'قبلی'},
-        insert: {key: 'insert', title: 'سطر جدید'},
-        focus: {key: 'space', title: 'تغییر'},
-        remove: {key: 'shift+del', title: 'حذف سطر'},
-        moveUp: {key: 'shift+up', title: 'جابجایی به بالا'},
-        moveDown: {key: 'shift+down', title: 'جابجایی به پایین'},
-        showDuplicateForm: {key: 'ctrl+f2', title: 'نمایش فرم کپی'},
-        showExportForm: {key: 'ctrl+f3', title: 'ارسال پلی‌لیست'},
-        custom: [
-            {
-                key: 'alt+1', title: 'آرم استیشن 27 ثانیه', value: {
-                    'episode-title': 'آرم استیشن',
-                    'duration': '00:00:27'
-                }
-            },
-            {
-                key: 'alt+2', title: 'اعلام‌برنامه 43 ثانیه', value: {
-                    'episode-title': 'اعلام برنامه',
-                    'duration': '00:00:43'
-                }
-            }
-        ]
-    };
+    var keysMap = Config.shortcuts.schedule;
     var ScheduleHelper = {
         flags: {}
-        , init: function (reinit) {
+        , counters: {}
+        , init: function (reinit, scheduleInstance) {
             if (typeof reinit !== "undefined" && reinit === true) {
                 ScheduleHelper.tableHelper();
                 ScheduleHelper.suggestion();
             } else {
-                ScheduleHelper.hotkeys();
+                ScheduleHelper.hotkeys(scheduleInstance);
                 ScheduleHelper.tableHelper();
                 ScheduleHelper.suggestion();
                 ScheduleHelper.handleEdits();
@@ -46,14 +23,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $(this).addClass('active').trigger('activated');
                 }
             });
-            $(document).mouseup(function (e) {
-                var container = $("#schedule-table .table-body");
-                if (!container.is(e.target) && !$(e.target).parents('#media-modal').length // if the target of the click isn't the container...
-                    && container.has(e.target).length === 0) // ... nor a descendant of the container
-                {
-                    container.find("li.active").removeClass('active').trigger('deactivated');
-                }
-            });
+            // $(document).mouseup(function (e) {
+            //     var container = $("#schedule-table .table-body");
+            //     if (!container.is(e.target) && !$(e.target).parents('#media-modal').length // if the target of the click isn't the container...
+            //         && container.has(e.target).length === 0) // ... nor a descendant of the container
+            //     {
+            //         container.find("li.active").removeClass('active').trigger('deactivated');
+            //     }
+            // });
             $(document).on('change', '[type="checkbox"]', function () {
                 if ($(this).is(':checked'))
                     $(this).attr('value', 1);
@@ -115,7 +92,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     break;
             }
         }
-        , hotkeys: function () {
+        , hotkeys: function (scheduleInstance) {
             $.hotkeys.options.filterInputAcceptingElements = false;
             $.hotkeys.options.filterTextInputs = false;
 //            $(document).on('keydown', null, 'f2', function () {
@@ -140,8 +117,19 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
 
             for (var key of Object.keys(keysMap)) {
-                ScheduleHelper.initShortCutKey(key);
+                ScheduleHelper.initShortCutKey(key, scheduleInstance);
             }
+        }
+        , checkActiveRowForEdit: function (activeRow) {
+            if (!activeRow.length) {
+                toastr.warning('هیچ سطری انتخاب نشده است', '', Config.settings.toastr);
+                return false;
+            }
+            if (activeRow.attr('data-readonly') === "true") {
+                toastr.error('امکان ویرایش در این وضعیت وجود ندارد', 'خطا', Config.settings.toastr);
+                return false;
+            }
+            return true;
         }
         , initShortCutKey: function (type) {
             switch (type) {
@@ -241,17 +229,50 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $('[data-task="show-export-form"]')[0].click();
                     });
                     break;
+                case 'advancedSearchTab1':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                            $('#media-modal').modal('show');
+                            $('#media-modal').find('[href="#media-search"]').click();
+                        }
+                    });
+                    break;
+                case 'advancedSearchTab2':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                            $('#media-modal').modal('show');
+                            $('#media-modal').find('[href="#broadcast-date"]').click();
+                        }
+                    });
+                    break;
                 case 'custom':
                     var custom = $.extend([], keysMap[type]);
                     if (custom.length) {
                         $.each(custom, function () {
-                            var item = $.extend({}, this);
+                            const item = $.extend({}, this);
                             $(document).on('keydown', null, item.key, function (e) {
-                                var activeRow = $("#schedule-table .table-body li.active");
-                                if (activeRow.attr('data-readonly') === "true")
-                                    return false;
-                                ScheduleHelper.duplicateRow(activeRow, false, item.value);
                                 e.preventDefault();
+                                var activeRow = $("#schedule-table .table-body li.active");
+                                if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                                    var postfix = '';
+                                    if (typeof item.value.counter$ !== 'undefined' && item.value.counter$ > 0) {
+                                        if (typeof ScheduleHelper.counters[item.key] === 'undefined') {
+                                            ScheduleHelper.counters[item.key] = 1;
+                                        } else {
+                                            if (ScheduleHelper.counters[item.key] < item.value.counter$) {
+                                                ScheduleHelper.counters[item.key]++;
+                                            }
+                                        }
+                                        postfix = ' - ' + ScheduleHelper.counters[item.key];
+                                    }
+                                    var cloneItem = $.extend({}, item.value, {'episode-title': item.value['episode-title'] + postfix});
+                                    console.log(cloneItem);
+                                    ScheduleHelper.duplicateRow(activeRow, false, cloneItem);
+                                }
                             });
                         });
                     }
@@ -286,7 +307,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         }
         , duplicateRow: function (row, isGap, data) {
             console.log('------------------- ROW DUPLICATION -------------------');
-            var isGap = (typeof isGap !== "undefined" && isGap === true) ? true : false;
+            var isGap = (typeof isGap !== "undefined" && isGap === true);
             var rows = $("#schedule-table .table-body li");
             if (rows.length > 1) {
                 if (row.find("[data-type=duration]").val() === "" || Global.processTime(row.find("[data-type=duration]").val()) === 0) {
@@ -711,7 +732,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
         }
         , fillDuplicateSelects: function (items, source) {
-            var source = typeof source !== "undefined" && source === true ? true : false;
+            var source = typeof source !== "undefined" && source === true;
             var starts = [];
             $.each(items, function () {
                 starts.push({
@@ -785,6 +806,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $this.find("option:first").remove();
                 });
             }
+        }
+        , resetCounters: function () {
+            ScheduleHelper.counters = {};
         }
     };
     return ScheduleHelper;

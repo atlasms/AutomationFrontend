@@ -1,6 +1,5 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'bootstrap/modal', 'bootstrap/tab'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree) {
-    'use strict';
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -98,12 +97,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
             $activeRow.find('[data-type="duration"]').val($row.data('duration'));
             $activeRow.find('[data-type="title"]').val($row.data('program-title'));
+            $activeRow.find('[data-type="title"]').parents('.form-group:first').find('label[for^="pr"]').text($row.data('program-title'));
             $activeRow.find('[name="ConductorMetaCategoryId"]').val($row.data('program-id'));
             $activeRow.find('[data-type="episode-title"]').val($row.find('span.title').text());
+            $activeRow.find('[data-type="episode-title"]').parents('.form-group:first').find('label[for^="ep"]').text($row.find('span.title').text());
             $activeRow.find('[name="ConductorMediaId"]').val($row.data('id'));
-            $activeRow.find('[data-type="episode-number"]').val($row.find('[data-field="EpisodeNumber"]').text());
+            $activeRow.find('[data-type="episode-number"]').val($.trim($row.find('[data-field="EpisodeNumber"]').text()));
             $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
+            if (!$activeRow.find('[name="ConductorMediaId"]').next().is('.remove-meta')) {
+                $activeRow.find('[name="ConductorMediaId"]').after('<a href="#" class="remove-meta">×</a>');
+            }
+            if (!$activeRow.find('[name="ConductorMetaCategoryId"]').next().is('.remove-meta')) {
+                $activeRow.find('[name="ConductorMetaCategoryId"]').after('<a href="#" class="remove-meta">×</a>');
+            }
             ScheduleHelper.updateTimes($activeRow);
+            $('#media-modal').modal('hide');
             toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', Config.settings.toastr);
         }
         , truncateTable: function (e) {
@@ -722,10 +730,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
             if (typeof this.flags.helperLoaded === "undefined") {
-                ScheduleHelper.init();
+                ScheduleHelper.init(false, this);
                 this.flags.helperLoaded = true;
             } else
-                ScheduleHelper.init(true);
+                ScheduleHelper.init(true, this);
 
             var dateParts = $("[name=startdate]").val().split('-');
             for (var i = 0; i < dateParts.length; i++)
@@ -808,6 +816,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , success: function (items) {
                     var items = self.prepareItems(items.toJSON(), params);
                     ScheduleHelper.fillDuplicateSelects(_.values(items), $this.hasClass('source'));
+                    ScheduleHelper.resetCounters();
 //                    console.log(items, $this.hasClass('source'));
                 }
             })
@@ -819,10 +828,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var $this = $(this);
                 if ($this.data('datepicker') == undefined) {
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, {
-                        onSelect: function () {
+                        onSelect: function (e) {
                             if ($this.parents("#toolbar").length) {
                                 self.load();
-//                                $('.datepicker.source').val($this.val());
                             }
                             $datePickers.blur();
                             if ($this.parents("#duplicate-schedule").length) {
