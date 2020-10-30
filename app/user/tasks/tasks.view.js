@@ -215,8 +215,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             for (var i = 0; i < items.length; i++) {
                 items[i].visible = false;
                 if (filters.date !== null) {
-                    if (items[i].date === filters.date) {
-                        items[i].visible = true;
+                    if (items[i].Media.RecommendedBroadcastDate !== null) {
+                        var gDate = items[i].Media.RecommendedBroadcastDate.split('T')[0];
+                        var jDate = Global.gregorianToJalali(gDate);
+                        if (jDate === filters.date) {
+                            items[i].visible = true;
+                        }
                     }
                 } else {
                     items[i].visible = true;
@@ -258,7 +262,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             // return $.extend({}, this.filters, {
             return {
                 status: ~~$('[name="status"]').val(),
-                date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val())[0] : null,
+                // date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val()) : null,
+                date: $('[name="filter-type"]').val() === 'date' ? $('[name="date"]').val() : null,
                 // type:
             };
         }
@@ -315,7 +320,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             });
             toolbar.render();
             self.flags.toolbarRendered = true;
-            setTimeout(function() {
+            setTimeout(function () {
                 self.attachDatepickers();
             }, 0);
         }
