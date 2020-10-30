@@ -1,7 +1,9 @@
 <style>
     a:not([href]) { cursor: default; }
     .page-sidebar li > a { cursor: pointer; }
-    #toast-container>div { padding: 15px 15px 15px 50px; }
+    #toast-container > div { padding: 15px 15px 15px 50px; }
+    .aspect-guide { position: absolute; opacity: 0; top: 0; left: 0; padding: 4px 10px; color: #fff; background-color: #f00; transition: .2s all; }
+    video:hover + .aspect-guide { opacity: 0.5; }
 </style>
 <div>
     <div class="page-header navbar">
@@ -99,7 +101,7 @@
                                 <li>
                                     <a href="/user/messages#inbox">
                                         پیام‌های من<i class="fa fa-envelope"></i>
-<!--                                        <span class="badge badge-danger"> 3 </span>-->
+                                        <!--                                        <span class="badge badge-danger"> 3 </span>-->
                                     </a>
                                 </li>
                                 <li>
@@ -108,10 +110,10 @@
                                     </a>
                                 </li>
                                 <li class="divider"></li>
-<!--                                <li>-->
-<!--                                    <a href="#">-->
-<!--                                        قفل موقت <i class="fa fa-lock"></i></a>-->
-<!--                                </li>-->
+                                <!--                                <li>-->
+                                <!--                                    <a href="#">-->
+                                <!--                                        قفل موقت <i class="fa fa-lock"></i></a>-->
+                                <!--                                </li>-->
                                 <li>
                                     <a href="/login">
                                         خروج از سیستم<i class="fa fa-key"></i></a>
