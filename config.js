@@ -89,8 +89,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 advancedSearchTab2: {key: 'alt+a', title: 'انتخاب تاریخ پخش / جستجوی پیشرفته'},
                 custom: [
                     {
-                        key: 'alt+1', title: 'آرم استیشن 25 ثانیه', value: {
-                            'episode-title': 'آرم استیشن',
+                        key: 'alt+1', title: 'آرم تایم 25 ثانیه', value: {
+                            'episode-title': 'آرم تایم',
                             'duration': '00:00:25'
                         }
                     },
