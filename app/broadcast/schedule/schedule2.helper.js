@@ -249,6 +249,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         }
                     });
                     break;
+                case 'fix':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                            ScheduleHelper.toggleFixedRow(activeRow);
+                        }
+                    });
+                    break;
                 case 'custom':
                     var custom = $.extend([], keysMap[type]);
                     if (custom.length) {
@@ -277,6 +286,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         });
                     }
                     break;
+            }
+        }
+        , toggleFixedRow: function ($row) {
+            if ($row.hasClass('fixed')) {
+                $row.find('[name="CondcutorIsFixed"]').prop('checked', false);
+                $row.removeClass('fixed');
+            } else {
+                $row.find('[name="CondcutorIsFixed"]').prop('checked', true);
+                $row.addClass('fixed');
             }
         }
         , deleteRow: function ($row, skipUpdate) {
