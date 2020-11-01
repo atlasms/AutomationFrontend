@@ -471,7 +471,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , callback: function (results) {
                     if (results) {
-                        new IngestModel({id: self.getId(), overrideUrl: Config.api.media}).save({FileName: $item.attr('data-filename'), Duration: $item.attr('data-duration')}, {
+                        new IngestModel({id: self.getId(), overrideUrl: Config.api.media}).save({
+                            FileName: $item.attr('data-filename'),
+                            Duration: $item.attr('data-duration')
+                        }, {
                             error: function (e, data) {
                                 toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                             }

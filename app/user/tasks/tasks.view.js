@@ -62,6 +62,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click [data-task="filter"]': 'filter'
             , 'click [data-task="sent"]': 'filter'
             , 'click [data-task="received"]': 'filter'
+            , 'click #task-details a.note': function(e) {
+                $('#details-modal').modal('hide');
+            }
         }
         , changeStatus: function (e, givenParams, reload) {
             var $target = null;
@@ -190,7 +193,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                     var handlebarsTemplate = Template.handlebars.compile(tmpl);
                     var output = handlebarsTemplate(data);
                     $('#task-details').html(output).promise().done(function () {
-                        $('#details-modal').modal('toggle')
+                        $('#details-modal').modal('toggle');
                     });
                 });
             }
@@ -282,6 +285,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 var output = handlebarsTemplate({});
                 $container.html(output).promise().done(function () {
                     self.load();
+                    self.afterRender();
                 });
             });
             // this.load();
