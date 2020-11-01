@@ -62,7 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click [data-task="filter"]': 'filter'
             , 'click [data-task="sent"]': 'filter'
             , 'click [data-task="received"]': 'filter'
-            , 'click #task-details a.note': function(e) {
+            , 'click #task-details a.note': function (e) {
                 $('#details-modal').modal('hide');
             }
         }
@@ -218,7 +218,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             for (var i = 0; i < items.length; i++) {
                 items[i].visible = false;
                 if (filters.date !== null) {
-                    if (items[i].Media.RecommendedBroadcastDate !== null) {
+                    if (typeof items[i].Media !== 'undefined'
+                        && items[i].Media !== null
+                        && typeof items[i].Media.RecommendedBroadcastDate !== 'undefined'
+                        && items[i].Media.RecommendedBroadcastDate !== null) {
                         var gDate = items[i].Media.RecommendedBroadcastDate.split('T')[0];
                         var jDate = Global.gregorianToJalali(gDate);
                         if (jDate === filters.date) {
