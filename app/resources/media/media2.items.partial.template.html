@@ -91,7 +91,9 @@
 						</td>
 						<td>
 <!--							{{#authorize 8388608}}{{>mediaOptions2}}{{/authorize}}-->
+							{{#ifCond State '!=' 2}}
 							{{>mediaOptions}}
+							{{/ifCond}}
 						</td>
 					</tr>
 					{{/each}}
