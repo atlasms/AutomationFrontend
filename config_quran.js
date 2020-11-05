@@ -65,11 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     '11': {title: 'گوینده', required: false},
                     '12': {title: 'هماهنگی', required: false},
                     '13': {title: 'نویسنده', required: false},
-                    '14': {title: 'دبیر مجری', required: false},
-                    '15': {title: 'سردبیر', required: false},
-                    '16': {title: 'دبیر زیرنویس', required: false},
-                    '17': {title: 'تصویریاب', required: false},
-                    '18': {title: 'آرشیو', required: false}
+                    '14': {title: 'کارشناس', required: true}
                 }
             },
         },
