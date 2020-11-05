@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'bootpag', 'bootstrap/modal', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, Toolbar, Statusbar, pDatepicker, NewsroomModel, MediaModel, Hotkeys, toastr, bootbox, NewsTree, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'jquery-ui', 'bootpag', 'bootstrap/modal', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, Toolbar, Statusbar, pDatepicker, NewsroomModel, MediaModel, Hotkeys, toastr, bootbox, NewsTree, Tree, ui) {
     var NewsroomScheduleView = Backbone.View.extend({
         data: {}
         , itamContainer: ".item.box .mainbody"
@@ -414,6 +414,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 self.reLoad();
                 return false;
             });
+            $(document).on('keydown', null, 'alt+f', function (e) {
+                self.expandEditor(e);
+                return false;
+            });
         }
         , getItemId: function ($el) {
             if ($el.is('[data-id]') || $el.parents('[data-id]:first').length) {
@@ -557,6 +561,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         , getId: function () {
             return $('[name="NewsId"]').val();
         }
+        , initSortable: function () {
+            var self = this;
+            try {
+                $("#news-items tbody").sortable('refresh');
+            } catch (e) {
+                $("#news-items tbody").sortable({
+                    items: "tr"
+                    , cancel: 'a, button, input, textarea, select'
+                    , axis: 'y'
+                    , forcePlaceholderSize: true
+                    , placeholder: ".sort-placeholder"
+                    , containment: "parent"
+                    , update: function () {
+                        self.reorderRows();
+                    }
+                });
+            }
+        }
         , activateFirstItem: function () {
             $(".box.itemlist table tbody tr:first").trigger('click');
         }
@@ -679,6 +701,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             this.attachDatepickers();
             this.handleDashboardHeight();
             this.handleStatusbar(items);
+            this.initSortable();
             $('[data-type="total-count"]').html(items.length);
         }
         , handleDashboardHeight: function () {
