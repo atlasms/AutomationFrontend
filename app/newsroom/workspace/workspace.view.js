@@ -713,10 +713,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'use
         , sendToSchedule: function (e) {
             e.preventDefault();
             var self = this;
-            console.log(this.currentItemId);
-            if (this.currentTreeNode && this.currentItemId) {
+            var wsid = !this.currentItemId ? $('#news-items tbody tr.active').attr('data-id') : this.currentItemId;
+            if (this.currentTreeNode && wsid) {
                 var query = {
-                    wsid: this.currentItemId,
+                    wsid: wsid,
                     conid: this.currentTreeNode,
                     date: Global.jalaliToGregorian($('[name="schedule-send-date"]').val())
                 };
