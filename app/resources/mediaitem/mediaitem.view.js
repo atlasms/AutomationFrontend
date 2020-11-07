@@ -392,6 +392,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             e.preventDefault();
             var $el = $(e.currentTarget);
             this.player.seek($el.attr('data-seek'), this.playerInstance);
+            $('html, body').animate({
+                scrollTop: 0
+            }, 600);
         }
         , openItem: function (e) {
             var $el = $(e.currentTarget);
@@ -473,9 +476,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var output = handlebarsTemplate(items);
                         $("#chats").html(output);
                         // After render
-                        if ($("table").find(".scroller").length)
-                            $("table").find(".scroller").slimScroll({
-                                height: $("table").find(".scroller").height()
+                        if ($("#chats").find(".scroller").length)
+                            $("#chats").find(".scroller").slimScroll({
+                                height: $("#chats").find(".scroller").height()
                                 , start: 'bottom'
                             });
                         if ($("input.time").length)
@@ -489,20 +492,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , loadHistoryItem: function (e) {
             e.preventDefault();
             var $tr = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr[data-id]:first');
-            if (Config.mediaLinkTarget === '_blank') {
-                var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', '_blank');
-                win && win.focus();
-            } else {
-                !Backbone.History.started && Backbone.history.start({pushState: true});
-                new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', {trigger: true});
-            }
+            // if (Config.mediaLinkTarget === '_blank') {
+            var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#review', '_blank');
+            win && win.focus();
+            // } else {
+            //     !Backbone.History.started && Backbone.history.start({pushState: true});
+            //     new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#review', {trigger: true});
+            // }
         }
         , loadHistory: function (e) {
             var self = this;
             var $target = $(e.target);
             if ($('#chats-history').is(':empty')) {
                 var params = {
-                    path: 'comments/' + $target.parents('tr.preview-pane:first').prev().attr('data-id')
+                    path: 'comments/' + self.getId()
                     , overrideUrl: Config.api.mediaversions
                 };
                 var model = new MediaModel(params);
@@ -800,7 +803,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         $container.html(output).promise().done(function () {
                             if (model.split('-')[1] === "comments")
                                 self.loadComments(params);
-                                self.loadSidebarComments(params);
+                            self.loadSidebarComments(params);
                         });
                     });
                 }

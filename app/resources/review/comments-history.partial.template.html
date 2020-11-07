@@ -1,17 +1,40 @@
+<style>
+    #chats-history tbody tr { cursor: pointer; }
+</style>
 <table class="table table-condensed table-hover table-striped">
     <thead>
     <tr>
         <th class="col-xs-2">کاربر</th>
-        <th class="col-xs-4">تاریخ</th>
-        <th class="col-xs-6">توضیحات</th>
+        <th class="col-xs-3">تاریخ</th>
+        <th class="col-xs-3">زمان</th>
+        <th class="col-xs-5">توضیحات</th>
     </tr>
     </thead>
     <tbody>
     {{#each []}}
-    <tr data-id="{{ExternalId}}">
-        <td>{{#ifCond Owner '==' 1}}سیستم{{/ifCond}}{{#ifCond Owner '!=' 1}}{{FromUserText}}{{/ifCond}}</td>
-        <td>{{extractDate SendDate}} {{extractTime SendDate}}</td>
-        <td>{{#ifCond Owner '==' 1}}{{FromUserText}} {{/ifCond}}{{Body}}</td>
+    <tr data-id="{{ExternalId}}" class="{{#ifCond Owner '==' 1}}text-muted{{/ifCond}}">
+        <td>
+            {{#ifCond Owner '==' 1}}<small>سیستم</small>
+            {{else}}<strong>{{FromUserText}}</strong>{{/ifCond}}
+        </td>
+        <td>
+            {{#ifCond Owner '!=' 1}}
+            <strong>{{extractTime SendDate}} {{extractDate SendDate}}</strong>
+            {{else}}
+            <small>{{extractTime SendDate}} {{extractDate SendDate}}</small>
+            {{/ifCond}}
+        </td>
+        <td>
+            {{#if Data.start}}
+            <strong class="datetime" style="direction: ltr;" data-seek="{{seconds Data.start}}">
+                {{Data.start}} - {{Data.end}}
+            </strong>
+            {{/if}}
+        </td>
+        <td>
+            {{#ifCond Owner '==' 1}}<small>{{FromUserText}} </small>{{/ifCond}}
+            {{#ifCond Owner '!=' 1}}<strong>{{Body}}</strong>{{else}}<small>{{Body}}</small>{{/ifCond}}
+        </td>
     </tr>
     {{/each}}
     </tbody>
