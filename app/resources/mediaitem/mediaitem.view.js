@@ -52,6 +52,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="save-broadcast-date"]': 'saveBroadcastDate'
             , 'click [data-task="save-allowed-broadcast-count"]': 'saveAllowedBroadcastCount'
             , 'click [data-task="save-tags"]': 'saveTags'
+            , 'click [href="#chats-history"]': 'loadHistory'
+            , 'click #chats-history tr[data-id]': 'loadHistoryItem'
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
@@ -430,6 +432,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , success: function (model, response) {
                     toastr.success('success', 'saved', Config.settings.toastr);
                     self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadSidebarComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
             e.preventDefault();
@@ -458,6 +461,67 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                 }
             });
+        }
+        , loadSidebarComments: function (params) {
+            var self = this;
+            new MediaModel(params).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/review', 'comments-with-history.partial');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $("#chats").html(output);
+                        // After render
+                        if ($("table").find(".scroller").length)
+                            $("table").find(".scroller").slimScroll({
+                                height: $("table").find(".scroller").height()
+                                , start: 'bottom'
+                            });
+                        if ($("input.time").length)
+                            $("input.time").mask('H0:M0:S0', {
+                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                            });
+                    });
+                }
+            });
+        }
+        , loadHistoryItem: function (e) {
+            e.preventDefault();
+            var $tr = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr[data-id]:first');
+            if (Config.mediaLinkTarget === '_blank') {
+                var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', '_blank');
+                win && win.focus();
+            } else {
+                !Backbone.History.started && Backbone.history.start({pushState: true});
+                new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', {trigger: true});
+            }
+        }
+        , loadHistory: function (e) {
+            var self = this;
+            var $target = $(e.target);
+            if ($('#chats-history').is(':empty')) {
+                var params = {
+                    path: 'comments/' + $target.parents('tr.preview-pane:first').prev().attr('data-id')
+                    , overrideUrl: Config.api.mediaversions
+                };
+                var model = new MediaModel(params);
+                model.fetch({
+                    success: function (data) {
+                        var items = self.prepareItems(data.toJSON(), params);
+                        items = Object.keys(items).map(function (k) {
+                            return items[k];
+                        });
+                        items = items.reverse();
+                        var template = Template.template.load('resources/review', 'comments-history.partial');
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(items);
+                            $('#chats-history').html(output);
+                        });
+                    }
+                });
+            }
         }
         , setVideo: function (e) {
             e.preventDefault();
@@ -736,6 +800,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         $container.html(output).promise().done(function () {
                             if (model.split('-')[1] === "comments")
                                 self.loadComments(params);
+                                self.loadSidebarComments(params);
                         });
                     });
                 }
@@ -797,9 +862,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }
             var player = new Player('#player-container', playerConfig);
             player.render();
-            self.player = player;
-            self.playerInstance = player.instance;
+            this.player = player;
+            this.playerInstance = player.instance;
             this.loadUsersList();
+            this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
         }
         , renderToolbar: function () {
             var self = this;

@@ -324,6 +324,19 @@
                                 <img src="{{replace Thumbnail '.jpg' '_hq.jpg'}}" alt="{{Title}}"/>
                             </figure>
                             {{/ifCond}}
+
+                            <div class="portlet light">
+                                <div class="portlet-body">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="active"><a href="#chats" role="tab" data-toggle="tab">نظرات</a></li>
+                                        <li><a href="#chats-history" role="tab" data-toggle="tab">تاریخچه نظرات</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade in active" id="chats"></div>
+                                        <div role="tabpanel" class="tab-pane fade" id="chats-history"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,9 +348,9 @@
                     <div class="row">
                         <div class="col-xs-2">
                             <ul class="nav nav-tabs tabs-left">
-                                <li data-service="review" class="active"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
+                                <li data-service="review"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
                                 <li data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
-                                <li data-service="persons"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
+                                <li data-service="persons" class="active"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
                                 <li data-service="workflow"><a href="#tab-workflow" data-toggle="tab">سابقه گردش کار</a></li>
                                 <li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
                                 <li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
@@ -347,10 +360,10 @@
                         </div>
                         <div class="col-xs-10">
                             <div class="tab-content">
-                                <div class="tab-pane fade in active" id="tab-review"></div>
+                                <div class="tab-pane fade" id="tab-review"></div>
                                 <div class="tab-pane fade" id="tab-workflow"></div>
                                 <div class="tab-pane fade" id="tab-metadata"></div>
-                                <div class="tab-pane fade" id="tab-persons"></div>
+                                <div class="tab-pane fade in active" id="tab-persons"></div>
                                 <div class="tab-pane fade" id="tab-versions"></div>
                                 <div class="tab-pane fade" id="tab-schedule"></div>
                                 <div class="tab-pane fade" id="tab-rush"></div>
