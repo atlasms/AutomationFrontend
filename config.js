@@ -115,6 +115,14 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                         }
                     }
                 ]
+            },
+            review: {
+                markStart: {key: 'alt+i', title: 'محدوده شروع'},
+                markEnd: {key: 'alt+o', title: 'محدوده پایان'},
+                togglePlayback: {key: 'space', title: 'پخش / متوقف ویدیو'},
+                stop: {key: 'alt+k', title: 'قطع ویدیو'},
+                speedUp: {key: 'alt+l', title: 'افزایش سرعت'},
+                speedDown: {key: 'alt+k', title: 'کاهش سرعت'}
             }
         },
         settings: {
