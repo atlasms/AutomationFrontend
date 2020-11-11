@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, TasksModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'mask', 'toastr', 'hotkeys', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, Mask, toastr, Hotkeys, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, TasksModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
     bootbox.setLocale('fa');
+    var keysMap = Config.shortcuts.review;
     var MediaitemView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         model: 'MediaitemModel'
@@ -130,6 +131,52 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 } else {
                     $select.append('<option value="' + user.id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
                 }
+            });
+        }
+
+        , hotkeys: function () {
+            $.hotkeys.options.filterInputAcceptingElements = false;
+            $.hotkeys.options.filterTextInputs = false;
+            for (var key of Object.keys(keysMap)) {
+                this.initShortCutKey(key);
+            }
+        }
+        , initShortCutKey: function (type) {
+            var self = this;
+            $(document).on('keydown', null, keysMap[type].key, function (e) {
+                switch (type) {
+                    case 'markStart':
+                        $('[data-task="clip-start"]').trigger('click');
+                        break;
+                    case 'markEnd':
+                        $('[data-task="clip-end"]').trigger('click');
+                        $('#chats [name="Body"]').trigger('focus');
+                        $('html, body').animate({
+                            scrollTop: $('#chats').offset().top
+                        }, 600);
+                        break;
+                    case 'togglePlayback':
+                        if ($(e.target).is('input') || $(e.target).is('textarea') || $(e.target).is('select')) {
+                            return true;
+                        }
+                        self.player.play();
+                        break;
+                    case 'stop':
+                        self.player.stop();
+                        break;
+                    case 'speedUp':
+                        if ($('.speed').find('li.active').next().is('li')) {
+                            $('.speed').find('li.active').next().trigger('click');
+                        }
+                        break;
+                    case 'speedDown':
+                        if ($('.speed').find('li.active').prev().is('li')) {
+                            $('.speed').find('li.active').prev().trigger('click');
+                        }
+                        break;
+                }
+                e.preventDefault();
+                return false;
             });
         }
 
@@ -867,6 +914,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             player.render();
             this.player = player;
             this.playerInstance = player.instance;
+            this.hotkeys();
             this.loadUsersList();
             this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
         }

@@ -273,6 +273,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 }, 50);
             }
         }
+        , stop: function(instance) {
+            var $this = this;
+            instance = this.getInstance(instance);
+            this.instance.stop();
+        }
         , forwards: function (instance) {
             instance = this.getInstance(instance);
             var position = instance.getPosition();
