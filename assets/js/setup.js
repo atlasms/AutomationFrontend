@@ -80,6 +80,8 @@ require.config({
         , "counterup2": ["vendor/jquery.counterup2.min"]
         , "count-to": ["vendor/jquery.countTo"]
         , "easy-pie-chart": ["vendor/jquery.easypiechart.min"]
+        , "axios": ["vendor/axios/axios.min"]
+        , "file-download": ["vendor/file-download"]
 
         // Static files
         , "menu": ["json!../../app/menu"]

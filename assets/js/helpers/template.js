@@ -333,6 +333,14 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 });
                 return pathArray.join('\\');
             });
+            Handlebars.registerHelper('generateSafeFileName', function (param1, param2, param3, options) {
+                // var safeString = param0;
+                var safeString = '';
+                safeString += param1.replace(/[|&:;$%@"<>()+,]/g, '').replace(' ', '-');
+                safeString += '_' + Global.createTime2(param3).split(':').reverse().join('-');
+                safeString += '_کلاکت-' + param2;
+                return safeString;
+            });
             Handlebars.registerHelper('$_get', function (property, date, options) {
                 var date = typeof date !== "undefined" ? date : false;
                 var output = '';
