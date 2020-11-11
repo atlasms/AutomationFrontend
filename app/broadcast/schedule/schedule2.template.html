@@ -197,9 +197,7 @@
                         </div>
                         <div class="c2 td">
                             <div class="form-group form-md-line-input fixed-label">
-                                {{#authorize 8388608}}
                                 <a href="#" class="advanced-search"><i class="fa fa-search-plus"></i> جستجوی پیشرفته</a>
-                                {{/authorize}}
                                 <input type="hidden" name="ConductorMediaId" value="{{ConductorMediaId}}"/>
                                 {{#if ConductorMediaId}}<a href="#" class="remove-meta">&times;</a>{{/if}}
                                 <input type="text" class="form-control" data-suggestion="true" dir="rtl" data-type="episode-title" data-suggestion-type="media" id="ep{{@index}}" name="ConductorTitle" value="{{ConductorTitle}}">
