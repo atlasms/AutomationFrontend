@@ -5,9 +5,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , player: null
         , model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید گروه', type: 'button', task: '6', access: 16777216}} // accept
+            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید گروه', type: 'button', task: '6', access: 134217728}} // accept
             , {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید پخش', type: 'button', task: '1', access: 4}} // accept
-            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 16777216}} // reject
+            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 134217728}} // reject
             , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4}} // reject
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}

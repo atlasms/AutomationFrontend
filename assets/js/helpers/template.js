@@ -459,14 +459,14 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     '<button class="' + buttonClasses + '" type="button" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>' +
                     '<ul class="dropdown-menu" role="menu">' +
                     '<li><a href="#" data-task="open-assign-modal"><i class="fa fa-share"></i> ارجاع</a></li>';
-                if (Authorize.access(4)) {
+                // if (Authorize.access(4)) {
                     output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
                         '<ul class="dropdown-menu">';
                     for (var i = 0; i < definitionTypes.length; i++)
                         if (definitionTypes[i].value)
                             output += '<li data-task="state" data-value="' + definitionTypes[i].value + '"><a href="#">' + definitionTypes[i].text + '</a></li>';
                     output += '</ul></li>';
-                }
+                // }
                 output += '</ul></div>';
                 return output;
             });
