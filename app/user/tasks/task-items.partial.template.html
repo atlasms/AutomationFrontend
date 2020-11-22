@@ -2,7 +2,7 @@
 <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}{{#if visible}}{{else}} hide{{/if}}">
     <td>{{Id}}</td>
     <td>
-        <span style="display: block;" class="text-center label label-{{resolveNewsLabel JobId}}">{{JobIdText}}</span>
+        <span style="display: block;" class="text-center label label-{{resolveTaskLabel JobId}}">{{JobIdText}}</span>
     </td>
     <!--                                    <td> {{Title}}</td>-->
     <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
