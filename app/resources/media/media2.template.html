@@ -107,7 +107,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
                                 <select data-type="state" class="form-control select2" multiple name="state">
-                                    {{#select '1'}}
+                                    {{#select 'Config.mediaList.defaultStateValue'}}
                                     {{{getDefinitionOptions 2}}}
                                     {{/select}}
                                 </select>
@@ -119,7 +119,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_2" checked type="checkbox">
+                            <input id="filter_2" {{#ifConfig 'mediaList.enabledCreatedDateFields'}}checked{{/ifConfig}} type="checkbox">
                             <label for="filter_2"><i class="fa fa-calendar"></i> بازه زمانی ایجاد</label>
                         </div>
                     </div>

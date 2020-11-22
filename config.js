@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: 'اتوماسیون تولید و پخش اطلس',
-        version: '1.201003.0129',
+        version: '1.201120.2108',
         loginMessage: 'ورود به سامانه اتوماسیون',
         channel: 'ایران‌کالا',
         channelLogo: '/assets/data/iktv.png',
@@ -396,6 +396,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 ]
             }
         ],
+        mediaList: {
+            defaultStateValue: 1,
+            enabledCreatedDateFields: true
+        },
         temp: {
             titleTypes: {
                 Key: 'titletypes', Value: 'subtitle_type', Children: [

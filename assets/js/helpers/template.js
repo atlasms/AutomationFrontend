@@ -160,7 +160,19 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 if (!value || value === "") {
                     return $el.html();
                 }
-                if (typeof value === "string" && value.indexOf(',') !== -1) {
+                if (typeof value === "string" && value.toLowerCase().indexOf('config') !== -1) {
+                    var values = value.split('.').slice(1);
+                    var conditionValue = Config;
+                    for (var i in values)
+                        conditionValue = conditionValue[values[i]];
+                    if (typeof conditionValue === "string" && conditionValue.indexOf(',') !== -1) {
+                        $.each(values, function () {
+                            $el.find('[value="' + this + '"]').attr({'selected': 'selected'});
+                        });
+                    } else {
+                        $el.find('[value="' + conditionValue + '"]').attr({'selected': 'selected'});
+                    }
+                } else if (typeof value === "string" && value.indexOf(',') !== -1) {
                     var values = value.split(',');
                     $.each(values, function () {
                         $el.find('[value=' + this + ']').attr({'selected': 'selected'});
@@ -243,13 +255,35 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var value = +value;
                 switch (value) {
                     case 0:
+                        // بازبینی نشده
                         return 'warning';
                     case 1:
+                        // تایید شده
                         return 'success';
+                    case 2:
+                        // رد شده
+                        return 'danger';
+                    case 3:
+                        // حذف شده
+                        return ' bg-blue-ebonyclay bg-font-blue-ebonyclay';
+                    case 4:
+                        // پخش شده
+                        return ' bg-blue-hoki bg-font-blue-hoki';
+                    case 5:
+                        // غیر قابل پخش
+                        return ' bg-red-thunderbird bg-font-red-thunderbird';
+                    case 6:
+                        // بازبینی گروه شده
+                        return ' bg-yellow bg-font-yellow';
+                    case 7:
+                        // تایید گروه شده
+                        return ' bg-purple-seance bg-font-purple-seance';
                     case 10:
+                        // ????
                         return 'info';
                     default:
-                        return 'danger';
+                        // پیش فرض
+                        return ' bg-grey-mint bg-font-grey-mint';
                 }
             });
             Handlebars.registerHelper('resolveNewsLabel', function (value, options) {
@@ -264,6 +298,20 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     case 3:
                         return 'danger';
                     default:
+                        return 'info';
+                }
+            });
+            Handlebars.registerHelper('resolveTaskLabel', function (value, options) {
+                var value = +value;
+                switch (value) {
+                    case 1:
+                        // بازبینی
+                        return ' bg-blue-steel bg-font-blue-steel';
+                    case 2:
+                        // رفع اشکال
+                        return ' bg-yellow-gold bg-font-yellow-gold';
+                    default:
+                        // پیش فرض
                         return 'info';
                 }
             });
@@ -460,12 +508,12 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     '<ul class="dropdown-menu" role="menu">' +
                     '<li><a href="#" data-task="open-assign-modal"><i class="fa fa-share"></i> ارجاع</a></li>';
                 // if (Authorize.access(4)) {
-                    output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
-                        '<ul class="dropdown-menu">';
-                    for (var i = 0; i < definitionTypes.length; i++)
-                        if (definitionTypes[i].value)
-                            output += '<li data-task="state" data-value="' + definitionTypes[i].value + '"><a href="#">' + definitionTypes[i].text + '</a></li>';
-                    output += '</ul></li>';
+                output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
+                    '<ul class="dropdown-menu">';
+                for (var i = 0; i < definitionTypes.length; i++)
+                    if (definitionTypes[i].value)
+                        output += '<li data-task="state" data-value="' + definitionTypes[i].value + '"><a href="#">' + definitionTypes[i].text + '</a></li>';
+                output += '</ul></li>';
                 // }
                 output += '</ul></div>';
                 return output;

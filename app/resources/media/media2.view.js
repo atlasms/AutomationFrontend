@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , offset: 0
             , count: Config.defalutMediaListLimit
             , categoryId: ''
-            , state: 1
+            , state: Config.mediaList.defaultStateValue
             , episode: ''
             // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
             , startdate: '1970-01-01T00:00:00'
@@ -412,6 +412,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // read fields values
             for (var field in fields) {
                 var $element = $('[name="' + field + '"]');
+                if (field === "state")
+                    console.log('state', $element.val())
                 var $checkbox = $element.parents('.pane:first').find('.checkbox input[type="checkbox"]');
                 if ($checkbox.length && $checkbox.get(0).checked) {
                     if ($element.length && typeof $element.val() !== 'undefined' && $element.val()) {

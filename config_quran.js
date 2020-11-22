@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: 'اتوماسیون تولید و پخش اطلس',
-        version: '1.201003.0129',
+        version: '1.201120.2108',
         loginMessage: 'ورود به سامانه اتوماسیون شبکه قرآن',
         channel: 'قرآن',
         channelLogo: '/assets/data/qurantv.png',
@@ -392,6 +392,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 ]
             }
         ],
+        mediaList: {
+            defaultStateValue: null,
+            enabledCreatedDateFields: false
+        },
         temp: {
             titleTypes: {
                 Key: 'titletypes', Value: 'subtitle_type', Children: [
