@@ -300,18 +300,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , getBroadcastMediaParams: function () {
             return {
                 RecommendedBroadcastDateStart: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val()),
-                RecommendedBroadcastDateEnd: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val())
+                RecommendedBroadcastDateEnd: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val()),
+                state: $('[name="media-broadcast-state"]').val()
             }
         }
-        , getMediaParams: function (skipQueries) {
+        , getMediaParams: function () {
             var self = this;
             var mode = $("[data-type=change-mode]").val();
-            var state = Global.getQuery('state') ? Global.getQuery('state') : $("[name=state]").val();
+            var state = $("[name=state]").val();
             var catid = '';
-            if (typeof skipQueries !== 'undefined' && skipQueries)
-                state = $("[name=state]").val();
-            // var startDate = '1970-01-01' + 'T00:00:00';
-            // var endDate = Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00';
             if (mode === 'tree') {
                 catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
             }
