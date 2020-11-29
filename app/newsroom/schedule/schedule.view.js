@@ -434,6 +434,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             var win = window.open('/newsroom/scheduleitemprint/' + id, '_blank');
             win.focus();
         }
+        , printSchedule: function (e) {
+            var self = this;
+            var params = {
+                date: Global.getQuery('date'),
+                cid: Global.getQuery('cid')
+            };
+            var win = window.open('/newsroom/scheduleprint/?date=' + params.date + '&cid=' + params.cid);
+            win.focus();
+        }
         , saveItem: function () {
             var self = this;
             var id = this.getId();

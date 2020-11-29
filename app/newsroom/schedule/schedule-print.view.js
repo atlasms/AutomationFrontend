@@ -1,6 +1,6 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'newsroom.model', 'user.helper'
 ], function ($, _, Backbone, Template, Config, Global, NewsroomModel, UserHelper) {
-    var NewsroomScheduleItemPrintView = Backbone.View.extend({
+    var NewsroomSchedulePrintView = Backbone.View.extend({
         data: {}
         , events: {}
         , render: function () {
@@ -44,5 +44,5 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'new
         }
     });
 
-    return NewsroomScheduleItemPrintView;
+    return NewsroomSchedulePrintView;
 });

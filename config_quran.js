@@ -256,6 +256,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'newsroom/workspace': {'private': true, 'view': 'newsroom.workspace.view', 'action': 'NewsroomWorkspaceView', 'file': 'app/newsroom/workspace/workspace.view'}
             , 'newsroom/itemprint': {'private': true, 'view': 'newsroom.itemprint.view', 'skipLayout': true, 'action': 'NewsroomItemPrintView', 'file': 'app/newsroom/item/itemprint.view'}
             , 'newsroom/scheduleitemprint': {'private': true, 'view': 'newsroom.schedule.itemprint.view', 'skipLayout': true, 'action': 'NewsroomScheduleItemPrintView', 'file': 'app/newsroom/schedule/schedule-itemprint.view'}
+            , 'newsroom/scheduleprint': {'private': true, 'view': 'newsroom.schedule.print.view', 'skipLayout': true, 'action': 'NewsroomSchedulePrintView', 'file': 'app/newsroom/schedule/schedule-print.view'}
             , 'newsroom/schedule': {'private': true, 'view': 'newsroom.schedule.view', 'skipLayout': false, 'action': 'NewsroomScheduleView', 'file': 'app/newsroom/schedule/schedule.view'}
             , 'newsroom/conductor': {'private': true, 'view': 'newsroom.schedule.view', 'skipLayout': false, 'action': 'NewsroomScheduleView', 'file': 'app/newsroom/schedule/schedule.view'}
             , 'website': {'private': true, 'view': 'website.view', 'action': 'WebsiteView', 'file': 'app/website/website.view'}
