@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             , 'click [data-task="delete"]': 'deleteRow'
             , 'click [data-task="save"]': 'saveItem'
             , 'click [data-task="print"]': 'printItem'
+            , 'click [data-task="print-schedule"]': 'printSchedule'
             , 'click [data-task="send"]': 'sendItems'
             , 'click #item-history table tbody tr': 'showHistoryItemBody'
             , 'submit #new-item-form': 'createItem'
@@ -427,7 +428,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             }
         }
         , printItem: function (e) {
-            var self = this;
             var id = typeof e !== 'undefined' && this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
             if (typeof id === "undefined" || id === "")
                 return false;
@@ -435,12 +435,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             win.focus();
         }
         , printSchedule: function (e) {
-            var self = this;
-            var params = {
-                date: Global.getQuery('date'),
-                cid: Global.getQuery('cid')
-            };
-            var win = window.open('/newsroom/scheduleprint/?date=' + params.date + '&cid=' + params.cid);
+            e.preventDefault();
+            var params = this.getParams();
+            var win = window.open('/newsroom/scheduleprint/?date=' + params.date + '&cid=' + params.cid, '_blank');
             win.focus();
         }
         , saveItem: function () {
@@ -497,10 +494,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             if (items.length) {
-                                if (typeof onlyUpdateList !== 'undefined' && onlyUpdateList)
+                                $('[data-task="print-schedule"]').show();
+                                if (typeof onlyUpdateList !== 'undefined' && onlyUpdateList) {
                                     self.activateCurrentItem(currentId);
-                                else
+                                } else {
                                     self.activateFirstItem();
+                                }
+                            } else {
+                                $('[data-task="print-schedule"]').hide();
                             }
                             self.afterRender(items, requestParams);
                             if (typeof loadCallback === 'function') {

@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         schedulePageLimit: 100,
         characterLimit: 130,
         wordLimit: 15,
-        defaultEditorFontSize: 18,
+        defaultEditorFontSize: 20,
         defalutMediaListLimit: 25,
         mediaScheduleGroupItems: 1,
         loginMode: 'default',

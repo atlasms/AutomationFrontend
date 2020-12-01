@@ -10,26 +10,40 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'new
         , loadItem: function (e) {
             var self = this;
             var id = this.getId();
-            var template = Template.template.load('newsroom/schedule', 'schedule-itemprint');
-            var detailParams = {id: id, overrideUrl: 'nws/conductor'};
+            var template = Template.template.load('newsroom/schedule', 'schedule-print');
+            var params = self.getParams();
+            var detailParams = {query: $.param(params), overrideUrl: Config.api.newsSchedule};
             new NewsroomModel(detailParams).fetch({
-                success: function (metadata) {
-                    metadata = self.prepareItems(metadata.toJSON(), detailParams);
-                    var compiled = $.extend(
-                        {},
-                        metadata,
-                        {_created: Global.createDate() + 'T' + Global.createTime(), id: id},
-                        {user: UserHelper.getUser()}
-                    );
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(compiled);
-                        $(Config.positions.wrapper).html(output).promise().done(function () {
-
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), detailParams);
+                    items = Object.entries(items).map(function (e) {
+                        return e[1];
+                    });
+                    var output = '';
+                    $.each(items, function (i) {
+                        var item = this;
+                        var compiled = $.extend(
+                            {},
+                            item,
+                            {_created: Global.createDate() + 'T' + Global.createTime(), id: item.id},
+                            {user: UserHelper.getUser()}
+                        );
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            output += handlebarsTemplate(compiled);
+                            if (i === items.length - 1) {
+                                $(Config.positions.wrapper).html(output);
+                            }
                         });
                     });
                 }
             });
+        }
+        , getParams: function () {
+            return {
+                date: Global.getQuery('date'),
+                cid: Global.getQuery('cid')
+            }
         }
         , getId: function () {
             return Backbone.history.getFragment().split("/").pop().split("?")[0];
