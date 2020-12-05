@@ -82,6 +82,7 @@ require.config({
         , "easy-pie-chart": ["vendor/jquery.easypiechart.min"]
         , "axios": ["vendor/axios/axios.min"]
         , "file-download": ["vendor/file-download"]
+        , "persian-rex": ["vendor/persian-rex/persian-rex.min"]
 
         // Static files
         , "menu": ["json!../../app/menu"]
