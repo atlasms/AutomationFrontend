@@ -5,7 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
         data: {}
         , events: {
             'submit .login-form': 'login',
-            'submit #change-password-form': 'updatePassword'
+            'submit #change-password-form': 'updatePassword',
+            'input [type="password"]': 'validatePassword'
         }
         , el: $(Config.positions.wrapper)
         , userData: {}
@@ -21,6 +22,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
                 typeof Config.overrideClass !== "undefined" && $("body").addClass(Config.overrideClass);
             });
             return this;
+        }
+        , validatePassword: function (e) {
+            var lastEnteredCharacter = $(e.target).val().split('').pop();
+            if (Global.checkForPersianCharacters(lastEnteredCharacter) || Global.checkForPersianCharacters($(e.target).val())) {
+                if ($('#change-password-modal').is('visible')) {
+                    if (!$('#change-password-modal .alert-error').is(':visible')) {
+                        $("#change-password-modal .alert-error").slideDown();
+                    }
+                } else {
+                    if (!$(".login-form .alert-warning").is(':visible')) {
+                        $(".login-form .alert-warning").slideDown();
+                    }
+                }
+            } else {
+                $(".login-form .alert-warning").slideUp();
+                $("#change-password-modal .alert-error").slideUp();
+            }
         }
         , login: function (e) {
             e.preventDefault();
@@ -60,7 +78,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
                     return false;
                 }
                 , error: function () {
-                    $(".login-form .alert").slideDown();
+                    $(".login-form .alert-danger").slideDown();
                 }
             });
             return false;

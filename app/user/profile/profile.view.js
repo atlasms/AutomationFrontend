@@ -9,6 +9,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
             'click [data-task="refresh"]': 'reLoad'
             , 'click [data-task="change-password"]': 'showChangePassModal'
             , 'click [data-task="save-password"]': 'changePassword'
+            , 'input [type="password"]': 'validatePassword'
+        }
+        , validatePassword: function (e) {
+            var lastEnteredCharacter = $(e.target).val().split('').pop();
+            if (Global.checkForPersianCharacters(lastEnteredCharacter) || Global.checkForPersianCharacters($(e.target).val())) {
+                if (!$('#change-pass-modal .alert-danger').is('visible')) {
+                    $("#change-pass-modal .alert-danger").slideDown();
+                }
+            } else {
+                $("#change-pass-modal .alert-danger").slideUp();
+            }
         }
         , changePassword: function (e) {
             var self = this;

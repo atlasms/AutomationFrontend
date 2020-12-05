@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
-], function ($, _, Backbone, Config, jDate, Cookies) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persian-rex'
+], function ($, _, Backbone, Config, jDate, Cookies, persianRex) {
 //    window.formatPersian = false;
 
     var responsiveResize = (function () {
@@ -377,6 +377,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie'
                     upper = mediant;
                 }
             }
+        }
+        , checkForPersianCharacters: function (text, method) {
+            method = typeof method === 'string' ? method : 'text';
+            return persianRex[method].test(text);
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
