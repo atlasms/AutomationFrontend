@@ -15,18 +15,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'new
             new NewsroomModel(detailParams).fetch({
                 success: function (metadata) {
                     metadata = self.prepareItems(metadata.toJSON(), detailParams);
+                    metadata.path = Global.getQuery('path').replace('$', '/');
                     var compiled = $.extend(
                         {},
                         metadata,
                         {_created: Global.createDate() + 'T' + Global.createTime(), id: id},
                         {user: UserHelper.getUser()}
                     );
+                    new NewsroomModel({overrideUrl: Config.api.newsSchedule, id: 'print/' + id}).fetch();
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(compiled);
-                        $(Config.positions.wrapper).html(output).promise().done(function () {
-
-                        });
+                        $(Config.positions.wrapper).html(output);
                     });
                 }
             });

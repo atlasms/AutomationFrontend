@@ -28,7 +28,12 @@
     }
     html, body {font-family: 'Vazir', 'Vazir2'; margin: 0; padding: 0;}
     body { margin: 0; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
-    @page { size: portrait; orientation: portrait; writing-mode: tb-rl; }
+    @page {
+        size: portrait;
+        orientation: portrait;
+        writing-mode: tb-rl;
+    }
+    /*@page { size: landscape; orientation: landscape; writing-mode: tb-rl; }*/
     @media print {
         html, body { font-size: 12px; }
     }
@@ -72,45 +77,3 @@
     #metadata td { width: 33.33333%; border: 1px solid #ccc !important; }
     #metadata strong:after { content: ': ' }
 </style>
-<div class="wrapper">
-    <table id="metadata">
-        <tr>
-            <td>
-                <strong>شماره خبر</strong>
-                <span class="ltr">{{sort}}</span>
-            </td>
-            <td>
-                <strong>مسیر</strong>
-                <span class="ltr">{{path}}</span>
-            </td>
-            <td>
-                <strong>شناسه</strong>
-                <span class="ltr">{{id}}</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>چاپ</strong>
-                <span class="ltr">{{extractDate _created}} {{extractTime _created}}</span>
-                <i>[{{user.Name}} {{user.Family}}]</i>
-            </td>
-            <td>
-                <strong>تولید</strong>
-                <span class="ltr">{{extractDate Created}} {{extractTime Created}}</span>
-                <i>[{{CreatedByText}}]</i>
-            </td>
-            <td>
-                <strong>انتشار</strong>
-                <span class="ltr">{{extractDate Created}} {{extractTime Created}}</span>
-                <i>[{{CreatedByText}}]</i>
-            </td>
-        </tr>
-    </table>
-    <h3 style="text-align: center; font-size: 20px;">{{#if title}}{{title}}{{else}}{{headline}}{{/if}}</h3>
-    <div style="margin-top: 20px; text-align: justify; font-size: 18px;">
-        {{#if summary}}
-        <p><strong>{{summary}}</strong></p>
-        {{/if}}
-        {{br body}}
-    </div>
-</div>

@@ -11,8 +11,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'new
             var self = this;
             var id = this.getId();
             var template = Template.template.load('newsroom/schedule', 'schedule-print');
+            var stylesTemplate = Template.template.load('newsroom/schedule', 'schedule-stylesheet');
             var params = self.getParams();
             var detailParams = {query: $.param(params), overrideUrl: Config.api.newsSchedule};
+
             new NewsroomModel(detailParams).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), detailParams);
@@ -20,20 +22,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'new
                         return e[1];
                     });
                     var output = '';
-                    $.each(items, function (i) {
-                        var item = this;
-                        var compiled = $.extend(
-                            {},
-                            item,
-                            {_created: Global.createDate() + 'T' + Global.createTime(), id: item.id},
-                            {user: UserHelper.getUser()}
-                        );
-                        template.done(function (data) {
-                            var handlebarsTemplate = Template.handlebars.compile(data);
-                            output += handlebarsTemplate(compiled);
-                            if (i === items.length - 1) {
-                                $(Config.positions.wrapper).html(output);
-                            }
+                    stylesTemplate.done(function (data) {
+                        output += Template.handlebars.compile(data)({});
+                        $.each(items, function (i) {
+                            var item = this;
+                            item.path = Global.getQuery('path').replace('$', '/');
+                            var compiled = $.extend(
+                                {},
+                                item,
+                                {_created: Global.createDate() + 'T' + Global.createTime(), id: item.id},
+                                {user: UserHelper.getUser()}
+                            );
+                            new NewsroomModel({overrideUrl: Config.api.newsSchedule, id: 'print/' + item.id}).fetch();
+                            template.done(function (data) {
+                                var handlebarsTemplate = Template.handlebars.compile(data);
+                                output += handlebarsTemplate(compiled);
+                                if (i === items.length - 1) {
+                                    $(Config.positions.wrapper).html(output);
+                                }
+                            });
                         });
                     });
                 }
