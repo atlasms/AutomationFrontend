@@ -1,10 +1,12 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'jquery-ui', 'bootpag', 'bootstrap/modal', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, Toolbar, Statusbar, pDatepicker, NewsroomModel, MediaModel, Hotkeys, toastr, bootbox, NewsTree, Tree, ui) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'storage.helper', 'jquery-ui', 'bootpag', 'bootstrap/modal', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, Toolbar, Statusbar, pDatepicker, NewsroomModel, MediaModel, Hotkeys, toastr, bootbox, NewsTree, Tree, Storage, ui) {
     var NewsroomScheduleView = Backbone.View.extend({
         data: {}
-        , itamContainer: ".item.box .mainbody"
+        , itemContainer: ".item.box .mainbody"
         , treeInstance: {}
-        , defaultEditorFontSize: Config.defaultEditorFontSize
+        , defaultEditorFontSize: function () {
+            return this.getCachedFontSize();
+        }
         , defaultListLimit: Config.defalutMediaListLimit
         , cache: {}
         , activeTab: 'item-body'
@@ -68,6 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
         }
         , currentItems: []
         , currentTreeNode: 0
+        , currentTreePath: ''
         , sendItems: function (e) {
             e.preventDefault();
             var data = this.getParams();
@@ -232,6 +235,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                 $('#editor-modal').modal('hide');
             }
         }
+        , cacheFontSize: function (size) {
+            STORAGE.setItem('newsroom-font-size', size);
+        }
+        , getCachedFontSize: function () {
+            if (STORAGE.getItem('newsroom-font-size')) {
+                return STORAGE.getItem('newsroom-font-size');
+            }
+            return Config.defaultEditorFontSize + 'px';
+        }
         , resizeFont: function (e) {
             e.preventDefault();
             var $button = $(e.currentTarget);
@@ -239,14 +251,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             var type = $button.data('type');
             switch (type) {
                 case 'increase':
-                    $editor.css('font-size', (parseInt($editor.css('font-size')) + 2) + 'px');
+                    var fontSize = (parseInt($editor.css('font-size')) + 2) + 'px';
+                    this.cacheFontSize(fontSize);
+                    $editor.css('font-size', fontSize);
                     break;
                 case 'decrease':
-                    if (parseInt($editor.css('font-size')) > 10)
-                        $editor.css('font-size', (parseInt($editor.css('font-size')) - 2) + 'px');
+                    if (parseInt($editor.css('font-size')) > 10) {
+                        var fontSize = (parseInt($editor.css('font-size')) - 2) + 'px';
+                        this.cacheFontSize(fontSize);
+                        $editor.css('font-size', fontSize);
+                    }
                     break;
                 case 'reset':
-                    $editor.css('font-size', this.defaultEditorFontSize + 'px');
+                    var fontSize = Config.defaultEditorFontSize + 'px';
+                    this.cacheFontSize(fontSize);
+                    $editor.css('font-size', fontSize);
                     break;
             }
         }
@@ -431,14 +450,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             var id = typeof e !== 'undefined' && this.getItemId($(e.target)) ? this.getItemId($(e.target)) : this.getId();
             if (typeof id === "undefined" || id === "")
                 return false;
-            var win = window.open('/newsroom/scheduleitemprint/' + id, '_blank');
+            var folder = this.getPrintFriendlyPath();
+            var win = window.open('/newsroom/scheduleitemprint/' + id + '?path=' + folder, '_blank');
             win.focus();
         }
         , printSchedule: function (e) {
             e.preventDefault();
-            var params = this.getParams();
-            var win = window.open('/newsroom/scheduleprint/?date=' + params.date + '&cid=' + params.cid, '_blank');
+            var params = $.param(this.getParams());
+            var win = window.open('/newsroom/scheduleprint/?' + params, '_blank');
             win.focus();
+        }
+        , getPrintFriendlyPath: function () {
+            return this.currentTreePath.split('/').length > 1
+                ? this.currentTreePath.split('/').splice(1).join(' $ ')
+                : this.currentTreePath;
         }
         , saveItem: function () {
             var self = this;
@@ -534,10 +559,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
                         item.id = $row.data("id");
                         item.activeTab = self.activeTab;
                         var output = handlebarsTemplate(item);
-                        $(self.itamContainer).html(output).promise().done(function () {
+                        $(self.itemContainer).html(output).promise().done(function () {
                             self.data['currentItem'] = $row.data("id");
                             self.data['itemIsLoading'] = false;
-
+                            var $editor = $('.metadata-inner [name="body"]');
+                            // setTimeout(function () {
+                            if ($editor.length > 1) {
+                                $editor.each(function () {
+                                    $(this).css('font-size', self.getCachedFontSize());
+                                })
+                            } else {
+                                $editor.css('font-size', self.getCachedFontSize());
+                            }
+                            // console.log($editor, 'set font', self.getCachedFontSize(), output);
+                            // }, 500);
                             if (item.activeTab !== 'item-body') {
                                 try {
                                     $('[href*="' + item.activeTab + '"]').get(0).click();
@@ -603,6 +638,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             return {
                 date: Global.jalaliToGregorian($('[name="date"]').val())
                 , cid: this.currentTreeNode
+                , path: this.getPrintFriendlyPath()
             };
         }
         , createIndices: function (e) {
@@ -702,10 +738,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             // params.method === "ready" && self.loadItems({cid: params.id});
         }
         , handleTreeCalls: function (routes, path) {
-            var self = this;
             var pathId = routes.pop().toString();
             this.currentTreeNode = pathId;
-            self.loadItems({cid: pathId});
+            this.currentTreePath = path.toString();
+            this.loadItems({cid: pathId});
         }
         , afterRender: function (items, requestParams) {
             this.attachDatepickers();

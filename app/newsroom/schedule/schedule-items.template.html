@@ -33,12 +33,12 @@
                     <th colspan="2">ترتیب</th>
                     <th class="col-xs-4">عنوان</th>
                     <!--                    <th class="col-xs-1">ترتیب</th>-->
-                    <th class="col-xs-2 text-center">انتشار</th>
+                    <th class="col-xs-2 text-center">ایجاد</th>
                     <th class="col-xs-1">دبیر</th>
                     <th class="col-xs-2 text-center">انتشار</th>
                     <th class="col-xs-1">سردبیر</th>
                     <th class="">اتوکیو</th>
-                    <th class="">چاپ‌</th>
+                    <th class="">چاپ‌شده</th>
                     <th class="col-xs-1">وضعیت</th>
                     <th class=""></th>
                 </tr>
@@ -77,12 +77,13 @@
                     <td>{{PublishedByText}}</td>
                     <td>
                         {{#if autoQ}}
-                        <button class="btn btn-sm blue-hoki" data-toggle="tooltip" title="اتوکیو"><i class="fa fa-file-text"></i></button>
+                        <div class="label bg-blue-hoki bg-font-blue-hoki text-center"><i class="fa fa-check"></i></div>
                         {{/if}}
                     </td>
                     <td>
                         {{#if isPrinted}}
-                        <button class="btn btn-sm purple" data-toggle="tooltip" title="چاپ شده"><i class="fa fa-print"></i></button>
+<!--                        <button class="btn btn-sm purple" data-toggle="tooltip" title="چاپ شده"><i class="fa fa-print"></i></button>-->
+                        <div class="label bg-purple bg-font-purple text-center"><i class="fa fa-check"></i></div>
                         {{/if}}
                     </td>
                     <td class="state-{{state}}">
