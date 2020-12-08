@@ -176,6 +176,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             else
                 return (convert) ? Global.gregorianToJalali(value) : value;
         }
+        , createTimeNoHours: function(timestamp) {
+            if (typeof timestamp !== 'undefined') {
+                var minutes = Global.zeroFill(parseInt(timestamp / 60));
+                var seconds = Global.zeroFill(timestamp % 60);
+                return seconds + '-' + minutes;
+            }
+            return '';
+        }
         , createTime2: function (timestamp) {
             if (typeof timestamp !== 'undefined') {
                 var hours = Global.zeroFill(parseInt(timestamp / 3600));
@@ -183,6 +191,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
                 var seconds = Global.zeroFill(timestamp % 60);
                 return hours + ":" + minutes + ":" + seconds;
             }
+            return '';
         }
         , createTime: function (timestamp, showSign) {
             var output;
