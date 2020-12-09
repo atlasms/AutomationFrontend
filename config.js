@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         vendorLinkEnabled: false,
         env: 'dev',
         hqVideoFormat: 'mp4',
+        hqFilenameTemplate: '{id}_مدت-{duration}_{title}_کلاکت-{episodeNumber}',
         showDashboardWorkspaceInbox: false,
         showDashboardTasks: true,
         placeholderImage: '/assets/img/placeholder.png',
