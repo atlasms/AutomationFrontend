@@ -6,8 +6,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
         , model: 'EconomyModel'
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-//            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
-//            , {'button': {cssClass: 'btn green-jungle', text: 'ذخیره', type: 'button', task: 'submit'}}
         ]
         , statusbar: []
         , flags: {}
@@ -24,7 +22,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'eco
         }
         , processPrice: function (e) {
             var $input = $(e.target);
+            var lastEnteredCharacter = $(e.target).val().split('').pop();
             $input.val(Global.processPrice($input.val().replace(/\,/gi, '')));
+            if (Global.checkForPersianCharacters(lastEnteredCharacter) || Global.checkForPersianCharacters($(e.target).val())) {
+                toastr.error('مقدار وارد شده با حروف فارسی است', 'ایراد ورودی', Config.settings.toastr);
+            }
         }
         , changeItemState: function(e) {
 //            , State: $(this).find('[name="Active"]')[0].checked
