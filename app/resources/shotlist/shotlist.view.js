@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn blue-sharp', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
+            , {'button': {cssClass: 'btn blue-sharp', text: 'جستجوی مدیا ', type: 'button', task: 'search', icon: 'fa fa-search'}}
         ]
         , statusbar: [
             {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
@@ -18,7 +18,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
-            , 'click [data-task=add]': 'openAddForm'
+            // , 'click [data-task=add]': 'openAddForm'
+            , 'click [data-task="search"]': 'openSearchModal'
             , 'click [data-task=refresh]': 'reLoad'
             , 'click #storagefiles tbody tr': 'selectRow'
             , 'click [data-seek]': 'seekPlayer'
@@ -28,6 +29,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="load-list"]': 'loadItemlist'
             , 'submit .itemlist-filter': 'loadItemlist'
             , 'click #itemlist tbody tr': 'loadVideo'
+
+            , 'keyup #media-broadcast-date-search': 'searchInMediaList'
+            , 'click .item-link': function (e) {
+                e.stopPropagation();
+            }
+            , 'click [data-task="load-media"]': 'loadMedia'
+            , 'click [data-task="load-broadcast-media"]': 'loadBroadcastMedia'
+            , 'click #media-modal table tbody tr': 'setMedia'
+
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
@@ -105,6 +115,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("#media-filename").val('shotlist');
             $(this.$modal).modal('toggle');
         }
+        , openSearchModal: function (e) {
+            $('#media-modal').modal('toggle');
+        }
         , selectRow: function (e) {
             var $el = $(e.target);
             var $row = $el.parents("tr:first");
@@ -138,7 +151,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.afterRender();
                 });
             });
-            
+
             // TODO: Test
             this.timeline = new Timeline('#timeline', {singleMode: false, repository: true});
             this.timeline.render();
@@ -347,6 +360,118 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
             self.loadItemlist();
+        }
+
+        , getId: function () {
+            var lastUrlPart = Backbone.history.getFragment().split("/").pop().split("?")[0];
+            if (~~lastUrlPart > 0) {
+                return lastUrlPart;
+            }
+            return null;
+        }
+        , getMediaParams: function () {
+            var self = this;
+            var mode = $("[data-type=change-mode]").val();
+            var state = $("[name=state]").val();
+            var catid = '';
+            if (mode === 'tree') {
+                catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+            }
+            var params = {
+                q: $.trim($("[name=q]").val()),
+                type: $("[name=type]").val(),
+                offset: 0,
+                count: self.defaultListLimit,
+                categoryId: catid,
+                state: state,
+                startdate: $("[name=media-search-startdate]").is('[disabled]')
+                    ? '1970-01-01T00:00:00'
+                    : Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
+                enddate: $("[name=media-search-enddate]").is('[disabled]')
+                    ? Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                    : Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
+            };
+            return params;
+        }
+        , loadBroadcastMedia: function (e) {
+            if (typeof e !== "undefined")
+                e.preventDefault();
+            var params = this.getBroadcastMediaParams();
+            this.loadBroadcastMediaItems(params);
+        }
+        , loadBroadcastMediaItems: function (params) {
+            var self = this;
+            var params = (typeof params !== "undefined") ? params : self.getBroadcastMediaParams();
+            var data = $.param(params);
+            var model = new MediaModel(params);
+            model.fetch({
+                data: data
+                , success: function (items) {
+                    var items = {items: self.prepareItems(items.toJSON(), params)};
+                    var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+                    var $container = $("#broadcast-itemlist");
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+                            $('#media-broadcast-date-search').val('');
+//                            self.afterRender(items, params);
+                        });
+                    });
+                }
+            });
+        }
+        , loadMedia: function (e, extend) {
+            if (typeof e !== "undefined")
+                e.preventDefault();
+            var params = this.getMediaParams();
+            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            this.loadMediaItems(params);
+            return false;
+        }
+        , loadMediaItems: function (params) {
+            var self = this;
+            var params = (typeof params !== "undefined") ? params : self.getParams();
+            var data = $.param(params);
+            var model = new MediaModel(params);
+            model.fetch({
+                data: data
+                , success: function (items) {
+                    items = items.toJSON();
+                    var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+                    var $container = $("#itemlist");
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output).promise().done(function () {
+//                            self.afterRender(items, params);
+                        });
+                    });
+                }
+            });
+        }
+        , setMedia: function (e) {
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            var $activeRow = $('#schedule-table').find('.table-row.active');
+            $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
+            $activeRow.find('[data-type="duration"]').val($row.data('duration'));
+            $activeRow.find('[data-type="title"]').val($row.data('program-title'));
+            $activeRow.find('[data-type="title"]').parents('.form-group:first').find('label[for^="pr"]').text($row.data('program-title'));
+            $activeRow.find('[name="ConductorMetaCategoryId"]').val($row.data('program-id'));
+            $activeRow.find('[data-type="episode-title"]').val($row.find('span.title').text());
+            $activeRow.find('[data-type="episode-title"]').parents('.form-group:first').find('label[for^="ep"]').text($row.find('span.title').text());
+            $activeRow.find('[name="ConductorMediaId"]').val($row.data('id'));
+            $activeRow.find('[data-type="episode-number"]').val($.trim($row.find('[data-field="EpisodeNumber"]').text()));
+            $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
+            if (!$activeRow.find('[name="ConductorMediaId"]').next().is('.remove-meta')) {
+                $activeRow.find('[name="ConductorMediaId"]').after('<a href="#" class="remove-meta">×</a>');
+            }
+            if (!$activeRow.find('[name="ConductorMetaCategoryId"]').next().is('.remove-meta')) {
+                $activeRow.find('[name="ConductorMetaCategoryId"]').after('<a href="#" class="remove-meta">×</a>');
+            }
+            ScheduleHelper.updateTimes($activeRow);
+            $('#media-modal').modal('hide');
+            toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', Config.settings.toastr);
         }
     });
     return ShotlistView;
