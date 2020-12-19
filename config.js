@@ -123,7 +123,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 togglePlayback: {key: 'space', title: 'پخش / متوقف ویدیو'},
                 stop: {key: 'alt+k', title: 'قطع ویدیو'},
                 speedUp: {key: 'alt+l', title: 'افزایش سرعت'},
-                speedDown: {key: 'alt+k', title: 'کاهش سرعت'}
+                speedDown: {key: 'alt+k', title: 'کاهش سرعت'},
+                showPersons: {key: 'alt+a', title: 'نمایش عوامل'}
             }
         },
         settings: {

@@ -174,6 +174,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             $('.speed').find('li.active').prev().trigger('click');
                         }
                         break;
+                    case 'showPersons':
+                        if ($.trim($('#tab-persons').html()) !== '') {
+                            if ($('#persons-overlay').length) {
+                                $('#persons-table').prependTo('#persons-container');
+                                $('#persons-overlay').remove();
+                            } else {
+                                $('#persons-table').wrap('<div id="persons-overlay"></div>');
+                                $('#persons-overlay').prepend('<h3>عوامل</h3>');
+                                $('#persons-overlay').appendTo('.basic-details');
+                            }
+                        }
+                        break;
                 }
                 e.preventDefault();
                 return false;
