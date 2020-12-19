@@ -221,7 +221,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
 //                    window.setTimeout(function () {
                 // in percents
 //                        $("#seekbar .seeker").find(".inner:first").slider('option', 'value', ($this.position * 100) / $this.duration);
-                
+
 //                    }, 50);
 //console.log($this.position)
                 instance.on('progress', function () {
