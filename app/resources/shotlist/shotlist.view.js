@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'mediaitem-timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal', 'select2'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -15,11 +15,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
         ]
         , flags: {}
+        , cache: {}
+        , cachedBasicData: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
             // , 'click [data-task=add]': 'openAddForm'
-            , 'click [data-task="search"]': 'openSearchModal'
+            , 'click [data-task="search"]': 'toggleSearchModal'
             , 'click [data-task=refresh]': 'reLoad'
             , 'click #storagefiles tbody tr': 'selectRow'
             , 'click [data-seek]': 'seekPlayer'
@@ -34,20 +36,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click .item-link': function (e) {
                 e.stopPropagation();
             }
-            , 'click [data-task="load-media"]': 'loadMedia'
-            , 'click [data-task="load-broadcast-media"]': 'loadBroadcastMedia'
+            , 'click [data-task="load-media"]': 'loadMediaItems'
             , 'click #media-modal table tbody tr': 'setMedia'
+            , 'click .mini-item [data-task="toggle-collapse"]': 'collapseMediaItem'
 
             , 'focus .has-error input': function (e) {
                 $(e.target).parents(".has-error:first").removeClass('has-error');
             }
+
+            , 'submit #person-search-form': 'searchPersons'
+            , 'click [data-task="search-persons"]': 'searchPersons'
+            , 'click [data-task="select-person"]': 'selectPerson'
+            , 'click [data-task="delete-person"]': 'deletePerson'
+            // , 'click [data-task="submit-persons"]': 'submitPersons'
         }
         , timeline: {}
         , loadShot: function (e) {
             var $row = $(e.target).parents("tr:first");
             var params = [
                 Global.processTime($row.find("td").eq(0).text())
-                        , Global.processTime($row.find("td").eq(1).text())
+                , Global.processTime($row.find("td").eq(1).text())
             ];
             this.player.setRange(params, this.playerInstance, true);
         }
@@ -101,7 +109,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $(self.$modal).modal('hide');
                     $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
                 }
-                , error: function() {
+                , error: function () {
                     toastr.error('انجام نشد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 }
             });
@@ -115,7 +123,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("#media-filename").val('shotlist');
             $(this.$modal).modal('toggle');
         }
-        , openSearchModal: function (e) {
+        , toggleSearchModal: function (e) {
             $('#media-modal').modal('toggle');
         }
         , selectRow: function (e) {
@@ -135,12 +143,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.load();
         }
         , load: function (e, extend) {
-            console.info('Loading items');
-            var params = {};
-            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
-            this.render(params);
+            this.render();
         }
-        , render: function (params) {
+        , render: function (id) {
             var self = this;
             var template = Template.template.load('resources/shotlist', 'shotlist');
             var $container = $(Config.positions.main);
@@ -149,17 +154,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var output = handlebarsTemplate({});
                 $container.html(output).promise().done(function () {
                     self.afterRender();
+                    var itemId = self.getId();
+                    if (itemId) {
+                        self.setMedia(null, itemId);
+                        // TODO: Load shots
+                    }
                 });
             });
 
             // TODO: Test
-            this.timeline = new Timeline('#timeline', {singleMode: false, repository: true});
+            this.timeline = new Timeline('#timeline', {
+                singleMode: true,
+                repository: false,
+                sidebar: true,
+                buttons: false,
+                localMode: true/*,
+                callbacks: {
+                    playShot: self.onShotOpened
+                }*/
+            });
             this.timeline.render();
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');
         }
-        , offsetTime: function(datetime, offset) {
+        , offsetTime: function (datetime, offset) {
             if (typeof datetime === "undefined")
                 return null;
             var dt = datetime.split(' ');
@@ -171,7 +190,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
             return datetime.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
         }
-        , loadVideo: function(e) {
+        , loadVideo: function (e) {
             if ($(e.target.parentElement).is("a") || $(e.target).is("a"))
                 return true;
             e.preventDefault();
@@ -181,7 +200,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //            var url = self.getMedia($(e.target).parents("tr:first").find("img").attr('src'));
 //            var url = "http://localhost:8008/assets/data/sample.mp4";
             var duration = $(e.target).parents("tr:first").data('duration');
-            
+
             //TODO
             this.timeline.addMedia({
                 id: $(e.target).parents("tr:first").attr('data-id')
@@ -191,7 +210,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , video: self.getMedia($(e.target).parents("tr:first").find("img").attr('src'))
             });
         }
-        , loadShotlist: function() {
+        , loadShotlist: function () {
             // Load Shot-list
             var $container = $("#shotlist");
             if (!$container.is(":empty"))
@@ -200,7 +219,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function() {
+                $container.html(output).promise().done(function () {
                     IngestHelper.mask('time');
                 });
             });
@@ -214,7 +233,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var modelParams = {offset: 0, count: self.defaultListLimit};
             new MediaModel(modelParams).fetch({
                 data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
-                , success: function(items) {
+                , success: function (items) {
                     items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
@@ -253,14 +272,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , afterRender: function () {
             var self = this;
-            self.attachDatepickers();
+            this.attachDatepickers();
+            this.handleSelect2Inputs();
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
             $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
-            if (typeof this.flags.helperLoaded === "undefined") {
-                IngestHelper.init();
-                this.flags.helperLoaded = true;
-            } else
-                IngestHelper.init(true);
+            this.getBasicData(true, function () {
+                self.addShotlistEventListeners();
+            });
             this.renderStatusbar();
         }
         , renderToolbar: function () {
@@ -289,7 +307,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , prepareSave: function () {
             var data = [{}];
             data[0].Shotlist = this.timeline.exportShots(undefined);
-            $.each(data[0].Shotlist, function() {
+            $.each(data[0].Shotlist, function () {
                 this.duration = this.shotDuration;
                 delete this.shotDuration;
                 delete this.mediaDuration;
@@ -318,7 +336,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = {overrideUrl: Config.api.media};
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
-
+            this.cache.pathId = pathId.toString();
+            this.cache.path = path.toString();
         }
         , renderStatusbar: function () {
             var elements = this.statusbar;
@@ -359,7 +378,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }));
                 }
             });
-            self.loadItemlist();
+        }
+        , handleSelect2Inputs: function () {
+            $("select.select2").each(function () {
+                var $select = $(this);
+                if ($select.hasClass("select2-hidden-accessible"))
+                    $select.select2('destroy');
+                $select.select2({dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body')});
+            });
+        }
+
+        , onShotOpened: function (metadata) {
+            // Load shot's metadata form
+            var self = this;
+            var template = Template.template.load('resources/shotlist', 'shot-metadata.partial');
+            var $container = $('#shot-metadata');
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var templateData = $.extend({}, self.cachedBasicData, {metadata: metadata});
+                var output = handlebarsTemplate(templateData);
+                $container.html(output).promise().done(function () {
+                    self.loadPersonsList();
+                    self.handleSelect2Inputs();
+                });
+            });
         }
 
         , getId: function () {
@@ -393,49 +435,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             };
             return params;
         }
-        , loadBroadcastMedia: function (e) {
-            if (typeof e !== "undefined")
-                e.preventDefault();
-            var params = this.getBroadcastMediaParams();
-            this.loadBroadcastMediaItems(params);
-        }
-        , loadBroadcastMediaItems: function (params) {
-            var self = this;
-            var params = (typeof params !== "undefined") ? params : self.getBroadcastMediaParams();
-            var data = $.param(params);
-            var model = new MediaModel(params);
-            model.fetch({
-                data: data
-                , success: function (items) {
-                    var items = {items: self.prepareItems(items.toJSON(), params)};
-                    var template = Template.template.load('broadcast/schedule', 'media.items.partial');
-                    var $container = $("#broadcast-itemlist");
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-                            $('#media-broadcast-date-search').val('');
-//                            self.afterRender(items, params);
-                        });
-                    });
-                }
-            });
-        }
-        , loadMedia: function (e, extend) {
-            if (typeof e !== "undefined")
-                e.preventDefault();
-            var params = this.getMediaParams();
-            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
-            this.loadMediaItems(params);
-            return false;
-        }
-        , loadMediaItems: function (params) {
-            var self = this;
-            var params = (typeof params !== "undefined") ? params : self.getParams();
-            var data = $.param(params);
-            var model = new MediaModel(params);
-            model.fetch({
-                data: data
+        , loadMediaItems: function (e) {
+            e.preventDefault();
+            var params = (typeof params !== "undefined") ? params : this.getMediaParams();
+            new MediaModel(params).fetch({
+                data: $.param(params)
                 , success: function (items) {
                     items = items.toJSON();
                     var template = Template.template.load('broadcast/schedule', 'media.items.partial');
@@ -443,35 +447,194 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
+                        $container.html(output);
+                    });
+                }
+            });
+        }
+        , loadMediaItem: function (id) {
+            var self = this;
+            new MediaItemModel({id: id}).fetch({
+                success: function (data) {
+                    var item = self.prepareItems(data.toJSON(), {id: id})[0];
+                    var template = Template.template.load('resources/shotlist', 'mediaitem.partial');
+                    self.cache.mediaItem = item;
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(item);
+                        $('#item-details').html(output).promise().done(function () {
+                            setTimeout(function () {
+                                self.timeline.loadMedia({
+                                    url: self.getMedia(item.Thumbnail)
+                                    , duration: item.Duration
+                                    , title: item.Title
+                                    , img: item.Thumbnail
+                                    , id: item.Id
+                                });
+                            }, 500);
+                        });
+                    });
+                }
+            })
+        }
+        , setMedia: function (e, id) {
+            if (typeof id !== 'undefined') {
+                this.loadMediaItem(id);
+            } else {
+                var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+                var id = $row.data('id');
+                new Backbone.Router().navigate('/resources/shotlist/' + id, {trigger: false});
+                this.loadMediaItem(id);
+                this.toggleSearchModal();
+            }
+        }
+        , collapseMediaItem: function (e) {
+            e.preventDefault();
+            $('.mini-item').toggleClass('collapsed')
+        }
+
+        , getBasicData: function (cache, callback) {
+            var self = this;
+            var params = {tags: [], subjects: [], persons: []};
+            new SharedModel().fetch({
+                success: function (tags) {
+                    params.tags = tags.toJSON();
+                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                        success: function (persons) {
+                            params.persons = persons.toJSON();
+                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                                success: function (subjects) {
+                                    params.subjects = subjects.toJSON();
+                                    if (typeof cache !== "undefined" && cache) {
+                                        self.cachedBasicData = params;
+                                    }
+                                    if (typeof callback === 'function') {
+                                        callback();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        , addShotlistEventListeners: function () {
+            var self = this;
+            // $(document).on('shotSaved', function (e) {
+            //
+            //     // console.log(e.detail);
+            // });
+            $(document).on('shotPlayed', function (e) {
+                self.onShotOpened(e.detail);
+            });
+        }
+        , loadPersonsList: function (categoryId) {
+            if (typeof categoryId === 'undefined' || categoryId <= 0) {
+                categoryId = this.cache.mediaItem.MetaCategoryId;
+            }
+            var self = this;
+            var params = {overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId};
+            var model = new SharedModel(params);
+            var $container = $('#persons-group');
+            $container.empty();
+            model.fetch({
+                success: function (data) {
+                    var items = self.prepareItems(data.toJSON(), params);
+                    var template = Template.template.load('resources/mediaitem', 'persons.partial');
+                    template.done(function (tmplData) {
+                        var handlebarsTemplate = Template.handlebars.compile(tmplData);
+                        var output = handlebarsTemplate({items: items, cols: false, placeholder: true});
                         $container.html(output).promise().done(function () {
-//                            self.afterRender(items, params);
                         });
                     });
                 }
             });
         }
-        , setMedia: function (e) {
-            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
-            var $activeRow = $('#schedule-table').find('.table-row.active');
-            $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
-            $activeRow.find('[data-type="duration"]').val($row.data('duration'));
-            $activeRow.find('[data-type="title"]').val($row.data('program-title'));
-            $activeRow.find('[data-type="title"]').parents('.form-group:first').find('label[for^="pr"]').text($row.data('program-title'));
-            $activeRow.find('[name="ConductorMetaCategoryId"]').val($row.data('program-id'));
-            $activeRow.find('[data-type="episode-title"]').val($row.find('span.title').text());
-            $activeRow.find('[data-type="episode-title"]').parents('.form-group:first').find('label[for^="ep"]').text($row.find('span.title').text());
-            $activeRow.find('[name="ConductorMediaId"]').val($row.data('id'));
-            $activeRow.find('[data-type="episode-number"]').val($.trim($row.find('[data-field="EpisodeNumber"]').text()));
-            $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
-            if (!$activeRow.find('[name="ConductorMediaId"]').next().is('.remove-meta')) {
-                $activeRow.find('[name="ConductorMediaId"]').after('<a href="#" class="remove-meta">×</a>');
+        , searchPersons: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
+            var params = {overrideUrl: Config.api.persons};
+            new SharedModel(params).fetch({
+                data: data
+                , success: function (items) {
+                    var items = self.prepareItems(items.toJSON(), params);
+                    var template = Template.template.load('resources/persons', 'person-results.partial');
+                    var $container = $('#person-search-results');
+                    template.done(function (data) {
+                        var handlebarsTemplate = Template.handlebars.compile(data);
+                        var output = handlebarsTemplate(items);
+                        $container.html(output);
+                    });
+                }
+            });
+        }
+        , getPersonResultItemParams: function ($row) {
+            return params = {
+                id: $row.data('id')
+                , name: $row.find('[data-type="name"]').text()
+                , family: $row.find('[data-type="family"]').text()
+                , type: $row.find('select').val()
             }
-            if (!$activeRow.find('[name="ConductorMetaCategoryId"]').next().is('.remove-meta')) {
-                $activeRow.find('[name="ConductorMetaCategoryId"]').after('<a href="#" class="remove-meta">×</a>');
-            }
-            ScheduleHelper.updateTimes($activeRow);
-            $('#media-modal').modal('hide');
-            toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', Config.settings.toastr);
+        }
+        , selectPerson: function (e) {
+            e.preventDefault();
+            var params = this.getPersonResultItemParams($(e.target).parents('tr:first'));
+            var foundDuplicate = false;
+            $('#persons-table tbody tr').each(function () {
+                if (~~$(this).attr('data-id') == ~~params.id)
+                    foundDuplicate = true;
+                if ($(this).hasClass('placeholder') && ~~$(this).attr('data-type') === ~~params.type)
+                    $(this).hide();
+            });
+            if (foundDuplicate)
+                return false;
+            $clonedRow = $('#persons-table tfoot tr:first').clone();
+            $clonedRow.attr('data-id', params.id);
+            $clonedRow.find('[data-type="id"]').text(params.id);
+            $clonedRow.find('[data-type="name"]').text(params.name);
+            $clonedRow.find('[data-type="family"]').text(params.family);
+            $clonedRow.find('select').val(params.type);
+            $('#persons-table tbody').append($clonedRow);
+        }
+        , deletePerson: function (e) {
+            e.preventDefault();
+            var $row = $(e.target).parents('tr:first');
+            bootbox.confirm({
+                message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        $row.remove();
+                    }
+                }
+            });
+        }
+        , submitPersons: function (id, callback) {
+            // typeof e !== 'undefined' && e.preventDefault();
+            var self = this;
+            var items = [];
+            $('#persons-table tbody tr').not('.placeholder').each(function () {
+                // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
+                items.push(~~$(this).attr('data-id'));
+            });
+            new SharedModel({overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + id}).save(null, {
+                data: JSON.stringify(items)
+                , contentType: 'application/json'
+                , processData: false
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                }
+                , success: function (model, response) {
+                    if (typeof callback === 'function')
+                        callback();
+                    toastr.success('با موفقیت انجام شد', 'ثبت اطلاعات عوامل', Config.settings.toastr);
+//                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
         }
     });
     return ShotlistView;

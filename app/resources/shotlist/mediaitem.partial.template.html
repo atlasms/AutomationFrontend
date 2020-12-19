@@ -1,0 +1,31 @@
+<style>
+    .mini-item { transition: 0.2s all; display: flex; flex-direction: row; padding: 10px; background: #f7f7f7; border: 1px solid #eee; margin-bottom: 20px; }
+    .mini-item figure { max-width: 220px; margin-left: 20px; margin-bottom: 0; transition: 0.2s all; }
+    .mini-item .desc { position: relative; width: 100%; }
+    .mini-item .desc .btn { position: absolute; top: 0; left: 0; }
+    .mini-item .desc .btn ~ .btn { left: 45px; }
+    .mini-item figure img { display: block; width: 100%; height: auto; }
+    .mini-item h3 { font-weight: bold; margin-top: 0; font-size: 18px; }
+    .mini-item p { margin-bottom: 0; transition: 0.2s all; overflow: hidden; }
+    .mini-item .list-inline { margin-bottom: 10px; overflow: hidden; }
+    .mini-item.collapsed { }
+    .mini-item.collapsed figure { max-width: 0; margin: 0; }
+    .mini-item.collapsed p { max-height: 0; margin: 0; }
+    .mini-item.collapsed .list-inline { max-height: 0; margin: 0; }
+</style>
+<div class="mini-item">
+    <figure>
+        <img src="{{Thumbnail}}"/>
+    </figure>
+    <div class="desc">
+        <a href="/resources/mediaitem/{{Id}}" target="_blank" class="btn btn-default btn-sm" data-task="toggle-collapse"><i class="fa fa-chevron-up"></i></a>
+        <a href="/resources/mediaitem/{{Id}}" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-external-link"></i> نمایش جزئیات</a>
+        <h3>{{Title}}&nbsp;-&nbsp;<small>قسمت {{EpisodeNumber}}</small></h3>
+        <ul class="list-inline">
+            <li>نام برنامه <strong>{{MetaCategoryName}}</strong></li>
+            <li>وضعیت <strong>{{StateText}}</strong></li>
+            <li>شناسه <strong>{{Id}}</strong></li>
+        </ul>
+        <p class="text-muted">{{Description}}</p>
+    </div>
+</div>
