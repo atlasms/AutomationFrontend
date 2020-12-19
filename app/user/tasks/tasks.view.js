@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         toolbar: [
             // {'button': {cssClass: 'btn default pull-left', text: 'صندوق دریافتی‌ها', type: 'button', task: 'received', icon: 'fa fa-download'}},
             // {'button': {cssClass: 'btn default pull-left', text: 'ارسالی‌ها', type: 'button', task: 'sent', icon: 'fa fa-upload'}},
-            {'button': {cssClass: 'btn btn-success', text: '', type: 'submit', task: 'filter', text: 'جستجو', icon: 'fa fa-search'}},
+            {'button': {cssClass: 'btn btn-success', type: 'submit', task: 'filter', text: 'جستجو', icon: 'fa fa-search'}},
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}},
             {
                 'select': {
@@ -23,8 +23,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             {
                 'select': {
                     cssClass: 'form-control', name: 'filter-type', options: [
-                        {value: 'date', text: 'بر اساس تاریخ پخش'},
-                        {value: 'all', text: 'همه'}
+                        {value: 'all', text: 'همه'},
+                        {value: 'date', text: 'بر اساس تاریخ پخش'}
                     ], addon: true, icon: 'fa fa-list'
                 }
             },
@@ -33,7 +33,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         , items: []
         , filters: {
             status: 'mytask',
-            date: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')),
+            date: '',
+            // date: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')),
             // type: 'date'
         }
         , defaultParams: {
@@ -58,7 +59,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 e.stopPropagation();
             }
 
-            , 'change [data-type="mode"]': 'load'
+            // , 'change [data-type="mode"]': 'load'
+            , 'change #toolbar select': 'filter'
             , 'click [data-task="filter"]': 'filter'
             , 'click [data-task="sent"]': 'filter'
             , 'click [data-task="received"]': 'filter'
@@ -213,7 +215,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 e.preventDefault();
             }
             var filters = this.getFilters();
-            console.log(filters);
+            var modelParams = {
+                status: filters.status,
+                count: 1000,
+                recommendedBroadcastDate: filters.date
+            };
+            this.load({query: $.param(modelParams)});
+
+            /*console.log(filters);
             var items = $.extend([], this.items);
             for (var i = 0; i < items.length; i++) {
                 items[i].visible = false;
@@ -241,16 +250,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 callback();
             } else {
                 this.showItems();
-            }
+            }*/
         }
-        , load: function () {
+        , load: function (params) {
             var self = this;
-            var params = this.getLoadParams();
+            var params = $.extend({}, this.getLoadParams(), params);
             new TasksModel(params).fetch({
                 success: function (data) {
                     var items = self.prepareItems(data.toJSON(), params);
                     self.items = items;
-                    self.filter();
+                    self.showItems();
                 }
             });
         }
@@ -265,18 +274,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             });
         }
         , getFilters: function () {
-            // return $.extend({}, this.filters, {
             return {
                 status: ~~$('[name="status"]').val(),
-                // date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val()) : null,
-                date: $('[name="filter-type"]').val() === 'date' ? $('[name="date"]').val() : null,
-                // type:
+                date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val()) : null,
+                // date: $('[name="filter-type"]').val() === 'date' ? $('[name="date"]').val() : null,
             };
         }
         , getLoadParams: function () {
             var mode = $('[data-type="mode"]').val();
+            var filters = this.getFilters();
+            var modelParams = {
+                status: filters.status,
+                count: 1000,
+                recommendedBroadcastDate: filters.date
+            };
             return {
-                path: '/' + mode + '?status=0'
+                // path: '/' + mode + '?status=0'
+                path: '/' + mode,
+                query: $.param(modelParams)
             };
         }
         , render: function () {
@@ -340,9 +355,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 }
             }
             var itemsList = Object.keys(items).map(function (k) {
-                items[k].visible = false;
-                items[k].date = Global.extractDate(items[k].RecommendedBroadcastDate);
+                items[k].date = typeof items[k].Media.RecommendedBroadcastDate !== 'undefined' && items[k].Media.RecommendedBroadcastDate
+                    ? Global.extractDate(items[k].Media.RecommendedBroadcastDate)
+                    : '1970-01-01';
+                console.log(items[k].Media.RecommendedBroadcastDate);
                 return items[k];
+            });
+            itemsList.sort(function (a, b) {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
             });
             return itemsList;
         }
