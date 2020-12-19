@@ -225,6 +225,7 @@ require.config({
         , "flowplayer.helper": ["helpers/flowplayer"]
         , "editable.helper": ["helpers/editable"]
         , "timeline.helper": ["helpers/timeline"]
+        , "mediaitem-timeline.helper": ["helpers/mediaitem-timeline"]
         , "authorization": ["helpers/authorization"]
     }
 });
