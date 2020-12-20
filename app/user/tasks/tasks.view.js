@@ -184,7 +184,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             var id = $(e.target).parents('tr:first').attr('data-id');
             var data = null;
             Object.keys(this.items).forEach(function (key) {
-                console.log(self.items[key]);
                 if (self.items[key].Id === ~~id) {
                     data = self.items[key];
                 }
@@ -201,8 +200,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             }
         }
         , toggleReceiptType: function (e) {
-//            e.preventDefault();
-            var self = this;
             var $this = $(e.currentTarget);
             $(".mail-to").find("select").prop('disabled', true);
             $('select[name=' + $this.attr("data-activate") + ']').removeAttr('disabled');
@@ -221,36 +218,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 recommendedBroadcastDate: filters.date
             };
             this.load({query: $.param(modelParams)});
-
-            /*console.log(filters);
-            var items = $.extend([], this.items);
-            for (var i = 0; i < items.length; i++) {
-                items[i].visible = false;
-                if (filters.date !== null) {
-                    if (typeof items[i].Media !== 'undefined'
-                        && items[i].Media !== null
-                        && typeof items[i].Media.RecommendedBroadcastDate !== 'undefined'
-                        && items[i].Media.RecommendedBroadcastDate !== null) {
-                        var gDate = items[i].Media.RecommendedBroadcastDate.split('T')[0];
-                        var jDate = Global.gregorianToJalali(gDate);
-                        if (jDate === filters.date) {
-                            items[i].visible = true;
-                        }
-                    }
-                } else {
-                    items[i].visible = true;
-                }
-                if (filters.status !== 0) {
-                    if (items[i].Status !== filters.status && items[i].visible) {
-                        items[i].visible = false;
-                    }
-                }
-            }
-            if (typeof callback === 'function') {
-                callback();
-            } else {
-                this.showItems();
-            }*/
         }
         , load: function (params) {
             var self = this;
@@ -355,14 +322,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 }
             }
             var itemsList = Object.keys(items).map(function (k) {
-                items[k].date = typeof items[k].Media.RecommendedBroadcastDate !== 'undefined' && items[k].Media.RecommendedBroadcastDate
-                    ? Global.extractDate(items[k].Media.RecommendedBroadcastDate)
-                    : '1970-01-01';
-                console.log(items[k].Media.RecommendedBroadcastDate);
+                items[k].date = (typeof items[k].Media.RecommendedBroadcastDate !== 'undefined'
+                    && items[k].Media.RecommendedBroadcastDate
+                    && new Date(items[k].Media.RecommendedBroadcastDate).getFullYear() >= 2020)
+                    ? items[k].Media.RecommendedBroadcastDate.split('T')[0]
+                    : '1900-01-01';
+                console.log(items[k].date, items[k].Media.RecommendedBroadcastDate);
                 return items[k];
             });
             itemsList.sort(function (a, b) {
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
             });
             return itemsList;
         }
