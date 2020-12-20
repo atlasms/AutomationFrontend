@@ -1,0 +1,27 @@
+{{#each shots}}
+<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time mediaDuration}}" data-type="{{../options.type}}" data-external-id="{{externalId}}"
+	class="{{#if Tags}}note note-info{{/if}}{{#if Persons}}note note-danger{{/if}}{{#if Subjects}}note note-success{{/if}}">
+	{{#if ../options.ordering}}
+	<td class="ordering">
+		<div style="width: 68px;">
+			<span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>
+			<span data-task="reorder" data-value="down" class="btn btn-sm btn-default"><i class="fa fa-arrow-down"></i></span>
+		</div>
+	</td>
+	{{/if}}
+	<td class="col-xs-2">
+		<figure>
+			<img src="{{img}}" alt="" onerror="this.onerror=null;this.src='/assets/img/placeholder.png'">
+		</figure>
+	</td>
+	<td class="col-xs-10">
+		{{#if title}}<h4 class="title">{{title}}</h4>{{/if}}
+		<span data-type="start">{{time start}}</span>
+		<span class="badge badge-default badge-roundless">&nbsp;</span>
+		<span data-type="end">{{time end}}</span>
+		<span data-type="duration" class="badge badge-info">{{time shotDuration}}</span>
+	</td>
+	<td><button class="btn btn-default" data-task="delete-shot"><i class="fa fa-trash"></i></button></td>
+	<td><button class="btn btn-success" data-task="save-shot"><i class="fa fa-save"></i></button></td>
+</tr>
+{{/each}}

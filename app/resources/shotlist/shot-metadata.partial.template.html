@@ -1,5 +1,10 @@
+<style>
+    [data-task="submit-persons"] { display: none; }
+    .page-title { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+    .persons-title { font-weight: bold; padding-top: 8px; font-size: 17px; }
+</style>
 <div class="metadata-form">
-    <h4 class="modal-title">ورود اطلاعات شات</h4>
+    <h4 class="page-title">ورود اطلاعات شات</h4>
     <!--<div class="form-group">
         <div class="row">
             <div class="col-xs-3">
@@ -66,7 +71,7 @@
     <hr style="margin: 0;"/>
     <div>
         {{{personsWarning}}}
-        <h4>فهرست عوامل</h4>
+        <h4 class="persons-title">فهرست عوامل</h4>
         <div class="clearfix"></div>
         <div id="persons-group"></div>
     </div>

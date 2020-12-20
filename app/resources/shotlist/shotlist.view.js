@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'mediaitem-timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'flowplayer.helper', 'bootstrap/modal', 'select2'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'mediaitem-timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'bootbox', 'flowplayer.helper', 'bootstrap/modal', 'select2'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, bootbox, FlowPlayer) {
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            , {'button': {cssClass: 'btn btn-success', text: 'ذخیره شات‌لیست ', type: 'button', task: 'save', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn blue-sharp', text: 'جستجوی مدیا ', type: 'button', task: 'search', icon: 'fa fa-search'}}
         ]
         , statusbar: [
