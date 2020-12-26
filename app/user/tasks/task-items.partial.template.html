@@ -1,17 +1,36 @@
 {{#each []}}
 <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
-    <td>{{Id}}</td>
     <td>
-        <span style="display: block;" class="text-center label label-{{resolveTaskLabel JobId}}">{{JobIdText}}</span>
+<!--        {{math @index '+' 1}}-->
+        <div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
+            <input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{Id}}" />
+            <label for="check-{{Id}}"></label>
+        </div>
+    </td>
+<!--    <td>{{Id}}</td>-->
+    <td>{{math @index '+' 1}}</td>
+    <td>
+        <span class="media-state text-center label label-{{resolveTaskLabel JobId}}">{{JobIdText}}</span>
     </td>
     <!--                                    <td> {{Title}}</td>-->
     <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
     <td>
-        <span style="display: block;" class="text-center label label-{{resolveLabel Media.State}}">{{Media.StateText}}</span>
+        <div class="date">
+            {{time Media.Duration}}
+        </div>
     </td>
-    <td> {{extractDate date}}</td>
-    <td> {{CreatedByText}}</td>
-    <td> {{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</td>
+    <td>
+        <span class="media-state text-center label label-{{resolveLabel Media.State}}">{{Media.StateText}}</span>
+    </td>
+    <td>
+        <div class="date">{{extractDate date}}</div>
+    </td>
+    <td>
+        <div class="name">{{CreatedByText}}</div>
+    </td>
+    <td>
+        <div class="name">{{#if ToGroupId}}<i class="fa fa-users"></i> {{ToGroupIdText}}{{else}}<i class="fa fa-user"></i> {{ToUserIdText}}{{/if}}</div>
+    </td>
     <td class="text-right">
         <div class="date">
             {{extractTime CreatedDate}} {{extractDate CreatedDate}}
@@ -23,7 +42,7 @@
         </div>
     </td>
     <td class="">
-        {{DoneByText}}
+        <div class="name">{{DoneByText}}</div>
     </td>
     <td>
         <select class="form-control input-sm" data-type="change-state">
@@ -33,9 +52,11 @@
         </select>
     </td>
     <td class="text-right">
-        <!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
-        <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
-        <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
+        <div class="buttons">
+            <!--                                        <button class="btn btn-sm btn-outline green-haze" data-task="follow-up"><i class="fa fa-recycle"></i> پیگیری</button>-->
+            <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
+            <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
+        </div>
     </td>
 </tr>
 {{/each}}

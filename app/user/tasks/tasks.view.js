@@ -5,7 +5,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             // {'button': {cssClass: 'btn default pull-left', text: 'صندوق دریافتی‌ها', type: 'button', task: 'received', icon: 'fa fa-download'}},
             // {'button': {cssClass: 'btn default pull-left', text: 'ارسالی‌ها', type: 'button', task: 'sent', icon: 'fa fa-upload'}},
             {'button': {cssClass: 'btn btn-success', type: 'submit', task: 'filter', text: 'جستجو', icon: 'fa fa-search'}},
+            {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;'}},
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}},
+            {
+                'select': {
+                    cssClass: 'form-control', name: 'sort', options: [
+                        {value: 'broadcast-date', text: 'تاریخ پخش', default: true},
+                        {value: 'created', text: 'زمان ارسال'}
+                    ], addon: true, icon: 'fa fa-sort', text: 'ترتیب'
+                }
+            },
             {
                 'select': {
                     cssClass: 'form-control', name: 'mode', options: [
@@ -49,6 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             'click .inbox-sidebar [data-type]': 'filterItems'
             , 'click .inbox-content table tr': 'loadTask'
             , 'click [data-task="refresh-view"]': 'reLoad'
+            , 'click [data-task="assign-batch"]': 'openAssignBatchModal'
             , 'click [data-task="assign"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
             , 'change [name="ToGroupId"]': 'updateUserList'
@@ -57,6 +67,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'change [data-type="change-state"]': 'changeStatus'
             , 'click [data-type="change-state"]': function (e) {
                 e.stopPropagation();
+            }
+
+            , 'click tr[data-id] td:first-child': function (e) {
+                e.stopPropagation();
+                // if ($(e.target).is('input')) {
+                //     return true;
+                // }
+                // var $tr = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+                // $tr.find('input')[0].checked = !$tr.find('input')[0].checked;
             }
 
             // , 'change [data-type="mode"]': 'load'
@@ -69,17 +88,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             }
         }
         , changeStatus: function (e, givenParams, reload) {
+            var self = this;
             var $target = null;
             if (typeof e === 'object') {
                 e.stopPropagation();
                 e.preventDefault();
                 $target = $(e.target);
             }
+            var id = typeof givenParams !== 'undefined' && givenParams.id ? givenParams.id : $target.parents('tr:first').attr('data-id');
+            var status = 'status=' + (typeof givenParams !== 'undefined' && givenParams.status ? givenParams.status : $target.val());
+            if (id.indexOf('$$') !== -1) {
+                var ids = id.split('$$');
+                for (var el in ids) {
+                    this.changeTaskItemState({id: el, query: status}, false);
+                }
+                setTimeout(function () {
+                    self.reLoad();
+                }, 500)
+            } else {
+                this.changeTaskItemState({id: id, query: status}, true);
+            }
+        }
+        , changeTaskItemState: function (params, reload) {
             var self = this;
-            var params = {
-                id: typeof givenParams !== 'undefined' && givenParams.id ? givenParams.id : $target.parents('tr:first').attr('data-id'),
-                query: 'status=' + (typeof givenParams !== 'undefined' && givenParams.status ? givenParams.status : $target.val())
-            };
             new TasksModel(params).save(null, {
                 patch: true,
                 success: function (res) {
@@ -93,7 +124,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
 
         , assign: function (e) {
             e.preventDefault();
-            var self = this;
             var data = $('#assign-modal form:first').serializeObject();
             if (data.ToUserId !== '0') {
                 data.ToGroupId = null;
@@ -101,6 +131,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 data.ToUserId = null;
             }
             delete data['to-type'];
+            if (data.MasterId.indexOf('$$') !== -1) {
+                var temp = data.MasterId.split('$$');
+                for (var i = 0; i < temp.length; i++) {
+                    data.MasterId = temp[i];
+                    this.submitAssign(data, i === (temp.length - 1));
+                }
+            } else {
+                this.submitAssign(data, true);
+            }
+        }
+        , submitAssign: function (data, changeStatus) {
+            var self = this;
             new TasksModel({}).save(null, {
                 data: JSON.stringify(data),
                 contentType: 'application/json',
@@ -108,9 +150,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 success: function (res) {
                     toastr['success']('مدیا با موفقیت ارجاع شد.', 'ارجاع مدیا', Config.settings.toastr);
                     $('#assign-modal').modal('hide');
-                    self.changeStatus(undefined, {id: self.currentAssigningItem, status: 3}, true);
+                    if (typeof changeStatus !== 'undefined' && changeStatus) {
+                        self.changeStatus(undefined, {id: self.currentAssigningItem, status: 3}, true);
+                    }
                 }
             });
+        }
+        , openAssignBatchModal: function (e) {
+            e.preventDefault();
+            var selectedItems = [];
+            var currentAssigningItems = [];
+            $('#task-items tr').each(function () {
+                if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
+                    selectedItems.push($(this).attr('data-media-id'));
+                    currentAssigningItems.push($(this).attr('data-id'))
+                }
+            });
+            if (!selectedItems.length) {
+                toastr['error']('هیچ موردی انتخاب نشده است.', 'ارجاع مدیا', Config.settings.toastr);
+                return false;
+            }
+            $('[name="MasterId"]').val(selectedItems.join('$$'));
+            this.currentAssigningItem = currentAssigningItems.join('$$');
+            $('#assign-modal').modal('toggle');
         }
         , openAssignModal: function (e) {
             e.stopPropagation();
@@ -155,7 +217,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         }
         , generateUserOptions: function (group) {
             group = typeof group !== 'undefined' && group ? group : 0;
-            console.log(group);
             var $select = $("[name=ToUserId]");
             $select.empty();
             if (group !== 0)
@@ -327,11 +388,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                     && new Date(items[k].Media.RecommendedBroadcastDate).getFullYear() >= 2020)
                     ? items[k].Media.RecommendedBroadcastDate.split('T')[0]
                     : '1900-01-01';
-                console.log(items[k].date, items[k].Media.RecommendedBroadcastDate);
                 return items[k];
             });
             itemsList.sort(function (a, b) {
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
+                if ($('[data-type="sort"]').val() === 'broadcast-date') {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime();
+                }
+                if ($('[data-type="sort"]').val() === 'created') {
+                    return new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime();
+                }
             });
             return itemsList;
         }
