@@ -1,5 +1,5 @@
 {{#each shots}}
-<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time mediaDuration}}" data-type="{{../options.type}}" data-external-id="{{externalId}}"
+<tr data-id="{{id}}" data-duration="{{time shotDuration}}" data-media-duration="{{time mediaDuration}}" data-type="{{../options.type}}" data-external-id="{{externalId}}" data-tags="" data-subjects="" data-persons="" data-description=""
 	class="{{#if Tags}}note note-info{{/if}}{{#if Persons}}note note-danger{{/if}}{{#if Subjects}}note note-success{{/if}}">
 	{{#if ../options.ordering}}
 	<td class="ordering">
@@ -22,6 +22,6 @@
 		<span data-type="duration" class="badge badge-info">{{time shotDuration}}</span>
 	</td>
 	<td><button class="btn btn-default" data-task="delete-shot"><i class="fa fa-trash"></i></button></td>
-	<td><button class="btn btn-success" data-task="save-shot"><i class="fa fa-save"></i></button></td>
+<!--	<td><button class="btn btn-success" data-task="save-shot"><i class="fa fa-save"></i></button></td>-->
 </tr>
 {{/each}}

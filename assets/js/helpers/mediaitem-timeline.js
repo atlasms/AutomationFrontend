@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         this.$el = (typeof $el !== 'undefined') ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
         this.callback = (typeof callback !== 'undefined' && callback !== null) ? callback : null;
-        this.timeline = (typeof timeline !== 'undefined' && timeline !== null) ? timeline : {items: [], shots: []};
+        this.timeline = (typeof timeline !== 'undefined' && timeline !== null) ? timeline : [];
         this.timeline['options'] = this.options;
         this.instance = null;
 
@@ -95,7 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             var method = (typeof clean !== "undefined" && clean === true) ? 'html' : 'append';
             var template = Template.template.load('resources/media', 'media.item-condensed.partial');
             var $container = $("#timeline-repository tbody");
-            items = self.checkDuplicateMedia(items);
+            // items = self.checkDuplicateMedia(items);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate(items);
@@ -104,16 +104,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 });
             });
         }
-        , checkDuplicateMedia: function (items) {
-            var self = this;
-            for (var i in items) {
-                if (typeof self.mediaList[items[i]['id']] !== "undefined")
-                    delete items[i];
-                else
-                    self.mediaList[items[i]['id']] = items[i];
-            }
-            return items;
-
+        , clearForm: function () {
+            $('[name="start"], [name="end"]').val('');
+            $('[data-type="metadata"]').find('option:selected').prop('selected', false);
+            $('[data-type="metadata"]').trigger('change');
+        }
+        , clearShots: function () {
+            $("#shotlist-table tr").remove();
         }
         , loadMedia: function (media) {
             // Load media to player
@@ -121,7 +118,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             if (self.playerInstance)
                 self.player.remove();
             $('#player-container').empty();
-            var type = media.url.indexOf('m3u8') !== -1 ? "application/x-mpegurl" : 'video/mp4';
+            var type = 'video/mp4';
             var playerConfig = {
                 clip: {
                     sources: [
@@ -138,35 +135,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             self.player = player;
             self.playerInstance = player.instance;
 
-            this.clearForm();
-        }
-        , clearForm: function () {
-            $('[name="start"], [name="end"]').val('');
-            $('[data-type="metadata"]').find('option:selected').prop('selected', false);
-            $('[data-type="metadata"]').trigger('change');
-        }
-        , clearShots: function () {
-            $("#shotlist-table tr").remove();
-        }
-        , mapThenAddShots: function (shots, initial) {
-            var data = {options: this.options, shots: []};
-            $.each(shots, function () {
-                var shot = this;
-                data.shots.push({
-                    id: shot.Id
-                    , start: shot.Start
-                    , end: shot.End
-                    , shotDuration: shot.Duration
-                    , mediaDuration: shot.ExternalObject.duration
-                    , type: shot.Type
-                    , Tags: shot.Tags
-                    , Persons: shot.Persons
-                    , Subjects: shot.Subjects
-                    , externalId: shot.ExternalId
-                    , img: shot.ExternalObject.thumb
-                });
-            });
-            this.addShot(null, data, initial);
+            // this.clearForm();
         }
         , addShot: function (e, shots, initial) {
             // Add shot to shotlist
@@ -191,8 +160,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                         self.clearShots();
                     }
                     $container.append(output).promise().done(function () {
-                        var event = new CustomEvent('shotSaved', {detail: item.shots[0]});
-                        document.dispatchEvent(event);
                         if (self.options.singleMode && !initial) {
                             if (!self.options.localMode) {
                                 self.saveShot(item, $container.find('> tr:last'));
@@ -202,7 +169,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                             self.initSortable(true);
                         }
                         window.setTimeout(function () {
-                            $("#shotlist-table tbody tr:last").trigger('click');
+                            // $("#shotlist-table tbody tr:last").trigger('click');
+                            $("#shotlist-table tbody tr:last")[0].click();
                         }, 500);
                         self.updateTotalDuration();
                     });
@@ -232,7 +200,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             var end = Global.processTime($shot.find('[data-type="end"]').text());
             var metadata = this._getShotMetadata($shot);
             this._getMedia($shot, ~~$shot.data('type'), function (url) {
-                self.renderPlayer(url, duration, function (instance) {
+                self.renderPlayer(url, mediaDuration, function (instance) {
                     self.player.setRange([start, end], undefined, true);
                     if (self.options.metadata) {
                         self.setMetadata(metadata);
@@ -245,7 +213,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                         end: end,
                         tags: metadata.tags,
                         persons: metadata.persons,
-                        subjects: metadata.subjects
+                        subjects: metadata.subjects,
+                        description: metadata.description
                     };
                     if (typeof self.options.callbacks.playShot === 'function') {
                         self.options.callbacks.playShot(shotParams);
@@ -267,17 +236,22 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         , exportShots: function (e) {
             typeof e !== 'undefined' && e.preventDefault();
             var $shots = $('#shotlist-table tbody tr');
+            var self = this;
             var data = [];
             $shots.each(function () {
-                data.push({
-                    id: $(this).attr('data-external-id')
-                    , start: Global.processTime($(this).find('[data-type="start"]').text())
-                    , end: Global.processTime($(this).find('[data-type="end"]').text())
+                var $shot = $(this);
+                var item = {
+                    externalId: $shot.attr('data-external-id')
+                    , start: Global.processTime($shot.find('[data-type="start"]').text())
+                    , end: Global.processTime($shot.find('[data-type="end"]').text())
+                    , img: $shot.find('img').attr('src')
+                    , title: $shot.find('.title').text()
+
                     , shotDuration: Global.processTime($(this).data('duration'))
                     , mediaDuration: Global.processTime($(this).data('media-duration'))
-                    , img: $(this).find('img').attr('src')
-                    , title: $(this).find('.title').text()
-                });
+                };
+                var metadata = self._getShotMetadata($shot);
+                data.push(self._prepareShotData($.extend({}, item, metadata)));
             });
             return data;
         }
@@ -309,9 +283,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             // TODO: Demo!
             // var data = (typeof data !== 'undefined') ? data : demoData;
             var timeline = JSON.parse(data.replace(/[\u0000-\u0019]+/g, ''));
-            timeline.items.forEach(function (item) {
-                item.video = item.img.replace('.jpg', '_lq.mp4');
-            });
+            // timeline.items.forEach(function (item) {
+            //     item.video = item.img.replace('.jpg', '_lq.mp4');
+            // });
             timeline['options'] = this.options;
             this.render(timeline);
         }
@@ -319,17 +293,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             typeof e !== 'undefined' && e.preventDefault();
             var self = this;
             var $media = $('#timeline-repository tbody tr');
-            var items = [];
-            $media.each(function () {
-                items.push({
-                    id: $(this).attr('data-id')
-                    , duration: Global.processTime($(this).attr('data-duration'))
-                    , title: $(this).find('.title').text()
-                    , img: $(this).find('img').attr('src')
-                    , video: self._getMedia($(this).find('img').attr('src'))
-                });
-            });
-            return {items: items, shots: self.exportShots(e)};
+            // var items = [];
+            // $media.each(function () {
+            //     items.push({
+            //         id: $(this).attr('data-id')
+            //         , duration: Global.processTime($(this).attr('data-duration'))
+            //         , title: $(this).find('.title').text()
+            //         , img: $(this).find('img').attr('src')
+            //         , video: self._getMedia($(this).find('img').attr('src'))
+            //     });
+            // });
+            return {shots: self.exportShots(e)};
         }
         , initSortable: function (refresh) {
             var refresh = (typeof refresh !== 'undefined') ? refresh : false;
@@ -406,23 +380,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 // TODO
                 console.log(timeline, JSON.stringify(timeline));
             });
-            $(document).off('click', '#timeline-repository tbody tr');
-            $(document).on('click', '#timeline-repository tbody tr', function (e) {
-                $('#timeline-repository tbody tr').removeClass('active');
-                var $row = $(this).is("tr") ? $(this) : $(this).parents("tr:first");
-                $row.addClass('active');
-                self.loadMedia({
-                    url: $row.data('url')
-                    , duration: Global.processTime($row.data('duration'))
-                    , title: $row.find('.title').text()
-                    , img: $row.find('img').attr('src')
-                    , id: $row.data('id')
-                });
-            });
-            $(document).off('click', '[data-task="add-clip"]');
-            $(document).on('click', '[data-task="add-clip"]', function (e) {
-                self.addShot(e);
-            });
+            // $(document).off('click', '[data-task="add-clip"]');
+            // $(document).on('click', '[data-task="add-clip"]', function (e) {
+            //     self.addShot(e);
+            // });
             $(document).off('click', '[data-task="reorder"]');
             $(document).on('click', '[data-task="reorder"]', function (e) {
                 e.stopPropagation();
@@ -436,6 +397,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             $(document).off('click', '#shotlist-table tbody tr');
             $(document).on('click', '#shotlist-table tbody tr', function (e) {
                 e.stopPropagation();
+                var $rows = $('#shotlist-table tbody tr');
+                var $currentRow = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+                $rows.removeClass('active');
+                $currentRow.addClass('active');
                 self.playShot(e);
             });
             $(document).off('change', 'input[name="type"]');
@@ -445,14 +410,21 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             });
         }
         , _getShotMetadata: function ($shot) {
-            var metadata = {type: 'tags', tags: [], persons: [], subjects: []};
+            var metadata = {tags: [], persons: [], subjects: [], description: ''};
             var types = ['tags', 'persons', 'subjects'];
             for (var i in types) {
-                $shot.find('[data-metadata="' + types[i] + '"] span').each(function () {
-                    metadata[types[i]].push($(this).attr('data-id'));
-                    metadata.type = types[i];
-                });
+                var data = [];
+                var attr = $shot.attr('data-' + types[i]);
+                if (typeof attr !== 'undefined' && attr && attr !== '') {
+                    if (attr.indexOf(',') !== -1) {
+                        data = attr.split(',');
+                    } else {
+                        data = [attr];
+                    }
+                }
+                metadata[types[i]] = data;
             }
+            metadata.description = $shot.attr('data-description');
             return metadata;
         }
         , _prepareShotData: function (shot) {
@@ -461,11 +433,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             data.End = shot.end;
             data.Duration = shot.shotDuration;
             data.Type = this.options.type;
+            data.Description = shot.description;
             data.ExternalId = shot.externalId;
-            data.Tags = typeof shot.Tags !== "undefined" ? shot.Tags : [];
-            data.Persons = typeof shot.Persons !== "undefined" ? shot.Persons : [];
-            data.Subjects = typeof shot.Subjects !== "undefined" ? shot.Subjects : [];
-            return [data];
+            data.Tags = typeof shot.tags !== "undefined" ? shot.tags : [];
+            data.Persons = typeof shot.persons !== "undefined" ? shot.persons : [];
+            data.Subjects = typeof shot.subjects !== "undefined" ? shot.subjects : [];
+            return data;
         }
         , _resolveMetadata: function (data) {
             switch (data.metadataType) {
@@ -527,11 +500,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         }
         , _afterRender: function (timeline) {
             // load shots
-            if (timeline.shots.length)
+            if (timeline.length)
                 this.addShot(null, timeline, true);
-            // load media(s)
-            if (timeline.items.length)
-                this.addMedia(timeline.items);
+            // // load media(s)
+            // if (timeline.items.length)
+            //     this.addMedia(timeline.items);
             // Add event listeners
             this._registerEvents();
             // Initialize Sortables
