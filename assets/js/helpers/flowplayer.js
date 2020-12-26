@@ -58,17 +58,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate($this.options);
                 $container.html(output).promise().done(function () {
-                    requirejs(['hlsjs'], function (HLSJS) {
-                        var instance = $this.instance = flowplayer('#player', $this.options);
-                        $this.instance.on('ready', function () {
-                            $('#player').removeClass('is-rtl');
-                            $this.setUI($this, instance);
-                            $this.setEvents();
-                            if (typeof callback === "function") {
-                                callback(instance);
-                            }
-                        });
+                    // requirejs(['hlsjs'], function (HLSJS) {
+                    var instance = $this.instance = flowplayer('#player', $this.options);
+                    $this.instance.on('ready', function () {
+                        $('#player').removeClass('is-rtl');
+                        $this.setUI($this, instance);
+                        $this.setEvents();
+                        if (typeof callback === "function") {
+                            callback(instance);
+                        }
                     });
+                    // });
                 });
             });
             return this;
@@ -133,6 +133,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             this.rangeValues = positions;
 //            $("#seekbar .range .inner:first").slider({values: []})
             if (setSlider) {
+                console.log('set slider position ', positions);
                 $("#seekbar .range .inner:first").slider({values: positions});
             }
         }
@@ -169,7 +170,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 });
             }
             if ($this.options.template.seekbar.range) {
-                $("#seekbar .range .inner:first").slider({
+                var seekbarRangeSliderParams = {
                     range: true
                     , values: [0, typeof $this.options.duration !== "undefined" ? $this.options.duration : $this.duration]
                     , min: 0
@@ -177,7 +178,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     , slide: function (e, ui) {
                         $this.setRange(ui.values);
                     }
-                });
+                };
+                $("#seekbar .range .inner:first").slider(seekbarRangeSliderParams);
             }
             if ($this.options.template.controls.keys) {
                 $('a[data-type="controls"]').on('click', function (e) {
@@ -223,11 +225,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
 //                        $("#seekbar .seeker").find(".inner:first").slider('option', 'value', ($this.position * 100) / $this.duration);
 
 //                    }, 50);
-//console.log($this.position)
                 instance.on('progress', function () {
-                    $this.position = $this.instance.video.time;
-                    $("#seekbar .seeker").find(".inner:first").slider('option', 'value', $this.position);
-                    $this.options.template.seekbar.current && $("#seekbar .current").text(Global.createTime($this.position));
+                    setTimeout(function () {
+                        $this.position = $this.instance.video.time;
+                        $("#seekbar .seeker").find(".inner:first").slider('option', 'value', $this.position);
+                        $this.options.template.seekbar.current && $("#seekbar .current").text(Global.createTime($this.position));
+                    }, 500)
                 });
             }
 //            });
