@@ -176,7 +176,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             else
                 return (convert) ? Global.gregorianToJalali(value) : value;
         }
-        , createTimeNoHours: function(timestamp) {
+        , createTimeNoHours: function (timestamp) {
             if (typeof timestamp !== 'undefined') {
                 var minutes = Global.zeroFill(parseInt(timestamp / 60));
                 var seconds = Global.zeroFill(timestamp % 60);
@@ -390,6 +390,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         , checkForPersianCharacters: function (text, method) {
             method = typeof method === 'string' ? method : 'text';
             return persianRex[method].test(text);
+        }
+        , objectListToArray: function (obj) {
+            var arr = [];
+            try {
+                for (var key in Object.keys(obj)) {
+                    arr.push(obj[key]);
+                }
+            } catch (e) {
+                // ignore
+            }
+            return arr;
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
