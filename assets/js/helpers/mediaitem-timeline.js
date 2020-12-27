@@ -137,6 +137,25 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
 
             // this.clearForm();
         }
+        , _perpareInitialShots: function (shots) {
+            console.log(this);
+            console.log(JSON.stringify(this.currentMedia));
+            var self = this;
+            var output = [];
+            for (var key in shots) {
+                var item = $.extend({}, shots[key], {
+                    start: ~~shots[key].Start,
+                    end: ~~shots[key].End,
+                    shotDuration: shots[key].Duration,
+                    mediaDuration: self.currentMedia.Duration,
+                    img: self.currentMedia.img,
+                    externalId: shots[key].ExternalId,
+                });
+                console.log(item);
+                output.push(item);
+            }
+            return output;
+        }
         , addShot: function (e, shots, initial) {
             // Add shot to shotlist
             typeof e !== "undefined" && e && e.preventDefault();
@@ -148,6 +167,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 return false;
             }
             if (typeof item.shots !== "undefined" && item.shots.constructor === Array) {
+                if (item.shots.length > 1 && initial) {
+                    item.shots = this._perpareInitialShots(item.shots);
+                }
                 var template = Template.template.load('shared', 'shotlist-media-item.partial');
                 var $container = $("#shotlist-table tbody");
                 if ($.trim($container.html()) === '') {
@@ -214,7 +236,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                         tags: metadata.tags,
                         persons: metadata.persons,
                         subjects: metadata.subjects,
-                        description: metadata.description
+                        title: metadata.title
                     };
                     if (typeof self.options.callbacks.playShot === 'function') {
                         self.options.callbacks.playShot(shotParams);
@@ -410,7 +432,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             });
         }
         , _getShotMetadata: function ($shot) {
-            var metadata = {tags: [], persons: [], subjects: [], description: ''};
+            var metadata = {tags: [], persons: [], subjects: [], title: ''};
             var types = ['tags', 'persons', 'subjects'];
             for (var i in types) {
                 var data = [];
@@ -424,7 +446,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 }
                 metadata[types[i]] = data;
             }
-            metadata.description = $shot.attr('data-description');
+            metadata.title = $shot.attr('data-title');
             return metadata;
         }
         , _prepareShotData: function (shot) {
@@ -433,11 +455,26 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             data.End = shot.end;
             data.Duration = shot.shotDuration;
             data.Type = this.options.type;
-            data.Description = shot.description;
+            data.Title = shot.title;
             data.ExternalId = shot.externalId;
-            data.Tags = typeof shot.tags !== "undefined" ? shot.tags : [];
-            data.Persons = typeof shot.persons !== "undefined" ? shot.persons : [];
-            data.Subjects = typeof shot.subjects !== "undefined" ? shot.subjects : [];
+            data.Tags = [];
+            data.Persons = [];
+            data.Subjects = [];
+            if (typeof shot.tags !== "undefined" && shot.tags.length) {
+                for (var t in shot.tags) {
+                    data.Tags.push({id: ~~shot.tags[t]});
+                }
+            }
+            if (typeof shot.persons !== "undefined" && shot.persons.length) {
+                for (var p in shot.persons) {
+                    data.Persons.push({id: ~~shot.persons[p]});
+                }
+            }
+            if (typeof shot.subjects !== "undefined" && shot.subjects.length) {
+                for (var s in shot.subjects) {
+                    data.Subjects.push({id: ~~shot.subjects[s]});
+                }
+            }
             return data;
         }
         , _resolveMetadata: function (data) {
@@ -500,7 +537,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         }
         , _afterRender: function (timeline) {
             // load shots
-            if (timeline.length)
+            if (timeline.media) {
+                this.loadMedia(timeline.media);
+            }
+            if (timeline.shots.length)
                 this.addShot(null, timeline, true);
             // // load media(s)
             // if (timeline.items.length)

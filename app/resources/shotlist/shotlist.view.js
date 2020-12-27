@@ -95,7 +95,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var data = this.prepareSave();
-            console.log(data);
             new MediaModel({overrideUrl: Config.api.shotlist}).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -119,7 +118,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $activeShot.attr('data-tags', $metadataForm.find('[name="Tags"]').val().join(','));
             $activeShot.attr('data-subjects', $metadataForm.find('[name="Subjects"]').val().join(','));
             $activeShot.attr('data-persons', persons.join(','));
-            $activeShot.attr('data-description', $('[name="Description"]').val());
+            $activeShot.attr('data-title', $('[name="Title"]').val());
             toastr.info('اطلاعات ثبت شد. برای ثبت نهایی روی ذخیره شات‌لیست کلیک کنید.', 'ثبت اطلاعات شات', Config.settings.toastr);
         }
         , seekPlayer: function (e) {
@@ -166,36 +165,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var itemId = self.getId();
                     if (itemId) {
                         self.setMedia(null, itemId);
-                        // TODO: Load shots
                     }
                 });
             });
-
-            if (typeof id !== 'undefined' && id) {
-                var params = {overrideUrl: Config.api.shotlist, query: 'type=1&externalid=' + this.getId()};
-                new MediaModel(params).fetch({
-                    success: function (currentShots) {
-                        var shotsObject = self.prepareItems(currentShots.toJSON(), params);
-                        var shots = [];
-                        for (var key in Object.keys(shotsObject)) {
-                            shots.push(shotsObject[key]);
-                        }
-                        self.initTimeline(shots);
-                    }
-                });
-            } else {
-                this.initTimeline([]);
-            }
         }
-        , initTimeline: function (shots) {
+        , initTimeline: function (shots, media) {
             shots = typeof shots !== 'undefined' && shots.length ? shots : [];
+            media = typeof media !== 'undefined' && media ? media : null;
             this.timeline = new Timeline('#timeline', {
                 singleMode: true,
                 repository: false,
                 sidebar: true,
                 buttons: false,
                 localMode: true
-            }, shots);
+            }, {shots: shots, media: media});
             this.timeline.render();
         }
         , getMedia: function (imageSrc) {
@@ -443,16 +426,42 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(item);
                         $('#item-details').html(output).promise().done(function () {
-                            setTimeout(function () {
-                                self.timeline.loadMedia({
-                                    url: self.getMedia(item.Thumbnail)
-                                    , duration: item.Duration
-                                    , title: item.Title
-                                    , img: item.Thumbnail
-                                    , id: item.Id
-                                });
-                            }, 500);
+                            self.initTimeline(item.ShotList, {
+                                url: self.getMedia(item.Thumbnail)
+                                , duration: item.Duration
+                                , title: item.Title
+                                , img: item.Thumbnail
+                                , id: item.Id
+                            });
+                            // setTimeout(function () {
+                            //     self.timeline.loadMedia({
+                            //         url: self.getMedia(item.Thumbnail)
+                            //         , duration: item.Duration
+                            //         , title: item.Title
+                            //         , img: item.Thumbnail
+                            //         , id: item.Id
+                            //     });
+                            // }, 500);
                         });
+
+
+
+                        //////////////////////
+                        // if (typeof id !== 'undefined' && id) {
+                        //     var params = {overrideUrl: Config.api.shotlist, query: 'type=1&externalid=' + this.getId()};
+                        //     new MediaModel(params).fetch({
+                        //         success: function (currentShots) {
+                        //             var shotsObject = self.prepareItems(currentShots.toJSON(), params);
+                        //             var shots = [];
+                        //             for (var key in Object.keys(shotsObject)) {
+                        //                 shots.push(shotsObject[key]);
+                        //             }
+                        //             self.initTimeline(shots);
+                        //         }
+                        //     });
+                        // } else {
+                        //     this.initTimeline([]);
+                        // }
                     });
                 }
             })
@@ -511,7 +520,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadPersonsList: function (categoryId, selectedPersons) {
             var self = this;
-            if (typeof selectedPersons !== 'undefined' && selectedPersons.filter(Boolean).length) {
+            if (typeof selectedPersons !== 'undefined') {
+            // if (typeof selectedPersons !== 'undefined' && selectedPersons.filter(Boolean).length) {
                 var items = this.createPersonsListFromExistingIds(selectedPersons);
                 this.renderPersonsForm(items);
             } else {
