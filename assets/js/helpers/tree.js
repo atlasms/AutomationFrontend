@@ -28,7 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                 , "file": {"icon": "fa fa-file file icon-state-warning icon-lg"}
             }
             , "state": {"key": "tree"}
-            , "plugins": ["contextmenu", "state", "types"]
+            , "plugins": ["contextmenu", "state", "types", "search"]
             , "checkbox": {
                 "tie_selection": false
             }
@@ -131,6 +131,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
 //                    console.log($(node).get(0).li_attr.deleted);
                     return contextItems;
                 }
+            }
+            , search: {
+
             }
         };
 
