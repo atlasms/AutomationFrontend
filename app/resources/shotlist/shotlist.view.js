@@ -1,15 +1,17 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'mediaitem-timeline.helper', 'ingestHelper', 'jquery-ui', 'pdatepicker', 'tree.helper', 'bootbox', 'flowplayer.helper', 'bootstrap/modal', 'select2'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, Timeline, IngestHelper, ui, pDatepicker, Tree, bootbox, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'jquery-ui', 'pdatepicker', 'tree.helper', 'bootbox', 'flowplayer.helper', 'bootstrap/modal', 'select2'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, ui, pDatepicker, Tree, bootbox, FlowPlayer) {
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
+        , shotlistTemplate: null
+        , currentMedia: null
         , $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"
         , model: 'MediaModel'
         , defaultListLimit: Config.defalutMediaListLimit
         , toolbar: [
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'ذخیره شات‌لیست ', type: 'button', task: 'submit', icon: 'fa fa-save'}}
+            // , {'button': {cssClass: 'btn btn-success', text: 'ذخیره شات‌لیست ', type: 'button', task: 'submit', icon: 'fa fa-save'}}
             , {'button': {cssClass: 'btn blue-sharp', text: 'انتخاب مدیا ', type: 'button', task: 'search', icon: 'fa fa-search'}}
         ]
         , statusbar: [
@@ -19,19 +21,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , cache: {}
         , cachedBasicData: {}
         , events: {
-            'click [data-task="submit"]': 'submit'
-            , 'click [data-task="submit-shot"]': 'submitShot'
+            // 'click [data-task="submit"]': 'submit'
+            'click [data-task="submit-shot"]': 'updateShot'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'click [data-task=refresh]': 'reLoad'
             // , 'click [data-task=add]': 'openAddForm'
             , 'click [data-task="search"]': 'toggleSearchModal'
-            , 'click [data-task=refresh]': 'reLoad'
-            , 'click #storagefiles tbody tr': 'selectRow'
+            // , 'click #storagefiles tbody tr': 'selectRow'
             , 'click [data-seek]': 'seekPlayer'
             , 'click [data-task="add-clip"]': 'addClip'
-//            , 'click [data-task="delete-shot"]': 'deleteShot'
+            , 'click [data-task="delete-shot"]': 'deleteShot'
             , 'click [data-task="load-list"]': 'loadItemlist'
             , 'submit .itemlist-filter': 'loadItemlist'
             , 'click #itemlist tbody tr': 'loadVideo'
+            , 'click #shotlist-table tbody tr': 'loadShot'
 
             , 'keyup #media-broadcast-date-search': 'searchInMediaList'
             , 'click .item-link': function (e) {
@@ -51,28 +54,248 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="delete-person"]': 'deletePerson'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
         }
-        , timeline: {}
+
+        // shotlist methods
+        , removeShotMetadataForm: function () {
+            $('#shot-metadata').empty();
+        }
+        , showShotMetadataForm: function ($row) {
+            // Load shot's metadata form
+            var metadata = this.prepareShotMetadata($row);
+            var self = this;
+            var template = Template.template.load('resources/shotlist', 'shot-metadata.partial');
+            var $container = $('#shot-metadata');
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var templateData = $.extend({}, self.cachedBasicData, {metadata: metadata});
+                var output = handlebarsTemplate(templateData);
+                $container.html(output).promise().done(function () {
+                    self.loadPersonsList(null, metadata.Persons);
+                    self.handleSelect2Inputs();
+                });
+            });
+        }
+        , prepareShotMetadata: function ($row) {
+            // generate shot metadata object to use in form
+            var start = Global.processTime($row.find('[data-type="start"]').text());
+            var end = Global.processTime($row.find('[data-type="end"]').text());
+            var data = {
+                Start: start,
+                End: end,
+                Duration: end - start,
+                Title: $row.find('.title').text(),
+                Description: $row.attr('data-description'),
+                ExternalId: ~~$row.attr('data-external-id'),
+                Type: ~~$row.attr('data-type'),
+                Id: ~~$row.attr('data-id'),
+                Persons: [],
+                Tags: [],
+                Subjects: []
+            };
+            var metadataTypes = ['tags', 'subjects', 'persons'];
+            for (var i in metadataTypes) {
+                var values = [];
+                var attr = $row.attr('data-' + metadataTypes[i]);
+                if (typeof attr !== 'undefined' && attr && attr !== '') {
+                    if (attr.indexOf(',') !== -1) {
+                        values = attr.split(',');
+                    } else {
+                        values = [attr];
+                    }
+                }
+                data[metadataTypes[i].capitalize()] = values;
+            }
+            return data;
+        }
+        , getShotMetadataFormValues: function () {
+            var formData = $('.metadata-form').serializeObject();
+            formData.Start = Global.processTime(formData.Start);
+            formData.End = Global.processTime(formData.End);
+            formData.Duration = Global.processTime(formData.Duration);
+            var metadataTypes = ['Tags', 'Subjects'];
+            for (var i in metadataTypes) {
+                var values = [];
+                var meta = $('[name="' + metadataTypes[i] + '"]').val();
+                if (typeof meta === 'string') {
+                    values.push({id: meta});
+                } else {
+                    for (var g in meta) {
+                        values.push({id: meta[g]});
+                    }
+                }
+                formData[metadataTypes[i]] = values;
+            }
+            // Persons
+            var $persons = $('#persons-table tbody tr');
+            var persons = [];
+            if ($persons.length) {
+                $persons.each(function () {
+                    persons.push({
+                        id: $(this).attr('data-id'),
+                        type: $(this).find('[data-type="type"] select').val(),
+                        name: $(this).find('[data-type="name"]').text(),
+                        family: $(this).find('[data-type="family"]').text()
+                    });
+                });
+                formData.Persons = persons;
+            }
+            return formData;
+        }
+        , updateShot: function (e) {
+            e.preventDefault();
+            var self = this;
+            var data = this.getShotMetadataFormValues();
+            // Send PUT
+            new MediaModel({overrideUrl: Config.api.shotlist, id: data.Id}).save(data, {
+                success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'به‌روزرسانی اطلاعات شات', Config.settings.toastr);
+                    self.loadShotlist(self.currentMedia);
+                    self.removeShotMetadataForm();
+                }
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                }
+            });
+        }
         , loadShot: function (e) {
-            var $row = $(e.target).parents("tr:first");
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents("tr:first");
             var params = [
-                Global.processTime($row.find("td").eq(0).text())
-                , Global.processTime($row.find("td").eq(1).text())
+                Global.processTime($row.find('[data-type="start"]').text())
+                , Global.processTime($row.find('[data-type="end"]').text())
             ];
             this.player.setRange(params, this.playerInstance, true);
+            this.showShotMetadataForm($row);
         }
         , addClip: function (e) {
-            // e.preventDefault();
-            // var $form = $("#shotlist form");
-            // var data = $form.serializeObject();
-            // var tmpl = '<tr data-media={mediaid}><td>{start}</td><td>{end}</td><td>{duration}</td><td><button class="btn btn-default btn-xs" data-task="delete-shot"><i class="fa fa-trash"></i></button></td></tr>';
-            // if (data.start && data.end && Global.processTime(data.start) < Global.processTime(data.end)) {
-            //     var duration = Global.createTime(Global.processTime(data.end) - Global.processTime(data.start));
-            //     var mediaId = $("#itemlist tr.active").data("id");
-            //     $form.next("table").find("tbody").append(tmpl.replace(/{start}/, data.start).replace(/{end}/, data.end).replace(/{duration}/, duration).replace(/{mediaid}/, mediaId));
-            //     this.initSortable(true);
-            //     this.handleDurations($form.next("table").find("tbody"));
-            // }
-            this.timeline.addShot(e);
+            var self = this;
+            e.preventDefault();
+            var data = [this.getInitialShotDataForSubmit()];
+            new MediaModel({overrideUrl: Config.api.shotlist}).save(null, {
+                data: JSON.stringify(data)
+                , contentType: 'application/json'
+                , processData: false
+                , success: function () {
+                    toastr.success('با موفقیت انجام شد', 'ذخیره شات', Config.settings.toastr);
+                    self.loadShotlist(self.currentMedia);
+                    // reload shots
+                }
+                , error: function () {
+                    toastr.error('با خطا مواجه شد', 'ذخیره شات', Config.settings.toastr);
+                }
+            });
+        }
+        , deleteShot: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $row = $(e.target).parents("tr:first");
+            var $table = $row.parents('tbody');
+            bootbox.confirm({
+                message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var modelParams = {query: 'type=2&externalid=' + media.Id.toString(), overrideUrl: Config.api.shotlist};
+                        new MediaItemModel(modelParams).destroy({
+                            success: function () {
+                                $row.remove();
+                                this.handleDurations($table);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        , getInitialShotDataForSubmit: function () {
+            var data = $('.shotlist-form').serializeObject();
+            if (data.Start && data.End && Global.processTime(data.Start) < Global.processTime(data.End)) {
+                data.Start = Global.processTime(data.Start);
+                data.End = Global.processTime(data.End);
+                data.Duration = data.End - data.Start;
+                data.ExternalId = this.getId();
+                data.Type = 2;
+                return data;
+            }
+        }
+        , loadShotlist: function (media) {
+            var self = this;
+            var $container = $('#shotlist-container');
+            if (this.shotlistTemplate) {
+                this.getShotlistOfMedia(media, function (shots) {
+                    media.ShotList = shots;
+                    var output = self.shotlistTemplate(media);
+                    $container.html(output);
+                });
+            } else {
+                var template = Template.template.load('resources/shotlist', 'shotlist-items.partial');
+                template.done(function (data) {
+                    var handlebarsTemplate = self.shotlistTemplate = Template.handlebars.compile(data);
+                    self.getShotlistOfMedia(media, function (shots) {
+                        media.ShotList = shots;
+                        var output = handlebarsTemplate(media);
+                        $container.html(output);
+                    });
+                });
+            }
+        }
+        , getShotlistOfMedia: function (media, callback) {
+            var self = this;
+            var modelParams = {query: 'type=2&externalid=' + media.Id.toString(), overrideUrl: Config.api.shotlist};
+            new MediaItemModel(modelParams).fetch({
+                success: function (data) {
+                    var shots = self.prepareItems(data.toJSON(), modelParams);
+                    var output = [];
+                    for (var prop of Object.keys(shots)) {
+                        output.push(shots[prop]);
+                    }
+                    if (typeof callback === 'function') {
+                        callback(output)
+                    }
+                }
+            });
+        }
+
+        // view methods
+        , load: function (e, extend) {
+            this.render();
+        }
+        , render: function () {
+            var self = this;
+            this.getBasicData(true, function () {
+                var template = Template.template.load('resources/shotlist', 'shotlist');
+                var $container = $(Config.positions.main);
+                template.done(function (data) {
+                    var handlebarsTemplate = Template.handlebars.compile(data);
+                    var output = handlebarsTemplate({});
+                    $container.html(output).promise().done(function () {
+                        self.afterRender();
+                        var itemId = self.getId();
+                        if (itemId) {
+                            self.setMedia(null, itemId);
+                        }
+                    });
+                });
+            });
+        }
+        , reLoad: function () {
+            this.load();
+        }
+        , afterRender: function () {
+            this.removeShotMetadataForm();
+            this.attachDatepickers();
+            this.handleSelect2Inputs();
+            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+            $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
+            this.renderStatusbar();
+        }
+
+        // helper methods
+        , seekPlayer: function (e) {
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            this.player.seek($el.attr('data-seek'), this.playerInstance);
         }
         , handleDurations: function (items) {
             items = items.find("tr");
@@ -83,183 +306,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             time = Global.createTime(time);
             this.handleStatusbar(time);
             $('input[data-type="duration"]').val(time);
-        }
-        , deleteShot: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $row = $(e.target).parents("tr:first");
-            var $table = $row.parents('tbody');
-            $row.remove();
-            this.handleDurations($table);
-        }
-        , submit: function (e) {
-            e.preventDefault();
-            var data = this.prepareSave();
-            new MediaModel({overrideUrl: Config.api.shotlist}).save(null, {
-                data: JSON.stringify(data)
-                , contentType: 'application/json'
-                , processData: false
-                , success: function () {
-                    toastr.success('با موفقیت انجام شد', 'ذخیره شاتلیست', Config.settings.toastr);
-                }
-                , error: function () {
-                    toastr.error('انجام نشد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
-                }
-            });
-        }
-        , submitShot: function (e) {
-            e.preventDefault();
-            var $activeShot = $('#shotlist-table tbody tr.active');
-            var $metadataForm = $('.metadata-form');
-            var persons = [];
-            $('#persons-table tbody tr').each(function () {
-                persons.push($(this).data('id'));
-            });
-            $activeShot.attr('data-tags', $metadataForm.find('[name="Tags"]').val().join(','));
-            $activeShot.attr('data-subjects', $metadataForm.find('[name="Subjects"]').val().join(','));
-            $activeShot.attr('data-persons', persons.join(','));
-            $activeShot.attr('data-title', $('[name="Title"]').val());
-            toastr.info('اطلاعات ثبت شد. برای ثبت نهایی روی ذخیره شات‌لیست کلیک کنید.', 'ثبت اطلاعات شات', Config.settings.toastr);
-        }
-        , seekPlayer: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget);
-            this.player.seek($el.attr('data-seek'), this.playerInstance);
-        }
-        , openAddForm: function (e) {
-            $("#media-filename").val('shotlist');
-            $(this.$modal).modal('toggle');
-        }
-        , toggleSearchModal: function (e) {
-            $('#media-modal').modal('toggle');
-        }
-        , selectRow: function (e) {
-            var $el = $(e.target);
-            var $row = $el.parents("tr:first");
-            if ($row.hasClass("disabled"))
-                return false;
-            $el.parents("tbody").find("tr").removeClass('active success');
-            $row.addClass('active success');
-            $row.find("[data-prop]").each(function () {
-                if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
-                    $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
-            });
-            $('button[data-task=add]').removeClass('disabled');
-        }
-        , reLoad: function () {
-            this.load();
-        }
-        , load: function (e, extend) {
-            this.render();
-        }
-        , render: function () {
-            var self = this;
-            var id = this.getId();
-            var template = Template.template.load('resources/shotlist', 'shotlist');
-            var $container = $(Config.positions.main);
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    self.afterRender();
-                    var itemId = self.getId();
-                    if (itemId) {
-                        self.setMedia(null, itemId);
-                    }
-                });
-            });
-        }
-        , initTimeline: function (shots, media) {
-            shots = typeof shots !== 'undefined' && shots.length ? shots : [];
-            media = typeof media !== 'undefined' && media ? media : null;
-            this.timeline = new Timeline('#timeline', {
-                singleMode: true,
-                repository: false,
-                sidebar: true,
-                buttons: false,
-                localMode: true
-            }, {shots: shots, media: media});
-            this.timeline.render();
-        }
-        , getMedia: function (imageSrc) {
-            return imageSrc.replace('.jpg', '_lq.mp4');
-        }
-        , offsetTime: function (datetime, offset) {
-            if (typeof datetime === "undefined")
-                return null;
-            var dt = datetime.split(' ');
-            if (typeof offset !== "undefined") {
-                var date = new Date(dt[0].split('-')[0], (+dt[0].split('-')[1] - 1), dt[0].split('-')[2], dt[1].split(':')[0], dt[1].split(':')[1], dt[1].split(':')[2]);
-                date.setTime(date.getTime() + (offset * 1000));
-                datetime = date.getFullYear() + '-' + Global.zeroFill(date.getMonth() + 1) + '-' + Global.zeroFill(date.getDate());
-                datetime += ' ' + Global.zeroFill(date.getHours()) + ':' + Global.zeroFill(date.getMinutes()) + ':' + Global.zeroFill(date.getSeconds());
-            }
-            return datetime.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
-        }
-        , loadVideo: function (e) {
-            if ($(e.target.parentElement).is("a") || $(e.target).is("a"))
-                return true;
-            e.preventDefault();
-            var self = this;
-//            $("#itemlist").find("tbody tr").removeClass('active');
-//            $(e.target).parents("tr:first").addClass('active');
-//            var url = self.getMedia($(e.target).parents("tr:first").find("img").attr('src'));
-//            var url = "http://localhost:8008/assets/data/sample.mp4";
-            var duration = $(e.target).parents("tr:first").data('duration');
-            //TODO
-            this.timeline.addMedia({
-                id: $(e.target).parents("tr:first").attr('data-id')
-                , duration: Global.processTime(duration)
-                , title: $(e.target).parents("tr:first").find('.title').text()
-                , img: $(e.target).parents("tr:first").find("img").attr('src')
-                , video: self.getMedia($(e.target).parents("tr:first").find("img").attr('src'))
-            });
-        }
-        , loadShotlist: function () {
-            // Load Shot-list
-            var $container = $("#shotlist");
-            if (!$container.is(":empty"))
-                return;
-            var template = Template.template.load('resources/ingest', 'ingest.shotlist.partial');
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({});
-                $container.html(output).promise().done(function () {
-                    IngestHelper.mask('time');
-                });
-            });
-        }
-        , loadItemlist: function (e) {
-            typeof e !== "undefined" && e.preventDefault();
-            var self = this;
-            var params = $(".itemlist-filter").serializeObject();
-            var template = Template.template.load('resources/media', 'media.items-condensed.partial');
-            var $container = $("#itemlist");
-            var modelParams = {offset: 0, count: self.defaultListLimit};
-            new MediaModel(modelParams).fetch({
-                data: $.param($.extend(true, {}, params, {offset: 0, count: self.defaultListLimit}))
-                , success: function (items) {
-                    items = self.prepareItems(items.toJSON(), $.extend(true, {}, modelParams, params));
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-//                            $container.stop().fadeIn();
-                        });
-                    });
-                }
-            });
-        }
-        , afterRender: function () {
-            var self = this;
-            this.attachDatepickers();
-            this.handleSelect2Inputs();
-            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
-            $("#toolbar button[type=submit]").removeClass('hidden').addClass('in');
-            this.getBasicData(true, function () {
-                self.addShotlistEventListeners();
-            });
-            this.renderStatusbar();
         }
         , renderToolbar: function () {
             var self = this;
@@ -350,23 +396,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $select.select2({dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body')});
             });
         }
-
-        , onShotOpened: function (metadata) {
-            // Load shot's metadata form
-            var self = this;
-            var template = Template.template.load('resources/shotlist', 'shot-metadata.partial');
-            var $container = $('#shot-metadata');
-            template.done(function (data) {
-                var handlebarsTemplate = Template.handlebars.compile(data);
-                var templateData = $.extend({}, self.cachedBasicData, {metadata: metadata});
-                var output = handlebarsTemplate(templateData);
-                $container.html(output).promise().done(function () {
-                    self.loadPersonsList(null, metadata.persons);
-                    self.handleSelect2Inputs();
-                });
-            });
+        , offsetTime: function (datetime, offset) {
+            if (typeof datetime === "undefined")
+                return null;
+            var dt = datetime.split(' ');
+            if (typeof offset !== "undefined") {
+                var date = new Date(dt[0].split('-')[0], (+dt[0].split('-')[1] - 1), dt[0].split('-')[2], dt[1].split(':')[0], dt[1].split(':')[1], dt[1].split(':')[2]);
+                date.setTime(date.getTime() + (offset * 1000));
+                datetime = date.getFullYear() + '-' + Global.zeroFill(date.getMonth() + 1) + '-' + Global.zeroFill(date.getDate());
+                datetime += ' ' + Global.zeroFill(date.getHours()) + ':' + Global.zeroFill(date.getMinutes()) + ':' + Global.zeroFill(date.getSeconds());
+            }
+            return datetime.replace(/\:/g, '/').replace(/\-/g, '/').replace(' ', '/').slice(0, -3);
         }
 
+        // media related methods
         , getId: function () {
             var lastUrlPart = Backbone.history.getFragment().split("/").pop().split("?")[0];
             if (~~lastUrlPart > 0) {
@@ -398,6 +441,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             };
             return params;
         }
+        , getMedia: function (imageSrc) {
+            return imageSrc.replace('.jpg', '_lq.mp4');
+        }
         , loadMediaItems: function (e) {
             e.preventDefault();
             var params = (typeof params !== "undefined") ? params : this.getMediaParams();
@@ -425,46 +471,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(item);
-                        $('#item-details').html(output).promise().done(function () {
-                            self.initTimeline(item.ShotList, {
-                                url: self.getMedia(item.Thumbnail)
-                                , duration: item.Duration
-                                , title: item.Title
-                                , img: item.Thumbnail
-                                , id: item.Id
-                            });
-                            // setTimeout(function () {
-                            //     self.timeline.loadMedia({
-                            //         url: self.getMedia(item.Thumbnail)
-                            //         , duration: item.Duration
-                            //         , title: item.Title
-                            //         , img: item.Thumbnail
-                            //         , id: item.Id
-                            //     });
-                            // }, 500);
+                        self.currentMedia = item;
+                        $('#media-container').html(output).promise().done(function () {
+                            self.renderPlayer(item);
+                            self.loadShotlist(item);
+                            self.removeShotMetadataForm();
                         });
-
-
-
-                        //////////////////////
-                        // if (typeof id !== 'undefined' && id) {
-                        //     var params = {overrideUrl: Config.api.shotlist, query: 'type=1&externalid=' + this.getId()};
-                        //     new MediaModel(params).fetch({
-                        //         success: function (currentShots) {
-                        //             var shotsObject = self.prepareItems(currentShots.toJSON(), params);
-                        //             var shots = [];
-                        //             for (var key in Object.keys(shotsObject)) {
-                        //                 shots.push(shotsObject[key]);
-                        //             }
-                        //             self.initTimeline(shots);
-                        //         }
-                        //     });
-                        // } else {
-                        //     this.initTimeline([]);
-                        // }
                     });
                 }
             })
+        }
+        , renderPlayer: function (item) {
+            var self = this;
+            if (self.playerInstance)
+                self.player.remove();
+            $('#player-container').empty();
+            var playerConfig = {
+                clip: {
+                    sources: [
+                        {src: item.Thumbnail.replace('.jpg', '_lq.mp4'), type: 'video/mp4'}
+                    ]
+                }
+                , template: {seekbar: {range: true}, controls: {keys: true}}
+                , duration: item.Duration
+            };
+            var player = new Player('#player-container', playerConfig);
+            self.player = player;
+            self.playerInstance = player.instance;
+
+            player.render(function (data) {
+                if (typeof callback === "function") {
+                    callback(data);
+                }
+            });
         }
         , setMedia: function (e, id) {
             if (typeof id !== 'undefined') {
@@ -481,7 +520,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             $('.mini-item').toggleClass('collapsed')
         }
+        , toggleSearchModal: function (e) {
+            $('#media-modal').modal('toggle');
+        }
 
+        // Basic shared data
         , getBasicData: function (cache, callback) {
             var self = this;
             var params = {tags: [], subjects: [], persons: []};
@@ -508,20 +551,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
         }
-        , addShotlistEventListeners: function () {
-            var self = this;
-            // $(document).on('shotSaved', function (e) {
-            //
-            //     // console.log(e.detail);
-            // });
-            $(document).on('shotPlayed', function (e) {
-                self.onShotOpened(e.detail);
-            });
-        }
         , loadPersonsList: function (categoryId, selectedPersons) {
             var self = this;
             if (typeof selectedPersons !== 'undefined') {
-            // if (typeof selectedPersons !== 'undefined' && selectedPersons.filter(Boolean).length) {
+                // if (typeof selectedPersons !== 'undefined' && selectedPersons.filter(Boolean).length) {
                 var items = this.createPersonsListFromExistingIds(selectedPersons);
                 this.renderPersonsForm(items);
             } else {

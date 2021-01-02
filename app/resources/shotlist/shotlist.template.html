@@ -1,17 +1,48 @@
 <style type="text/css">
     .media-filters { margin-bottom: 10px; }
-    #shotlist-table h4 { display: none; }
+    .mini-item { transition: 0.2s all; display: flex; flex-direction: row; padding: 10px; background: #f7f7f7; border: 1px solid #eee; margin-bottom: 20px; }
+    .mini-item figure { max-width: 220px; margin-left: 20px; margin-bottom: 0; transition: 0.2s all; }
+    .mini-item .desc { position: relative; width: 100%; }
+    .mini-item .desc .btn { position: absolute; top: 0; left: 0; }
+    .mini-item .desc .btn ~ .btn { left: 45px; }
+    .mini-item figure img { display: block; width: 100%; height: auto; }
+    .mini-item h3 { font-weight: bold; margin-top: 0; font-size: 18px; }
+    .mini-item p { margin-bottom: 0; transition: 0.2s all; overflow: hidden; }
+    .mini-item .list-inline { margin-bottom: 10px; overflow: hidden; }
+    .mini-item.collapsed { }
+    .mini-item.collapsed figure { max-width: 0; margin: 0; }
+    .mini-item.collapsed p { max-height: 0; margin: 0; }
+    .mini-item.collapsed .list-inline { max-height: 0; margin: 0; }
+    /*#shotlist-table h4 { display: none; }*/
     #shotlist-table td { vertical-align: middle; }
     #shotlist-table tbody tr { border-right: 4px solid #bac3d0; }
     #shotlist-table tbody tr.active { border-right-color: #659be0; }
+    .flowplayer { direction: ltr; }
+    .flowplayer .fp-ratio { padding-top: 56.25%; }
+    #timeline-repository figure { width: 80px; }
+    #timeline-repository tr { cursor: pointer; }
+    .shotlist-form { padding: 10px; margin: 0 0 10px 0; background: #eee; }
+    .shotlist-form > div { }
+    .shotlist-form .note { margin-left: -10px; }
+    .shotlist-form .note.note-info { margin-top: 15px; }
+    .shotlist-form .note.note-success { background: transparent; }
+    #shotlist-table h4 { font-size: 14px; font-weight: bold; margin-top: 0; }
+    #shotlist-table tbody tr:first-child .ordering .btn:first-child { visibility: hidden; }
+    #shotlist-table tbody tr:last-child .ordering .btn:last-child { display: none; }
+    #shotlist-table tbody figure { width: 80px; }
+    #shotlist-table .ordering { font-size: 0; }
+    #shotlist-table .label.label-sm { padding-top: 0; padding-bottom: 0; }
+    #shotlist-table p[data-metadata] { margin-bottom: 8px; }
+    #shotlist-table .note.note-success { background: transparent; }
+    #page-info { display: block; position: absolute; top: 20px; left: 20px; height: 64px; }
+    #page-info h4 { margin: 0; line-height: 34px; }
 </style>
-<div id="ingest-page" class="portlet box">
+<div id="shotlist-page" class="portlet box">
     <div class="portlet-body">
         <div class="mainbody">
             <div class="row">
                 <div class="col-xs-8">
-                    <div id="item-details"></div>
-                    <div id="timeline"></div>
+                    <div id="media-container"></div>
                 </div>
                 <div class="col-xs-4">
                     <div id="shot-metadata"></div>

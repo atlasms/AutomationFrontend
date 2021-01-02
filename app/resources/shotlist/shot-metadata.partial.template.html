@@ -3,26 +3,30 @@
     .page-title { font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
     .persons-title { font-weight: bold; padding-top: 8px; font-size: 17px; }
 </style>
-<div class="metadata-form">
+<form class="metadata-form">
+
+    <input type="hidden" name="Type" value="{{metadata.Type}}"/>
+    <input type="hidden" name="ExternalId" value="{{metadata.ExternalId}}"/>
+    <input type="hidden" name="Id" value="{{metadata.Id}}"/>
+
     <h4 class="page-title">ورود اطلاعات شات</h4>
-    <!--<div class="form-group">
-        <div class="row">
-            <div class="col-xs-3">
-                <label class="control-label">عنوان</label>
-            </div>
-            <div class="col-xs-9">
-                <input class="form-control" name="Title" value="{{metadata.title}}" disabled>
-            </div>
-        </div>
-    </div>-->
     <div class="form-group">
         <div class="row">
             <div class="col-xs-3">
                 <label class="control-label">عنوان شات</label>
             </div>
             <div class="col-xs-9">
-<!--                <textarea class="form-control" data-type="title" name="Title" rows="5" placeholder="عنوان">{{metadata.title}}</textarea>-->
-                <input class="form-control" data-type="title" name="Title" value="{{metadata.title}}" placeholder="عنوان">
+                <input class="form-control" data-type="title" name="Title" value="{{metadata.Title}}" placeholder="عنوان">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-3">
+                <label class="control-label">توضیحات</label>
+            </div>
+            <div class="col-xs-9">
+                <textarea class="form-control" data-type="description" name="Description" rows="5" placeholder="توضیحات">{{metadata.Description}}</textarea>
             </div>
         </div>
     </div>
@@ -33,7 +37,7 @@
             </div>
             <div class="col-xs-9">
                 <select class="form-control select2" data-type="tags" name="Tags" multiple required>
-                    {{#select metadata.tags}}
+                    {{#select metadata.Tags}}
                     {{#each tags}}
                     <option value="{{id}}">{{title}}</option>
                     {{/each}}
@@ -49,7 +53,7 @@
             </div>
             <div class="col-xs-9">
                 <select class="form-control select2" data-type="subjects" name="Subjects" multiple required>
-                    {{#select metadata.subjects}}
+                    {{#select metadata.Subjects}}
                     {{#each subjects}}
                     <option value="{{id}}">{{title}}</option>
                     {{/each}}
@@ -66,13 +70,13 @@
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <input type="text" class="time form-control" data-before-save="timestamp" data-type="start" name="Start" id="media-start" value="{{time metadata.start}}" required readonly/>
+                <input type="text" class="time form-control" data-before-save="timestamp" data-type="start" name="Start" id="media-start" value="{{time metadata.Start}}" required readonly/>
             </div>
             <div class="col-xs-4">
-                <input type="text" class="time form-control" data-before-save="timestamp" data-type="end" name="End" id="media-end" value="{{time metadata.end}}" required readonly/>
+                <input type="text" class="time form-control" data-before-save="timestamp" data-type="end" name="End" id="media-end" value="{{time metadata.End}}" required readonly/>
             </div>
             <div class="col-xs-4">
-                <input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="Duration" id="media-duration" value="{{time metadata.duration}}" required readonly/>
+                <input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" name="Duration" id="media-duration" value="{{time metadata.Duration}}" required readonly/>
             </div>
         </div>
     </div>
@@ -83,7 +87,5 @@
         <div class="clearfix"></div>
         <div id="persons-group"></div>
     </div>
-
-    <input type="hidden" name="Type" value="0"/>
     <button type="submit" data-task="submit-shot" class="btn btn-success"><i class="fa fa-save"></i> ذخیره اطلاعات</button>
-</div>
+</form>
