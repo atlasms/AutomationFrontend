@@ -1,6 +1,6 @@
 <style>
     .basic-details { position: relative; }
-    #persons-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; }
+    /*#persons-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; }*/
 </style>
 <div id="mediaitem-page">
     <div class="row">
@@ -51,7 +51,7 @@
                                         <td>
                                             <a href="/resources/media2/?startdate=1970-01-01&categoryId={{MetaCategoryId}}" target="_blank">
                                                 <span data-type="category" class="label label-sm bg-dark bg-font-dark">{{MetaCategoryName}}</span>
-                                                &nbsp;<i class="fa fa-external-link"></i><small> سایر قسمت‌ها</small>
+                                                &nbsp;<i class="fa fa-external-link"></i><small> سایر {{config '__.episode'}}‌ها</small>
                                             </a>
                                             <a href="#" class="pull-right" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
                                                     class="fa fa-pencil"></i> تغییر برنامه</a>
@@ -87,11 +87,11 @@
                                         <td>{{time Duration}}</td>
                                     </tr>
                                     <tr>
-                                        <td>شماره قسمت</td>
+                                        <td>شماره {{config '__.episode'}}</td>
                                         <td>
                                             <a href="#" class="x-editable" id="episode-field" data-type="number"
                                                data-pk="{{Id}}" data-field="EpisodeNumber"
-                                               data-original-title="شماره قسمت">{{EpisodeNumber}}</a>
+                                               data-original-title="شماره {{config '__.episode'}}">{{EpisodeNumber}}</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -187,6 +187,8 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="basic-stats">
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
                                         <h5><strong>اتوماسیون / پخش</strong></h5>
@@ -262,7 +264,7 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td>عنوان قسمت</td>
+                                                <td>عنوان {{config '__.episode'}}</td>
                                                 <td>{{#if WebSite.Title}}{{WebSite.Title}}{{/if}}</td>
                                             </tr>
                                             <tr>
@@ -272,7 +274,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>لینک قسمت</td>
+                                                <td>لینک {{config '__.episode'}}</td>
                                                 <td>{{#if WebSite.ShortUrl}}<a href="{{WebSite.ShortUrl}}"
                                                                                target="_blank">{{WebSite.ShortUrl}}</a>{{/if}}
                                                 </td>
@@ -360,6 +362,7 @@
                                 <li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
                                 <li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
                                 <li data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
+                                <li data-service="shotlist"><a href="#tab-shotlist" data-toggle="tab">شات‌لیست</a></li>
                                 <!--<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>-->
                             </ul>
                         </div>
@@ -372,6 +375,7 @@
                                 <div class="tab-pane fade" id="tab-versions"></div>
                                 <div class="tab-pane fade" id="tab-schedule"></div>
                                 <div class="tab-pane fade" id="tab-rush"></div>
+                                <div class="tab-pane fade" id="tab-shotlist"></div>
                                 <!--<div class="tab-pane fade" id="tab-publicdata"></div>-->
                             </div>
                         </div>

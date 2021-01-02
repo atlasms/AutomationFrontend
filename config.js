@@ -401,7 +401,11 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         ],
         mediaList: {
             defaultStateValue: 1,
-            enabledCreatedDateFields: true
+            enabledCreatedDateFields: true,
+            showLastTask: false
+        },
+        schedule: {
+            fixedMediaStateFilter: true
         },
         temp: {
             titleTypes: {
@@ -411,6 +415,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     {Id: '3', Key: 'سه خطی', Value: '3'}
                 ]
             }
+        },
+        __: {
+            episode: 'قسمت'
         }
     };
 

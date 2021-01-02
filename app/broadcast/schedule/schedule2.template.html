@@ -9,6 +9,7 @@
     .modal .modal-body { padding-top: 0; }
     .nowrap { white-space: nowrap; }
     #media-modal table tbody tr { cursor: pointer; }
+    [readonly] { pointer-events: none; }
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -140,8 +141,8 @@
                     <div class="c1"><span>شروع</span></div>
                     <div class="c1"><span>مدت</span></div>
                     <div class="c2"><span>برنامه</span></div>
-                    <div class="c2"><span>عنوان قسمت</span></div>
-                    <div class="id"><span>قسمت</span></div>
+                    <div class="c2"><span>عنوان {{config '__.episode'}}</span></div>
+                    <div class="id"><span>{{config '__.episode'}}</span></div>
                     <div class="co"><span># پخش</span></div>
                     <div class="c4"><span>توضیحات</span></div>
                     <div class="c1"><span>نوع آیتم</span></div>
@@ -265,7 +266,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
-                                    <select data-type="state" class="form-control" name="state">
+                                    <select data-type="state" class="form-control" name="state" {{#ifConfig 'schedule.fixedMediaStateFilter'}}readonly{{/ifConfig}}>
                                         {{#select 1}}
                                         {{{getDefinitionOptions 2}}}
                                         {{/select}}
@@ -323,7 +324,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
-                                    <select data-type="state" class="form-control" name="media-broadcast-state">
+                                    <select data-type="state" class="form-control" name="media-broadcast-state" {{#ifConfig 'schedule.fixedMediaStateFilter'}}readonly{{/ifConfig}}>
                                         {{#select 1}}
                                         {{{getDefinitionOptions 2}}}
                                         {{/select}}

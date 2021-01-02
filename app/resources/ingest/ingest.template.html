@@ -63,11 +63,11 @@
                                     {{#input 'ingest.Title'}}
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label class="control-label">نام قسمت</label>
+                                            <label class="control-label">نام {{config '__.episode'}}</label>
                                         </div>
                                         <div class="col-xs-8">
                                             <div class="form-group">
-                                                <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام قسمت (موضوع اصلی)" required/>
+                                                <input type="text" data-type="title" class="form-control" id="media-title" name="Title" value="" placeholder="نام {{config '__.episode'}} (موضوع اصلی)" required/>
                                                 <!--<span class="help-block">برای جستجو نام برنامه را وارد کنید</span>-->
                                             </div>
                                         </div>
@@ -77,7 +77,7 @@
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         {{#input 'ingest.EpisodeNumber'}}
-                                        <input type="text" data-type="episode" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره کلاکت" required/>
+                                        <input type="text" data-type="episode" class="form-control text-center" id="media-episode" name="EpisodeNumber" value="" placeholder="شماره {{config '__.episode'}}" required/>
                                         {{/input}}
                                         <!--<span class="help-block">شماره قسمت</span>-->
                                     </div>
@@ -85,11 +85,11 @@
                                 <div class="col-xs-12">
                                     <div class="row">
                                         <div class="col-xs-3">
-                                            <label class="control-label">توضیحات قسمت</label>
+                                            <label class="control-label">توضیحات {{config '__.episode'}}</label>
                                         </div>
                                         <div class="col-xs-9">
                                             <div class="form-group">
-                                                <textarea class="form-control" data-type="description" name="Description" rows="4" placeholder="توضیحات قسمت" required></textarea>
+                                                <textarea class="form-control" data-type="description" name="Description" rows="4" placeholder="توضیحات {{config '__.episode'}}" required></textarea>
                                             </div>
                                         </div>
                                     </div>
