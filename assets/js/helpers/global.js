@@ -27,6 +27,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         return this.replace(/[^0-9.]/g, function (w) {
             return id[w] || w;
         });
+    };
+
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
     }
 
     !(function () {
