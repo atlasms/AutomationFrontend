@@ -197,6 +197,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return Global.processTime(time);
             });
             Handlebars.registerHelper('config', function (value, options) {
+                if (typeof value === 'string' && value.indexOf('.') !== -1) {
+                    var values = value.split('.');
+                    var configValue = Config;
+                    for (var i in values)
+                        configValue = configValue[values[i]];
+                    return configValue;
+                }
                 return Config[value];
             });
             Handlebars.registerHelper('ifConfig', function (value, options) {
@@ -423,6 +430,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 }
                 return html;
             });
+            Handlebars.registerHelper('extractId', function (list) {
+                var result = [];
+                for (var i in list) {
+                    result.push(list[i]['id']);
+                }
+                return result.join(',');
+            });
             Handlebars.registerHelper('price', function (price) {
                 return Global.processPrice(price);
             });
@@ -516,9 +530,11 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 // if (Authorize.access(4)) {
                 output += '<li class="dropdown-submenu"><a href="javascript:;"><i class="fa fa-exchange"></i> تغییر وضعیت</a> ' +
                     '<ul class="dropdown-menu">';
-                for (var i = 0; i < definitionTypes.length; i++)
-                    if (definitionTypes[i].value)
+                for (var i = 0; i < definitionTypes.length; i++) {
+                    if (definitionTypes[i].value && Authorize.access(definitionTypes[i].value, null, 'media-state')) {
                         output += '<li data-task="state" data-value="' + definitionTypes[i].value + '"><a href="#">' + definitionTypes[i].text + '</a></li>';
+                    }
+                }
                 output += '</ul></li>';
                 // }
                 output += '</ul></div>';
