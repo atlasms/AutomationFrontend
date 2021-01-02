@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             if (id.indexOf('$$') !== -1) {
                 var ids = id.split('$$');
                 for (var el in ids) {
-                    this.changeTaskItemState({id: el, query: status}, false);
+                    this.changeTaskItemState({id: ids[el], query: status}, false);
                 }
                 setTimeout(function () {
                     self.reLoad();
@@ -276,7 +276,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             var modelParams = {
                 status: filters.status,
                 count: 1000,
-                recommendedBroadcastDate: filters.date
+                recommendedBroadcastDate: filters.date,
+                recommendedBroadcastEndDate: filters.date
             };
             this.load({query: $.param(modelParams)});
         }
@@ -314,7 +315,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             var modelParams = {
                 status: filters.status,
                 count: 1000,
-                recommendedBroadcastDate: filters.date
+                recommendedBroadcastDate: filters.date,
+                recommendedBroadcastEndDate: filters.date
             };
             return {
                 // path: '/' + mode + '?status=0'
