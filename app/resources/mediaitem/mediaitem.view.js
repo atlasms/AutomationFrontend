@@ -32,6 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=return-item]': 'returnItem'
             , 'click [data-seek]': 'seekPlayer'
             , 'submit .chat-form': 'insertComment'
+            , 'click [data-task="change-comment-state"]': 'changeCommentState'
             , 'click .open-item': 'openItem'
             , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
             , 'submit .categories-metadata-form': 'saveMetadata'
@@ -474,11 +475,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }, 500);
             return false;
         }
+        , changeCommentState: function (e) {
+            var self = this;
+            var $button = $(e.target).is('button') ? $(e.target) : $(e.target).parents('button:first');
+            var commentId = $button.parents('li:first').attr('data-id');
+            new ReviewModel({overrideUrl: Config.api.comments, id: commentId}).save({Key: 'state', Value: 1}, {
+                patch: true
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'انتشار نظر', Config.settings.toastr);
+                    self.loadComments({query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadSidebarComments({query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments});
+                }
+            });
+        }
         , insertComment: function (e) {
             var self = this;
             var $form = $(e.currentTarget);
             var data = [];
             data.push($form.serializeObject());
+            data[0].State = typeof data[0].State !== 'undefined' ? ~~data[0].State : 2;
             data[0].externalid = this.getId();
             data[0].Data = JSON.stringify({
                 start: $form.find('[data-type="clip-start"]').val()
@@ -806,6 +821,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , overrideUrl: Config.api.versionsbypid
                     };
                     tmpl = ['resources/mediaitem', 'versions.partial'];
+                    model = new MediaitemModel(params);
+                    break;
+                case 'shotlist':
+                    var params = {
+                        overrideUrl: Config.api.shotlist,
+                        query: 'type=2&externalid=' + self.getId()
+                    };
+                    tmpl = ['resources/mediaitem', 'shotlist.partial'];
                     model = new MediaitemModel(params);
                     break;
             }

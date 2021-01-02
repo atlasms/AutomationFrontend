@@ -1,0 +1,75 @@
+<style>
+    #media-shotlist-table td { vertical-align: middle }
+    #media-shotlist-table .table-container { padding: 0; }
+    #media-shotlist-table .table { margin: 0; }
+    #media-shotlist-table .table select { padding: 0; line-height: 1; height: 18px; appearance: none; background: none; box-shadow: none; border: 0 none; cursor: default; }
+</style>
+<div class="note note-info clearfix">
+    <a href="/resources/shotlist/" target="_blank" class="btn btn-default pull-right">ثبت یا ویرایش شات‌لیست</a>
+</div>
+<table class="table table-condensed table-hover table-striped table-bordered" id="media-shotlist-table">
+    <thead>
+    <th class="">#</th>
+    <th class="col-xs-2">توضیحات</th>
+    <th class="col-xs-2">ایجاد</th>
+    <th class="col-xs-2">آخرین ویرایش</th>
+    <th class="">شروع</th>
+    <th class="">پایان</th>
+    <th class="">مدت</th>
+    <th class="col-xs-1">کلیدواژه‌ها</th>
+    <th class="col-xs-1">محورها</th>
+    <th class="col-xs-3">عوامل</th>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="Id" data-seek="{{Start}}">
+        <td>{{math @index '+' 1}}</td>
+        <td>
+            {{#if Title}}<h4>{{Title}}</h4>{{/if}}
+            {{#if Description}}<p>{{Description}}</p>{{/if}}
+        </td>
+        <td>
+            {{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}
+            {{#if CreatedByText}}({{CreatedByText}}){{/if}}
+        </td>
+        <td>
+            {{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}
+            {{#if ModifiedByText}}({{ModifiedByText}}){{/if}}
+        </td>
+        <td>{{time Start}}</td>
+        <td>{{time End}}</td>
+        <td>{{time Duration}}</td>
+        <td>
+            {{#each Tags}}
+            <span data-type="tag" class="label label-sm bg-grey-salsa">{{title}}</span>
+            {{/each}}
+        </td>
+        <td>
+            {{#each Subjects}}
+            <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
+            {{/each}}
+        </td>
+        <td class="table-container">
+            {{#if Persons}}
+            <table class="table table-condensed table-striped">
+                <tbody>
+                {{#each Persons}}
+                <tr>
+                    <td>{{family}}، {{name}}</td>
+                    <td>
+                        <select class="form-control disabled" disabled>
+                            {{#select type}}
+                            {{#getDefinitionOptions 135}}{{/getDefinitionOptions}}
+                            {{/select}}
+                        </select>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
