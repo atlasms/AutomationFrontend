@@ -412,8 +412,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // read fields values
             for (var field in fields) {
                 var $element = $('[name="' + field + '"]');
-                if (field === "state")
-                    console.log('state', $element.val())
                 var $checkbox = $element.parents('.pane:first').find('.checkbox input[type="checkbox"]');
                 if ($checkbox.length && $checkbox.get(0).checked) {
                     if ($element.length && typeof $element.val() !== 'undefined' && $element.val()) {
@@ -453,9 +451,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             this.handleFilterLabels(fields);
 
             // DEV
-            $('pre.alert-danger').html(JSON.stringify(fields, null, 2));
-            this.currentPageUrl = '?' + $.param(fields);
-            $('.alert-success').html('<a target="_blank" href="' + this.currentPageUrl + '">' + this.currentPageUrl + '</a>');
+            // $('pre.alert-danger').html(JSON.stringify(fields, null, 2));
+            // this.currentPageUrl = '?' + $.param(fields);
+            // $('.alert-success').html('<a target="_blank" href="' + this.currentPageUrl + '">' + this.currentPageUrl + '</a>');
 
             return fields;
         }

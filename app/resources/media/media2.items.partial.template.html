@@ -31,9 +31,12 @@
 						<th data-field="MetaCategoryName" class="col-xs-2 text-center"><span>برنامه</span></th>
 						<th data-field="Created" class="col-xs-2 text-center sortable"><span>زمان ایجاد</span></th>
 						<th data-field="CreatedByText" class="col-xs-1"><span>ایجاد کننده</span></th>
+						{{#ifConfig 'mediaList.showLastTask'}}
+						<th data-field="LastTaskPerson" class="col-xs-1"><span>آخرین ارجاع</span></th>
+						{{/ifConfig}}
 <!--						<th class="col-xs-2 text-center">آخرین ویرایش</th>-->
 <!--						<th class="col-xs-1">ویرایش کننده</th>-->
-						<th data-field="EpisodeNumber" class="text-center sortable"><span>قسمت</span></th>
+						<th data-field="EpisodeNumber" class="text-center sortable"><span>{{config '__.episode'}}</span></th>
 						<th data-field="ConductorUseCount" class="text-center"><span>#&nbsp;پخش</span></th>
 						<th data-field="Duration" class="col-xs-1 text-center sortable"><span>مدت</span></th>
 						<th data-field="State" class="col-xs-2 text-center"><span>وضعیت</span></th>
@@ -71,6 +74,11 @@
 						<td class="text-left">
 							<span class="">{{CreatedByText}}</span>
 						</td>
+						{{#ifConfig 'mediaList.showLastTask'}}
+						<td class="text-left">
+							<span class="" title="{{extractTime LastTaskDatetime}} {{extractDate LastTaskDatetime}}">{{LastTaskPersonText}}</span>
+						</td>
+						{{/ifConfig}}
 						<!--<td class="text-right">
 							<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
 						</td>
