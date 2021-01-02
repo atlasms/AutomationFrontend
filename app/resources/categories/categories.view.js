@@ -22,6 +22,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="submit-persons"]': 'submitPersons'
             , 'click [data-task="revoke-access"]': 'revokeAccess'
             , 'click [data-task="grant-access"]': 'grantAccess'
+
+            , 'keyup [data-type="tree-search"]': 'searchTree'
+        }
+        , searchTree: function(e) {
+            $('#tree').jstree(true).search($(e.target).val());
         }
         , saveMetadata: function (e) {
             e.preventDefault();
