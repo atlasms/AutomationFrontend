@@ -1,50 +1,65 @@
 <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
-	<ul class="chats">
-		{{#each []}}
-		<li class="out {{#ifCond Owner '==' 1}}system{{/ifCond}}">
-			<img class="avatar" alt="" src="/assets/img/avatar.png"/>
-			<div class="date">{{extractTime SendDate}} {{extractDate SendDate}}</div>
-			<span class="name"> {{FromUserText}} </span>
-			<div class="message">
-				<span class="arrow"> </span>
-				{{#if TypeText}}
-				<span class="label label-danger label-sm label-type">{{TypeText}}</span>
-				{{/if}}
-				{{#if Data.start}}
-				<span class="datetime label" data-seek="{{seconds Data.start}}">
+    <ul class="chats">
+        {{#each []}}
+        <li class="out {{#ifCond Owner '==' 1}}system{{/ifCond}}" data-state="{{State}}" data-id="{{Id}}">
+            {{#ifCond State '==' '2'}}
+            <button data-task="change-comment-state" class="btn btn-sm green-jungle"><i class="fa fa-check"></i> انتشار</button>
+            {{/ifCond}}
+            <img class="avatar" alt="" src="/assets/img/avatar.png"/>
+            <div class="date">{{extractTime SendDate}} {{extractDate SendDate}}</div>
+            <span class="name"> {{FromUserText}} </span>
+            <div class="message">
+                <span class="arrow"> </span>
+                {{#if TypeText}}
+                <span class="label label-danger label-sm label-type">{{TypeText}}</span>
+                {{/if}}
+                {{#if Data.start}}
+                <span class="datetime label" data-seek="{{seconds Data.start}}">
 							<span class="label label-default label-sm">{{Data.start}} - {{Data.end}}</span>
 						</span>
-				{{/if}}
-				<span class="body clearfix">{{#ifCond Owner '==' 1}}{{FromUserText}}{{/ifCond}} {{Body}}</span>
-			</div>
-		</li>
-		{{/each}}
-	</ul>
+                {{/if}}
+                <span class="body clearfix">{{#ifCond Owner '==' 1}}{{FromUserText}}{{/ifCond}} {{Body}}</span>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
 </div>
 <form class="chat-form">
-	<div class="form-horizontal">
-		<div class="form-group form-md-line-input form-md-floating-label">
-			<input type="hidden" name="Kind" value="1"/>
-			<div class="col-xs-4">
-				<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-start" step="2" name="" value=""/>
-			</div>
-			<div class="col-xs-4">
-				<input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-end" step="2" name="" value=""/>
-			</div>
-			<div class="col-xs-4">
-				<select class="form-control" name="Type">
-					{{{getDefinitionOptions 6}}}
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="input-cont">
-		<input class="form-control" type="text" name="Body" placeholder="توضیحات..."/>
-	</div>
-	<div class="btn-cont">
-		<span class="arrow"> </span>
-		<button type="submit" class="btn blue icn-only">
-			<i class="fa fa-check icon-white"></i>
-		</button>
-	</div>
+    <div class="form-horizontal">
+        <div class="form-group form-md-line-input form-md-floating-label">
+            <input type="hidden" name="Kind" value="1"/>
+            <div class="col-xs-4">
+                <input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-start" step="2" name="" value=""/>
+            </div>
+            <div class="col-xs-4">
+                <input type="text" class="time form-control" data-before-save="timestamp" data-type="clip-end" step="2" name="" value=""/>
+            </div>
+            <div class="col-xs-4">
+                <select class="form-control" name="Type">
+                    {{{getDefinitionOptions 6}}}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="checkbox checkbox-primary checkbox-circle">
+            <input name="State" id="draft-comment" value="1" type="checkbox" checked />
+            <label for="draft-comment">انتشار</label>
+        </div>
+    </div>
+    <div class="input-cont">
+        <input class="form-control" type="text" name="Body" placeholder="توضیحات..." />
+    </div>
+    <div class="btn-cont">
+        <span class="arrow"> </span>
+        <button type="submit" class="btn blue icn-only">
+            <i class="fa fa-check icon-white"></i>
+        </button>
+    </div>
+<!--    <div class="btn-cont">-->
+<!--        <span class="arrow"> </span>-->
+<!--        <button type="submit" class="btn green-haze icn-only" data-state="2">-->
+<!--            <i class="fa fa-edit icon-white"></i> پیش‌نویس-->
+<!--        </button>-->
+<!--    </div>-->
 </form>

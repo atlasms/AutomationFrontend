@@ -509,11 +509,14 @@ div#schedule-table {
 #chats .chats {
     li {
         position: relative;
-        .name { display: block; float: right; position: absolute; top: 50px; right: 0; font-size: 12px; }
+        button[data-task="change-comment-state"] { position: absolute; top: 0; left: 0; z-index: 1; }
+        .name { display: block; float: right; position: absolute; top: 65px; right: 0; font-size: 12px; max-width: 65px; }
         .body { margin-top: 8px; }
-        .message { text-align: left; }
-        .date { color: #777; font-size: 90%; opacity: .1; visibility: hidden; transition: 0.2s all; text-align: center; }
+        .message { text-align: left; min-height: 55px; }
+        .date { color: #777; font-size: 90%; /*opacity: .1; visibility: hidden;*/ transition: 0.2s all; text-align: center; }
+        .avatar { position: absolute; margin: 0; top: 16px; right: 0; }
         &.out {
+            .avatar { margin: 0; }
             .label-type { float: right; }
         }
         &.in {
@@ -527,13 +530,26 @@ div#schedule-table {
             .name { display: none; }
             .arrow { display: none; }
             .message {
-                margin-right: 0; text-align: center; background: #efefef; margin: 0 auto; border: 1px solid #eee; border-radius: 2px !important; padding: 0;
+                text-align: center; background: #efefef; margin: 0 auto; border: 1px solid #eee; border-radius: 2px !important; padding: 0;
+                min-height: 0;
                 .body { margin: 5px 0; color: #666; font-size: 80%; }
             }
         }
-        &:hover {
-            .date { opacity: 1; visibility: visible }
+        &[data-state="2"] {
+            /*padding: 15px;*/ opacity: .8; border: 2px dashed #ccc; transition: 0.2s all;
+            &:before {
+                display: block; content: 'منتشر نشده'; position: absolute; top: 0; right: 0; background: #ffa500; color: #fff;
+                padding: 4px 6px;
+            }
+            &:after { display: block; content: ''; border: 5px solid transparent; top: -4px; left: 0; border-right-color: #eee; }
+            //.message { margin-right: 75px; }
+            .name { bottom: 3px; }
+            .avatar, .name { right: 10px; }
+            &:hover { opacity: 0.95; }
         }
+        //&:hover {
+        //    .date { opacity: 1; visibility: visible }
+        //}
     }
 }
 

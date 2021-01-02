@@ -31,6 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task=load_review]': 'load'
             , 'click [data-task=refresh-view]': 'reLoad'
             , 'submit .chat-form': 'insertComment'
+            , 'click [data-task="change-comment-state"]': 'changeCommentState'
             , 'click #review-table tbody tr td': 'collapseRow'
             , 'click [data-seek]': 'seekPlayer'
             , 'click [href="#chats-history"]': 'loadHistory'
@@ -131,6 +132,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $("#media-desc").append('<p>' + $row.find('small').html() + '</p>');
                     self.loadComments(params);
                 });
+            });
+        }
+        , changeCommentState: function (e) {
+            var self = this;
+            var $button = $(e.target).is('button') ? $(e.target) : $(e.target).parents('button:first');
+            var commentId = $button.parents('li:first').attr('data-id');
+            var externalid = $form.parents(".preview-pane").prev().attr('data-id');
+            new ReviewModel({overrideUrl: Config.api.comments, id: commentId}).save({Key: 'state', Value: 1}, {
+                patch: true
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'انتشار نظر', Config.settings.toastr);
+                    self.loadComments({query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadSidebarComments({query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments});
+                }
             });
         }
         , insertComment: function (e) {
