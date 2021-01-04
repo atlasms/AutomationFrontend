@@ -23,7 +23,7 @@ require.config({
         , "bootstrap/popover": {deps: ["jquery", "bootstrap/tooltip"], exports: "$.fn.popover"}
         , "bootstrap/transition": {deps: ["jquery"], exports: "$.fn.transition"}
         , "bootstrap-table": {deps: ["jquery"], exports: "$.fn.bootstrapTable"}
-        , "x-editable": {deps: ["jquery", "bootstrap/tooltip", "bootstrap/popover"], exports: "jQuery"}
+        , "x-editable": {deps: ["jquery", "bootstrap/tooltip", "bootstrap/popover"], exports: "$.fn.editable"}
         , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
         , "jwplayer": {exports: "jwplayer"}
         , "flowplayer": {exports: "flowplayer"}
