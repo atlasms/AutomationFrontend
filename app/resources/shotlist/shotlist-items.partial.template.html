@@ -1,7 +1,7 @@
 <table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
     <tbody>
     {{#each ShotList}}
-    <tr data-id="{{Id}}" data-duration="{{time Duration}}" data-media-duration="{{time ../Duration}}" data-type="{{Type}}" data-external-id="{{ExternalId}}" data-tags="{{extractId Tags}}" data-subjects="{{extractId Subjects}}" data-persons="{{extractId Persons}}" data-title="{{Title}}" data-description="{{Description}}">
+    <tr data-id="{{Id}}" data-duration="{{time Duration}}" data-media-duration="{{time ../Duration}}" data-type="{{Type}}" data-external-id="{{ExternalId}}" data-tags="{{extractId Tags}}" data-subjects="{{extractId Subjects}}" data-persons="{{extractId Persons}}" data-title="{{Title}}" data-description="{{Description}}" data-json="{{stringify this}}">
         <td class="ordering">
             <div style="width: 68px;">
                 <span data-task="reorder" data-value="up" class="btn btn-sm btn-default"><i class="fa fa-arrow-up"></i></span>

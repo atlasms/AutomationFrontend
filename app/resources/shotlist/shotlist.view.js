@@ -15,7 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {'button': {cssClass: 'btn blue-sharp', text: 'انتخاب مدیا ', type: 'button', task: 'search', icon: 'fa fa-search'}}
         ]
         , statusbar: [
-            {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
+            // {type: 'total-duration', text: 'مجموع زمان', cssClass: 'badge badge-info'}
         ]
         , flags: {}
         , cache: {}
@@ -79,6 +79,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // generate shot metadata object to use in form
             var start = Global.processTime($row.find('[data-type="start"]').text());
             var end = Global.processTime($row.find('[data-type="end"]').text());
+            var json = typeof $row.attr('data-json') !== 'undefined' ? JSON.parse($row.attr('data-json')) : {};
             var data = {
                 Start: start,
                 End: end,
@@ -90,7 +91,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 Id: ~~$row.attr('data-id'),
                 Persons: [],
                 Tags: [],
-                Subjects: []
+                Subjects: [],
+                VideoType: typeof json.VideoType !== 'undefined' ? json.VideoType : null,
+                EF1: typeof json.EF1 !== 'undefined' ? json.EF1 : null,
+                EF2: typeof json.EF2 !== 'undefined' ? json.EF2 : null,
+                EF3: typeof json.EF3 !== 'undefined' ? json.EF3 : null,
+                EF4: typeof json.EF4 !== 'undefined' ? json.EF4 : null,
             };
             var metadataTypes = ['tags', 'subjects', 'persons'];
             for (var i in metadataTypes) {
@@ -112,6 +118,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             formData.Start = Global.processTime(formData.Start);
             formData.End = Global.processTime(formData.End);
             formData.Duration = Global.processTime(formData.Duration);
+            formData.VideoType = ~~formData.VideoType;
             var metadataTypes = ['Tags', 'Subjects'];
             for (var i in metadataTypes) {
                 var values = [];
