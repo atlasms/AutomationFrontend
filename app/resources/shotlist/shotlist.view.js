@@ -76,6 +76,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , prepareShotMetadata: function ($row) {
+            if (typeof $row === 'undefined' || !$row) {
+                return {};
+            }
             // generate shot metadata object to use in form
             var start = Global.processTime($row.find('[data-type="start"]').text());
             var end = Global.processTime($row.find('[data-type="end"]').text());
@@ -170,8 +173,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 Global.processTime($row.find('[data-type="start"]').text())
                 , Global.processTime($row.find('[data-type="end"]').text())
             ];
+            this.handleActiveRow($row);
             this.player.setRange(params, this.playerInstance, true);
             this.showShotMetadataForm($row);
+        }
+        , handleActiveRow: function($row) {
+            $('#shotlist-table tbody tr').removeClass('active');
+            $row.addClass('active');
         }
         , addClip: function (e) {
             var self = this;
@@ -483,6 +491,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             self.renderPlayer(item);
                             self.loadShotlist(item);
                             self.removeShotMetadataForm();
+                            self.showShotMetadataForm(null);
                         });
                     });
                 }

@@ -1,3 +1,5 @@
+<h4 class="page-title clearfix">شات‌لیست</h4>
+{{#if ShotList}}
 <table id="shotlist-table" class="table table-condensed table-hover table-bordered table-striped">
     <tbody>
     {{#each ShotList}}
@@ -28,3 +30,6 @@
     {{/each}}
     </tbody>
 </table>
+{{else}}
+<div class="alert alert-warning">برای این مدیا هنوز شات‌لیستی ثبت نشده است.</div>
+{{/if}}

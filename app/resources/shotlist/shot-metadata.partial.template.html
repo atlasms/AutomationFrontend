@@ -9,7 +9,9 @@
     <input type="hidden" name="ExternalId" value="{{metadata.ExternalId}}"/>
     <input type="hidden" name="Id" value="{{metadata.Id}}"/>
     <h4 class="page-title clearfix">
+        {{#if metadata.Id}}
         <button type="submit" data-task="submit-shot" class="btn btn-success pull-right"><i class="fa fa-save"></i> ذخیره اطلاعات</button>
+        {{/if}}
         ورود اطلاعات شات
     </h4>
     <div class="form-group">
