@@ -83,6 +83,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(e.target).parents('.pane').first().toggleClass('collapsed');
             }
             // , 'change select.form-control': 'reLoad'
+
+            , 'keyup [data-type="tree-search"]': 'searchTree'
         }
 
         , assign: function (e) {
@@ -450,9 +452,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             this.handleFilterLabels(fields);
 
+            this.currentPageUrl = '?' + $.param(fields);
+
             // DEV
             // $('pre.alert-danger').html(JSON.stringify(fields, null, 2));
-            // this.currentPageUrl = '?' + $.param(fields);
             // $('.alert-success').html('<a target="_blank" href="' + this.currentPageUrl + '">' + this.currentPageUrl + '</a>');
 
             return fields;
@@ -554,6 +557,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , handleRangeSliders: function () {
             $("#duration").ionRangeSlider({type: "double", grid: true, min: 0, max: 180, from: 0, to: 180, prefix: ""})
             $("#broadcastCount").ionRangeSlider({type: "double", grid: true, min: 0, max: 999, from: 0, to: 999, prefix: ""})
+        }
+        , searchTree: function(e) {
+            $('#tree').jstree(true).search($(e.target).val());
         }
         , loadTree: function () {
             var self = this;
@@ -709,6 +715,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             params.method === "ready" && $('[name="cat-name"]').val(params.text) && self.loadItems();
         }
         , afterRender: function (items, requestParams) {
+            console.log(this.currentPageUrl)
             window.history.pushState({}, "", this.currentPageUrl);
             window.setTimeout(function () {
                 $("select.select2").each(function () {
