@@ -440,6 +440,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('price', function (price) {
                 return Global.processPrice(price);
             });
+            Handlebars.registerHelper('stringify', function (json) {
+                return JSON.stringify(json);
+            });
             Handlebars.registerHelper('input', function (value, options) {
                 var policy = Global.getInputPolicy(value);
                 var $el = $(options.fn(this));
