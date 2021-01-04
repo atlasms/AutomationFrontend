@@ -873,6 +873,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                             $("input.time").mask('H0:M0:S0', {
                                                 placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
                                             });
+                                        if (service === 'shotlist') {
+                                            $('.shotlist-link a').attr('href', $('.shotlist-link a').attr('href') + self.getId());
+                                        }
                                     });
                                 }
                             });
