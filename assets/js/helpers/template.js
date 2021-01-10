@@ -190,6 +190,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('percent', function (value, whole, options) {
                 return Math.round((~~value * 100) / ~~whole);
             });
+            Handlebars.registerHelper('filesPercent', function (value, options) {
+                if (typeof value === 'undefined' || !value || value.indexOf('/') === -1) {
+                    return 0;
+                }
+                var numbers = value.split('/');
+                return Math.round((~~numbers[0] * 100) / ~~numbers[1]);
+            });
             Handlebars.registerHelper('time2', function (timestamp, options) {
                 return Global.createTime2(timestamp);
             });
@@ -285,6 +292,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     case 7:
                         // تایید گروه شده
                         return ' bg-purple-seance bg-font-purple-seance';
+                    case 8:
+                        // تایید هماهنگی
+                        return ' bg-blue-hoki bg-font-blue-hoki';
                     case 10:
                         // ????
                         return 'info';
