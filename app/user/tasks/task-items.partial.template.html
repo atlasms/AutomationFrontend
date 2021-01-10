@@ -36,14 +36,14 @@
             {{extractTime CreatedDate}} {{extractDate CreatedDate}}
         </div>
     </td>
-    <td class="text-right">
-        <div class="date">
-            {{extractTime DoneDate}} {{extractDate DoneDate}}
-        </div>
-    </td>
-    <td class="">
-        <div class="name">{{DoneByText}}</div>
-    </td>
+<!--    <td class="text-right">-->
+<!--        <div class="date">-->
+<!--            {{extractTime DoneDate}} {{extractDate DoneDate}}-->
+<!--        </div>-->
+<!--    </td>-->
+<!--    <td class="">-->
+<!--        <div class="name">{{DoneByText}}</div>-->
+<!--    </td>-->
     <td>
         <select class="form-control input-sm" data-type="change-state">
             {{#select Status}}
@@ -57,6 +57,11 @@
             <button class="btn btn-sm btn-outline purple-sharp" data-task="assign"><i class="fa fa-share"></i> ارجاع</button>
             <button class="btn btn-sm btn-outline blue-hoki" data-task="load-media"><i class="fa fa-info-circle"></i> مدیا</button>
         </div>
+    </td>
+    <td>
+        {{#ifCond State '!=' 2}}
+        {{>mediaOptions}}
+        {{/ifCond}}
     </td>
 </tr>
 {{/each}}

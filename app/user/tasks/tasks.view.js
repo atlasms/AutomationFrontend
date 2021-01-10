@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'toastr', 'toolbar', 'select2', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, toastr, Toolbar, select2) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'resources.media-options.helper', 'toastr', 'toolbar', 'select2', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, MediaOptionsHelper, toastr, Toolbar, select2) {
     var TasksView = Backbone.View.extend({
         toolbar: [
             // {'button': {cssClass: 'btn default pull-left', text: 'صندوق دریافتی‌ها', type: 'button', task: 'received', icon: 'fa fa-download'}},
@@ -20,13 +20,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                     cssClass: 'form-control', name: 'mode', options: [
                         {value: 'mytask', text: 'دریافتی‌ها', default: true},
                         {value: 'sent', text: 'ارسالی‌ها'}
-                    ], addon: true, icon: 'fa fa-inbox', text: 'نوع'
+                    ], addon: true, icon: 'fa fa-inbox', text: ''
                 }
             },
             {
                 'input': {
-                    cssClass: 'form-control datepicker', placeholder: 'تاریخ پخش', type: 'text', name: 'date', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;', text: 'تاریخ پخش'
+                    cssClass: 'form-control datepicker', placeholder: 'تاریخ پخش تا', type: 'text', name: 'edate', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;', text: 'تا'
+                }
+            },
+            {
+                'input': {
+                    cssClass: 'form-control datepicker', placeholder: 'تاریخ پخش از', type: 'text', name: 'date', addon: true, icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;', text: 'تاریخ پخش از'
                 }
             },
             {
@@ -56,7 +62,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         , currentAssigningItem: null
         , events: {
             'click .inbox-sidebar [data-type]': 'filterItems'
-            , 'click .inbox-content table tr': 'loadTask'
+            , 'click .inbox-content table tr td:not(:last-child):not(:first-child)': 'loadTask'
             , 'click [data-task="refresh-view"]': 'reLoad'
             , 'click [data-task="assign-batch"]': 'openAssignBatchModal'
             , 'click [data-task="assign"]': 'openAssignModal'
@@ -65,10 +71,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click [data-task="follow-up"]': 'followUp'
             , 'click [data-task="load-media"]': 'loadMedia'
             , 'change [data-type="change-state"]': 'changeStatus'
+            , 'click .media-options a': 'updateMediaParams'
+            // , 'click .media-options': function (e) {
+            //     e.stopPropagation();
+            // }
             , 'click [data-type="change-state"]': function (e) {
                 e.stopPropagation();
             }
-
             , 'click tr[data-id] td:first-child': function (e) {
                 e.stopPropagation();
                 // if ($(e.target).is('input')) {
@@ -86,6 +95,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , 'click #task-details a.note': function (e) {
                 $('#details-modal').modal('hide');
             }
+        }
+        , updateMediaParams: function (e) {
+            // e.stopPropagation();
+            e.preventDefault();
+            var self = this;
+            var $li = $(e.target).parents('li:first');
+            var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('media-id')};
+            MediaOptionsHelper.update(params, function (response) {
+                if (response.error !== false)
+                    toastr.error(response.error, 'خطا', Config.settings.toastr);
+                else {
+                    toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
+                    self.reLoad();
+                }
+            });
         }
         , changeStatus: function (e, givenParams, reload) {
             var self = this;
@@ -277,7 +301,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 status: filters.status,
                 count: 1000,
                 recommendedBroadcastDate: filters.date,
-                recommendedBroadcastEndDate: filters.date
+                recommendedBroadcastEndDate: filters.edate
             };
             this.load({query: $.param(modelParams)});
         }
@@ -306,6 +330,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             return {
                 status: ~~$('[name="status"]').val(),
                 date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val()) : null,
+                edate: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="edate"]').val()) : null,
                 // date: $('[name="filter-type"]').val() === 'date' ? $('[name="date"]').val() : null,
             };
         }
