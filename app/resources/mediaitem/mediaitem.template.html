@@ -1,65 +1,71 @@
 <style>
     .basic-details { position: relative; }
+    .btn-sm { height: 25px; line-height: 1; }
+    .btn-icon-only.btn-sm { width: 25px; }
     /*#persons-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; }*/
+    .basic-details #persons-table tr th:last-child, .basic-details #persons-table tr td:last-child { display: none; }
+    .basic-details #persons-table select.form-control.disabled[disabled] { padding: 0; height: 24px; }
+    #filters { height: 34px; }
+    #filters .label { float: right; margin: 4px 10px 0 0; white-space: nowrap; padding-left: 10px; cursor: pointer; }
+    #filters .label span { font-weight: bold; margin-right: 10px; }
+    /*#filters .label:first-child { margin-right: 50px; }*/
+    #files-table th, #files-table td { text-align: center; }
+    #mediaitem-page .item-forms .portlet { min-height: auto; }
+    .spinner {
+        /*position: absolute;*/
+        display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: transparent;
+        border: 2px solid transparent; border-top: 2px solid #fff; border-left: 2px solid #fff; animation: 2s spin linear infinite;
+        float: left;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
 </style>
 <div id="mediaitem-page">
     <div class="row">
+        <div class="filters-cache">
+            <span class="label bg-green-steel bg-font-green-steel" data-key="workflow" data-value=""><i class="fa fa-exchange"></i> گردش کار<span><i class="spinner"></i></span></span>
+            <span class="label bg-green-turquoise bg-font-green-turquoise" data-key="persons" data-value=""><i class="fa fa-user"></i> عوامل<span><i class="spinner"></i></span></span>
+            <span class="label bg-purple-plum bg-font-purple-plum" data-key="versions" data-value=""><i class="fa fa-copy"></i> تغییرات <span><i class="spinner"></i></span></span>
+            <span class="label bg-purple-seance bg-font-purple-seance" data-key="schedule" data-value=""><i class="fa fa-tv"></i> سابقه پخش <span><i class="spinner"></i></span></span>
+            <span class="label bg-yellow-casablanca bg-font-yellow-casablanca" data-key="rush" data-value=""><i class="fa fa-video-camera"></i> تصاویر راش <span><i class="spinner"></i></span></span>
+            <span class="label bg-blue-madison bg-font-blue-madison" data-key="shotlist" data-value=""><i class="fa fa-file-movie-o"></i> شات‌لیست <span><i class="spinner"></i></span></span>
+            <span class="label label-warning" data-key="files" data-value=""><i class="fa fa-server"></i> فایل‌ها <span>{{FilesPercent}}</span></span>
+        </div>
         <div class="item-details col-md-12">
             <div class="portlet light">
                 <div class="portlet-body">
                     <div class="row">
                         <div class="col-md-7">
                             <div class="basic-details" data-editable="{{#authorize 2048}}true{{/authorize}}">
-                                <h5><strong>اطلاعات پایه</strong></h5>
+                                <!--                                <h5><strong>اطلاعات پایه</strong></h5>-->
                                 <table class="table table-bordered table-hover table-striped hidden-header">
                                     <thead>
                                     <tr>
-                                        <th class="col-xs-3"></th>
-                                        <th class="col-xs-9"></th>
+                                        <th class="col-xs-4"></th>
+                                        <th class="col-xs-4"></th>
+                                        <th class="col-xs-4"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>شناسه</td>
+                                    <tr data-type="{{Type}}" data-pid="{{Pid}}">
                                         <td>
-                                            {{Id}}
+                                            <strong>شناسه:</strong> {{Id}}
                                             {{#ifCond Type '==' 3}}
                                             <a href="/resources/mediaitem/{{Pid}}" class="label label-sm label-info"
                                                target="{{config 'mediaLinkTarget'}}">مدیای اصلی ({{Pid}})</a>
                                             {{/ifCond}}
                                         </td>
-                                    </tr>
-                                    <tr data-type="{{Type}}" data-pid="{{Pid}}">
-                                        <td>نوع</td>
                                         <td>
+                                            <strong>نوع:</strong>
                                             {{#ifCond Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
                                             {{#ifCond Type '==' 1}}<i class="fa fa-picture-o"></i> تصویر{{/ifCond}}
                                             {{#ifCond Type '==' 2}}<i class="fa fa-headphones"></i> صدا{{/ifCond}}
                                             {{#ifCond Type '==' 3}}<i class="fa fa-video-camera"></i> راش{{/ifCond}}
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>عنوان</td>
                                         <td>
-                                            <a href="#" class="x-editable" id="title-field" data-type="text"
-                                               data-pk="{{Id}}" data-field="Title"
-                                               data-original-title="عنوان">{{Title}}</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>برنامه</td>
-                                        <td>
-                                            <a href="/resources/media2/?startdate=1970-01-01&categoryId={{MetaCategoryId}}" target="_blank">
-                                                <span data-type="category" class="label label-sm bg-dark bg-font-dark">{{MetaCategoryName}}</span>
-                                                &nbsp;<i class="fa fa-external-link"></i><small> سایر {{config '__.episode'}}‌ها</small>
-                                            </a>
-                                            <a href="#" class="pull-right" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
-                                                    class="fa fa-pencil"></i> تغییر برنامه</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>وضعیت</td>
-                                        <td>
+                                            <strong>وضعیت:</strong>
                                             <span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
                                             {{#ifCond State '==' 2}}
                                             {{#authorize 32768}}
@@ -75,16 +81,23 @@
                                                 {{/ifCond}}
                                         </td>
                                     </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered table-hover table-striped hidden-header">
+                                    <thead>
                                     <tr>
-                                        <td>خلاصه</td>
-                                        <td>
-                                            <a href="#" class="x-editable" id="desc-field" data-type="textarea"
-                                               data-pk="{{Id}}" data-field="Description" data-original-title="توضیحات">{{Description}}</a>
-                                        </td>
+                                        <th class="col-xs-3"></th>
+                                        <th class="col-xs-9"></th>
                                     </tr>
+                                    </thead>
+                                    <tbody>
                                     <tr>
-                                        <td>مدت</td>
-                                        <td>{{time Duration}}</td>
+                                        <td>عنوان {{config '__.episode'}}</td>
+                                        <td>
+                                            <a href="#" class="x-editable" id="title-field" data-type="text"
+                                               data-pk="{{Id}}" data-field="Title"
+                                               data-original-title="عنوان">{{Title}}</a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>شماره {{config '__.episode'}}</td>
@@ -95,68 +108,45 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>محورها</td>
+                                        <td>مدت</td>
+                                        <td>{{time Duration}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>برنامه</td>
                                         <td>
-                                            {{#each ShotList}}
-                                            {{#if @first}}
-                                            {{#each Subjects}}
-                                            <span data-type="subject" class="label label-sm bg-grey-salsa">{{title}}</span>
-                                            {{/each}}
-                                            {{/if}}
-                                            {{/each}}
-                                            <div class="pull-right">
-                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-subjects"><i class="fa fa-pencil"></i> ویرایش محورها</button>
-                                            </div>
-                                            <form class="subjects-form hide" style="margin-top: 20px;">
-                                                <div class="form-group">
-                                                    <select class="form-control  select2" data-type="subjects" name="Subjects" multiple required></select>
-                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-subjects"><i class="fa fa-save"></i> ثبت</button>
-                                                </div>
-                                            </form>
+                                            <a href="/resources/media2/?startdate=1970-01-01&categoryId={{MetaCategoryId}}" target="_blank">
+                                                <span data-type="category" class="label label-sm bg-dark bg-font-dark">{{MetaCategoryName}}</span>
+                                                &nbsp;<i class="fa fa-external-link"></i><small> سایر {{config '__.episode'}}‌ها</small>
+                                            </a>
+                                            <a href="#" class="pull-right" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
+                                                    class="fa fa-pencil"></i> تغییر برنامه</a>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>کلیدواژه‌ها</td>
+                                        <td>خلاصه</td>
                                         <td>
-                                            {{#each ShotList}}
-                                            {{#if @first}}
-                                            {{#each Tags}}
-                                            <span data-type="tag" class="label label-sm bg-grey-salsa">{{title}}</span>
-                                            {{/each}}
-                                            {{/if}}
-                                            {{/each}}
-                                            <div class="pull-right">
-                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-tags"><i class="fa fa-pencil"></i> ویرایش تگ‌ها</button>
-                                            </div>
-                                            <form class="tags-edit hide" style="margin-top: 20px;">
-                                                <div class="form-group">
-                                                    <select class="form-control select2" data-type="tags" name="Tags" multiple required></select>
-                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-tags"><i class="fa fa-save"></i> ثبت</button>
-                                                </div>
-                                            </form>
+                                            <a href="#" class="x-editable" id="desc-field" data-type="textarea"
+                                               data-pk="{{Id}}" data-field="Description" data-original-title="توضیحات">{{Description}}</a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>توضیحات آرشیو</td>
-                                        <td>
-                                            <a href="#" class="x-editable" id="archive-desc-field" data-type="textarea" data-optional="true"
-                                               data-pk="{{Id}}" data-field="ArchiveDescr" data-original-title="توضیحات آرشیو">{{ArchiveDescr}}</a>
-                                        </td>
-                                    </tr>
+
                                     <tr>
                                         <td>تعداد مجاز پخش</td>
                                         <td>
                                             {{#if AllowedBroadcastCount}}
-                                                {{#ifCond AllowedBroadcastCount '>' ConductorUseCount}}
-                                                    <span class="label label-danger">{{AllowedBroadcastCount}}</span>
-                                                {{else}}
-                                                    <span class="label label-primary">{{AllowedBroadcastCount}}</span>
-                                                {{/ifCond}}
+                                            {{#ifCond AllowedBroadcastCount '>' ConductorUseCount}}
+                                            <span class="label label-danger">{{AllowedBroadcastCount}}</span>
                                             {{else}}
-                                                <span class="label label-warning">ندارد</span>
+                                            <span class="label label-primary">{{AllowedBroadcastCount}}</span>
+                                            {{/ifCond}}
+                                            {{else}}
+                                            <span class="label label-warning">ندارد</span>
                                             {{/if}}
                                             <div class="pull-right">
-                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-allowed-broadcast-count"><i class="fa fa-pencil"></i> ویرایش تعداد مجاز پخش</button>
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-allowed-broadcast-count"><i class="fa fa-pencil"></i>
+                                                    <!--                                                    ویرایش تعداد مجاز پخش-->
+                                                    ویرایش
+                                                </button>
                                             </div>
                                             <form class="allowed-broadcast-count-form hide" style="margin-top: 20px;">
                                                 <div class="form-group">
@@ -175,7 +165,10 @@
                                             <span class="label label-warning">ندارد</span>
                                             {{/ifDate}}
                                             <div class="pull-right">
-                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-broadcast-date"><i class="fa fa-pencil"></i> ویرایش تاریخ پخش</button>
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-broadcast-date"><i class="fa fa-pencil"></i>
+                                                    <!--                                                    ویرایش تاریخ پخش-->
+                                                    ویرایش
+                                                </button>
                                             </div>
                                             <form class="broadcast-date-form hide" style="margin-top: 20px;">
                                                 <div class="form-group">
@@ -183,6 +176,62 @@
                                                     <button class="btn green-haze btn-sm" type="button" data-task="save-broadcast-date"><i class="fa fa-save"></i> ثبت</button>
                                                 </div>
                                             </form>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>محورها</td>
+                                        <td>
+                                            {{#each ShotList}}
+                                            {{#if @first}}
+                                            {{#each Subjects}}
+                                            <span data-type="subject" class="label label-sm bg-blue-oleo">{{title}}</span>
+                                            {{/each}}
+                                            {{/if}}
+                                            {{/each}}
+                                            <div class="pull-right">
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-subjects"><i class="fa fa-pencil"></i>
+                                                    <!--                                                    ویرایش محورها-->
+                                                    ویرایش
+                                                </button>
+                                            </div>
+                                            <form class="subjects-form hide" style="margin-top: 20px;">
+                                                <div class="form-group">
+                                                    <select class="form-control  select2" data-type="subjects" name="Subjects" multiple required></select>
+                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-subjects"><i class="fa fa-save"></i> ثبت</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>کلیدواژه‌ها</td>
+                                        <td>
+                                            {{#each ShotList}}
+                                            {{#if @first}}
+                                            {{#each Tags}}
+                                            <span data-type="tag" class="label label-sm bg-blue-oleo">{{title}}</span>
+                                            {{/each}}
+                                            {{/if}}
+                                            {{/each}}
+                                            <div class="pull-right">
+                                                <button class="btn blue btn-circle btn-sm" type="button" data-task="edit-tags"><i class="fa fa-pencil"></i>
+                                                    <!--                                                    ویرایش تگ‌ها-->
+                                                    ویرایش
+                                                </button>
+                                            </div>
+                                            <form class="tags-edit hide" style="margin-top: 20px;">
+                                                <div class="form-group">
+                                                    <select class="form-control select2" data-type="tags" name="Tags" multiple required></select>
+                                                    <button class="btn green-haze btn-sm" type="button" data-task="save-tags"><i class="fa fa-save"></i> ثبت</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>توضیحات آرشیو</td>
+                                        <td>
+                                            <a href="#" class="x-editable" id="archive-desc-field" data-type="textarea" data-optional="true"
+                                               data-pk="{{Id}}" data-field="ArchiveDescr" data-original-title="توضیحات آرشیو">{{ArchiveDescr}}</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -301,7 +350,7 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <h5>&nbsp;</h5>
+                            <!--                            <h5>&nbsp;</h5>-->
                             <div class="clearfix"></div>
                             {{#ifCond State 'in' '0,2'}}
                             {{#authorize 1024}}
@@ -313,8 +362,8 @@
                             {{#authorize 2097152}}
                             <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left" download><i
                                     class="fa fa-download"></i> دریافت فایل HQ</a>
-<!--                            <a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i-->
-<!--                                    class="fa fa-download"></i> دریافت فایل HQ</a>-->
+                            <!--                            <a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i-->
+                            <!--                                    class="fa fa-download"></i> دریافت فایل HQ</a>-->
                             {{/authorize}}
                             {{#authorize 262144}}
                             <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
@@ -350,132 +399,283 @@
             </div>
         </div>
         <div class="item-forms col-xs-12">
-            <div class="portlet light">
+
+            <!--                    <div class="row">-->
+            <!--                        <div class="col-xs-2">-->
+            <!--                            <ul class="nav nav-tabs tabs-left">-->
+            <ul class="nav nav-tabs hide">
+                <!--                <li class="" data-service="review"><a href="#tab-review" data-toggle="tab">نظرات</a></li>-->
+                <li class="" data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
+                <li class="" data-service="persons"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
+                <li class="" data-service="workflow"><a href="#tab-workflow" data-toggle="tab">سابقه گردش کار</a></li>
+                <li class="" data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
+                <li class="" data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
+                <li class="" data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
+                <li class="" data-service="shotlist"><a href="#tab-shotlist" data-toggle="tab">شات‌لیست</a></li>
+                <!--<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>-->
+            </ul>
+            <!--                        </div>-->
+            <!--                        <div class="col-xs-10">-->
+            <!--                            <div class="tab-content">-->
+            <!--            <div class="portlet light">-->
+            <!--                <div class="portlet-title">-->
+            <!--                    <div class="caption">-->
+            <!--                        <i class="fa fa-comments"></i>-->
+            <!--                        <span class="caption-subject font-dark bold uppercase">نظرات</span>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="portlet-body">-->
+            <!--                    <div class="tab-pane in active" id="tab-review"></div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <div class="portlet light note border-green-steel">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-exchange"></i>
+                        <span class="caption-subject font-dark bold uppercase">سابقه گردش کار</span>
+                    </div>
+                </div>
                 <div class="portlet-body">
-                    <div class="row">
-                        <div class="col-xs-2">
-                            <ul class="nav nav-tabs tabs-left">
-                                <li data-service="review"><a href="#tab-review" data-toggle="tab">نظرات</a></li>
-                                <li data-service="metadata"><a href="#tab-metadata" data-toggle="tab">اطلاعات تکمیلی</a></li>
-                                <li data-service="persons" class="active"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
-                                <li data-service="workflow"><a href="#tab-workflow" data-toggle="tab">سابقه گردش کار</a></li>
-                                <li data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
-                                <li data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
-                                <li data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
-                                <li data-service="shotlist"><a href="#tab-shotlist" data-toggle="tab">شات‌لیست</a></li>
-                                <!--<li data-service=""><a href="#tab-publicdata" data-toggle="tab">اطلاعات جانبی</a></li>-->
-                            </ul>
-                        </div>
-                        <div class="col-xs-10">
-                            <div class="tab-content">
-                                <div class="tab-pane fade" id="tab-review"></div>
-                                <div class="tab-pane fade" id="tab-workflow"></div>
-                                <div class="tab-pane fade" id="tab-metadata"></div>
-                                <div class="tab-pane fade in active" id="tab-persons"></div>
-                                <div class="tab-pane fade" id="tab-versions"></div>
-                                <div class="tab-pane fade" id="tab-schedule"></div>
-                                <div class="tab-pane fade" id="tab-rush"></div>
-                                <div class="tab-pane fade" id="tab-shotlist"></div>
-                                <!--<div class="tab-pane fade" id="tab-publicdata"></div>-->
-                            </div>
-                        </div>
+                    <div class="tab-pane in active" id="tab-workflow"></div>
+                </div>
+            </div>
+            <div class="portlet light note note-info">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-info-circle"></i>
+                        <span class="caption-subject font-dark bold uppercase">اطلاعات تکمیلی</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-metadata"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-green-turquoise">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-users"></i>
+                        <span class="caption-subject font-dark bold uppercase">فهرست عوامل</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-persons"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-purple-plum">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-copy"></i>
+                        <span class="caption-subject font-dark bold uppercase">سابقه تغییرات</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-versions"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-purple-seance">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-tv"></i>
+                        <span class="caption-subject font-dark bold uppercase">سابقه پخش</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-schedule"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-yellow-casablanca">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-video-camera"></i>
+                        <span class="caption-subject font-dark bold uppercase">تصاویر راش</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-rush"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-file-movie-o"></i>
+                        <span class="caption-subject font-dark bold uppercase">شات‌لیست</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-shotlist"></div>
+                </div>
+            </div>
+            <!--<div class="tab-pane fade" id="tab-publicdata"></div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <div class="portlet light note note-warning">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-server"></i>
+                        <span class="caption-subject font-dark bold uppercase">وضعیت فایل‌ها</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-files">
+                        <table id="files-table" class="table table-bordered table-striped table-condensed">
+                            <thead>
+                            <tr>
+                                <th rowspan="2">وضعیت</th>
+                                <th rowspan="2">مسیر</th>
+                                <th rowspan="2">پسوند</th>
+                                <th rowspan="2">حجم</th>
+                                <th rowspan="2">زمان ایجاد</th>
+                                <th rowspan="2">مدت</th>
+                                <th colspan="4">صدا</th>
+                                <th colspan="5">تصویر</th>
+                                <th rowspan="2">LTO</th>
+                            </tr>
+                            <tr>
+                                <th>کانال‌‌ها</th>
+                                <th>فورمت</th>
+                                <th>Bitrate</th>
+                                <th>Sample rate</th>
+
+                                <th>فورمت</th>
+                                <th>Bitrate</th>
+                                <th>Frame rate</th>
+                                <th>Codec</th>
+                                <th>اندازه</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each Files}}
+                            <tr data-id="Id">
+                                <td>
+                                    <div class="text-center label label-{{#ifCond State '==' 'online'}}success{{else}}warning{{/ifCond}}">{{State}}</div>
+                                </td>
+                                <td><div class="ltr text-right">{{Path}}</div></td>
+                                <td><div class="ltr text-right">{{Extension}}</div></td>
+                                <td><div class="ltr">{{SizeReadable}}</div></td>
+                                <td>{{extractTime Created}} {{extractDate Created}}</td>
+                                <td>{{time Duration}}</td>
+
+                                <td>{{AudioChannels}}</td>
+                                <td>{{AudioFormat}}</td>
+                                <td>{{AudioBitrate}}</td>
+                                <td>{{AudioSampleRate}}</td>
+
+                                <td>{{Format}}</td>
+                                <td>{{Bitrate}}</td>
+                                <td>{{FrameRate}}</td>
+                                <td>{{VideoCodec}}</td>
+                                <td>
+                                    {{#if Width}}
+                                    <div class="ltr">
+                                        {{Width}} &times; {{Height}}
+                                    </div>
+                                    {{/if}}
+                                </td>
+                                <td>{{LTO}}</td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="storage-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog container" role="document">
-            <div class="modal-content">
+</div>
+</div>
+<div class="modal fade" id="storage-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content">
 
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <div class="modal fade" id="tree-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog container" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                    <button type="button" data-task="select-folder" class="btn btn-info pull-right">ذخیره</button>
-                    <h4 class="modal-title">تغییر برنامه</h4>
-                </div>
-                <div id="tree"></div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <div class="modal fade" id="assign-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <form class="modal-content" role="form">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">ارجاع</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="MasterId" value="{{Id}}"/>
-                    <label>گیرنده</label>
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <label>
-                                &nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
-                        </dt>
-                        <dd>
-                            <div class="form-group">
-                                <select class="form-control" name="ToGroupId">
-                                    <option value="0">همه‌ی کاربران</option>
-                                    {{{getDefinitionOptions 14}}}
-                                </select>
-                            </div>
-                        </dd>
-                        <dt>
-                            <label>
-                                &nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
-                        </dt>
-                        <dd>
-                            <div class="form-group">
-                                <select class="form-control" name="ToUserId">
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="tree-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <button type="button" data-task="select-folder" class="btn btn-info pull-right">ذخیره</button>
+                <h4 class="modal-title">تغییر برنامه</h4>
+            </div>
+            <div id="tree"></div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="assign-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" role="form">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">ارجاع</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="MasterId" value="{{Id}}"/>
+                <label>گیرنده</label>
+                <dl class="dl-horizontal">
+                    <dt>
+                        <label>
+                            &nbsp;&nbsp;<i class="fa fa-globe text-muted"></i> گروه کاربری</label>
+                    </dt>
+                    <dd>
+                        <div class="form-group">
+                            <select class="form-control" name="ToGroupId">
+                                <option value="0">همه‌ی کاربران</option>
+                                {{{getDefinitionOptions 14}}}
+                            </select>
+                        </div>
+                    </dd>
+                    <dt>
+                        <label>
+                            &nbsp;&nbsp;<i class="fa fa-users text-muted"></i> کاربر</label>
+                    </dt>
+                    <dd>
+                        <div class="form-group">
+                            <select class="form-control" name="ToUserId">
 
-                                </select>
-                            </div>
-                        </dd>
-                    </dl>
-                    <hr/>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <label for="JobId">نوع ارجاع</label>
-                            </div>
-                            <div class="col-xs-9">
-                                <select class="form-control" id="JobId" name="JobId">
-                                    {{{getDefinitionOptions 219}}}
-                                </select>
-                            </div>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <label for="Title">عنوان</label>
-                            </div>
-                            <div class="col-xs-9">
-                                <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان"/>
-                            </div>
+                    </dd>
+                </dl>
+                <hr/>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <label for="JobId">نوع ارجاع</label>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <label for="Body">توضیحات</label>
-                            </div>
-                            <div class="col-xs-9">
-                                <textarea class="form-control" id="Body" name="Body" placeholder="توضیحات"></textarea>
-                            </div>
+                        <div class="col-xs-9">
+                            <select class="form-control" id="JobId" name="JobId">
+                                {{{getDefinitionOptions 219}}}
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-info" data-task="assign-item">ارجاع</button>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <label for="Title">عنوان</label>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان"/>
+                        </div>
+                    </div>
                 </div>
-            </form><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <label for="Body">توضیحات</label>
+                        </div>
+                        <div class="col-xs-9">
+                            <textarea class="form-control" id="Body" name="Body" placeholder="توضیحات"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info" data-task="assign-item">ارجاع</button>
+            </div>
+        </form><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </div>

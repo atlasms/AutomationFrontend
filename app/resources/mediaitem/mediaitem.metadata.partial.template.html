@@ -11,15 +11,15 @@
     <input type="hidden" name="MasterId" value="{{MasterId}}"/>
     <input type="hidden" name="Type" value="{{Type}}"/>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
+        <li><a href="#tab-info" data-toggle="tab">اطلاعات</a></li>
         <li><a href="#tab-broadcast" data-toggle="tab">پخش</a></li>
-        <li><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
+        <li class="active"><a href="#tab-website" data-toggle="tab">وب‌سایت</a></li>
         <li><a href="#tab-social" data-toggle="tab">شبکه‌های اجتماعی</a></li>
         <li><a href="#tab-videos" data-toggle="tab">ویدیو</a></li>
         <li><a href="#tab-photos" data-toggle="tab">تصاویر</a></li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="tab-info">
+        <div class="tab-pane fade" id="tab-info">
             <div class="form-group">
                 <label class="col-sm-3 control-label">عنوان</label>
                 <div class="col-sm-9">
@@ -152,7 +152,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="tab-website">
+        <div class="tab-pane fade in active" id="tab-website">
             {{#authorize 67108864}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">وضعیت نمایش</label>

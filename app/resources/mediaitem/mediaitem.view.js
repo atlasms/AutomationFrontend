@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'mask', 'toastr', 'hotkeys', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'mask', 'toastr', 'hotkeys', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'player.helper', 'resources.ingest.model', 'resources.review.model', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'bootbox', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/popover', 'editable.helper', 'resources.media-options.helper', 'shared.model', 'select2', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, Mask, toastr, Hotkeys, Toolbar, Statusbar, pDatepicker, Tree, player, IngestModel, ReviewModel, TasksModel, MetadataModel, CategoriesModel, bootbox, $tab, $modal, $popover, Editable, MediaOptionsHelper, SharedModel, select2) {
     bootbox.setLocale('fa');
     var keysMap = Config.shortcuts.review;
@@ -15,6 +15,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , subjects: []
         , tags: []
         , toolbar: [
+            {'filters': {}},
             // {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}},
             {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'submit', icon: 'fa fa-share', task: 'open-assign-modal'}}
         ]
@@ -34,7 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'submit .chat-form': 'insertComment'
             , 'click [data-task="change-comment-state"]': 'changeCommentState'
             , 'click .open-item': 'openItem'
-            , 'click .item-forms .nav-tabs.tabs-left li a': 'loadTab'
+            , 'click .item-forms > .nav-tabs li a': 'loadTab'
             , 'submit .categories-metadata-form': 'saveMetadata'
             , 'click [data-task="send-telegram"]': 'sendTelegram'
             , 'click [data-task="publish-website"]': 'publishWebsite'
@@ -56,6 +57,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="save-tags"]': 'saveTags'
             , 'click [href="#chats-history"]': 'loadHistory'
             , 'click #chats-history tr[data-id]': 'loadHistoryItem'
+            , 'click #filters .label': 'scrollToTabContent'
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
@@ -757,13 +759,30 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
-        , loadTab: function (e, force) {
+        , setLabelValue: function (type, value) {
+            if (type === 'schedule' && value === 0) {
+                value = 'ندارد';
+            }
+            if (type === 'shotlist' && value === 0) {
+                value = 'ثبت نشده';
+            }
+            if (type === 'rush' && value === 0) {
+                value = 'وارد نشده';
+            }
+            $('#filters [data-key="' + type + '"]').find('span').html(value.toString());
+        }
+        , scrollToTabContent: function(e) {
+            var $target = $(e.target).is('.label') ? $(e.target) : $(e.target).parents('.label:first');
+            var tab = $target.data('key');
+            $("html, body").animate({'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80}, 500);
+        }
+        , loadTab: function (e, force, el) {
             var self = this;
-            if (typeof e !== "undefined" && e !== null) {
+            if (typeof e !== "undefined" && e) {
                 e.preventDefault();
-                var el = $(e.currentTarget).parent();
-            } else
-                var el = $(".item-forms .nav-tabs li.active");
+                var el = typeof el === 'undefined' || !el ? $(e.currentTarget).parent() : el;
+            } /*else
+                var el = $(".item-forms .nav-tabs li.active");*/
             if (typeof force !== "undefined" && force !== true)
                 return;
             var tmpl, model, data;
@@ -837,16 +856,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if (typeof model !== "string" || model.indexOf('sequential') === -1) {
                     model.fetch({
                         success: function (items) {
-                            items = self.prepareItems(items.toJSON(), params);
+                            items = self.prepareItems(items.toJSON(), params, (service === "metadata"));
                             template.done(function (data) {
                                 if (service === "metadata") {
                                     var mediaItemsParams = {query: $.param({categoryId: catid, offset: 0, count: self.defaultListLimit})};
                                     var itemsModel = new MediaModel(mediaItemsParams);
                                     itemsModel.fetch({
                                         success: function (mediaItems) {
+                                            // console.log(mediaItems.toJSON());
                                             mediaItems = self.prepareItems(mediaItems.toJSON(), mediaItemsParams);
                                             items.media = mediaItems;
                                             var handlebarsTemplate = Template.handlebars.compile(data);
+                                            // console.log(items);
                                             var output = handlebarsTemplate(items);
                                             $container.html(output).promise().done(function () {
                                                 // After metadata form loaded
@@ -858,12 +879,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     });
                                 } else {
                                     var handlebarsTemplate = Template.handlebars.compile(data);
-                                    if (service === "broadcast")
+                                    if (service === "broadcast") {
+                                        self.setLabelValue('schedule', items.length);
                                         items = {items: items, params: {}};
-                                    if (service === 'persons')
+                                    } else if (service === 'persons') {
+                                        self.setLabelValue('persons', items.length);
                                         items = {items: items, cols: true, placeholder: false};
+                                    } else {
+                                        self.setLabelValue(service, items.length);
+                                    }
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
+                                        if (service === 'persons') {
+                                            $('#persons-table').clone().appendTo('.basic-details');
+                                        }
                                         if ($container.find(".scroller").length)
                                             $container.find(".scroller").slimScroll({
                                                 height: $container.find(".scroller").height()
@@ -924,11 +953,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , afterRender: function (item, params) {
             var self = this;
+            $('#filters').empty();
+            $('.filters-cache').appendTo('#filters');
+            // $('.filters-cache').unwrap();
             if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
-                $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
+                // $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
                 $("html, body").animate({'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50}, 500);
-            } else
-                self.loadTab();
+            } else {
+                // self.loadTab();
+                $('.item-forms .nav-tabs li').each(function () {
+                    self.loadTab(undefined, true, $(this));
+                });
+            }
             self.initEditables();
             var media = {
                 thumbnail: item.Thumbnail
@@ -971,7 +1007,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //                self.flags.toolbarRendered = true;
             }
         }
-        , prepareItems: function (items, params) {
+        , prepareItems: function (items, params, disableConvert) {
             if (typeof items.query !== "undefined")
                 delete items.query;
             if (typeof params !== "undefined") {
@@ -983,7 +1019,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if (typeof this.Data === "string" && this.Data !== "")
                     this.Data = JSON.parse(this.Data);
             });
-            return items;
+            if (typeof disableConvert !== 'undefined' && disableConvert) {
+                return items;
+            }
+            var output = [];
+            for (var key in Object.keys(items)) {
+                output.push(items[key]);
+            }
+            return output;
         }
         , prepareContent: function () {
             this.renderToolbar();
