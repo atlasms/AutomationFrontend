@@ -1,112 +1,122 @@
 <style>
-	th span { display: block; position: relative; }
-	th span:after { display: block; content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%); color: #ccc; font-family:'FontAwesome'; font-weight: normal; }
-	.sortable { cursor: pointer; }
-	.sortable.asc span:after {content:"\f062"}
-	.sortable.desc span:after {content:"\f063"}
-	.assign-checkbox { margin-top: 10px; }
+    th span { display: block; position: relative; }
+    th span:after { display: block; content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%); color: #ccc; font-family: 'FontAwesome'; font-weight: normal; }
+    .sortable { cursor: pointer; }
+    .sortable.asc span:after {content: "\f062"}
+    .sortable.desc span:after {content: "\f063"}
+    .assign-checkbox { margin-top: 10px; }
 </style>
 <div class="portlet itemlist box">
-	<div class="portlet-title" style="background: #3598dc">
-		<div class="caption">
-			<span class="fa fa-columns" style=""></span>
-			تعداد:
-			<span data-type="total-count"></span>
-			<span class="fa fa-clock-o" style="margin-right: 20px;"></span>
-			مدت:
-			<span data-type="total-duration"></span>
-		</div>
-		<div class="actions" style="padding: 7px 0 0 0;">
-			<div class="paginator"></div>
-		</div>
-	</div>
-	<div class="portlet-body" style="border: 1px solid #3598dc; padding: 0;">
-		<div class="mainbody" style="overflow-x: auto;">
-			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
-				<thead>
-					<tr>
-						<th data-field="Id" class="sortable"><span>شناسه</span></th>
-						<th data-field="Thumbnail" class="col-xs-1"><span></span></th>
-						<th data-field="Title" class="col-xs-4"><span>عنوان</span></th>
-						<th data-field="MetaCategoryName" class="col-xs-2 text-center"><span>برنامه</span></th>
-						<th data-field="Created" class="col-xs-2 text-center sortable"><span>زمان ایجاد</span></th>
-						<th data-field="CreatedByText" class="col-xs-1"><span>ایجاد کننده</span></th>
-						{{#ifConfig 'mediaList.showLastTask'}}
-						<th data-field="LastTaskPerson" class="col-xs-1"><span>آخرین ارجاع</span></th>
-						{{/ifConfig}}
-<!--						<th class="col-xs-2 text-center">آخرین ویرایش</th>-->
-<!--						<th class="col-xs-1">ویرایش کننده</th>-->
-						<th data-field="EpisodeNumber" class="text-center sortable"><span>{{config '__.episode'}}</span></th>
-						<th data-field="ConductorUseCount" class="text-center"><span>#&nbsp;پخش</span></th>
-						<th data-field="Duration" class="col-xs-1 text-center sortable"><span>مدت</span></th>
-						<th data-field="State" class="col-xs-2 text-center"><span>وضعیت</span></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each items}}
-					<tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}">
-						<td>
-							{{Id}}
-							<div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
-								<input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{@index}}" />
-								<label for="check-{{@index}}"></label>
-							</div>
-						</td>
-						<td class="text-center">
-							<figure>
-								<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-							</figure>
-						</td>
-						<td>
-							{{Title}}
-							<small class="help-block text-muted clip-line">{{Description}}</small>
-							{{#if RecommendedBroadcastDate}}
-							<small><strong><i class="help-block text-muted clip-line">تاریخ پخش: {{extractDate RecommendedBroadcastDate}}</i></strong></small>
-							{{/if}}
-						</td>
-						<td class="text-left">
-							<span class="">{{MetaCategoryName}}</span>
-						</td>
-						<td class="text-right">
-							<span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
-						</td>
-						<td class="text-left">
-							<span class="">{{CreatedByText}}</span>
-						</td>
-						{{#ifConfig 'mediaList.showLastTask'}}
-						<td class="text-left">
-							<span class="" title="{{extractTime LastTaskDatetime}} {{extractDate LastTaskDatetime}}">{{LastTaskPersonText}}</span>
-						</td>
-						{{/ifConfig}}
-						<!--<td class="text-right">
-							<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
-						</td>
-						<td class="text-left">
-							<span class="">{{ModifiedByText}}</span>
-						</td>-->
-						<td class="text-center">
-							{{EpisodeNumber}}
-						</td>
-						<td class="text-center">
-							<span class="" data-title="">{{ConductorUseCount}}</span>
-						</td>
-						<td class="text-center">
-							<span class="time">{{time Duration}}</span>
-						</td>
-						<td class="text-center">
-							<span class="label label-{{resolveLabel State}}">{{StateText}}</span>
-						</td>
-						<td>
-<!--							{{#authorize 8388608}}{{>mediaOptions2}}{{/authorize}}-->
-							{{#ifCond State '!=' 2}}
-							{{>mediaOptions}}
-							{{/ifCond}}
-						</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <div class="portlet-title" style="background: #3598dc">
+        <div class="caption">
+            <span class="fa fa-columns" style=""></span>
+            تعداد:
+            <span data-type="total-count"></span>
+            <span class="fa fa-clock-o" style="margin-right: 20px;"></span>
+            مدت:
+            <span data-type="total-duration"></span>
+        </div>
+        <div class="actions" style="padding: 7px 0 0 0;">
+            <div class="paginator"></div>
+        </div>
+    </div>
+    <div class="portlet-body" style="border: 1px solid #3598dc; padding: 0;">
+        <div class="mainbody" style="overflow-x: auto;">
+            <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+                <thead>
+                <tr>
+                    <th data-field="Id" class="sortable"><span>شناسه</span></th>
+                    <th data-field="Thumbnail" class="col-xs-1"><span></span></th>
+                    <th data-field="Title" class="col-xs-4"><span>عنوان</span></th>
+                    <th class="text-center" title="وضعیت فایل‌های هر مدیا روی سرور"><i class="fa fa-server"></i></th>
+                    <th data-field="MetaCategoryName" class="col-xs-2 text-center"><span>برنامه</span></th>
+                    <th data-field="Created" class="col-xs-2 text-center sortable"><span>زمان ایجاد</span></th>
+                    <th data-field="CreatedByText" class="col-xs-1"><span>ایجاد کننده</span></th>
+                    {{#ifConfig 'mediaList.showLastTask'}}
+                    <th data-field="LastTaskPerson" class="col-xs-1"><span>آخرین ارجاع</span></th>
+                    {{/ifConfig}}
+                    <!--						<th class="col-xs-2 text-center">آخرین ویرایش</th>-->
+                    <!--						<th class="col-xs-1">ویرایش کننده</th>-->
+                    <th data-field="EpisodeNumber" class="text-center sortable"><span>{{config '__.episode'}}</span></th>
+                    <th data-field="ConductorUseCount" class="text-center"><span>#&nbsp;پخش</span></th>
+                    <th data-field="Duration" class="col-xs-1 text-center sortable"><span>مدت</span></th>
+                    <th data-field="State" class="col-xs-2 text-center"><span>وضعیت</span></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each items}}
+                <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}">
+                    <td>
+                        {{Id}}
+                        <div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
+                            <input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{@index}}"/>
+                            <label for="check-{{@index}}"></label>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <figure>
+                            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+                        </figure>
+                    </td>
+                    <td>
+                        {{Title}}
+                        <small class="help-block text-muted clip-line">{{Description}}</small>
+                        {{#if RecommendedBroadcastDate}}
+                        <small><strong><i class="help-block text-muted clip-line">
+							تاریخ پخش: {{extractDate RecommendedBroadcastDate}}
+						</i></strong></small>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if FilesPercent}}
+                        <div class="chart" data-percent="{{filesPercent FilesPercent}}" data-bar-color="#26C281">
+                            <span class="percent"></span>
+                        </div>
+                        {{/if}}
+                    </td>
+                    <td class="text-left">
+                        <span class="">{{MetaCategoryName}}</span>
+                    </td>
+                    <td class="text-right">
+                        <span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>
+                    </td>
+                    <td class="text-left">
+                        <span class="">{{CreatedByText}}</span>
+                    </td>
+                    {{#ifConfig 'mediaList.showLastTask'}}
+                    <td class="text-left">
+                        <span class="" title="{{extractTime LastTaskDatetime}} {{extractDate LastTaskDatetime}}">{{LastTaskPersonText}}</span>
+                    </td>
+                    {{/ifConfig}}
+                    <!--<td class="text-right">
+                        <span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
+                    </td>
+                    <td class="text-left">
+                        <span class="">{{ModifiedByText}}</span>
+                    </td>-->
+                    <td class="text-center">
+                        {{EpisodeNumber}}
+                    </td>
+                    <td class="text-center">
+                        <span class="" data-title="">{{ConductorUseCount}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="time">{{time Duration}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="label label-{{resolveLabel State}}">{{StateText}}</span>
+                    </td>
+                    <td>
+                        <!--							{{#authorize 8388608}}{{>mediaOptions2}}{{/authorize}}-->
+                        {{#ifCond State '!=' 2}}
+                        {{>mediaOptions}}
+                        {{/ifCond}}
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

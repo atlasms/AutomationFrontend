@@ -22,6 +22,10 @@
     .label a:hover { background: rgba(0, 0, 0, 0.1) }
     .label[data-key*="date"] span, .label[data-key*="Date"] span { display: inline-block; direction: ltr; }
     .modal-content { min-height: 400px; }
+    .chart { position: relative; display: inline-block; width: 48px; height: 48px; text-align: center; margin-top: 4px; margin-bottom: 0; }
+    .chart canvas { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+    .percent { display: inline-block; line-height: 48px; z-index: 2;  font-size: .8em; }
+    .percent:after { content: '%'; margin-left: 0.1em; font-size: .7em; }
 </style>
 <div id="metadata-page" class="portlet box">
     <div class="row">

@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'bootstrap-table', 'bootpag', 'rangeslider'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'easy-pie-chart', 'bootstrap-table', 'bootpag', 'rangeslider'
 ], function ($, _, Backbone, Template, Config, Global, Media2Model, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
     var MediaView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
@@ -722,6 +722,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($(this).hasClass("select2-hidden-accessible"))
                         $(this).select2('destroy');
                     $(this).select2({dir: "rtl", multiple: true, tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first')});
+                });
+
+                var $charts = $('.chart');
+                $charts.each(function () {
+                    $(this).easyPieChart({
+                        size: 48,
+                        scaleColor: false,
+                        lineWidth: 2,
+                        animate: {
+                            duration: 1000,
+                            enabled: true
+                        },
+                        onStep: function (from, to, percent) {
+                            $(this.el).find('.percent').text(Math.round(percent));
+                        }
+                    });
                 });
             }, 500);
 
