@@ -41,7 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="publish-website"]': 'publishWebsite'
             , 'change [data-task="change-mediausage-mode"]': 'mediaUsageChangeMode'
             , 'click [data-task="apply-mediausage-filters"]': 'mediaUsageFilter'
-            , 'click .media-options a': 'UpdateMediaParams'
+            , 'click .media-options a': 'updateMediaParams'
             , 'submit #person-search-form': 'searchPersons'
             , 'click [data-task="search-persons"]': 'searchPersons'
             , 'click [data-task="select-person"]': 'selectPerson'
@@ -348,16 +348,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $select.select2({dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body')});
             // });
         }
-        , UpdateMediaParams: function (e) {
+        , updateMediaParams: function (e) {
             e.preventDefault();
             var self = this;
-            // var id = this.getId();
             var $li = $(e.target).parents('li:first');
-            var params = {task: $li.data('task'), value: $li.data('value'), id: this.getId()};
+            var params = {
+                task: $li.data('task'),
+                value: $li.data('value'),
+                id: this.getId()
+            };
+            new MediaitemModel({id: +params.id}).fetch({
+                success: function (items) {
+                    items = self.prepareItems(items.toJSON(), params);
+                    var item = (Object.keys(items).length === 1) ? items[0] : items;
+                    Global.checkMediaFilesAvailability(item.Files);
+                }
+            });
+            // return;
             MediaOptionsHelper.update(params, function (response) {
-                if (response.error !== false)
+                if (response.error !== false) {
                     toastr.error(response.error, 'خطا', Config.settings.toastr);
-                else {
+                } else {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
@@ -753,7 +764,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.load();
         }
         , load: function (e, extend) {
-            console.info('Loading items');
             var params = {};
             params.q = $("[name=q]").val();
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;

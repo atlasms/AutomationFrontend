@@ -37,6 +37,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         // 'initialRedirect: '/resources/media2',
         epgMediaPath: 'http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}',
         minimumRequiredPersons: 2,
+        mainMediaExtensions: ['_hq.mxf', '_lq.mp4'],
         inputPolicies: {
             'ingest.Title': {uid: 'title', required: true, show: true, validation: 'text', min: 4},
             'ingest.EpisodeNumber': {uid: 'episode', required: true, show: true, validation: 'text', min: 0},

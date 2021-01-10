@@ -406,6 +406,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             }
             return arr;
         }
+        , checkMediaFilesAvailability: function(files) {
+            var avail = {};
+            CONFIG.mainMediaExtensions.map(function(i) {
+                avail[i] = 0;
+            });
+            console.log(avail);
+            for (var file in files) {
+                if (file.Path !== 'original') {
+
+                }
+            }
+        }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
         , Cache: {
