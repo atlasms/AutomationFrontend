@@ -357,14 +357,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 value: $li.data('value'),
                 id: this.getId()
             };
-            new MediaitemModel({id: +params.id}).fetch({
+
+            if (this.currentData.Type !== 0 || Config.mainStatesExceptions.indexOf(~~params.value) !== -1) {
+                this.setMediaParam(params);
+                return;
+            }
+
+            var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+            new MediaitemModel(modelParams).fetch({
                 success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
-                    var item = (Object.keys(items).length === 1) ? items[0] : items;
-                    Global.checkMediaFilesAvailability(item.Files);
+                    var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
+                    var check = Global.checkMediaFilesAvailability(files);
+                    if (check) {
+                        self.setMediaParam(params);
+                    } else {
+                        toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
+                    }
                 }
             });
-            // return;
+        }
+        , setMediaParam: function (params) {
+            var self = this;
             MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false) {
                     toastr.error(response.error, 'خطا', Config.settings.toastr);
@@ -781,7 +794,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }
             $('#filters [data-key="' + type + '"]').find('span').html(value.toString());
         }
-        , scrollToTabContent: function(e) {
+        , scrollToTabContent: function (e) {
             var $target = $(e.target).is('.label') ? $(e.target) : $(e.target).parents('.label:first');
             var tab = $target.data('key');
             $("html, body").animate({'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80}, 500);

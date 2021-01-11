@@ -110,6 +110,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (!$activeRow.find('[name="ConductorMetaCategoryId"]').next().is('.remove-meta')) {
                 $activeRow.find('[name="ConductorMetaCategoryId"]').after('<a href="#" class="remove-meta">×</a>');
             }
+            if ($activeRow.find('.td.id').not('.ep').find('.item-link').length) {
+                $activeRow.find('.td.id').not('.ep').find('.item-link').attr('href', '/resources/mediaitem/' + $row.data('id'));
+            } else {
+                $activeRow.find('.td.id').not('.ep').append('<a class="item-link" href="/resources/mediaitem/' + $row.data('id') + '" target="_blank"><i class="fa fa-info-circle"></i></a>');
+            }
             ScheduleHelper.updateTimes($activeRow);
             $('#media-modal').modal('hide');
             toastr.success('سطر انتخاب شده در کنداکتور جایگزین شد', 'انتخاب مدیا', Config.settings.toastr);

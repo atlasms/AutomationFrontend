@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'resources.media-options.helper', 'toastr', 'toolbar', 'select2', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, MediaOptionsHelper, toastr, Toolbar, select2) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'resources.media-options.helper', 'resources.mediaitem.model', 'toastr', 'toolbar', 'select2', 'bootstrap/modal'
+], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, MediaOptionsHelper, MediaitemModel, toastr, Toolbar, select2) {
     var TasksView = Backbone.View.extend({
         toolbar: [
             // {'button': {cssClass: 'btn default pull-left', text: 'صندوق دریافتی‌ها', type: 'button', task: 'received', icon: 'fa fa-download'}},
@@ -101,11 +101,36 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             e.preventDefault();
             var self = this;
             var $li = $(e.target).parents('li:first');
-            var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('media-id')};
+            var params = {
+                task: $li.data('task'),
+                value: $li.data('value'),
+                id: $(e.target).parents('tr:first').data('media-id')
+            };
+            var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+
+            if (Config.mainStatesExceptions.indexOf(~~params.value) !== -1) {
+                this.setMediaParam(params);
+                return;
+            }
+
+            new MediaitemModel(modelParams).fetch({
+                success: function (items) {
+                    var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
+                    var check = Global.checkMediaFilesAvailability(files);
+                    if (check) {
+                        self.setMediaParam(params);
+                    } else {
+                        toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
+                    }
+                }
+            });
+        }
+        , setMediaParam: function (params) {
+            var self = this;
             MediaOptionsHelper.update(params, function (response) {
-                if (response.error !== false)
+                if (response.error !== false) {
                     toastr.error(response.error, 'خطا', Config.settings.toastr);
-                else {
+                } else {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
@@ -410,7 +435,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 }
             }
             var itemsList = Object.keys(items).map(function (k) {
-                items[k].date = (typeof items[k].Media.RecommendedBroadcastDate !== 'undefined'
+                items[k].date = (typeof items[k].Media !== 'undefined'
+                    && typeof items[k].Media.RecommendedBroadcastDate !== 'undefined'
                     && items[k].Media.RecommendedBroadcastDate
                     && new Date(items[k].Media.RecommendedBroadcastDate).getFullYear() >= 2020)
                     ? items[k].Media.RecommendedBroadcastDate.split('T')[0]

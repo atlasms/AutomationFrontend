@@ -29,9 +29,17 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         });
     };
 
-    String.prototype.capitalize = function() {
+    String.prototype.capitalize = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
-    }
+    };
+
+    Object.filter = function (obj, predicate) {
+        Object.keys(obj).filter(function (key) {
+            return predicate(obj[key]);
+        }).reduce(function (res, key) {
+            return Object.assign(res, {[key]: obj[key]}, {});
+        });
+    };
 
     !(function () {
         "use strict";
@@ -406,17 +414,25 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             }
             return arr;
         }
-        , checkMediaFilesAvailability: function(files) {
+        , checkMediaFilesAvailability: function (files) {
             var avail = {};
-            CONFIG.mainMediaExtensions.map(function(i) {
+            CONFIG.mainMediaExtensions.map(function (i) {
                 avail[i] = 0;
             });
-            console.log(avail);
-            for (var file in files) {
+            for (var key in files) {
+                var file = files[key];
                 if (file.Path !== 'original') {
-
+                    if (typeof avail[file.Extension] !== 'undefined') {
+                        avail[file.Extension]++;
+                    }
                 }
             }
+            for (var key in avail) {
+                if (avail[key] === 0) {
+                    return false;
+                }
+            }
+            return true;
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class

@@ -228,20 +228,42 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 });
             } else {
-                new MediaModel({id: $("tr.active").attr('data-id')}).save({
+
+                var params = {
                     key: 'State'
                     , value: $(e.currentTarget).attr('data-task')
-                }, {
-                    patch: true
-                    , error: function (e, data) {
-                        toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
-                    }
-                    , success: function (model, response) {
-                        toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
-                        self.reLoad();
+                    , id: $("tr.active").attr('data-id')
+                };
+
+                var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+                new MediaModel(modelParams).fetch({
+                    success: function (items) {
+                        var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
+                        var check = Global.checkMediaFilesAvailability(files);
+                        if (check) {
+                            self.setMediaParam(params);
+                        } else {
+                            toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
+                        }
+                        return;
                     }
                 });
+
+
             }
+        }
+        , setMediaParam: function(params) {
+            var self = this;
+            new MediaModel({id: params.id}).save(params, {
+                patch: true
+                , error: function (e, data) {
+                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                }
+                , success: function (model, response) {
+                    toastr.success('عملیات تغییر وضعیت با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
+                    self.reLoad();
+                }
+            });
         }
         , reLoad: function () {
             this.load();

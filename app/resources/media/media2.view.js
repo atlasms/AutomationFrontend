@@ -51,7 +51,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , treeInstance: {}
         , events: {
             'click [data-task=load_metadata]': 'load'
-            , 'click #metadata-page tbody tr': 'selectRow'
+            , 'click #metadata-page tbody tr td:not(:first-child):not(:last-of-type)': 'selectRow'
             , 'click [data-task=print]': 'print'
             , 'click [data-task=refresh]': 'reLoad'
             , 'click [data-task=refresh-view]': 'reLoad'
@@ -300,20 +300,43 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var $li = $(e.target).parents('li:first');
             var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
+
+            if (~~$li.data('type') !== 0 || Config.mainStatesExceptions.indexOf(~~params.value) !== -1) {
+                this.setMediaParam(params);
+                return;
+            }
+
+            var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+            new MediaitemModel(modelParams).fetch({
+                success: function (items) {
+                    var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
+                    var check = Global.checkMediaFilesAvailability(files);
+                    if (check) {
+                        self.setMediaParam(params);
+                    } else {
+                        toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
+                    }
+                }
+            });
+        }
+
+        , setMediaParam: function (params) {
+            var self = this;
             MediaOptionsHelper.update(params, function (response) {
-                if (response.error !== false)
+                if (response.error !== false) {
                     toastr.error(response.error, 'خطا', Config.settings.toastr);
-                else {
+                } else {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر وضعیت', Config.settings.toastr);
                     self.reLoad();
                 }
             });
         }
         , selectRow: function (e) {
-            if ($(e.target).is('.media-options') || $(e.target).parents('.media-options').length)
-                return true;
-            var $el = $(e.currentTarget);
-            var id = $el.attr("data-id");
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            // if ($(e.target).is('.media-options') || $(e.target).parents('.media-options').length)
+            //     return true;
+            // var $el = $(e.currentTarget);
+            var id = $row.attr("data-id");
             window.open('/resources/mediaitem/' + id, Config.mediaLinkTarget);
         }
         , reLoad: function (e) {
