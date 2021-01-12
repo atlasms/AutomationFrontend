@@ -1,69 +1,88 @@
+<style>
+    .chart { position: relative; display: inline-block; width: 48px; height: 48px; text-align: center; margin-top: 4px; margin-bottom: 0; }
+    .chart canvas { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+    .percent { display: inline-block; line-height: 48px; z-index: 2;  font-size: .8em; }
+    .percent:after { content: '%'; margin-left: 0.1em; font-size: .7em; }
+</style>
 <div id="ingest-page" class="portlet box">
-	<div class="portlet-body">
-		<div class="mainbody">
-			<div class="row">
-				<div class="col-xs-12">
-					<table id="review-table" class="table table-hover table-bordered table-condensed table-striped flip-content">
-						<thead>
-							<tr>
-								<th>شناسه</th>
-								<th class="col-xs-1"></th>
-								<th class="col-xs-4">نام</th>
-								<th class="col-xs-1 text-center">برنامه</th>
-								<th class="col-xs-2 text-center">زمان ثبت</th>
-								<th class="col-xs-1">ایجاد کننده</th>
-								<th class="col-xs-2 text-center">بازبینی</th>
-								<th class="col-xs-1">بازبین</th>
-								<th class="text-center">قسمت</th>
-								<th class="col-xs-1 text-center">مدت</th>
-								<th class="col-xs-2 text-center"><i class="fa fa-info"></i></th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each []}}
-							<tr data-media="{{getMedia Thumbnail}}" data-thumbnail="{{Thumbnail}}" data-duration="{{Duration}}" data-id="{{Id}}" data-index="{{math @index "+" 1}}" data-type="{{Type}}">
-								<td>{{Id}}</td>
-								<td class="text-center">
-									<figure>
-										<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-									</figure>
-								</td>
-								<td>
-									{{Title}}
-									<small class="help-block text-muted clip-line">{{Description}}</small>
-								</td>
-								<td>
-									{{MetaCategoryName}}
-								</td>
-								<td class="text-right">
-									<span class="">{{extractTime Created}} {{extractDate Created}}</span>
-								</td>
-								<td class="text-left">
-									<span class="">{{CreatedByText}}</span>
-								</td>
-								<td class="text-right">
-									<span class="">{{#if Published}}{{extractTime Published}} {{extractDate Published}}{{/if}}</span>
-								</td>
-								<td class="text-left">
-									<span class="">{{PublishedByText}}</span>
-								</td>
-								<td class="text-center">
-									{{EpisodeNumber}}
-								</td>
-								<td class="text-center">
-									<span class="time">{{time Duration}}</span>
-								</td>
-								<td class="text-center">
-									<a href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}">
-										<i class="fa fa-info-circle"></i>
-									</a>
-								</td>
-							</tr>
-							{{/each}}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="portlet-body">
+        <div class="mainbody">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table id="review-table" class="table table-hover table-bordered table-condensed table-striped flip-content">
+                        <thead>
+                        <tr>
+                            <th>شناسه</th>
+                            <th class="col-xs-1"></th>
+                            <th class="col-xs-4">نام</th>
+							<th class="text-center" title="وضعیت فایل‌های هر مدیا روی سرور"><i class="fa fa-server"></i></th>
+                            <th class="col-xs-1 text-center">برنامه</th>
+                            <th class="col-xs-2 text-center">زمان ثبت</th>
+                            <th class="col-xs-1">ایجاد کننده</th>
+                            <th class="col-xs-2 text-center">بازبینی</th>
+                            <th class="col-xs-1">بازبین</th>
+                            <th class="text-center">قسمت</th>
+                            <th class="col-xs-1 text-center">مدت</th>
+                            <th class="col-xs-2 text-center"><i class="fa fa-info"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each []}}
+                        <tr data-media="{{getMedia Thumbnail}}" data-thumbnail="{{Thumbnail}}" data-duration="{{Duration}}" data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}">
+                            <td>{{Id}}</td>
+                            <td class="text-center">
+                                <figure>
+                                    <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+                                </figure>
+                            </td>
+                            <td>
+                                {{Title}}
+                                <small class="help-block text-muted clip-line">{{Description}}</small>
+                                {{#if RecommendedBroadcastDate}}
+                                <small><strong><i class="help-block text-muted clip-line">
+                                    تاریخ پخش: {{extractDate RecommendedBroadcastDate}}
+                                </i></strong></small>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{#if FilesPercent}}
+                                <div class="chart" data-percent="{{filesPercent FilesPercent}}" data-bar-color="#26C281">
+                                    <span class="percent"></span>
+                                </div>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{MetaCategoryName}}
+                            </td>
+                            <td class="text-right">
+                                <span class="">{{extractTime Created}} {{extractDate Created}}</span>
+                            </td>
+                            <td class="text-left">
+                                <span class="">{{CreatedByText}}</span>
+                            </td>
+                            <td class="text-right">
+                                <span class="">{{#if Published}}{{extractTime Published}} {{extractDate Published}}{{/if}}</span>
+                            </td>
+                            <td class="text-left">
+                                <span class="">{{PublishedByText}}</span>
+                            </td>
+                            <td class="text-center">
+                                {{EpisodeNumber}}
+                            </td>
+                            <td class="text-center">
+                                <span class="time">{{time Duration}}</span>
+                            </td>
+                            <td class="text-center">
+                                <a href="/resources/mediaitem/{{Id}}" target="{{config 'mediaLinkTarget'}}">
+                                    <i class="fa fa-info-circle"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

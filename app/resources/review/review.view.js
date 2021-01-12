@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab', 'easy-pie-chart'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox, tab) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
@@ -252,7 +252,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             }
         }
-        , setMediaParam: function(params) {
+        , setMediaParam: function (params) {
             var self = this;
             new MediaModel({id: params.id}).save(params, {
                 patch: true
@@ -322,6 +322,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , afterRender: function () {
             this.renderStatusbar();
             ReviewHelper.mask("time");
+
+            window.setTimeout(function () {
+                var $charts = $('.chart');
+                $charts.each(function () {
+                    $(this).easyPieChart({
+                        size: 48,
+                        scaleColor: false,
+                        lineWidth: 2,
+                        animate: {
+                            duration: 1000,
+                            enabled: true
+                        },
+                        onStep: function (from, to, percent) {
+                            $(this.el).find('.percent').text(Math.round(percent));
+                        }
+                    });
+                });
+            }, 500);
         }
         , renderToolbar: function () {
             var self = this;
