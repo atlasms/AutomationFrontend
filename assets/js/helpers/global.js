@@ -33,14 +33,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    Object.filter = function (obj, predicate) {
-        Object.keys(obj).filter(function (key) {
-            return predicate(obj[key]);
-        }).reduce(function (res, key) {
-            return Object.assign(res, {[key]: obj[key]}, {});
-        });
-    };
-
     !(function () {
         "use strict";
         $.fn.serializeObject = function () {
@@ -422,7 +414,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             for (var key in files) {
                 var file = files[key];
                 if (file.Path !== 'original') {
-                    if (typeof avail[file.Extension] !== 'undefined') {
+                    if (typeof avail[file.Extension] !== 'undefined' && file.State === 'online') {
                         avail[file.Extension]++;
                     }
                 }
