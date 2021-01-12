@@ -96,19 +96,23 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
         $("title").text(Config.title);
 
         var systemDate = function () {
-            Global.getServerDate(function (request) {
-                var serverDate = request.getResponseHeader('Date');
-                var d = new Date(serverDate);
-                window.SERVERDATE = d;
-                d.setSeconds(d.getSeconds() + 1);
-                if (typeof self.clockInterval !== null)
-                    window.clearInterval(self.clockInterval);
-                self.clockInterval = window.setInterval(function () {
+            try {
+                Global.getServerDate(function (request) {
+                    var serverDate = request.getResponseHeader('Date');
+                    var d = new Date(serverDate);
+                    window.SERVERDATE = d;
                     d.setSeconds(d.getSeconds() + 1);
-                    var dateTime = Global.gregorianToJalali(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()) + ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
-                    $("#server-time span").text(dateTime);
-                }, 1000);
-            });
+                    if (typeof self.clockInterval !== null)
+                        window.clearInterval(self.clockInterval);
+                    self.clockInterval = window.setInterval(function () {
+                        d.setSeconds(d.getSeconds() + 1);
+                        var dateTime = Global.gregorianToJalali(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()) + ' ' + Global.zeroFill(d.getHours()) + ':' + Global.zeroFill(d.getMinutes()) + ':' + Global.zeroFill(d.getSeconds());
+                        $("#server-time span").text(dateTime);
+                    }, 1000);
+                });
+            } catch (e) {
+                // ignored
+            }
         };
         systemDate();
         if (clockUpdateInterval !== null)
