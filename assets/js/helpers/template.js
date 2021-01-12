@@ -195,7 +195,10 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     return 0;
                 }
                 var numbers = value.split('/');
-                return Math.round((~~numbers[0] * 100) / ~~numbers[1]);
+                var percent = Math.round((~~numbers[0] * 100) / ~~numbers[1]);
+                percent = percent > 100 ? 100 : percent;
+                percent = percent < 0 ? 0 : percent;
+                return percent;
             });
             Handlebars.registerHelper('time2', function (timestamp, options) {
                 return Global.createTime2(timestamp);
