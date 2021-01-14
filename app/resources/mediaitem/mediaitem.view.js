@@ -552,11 +552,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         var output = handlebarsTemplate(items);
                         $("#comments-container").html(output);
                         // After render
-                        if ($("table").find(".scroller").length)
-                            $("table").find(".scroller").slimScroll({
-                                height: $("table").find(".scroller").height()
-                                , start: 'bottom'
-                            });
+                        // if ($("table").find(".scroller").length)
+                        //     $("table").find(".scroller").slimScroll({
+                        //         height: $("table").find(".scroller").height()
+                        //         , start: 'bottom'
+                        //     });
+
                         if ($("input.time").length)
                             $("input.time").mask('H0:M0:S0', {
                                 placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
@@ -574,13 +575,28 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
-                        $("#chats").html(output);
+
+                        var reviewsCount = 0;
+                        for (var i in items) {
+                            if (items[i].Owner !== 1) {
+                                reviewsCount++;
+                            }
+                        }
+                        var $navLink = $('.chats-portlet .nav-tabs [href="#chats"]');
+                        if ($navLink.find('span').length) {
+                            $navLink.find('span').text(reviewsCount.toString());
+                        } else {
+                            $navLink.append('<span class="badge badge-danger">' + reviewsCount.toString() + '</span>');
+                        }
+                        $("#chats").html(output).promise().done(function () {
+                            $('ul.chats li:last')[0].scrollIntoView();
+                        });
                         // After render
-                        if ($("#chats").find(".scroller").length)
-                            $("#chats").find(".scroller").slimScroll({
-                                height: $("#chats").find(".scroller").height()
-                                , start: 'bottom'
-                            });
+                        // if ($("#chats").find(".scroller").length)
+                        //     $("#chats").find(".scroller").slimScroll({
+                        //         height: $("#chats").find(".scroller").height()
+                        //         , start: 'bottom'
+                        //     });
                         if ($("input.time").length)
                             $("input.time").mask('H0:M0:S0', {
                                 placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
@@ -831,7 +847,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 case 'versions':
                     var params = {
                         id: self.getId()
-                        , overrideUrl: Config.api.mediaversions
+                        , overrideUrl: Config.api.versionsbypid
                     };
                     tmpl = ['resources/mediaitem', 'versions.partial'];
                     model = new MediaitemModel(params);
@@ -859,7 +875,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     break;
                 case 'rush':
                     var params = {
-                        id: $("tr[data-type]").data('type') === 3 ? $("tr[data-pid]").data('pid') : self.getId()
+                        id: $("tr[data-type]").data('type') === 3 ? $("tr[data-pid]").data('pid') + '/3' : self.getId() + '/3'
                         , overrideUrl: Config.api.versionsbypid
                     };
                     tmpl = ['resources/mediaitem', 'versions.partial'];

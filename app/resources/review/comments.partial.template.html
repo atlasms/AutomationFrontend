@@ -1,6 +1,6 @@
 <div class="portlet light">
 	<div class="portlet-body" id="chats">
-		<div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
+		<div style="height: 325px; overflow: hidden; overflow-y: auto; padding: 0 8px; border: 1px solid #e9eff3;">
 			<ul class="chats">
 				{{#each []}}
 				<li class="out {{#ifCond Owner '==' 1}}system{{/ifCond}}">
