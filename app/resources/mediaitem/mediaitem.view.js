@@ -103,16 +103,22 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 
                     self.usersCache = [];
                     $.each(items, function () {
-                        var user = {id: this.Id, name: this.Family + '، ' + this.Name, groups: []};
-                        if (typeof this.Access !== 'undefined' && this.Access.length) {
-                            for (var i = 0; i < this.Access.length; i++) {
-                                if (this.Access[i].Key === 'groups') {
-                                    user.groups.push(this.Access[i].Value);
+                        if (this.State) {
+                            var user = {
+                                id: this.Id,
+                                name: this.Name !== '' ? this.Family + '، ' + this.Name : this.Family,
+                                groups: []
+                            };
+                            if (typeof this.Access !== 'undefined' && this.Access.length) {
+                                for (var i = 0; i < this.Access.length; i++) {
+                                    if (this.Access[i].Key === 'groups') {
+                                        user.groups.push(this.Access[i].Value);
+                                    }
                                 }
                             }
+                            $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                            self.usersCache.push(user);
                         }
-                        $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + this.Family + '، ' + this.Name + '</option>');
-                        self.usersCache.push(user);
                     });
                 }
             });
@@ -589,7 +595,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             $navLink.append('<span class="badge badge-danger">' + reviewsCount.toString() + '</span>');
                         }
                         $("#chats").html(output).promise().done(function () {
-                            $('ul.chats li:last')[0].scrollIntoView();
+                            // $('ul.chats li:last')[0].scrollIntoView();
+                            $('ul.chats').parent()[0].scrollTop = $('ul.chats li:last').offset().top;
                         });
                         // After render
                         // if ($("#chats").find(".scroller").length)
