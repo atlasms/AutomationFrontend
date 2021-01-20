@@ -286,4 +286,54 @@
             </div>
         </div>
     </div>
+    <div class="row widget-row">
+        <!-- FilesOnlineCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">فایل‌های آن‌لاین</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-wisteria fa fa-server"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{FilesOnlineCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FilesOnlineSizeReadable -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">حجم آن‌لاین</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-wisteria fa fa-server"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat">{{FilesOnlineSizeReadable}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FilesOfflineCount -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">فایل‌های آف‌لاین</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-intense fa fa-hdd-o"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{FilesOfflineCount}}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FilesOfflineSizeReadable -->
+        <div class="col-md-3">
+            <div class="widget-thumb widget-bg-color-white bordered">
+                <h4 class="widget-thumb-heading">حجم آف‌لاین</h4>
+                <div class="widget-thumb-wrap">
+                    <i class="widget-thumb-icon bg-purple-intense fa fa-hdd-o"></i>
+                    <div class="widget-thumb-body">
+                        <span class="widget-thumb-body-stat">{{FilesOfflineSizeReadable}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </fieldset>
