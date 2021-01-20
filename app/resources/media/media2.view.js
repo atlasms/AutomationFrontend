@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'easy-pie-chart', 'bootstrap-table', 'bootpag', 'rangeslider'
-], function ($, _, Backbone, Template, Config, Global, Media2Model, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.mediaitem.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'easy-pie-chart', 'bootstrap-table', 'bootpag', 'rangeslider'
+], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaitemModel, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
     var MediaView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'Media2Model'
