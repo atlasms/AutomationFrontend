@@ -1,50 +1,55 @@
 <table class="table table-bordered table-hover table-striped">
-	<thead>
-		<tr>
-			<th class="">شناسه</th>
-			<th class="col-xs-1"></th>
-			<th class="col-xs-5">نام آیتم</th>
-			<th class="col-xs-1 text-center">برنامه</th>
-			<th class="col-xs-2 text-center">آخرین ویرایش</th>
-			<th class="text-center">قسمت</th>
-			<th class="col-xs-1 text-center">مدت</th>
-		</tr>
-	</thead>
-	<tbody>
-		{{#each []}}
-		<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}" class="open-item" style="cursor: pointer;">
-			<td>{{Id}}</td>
-			<td class="text-center">
-				<figure>
-					<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-				</figure>
-			</td>
-			<td>
-				{{Title}}
-				<small class="help-block text-muted clip-line">{{Description}}</small>
-			</td>
-			<td class="text-left">
-				<span class="">{{MetaCategoryName}}</span>
-			</td>
-			<td class="text-right">
-				<span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
-			</td>
-			<td class="text-center">
-				{{EpisodeNumber}}
-			</td>
-			<td class="text-center">
-				<span class="time">{{time Duration}}</span>
-			</td>
-		</tr>
-		{{else}}
-		<tr>
-			<td colspan="100%" class="text-center">
-				<strong>
-					هیچ سابقه‌ای وجود ندارد!
-				</strong>
-			</td>
-		</tr>
+    <thead>
+    <tr>
+        <th class="">شناسه</th>
+        <th class="col-xs-1"></th>
+        <th class="col-xs-4">نام آیتم</th>
+        <th class="col-xs-1 text-center">برنامه</th>
+        <th class="col-xs-2 text-center">آخرین ویرایش</th>
+        <th class="col-xs-1 text-center">وضعیت</th>
+        <th class="text-center">قسمت</th>
+        <th class="col-xs-1 text-center">مدت</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="{{Id}}" data-index="{{math @index " +
+    " 1}}" class="open-item" style="cursor: pointer;">
+    <td>{{Id}}</td>
+    <td class="text-center">
+        <figure>
+            <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+        </figure>
+    </td>
+    <td>
+        {{Title}}
+        <small class="help-block text-muted clip-line">{{Description}}</small>
+    </td>
+    <td class="text-left">
+        <span class="">{{MetaCategoryName}}</span>
+    </td>
+    <td class="text-right">
+        <span class="">{{#if Modified}}{{extractTime Modified}} {{extractDate Modified}}{{/if}}</span>
+    </td>
+    <td class="text-center">
+        <div class="media-state text-center label label-{{resolveLabel State}}">{{StateText}}</div>
+    </td>
+    <td class="text-center">
+        {{EpisodeNumber}}
+    </td>
+    <td class="text-center">
+        <span class="time">{{time Duration}}</span>
+    </td>
+    </tr>
+    {{else}}
+    <tr>
+        <td colspan="100%" class="text-center">
+            <strong>
+                هیچ سابقه‌ای وجود ندارد!
+            </strong>
+        </td>
+    </tr>
 
-		{{/each}}
-	</tbody>
+    {{/each}}
+    </tbody>
 </table>
