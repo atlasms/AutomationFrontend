@@ -276,12 +276,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $form = $('form.broadcast-date-form');
             var $datePicker = $form.find(".datepicker");
             var params = {
-                key: 'RecommendedBroadcastDate',
+                // key: 'RecommendedBroadcastDate',
+                key: 'recommendedbroadcastdateneedreview',
                 value: Global.jalaliToGregorian($datePicker.val()) + 'T00:00:00'
             };
-            this.handleEditables(id, params, function () {
-                toastr['success']('تاریخ پخش با موفقیت تغییر کرد.', '', Config.settings.toastr);
-                self.reLoad();
+            bootbox.confirm({
+                message: "پس از ثبت تاریخ پخش جدید وضعیت این آیتم به بازبینی نشده تغییر خواهد کرد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        self.handleEditables(id, params, function () {
+                            toastr['success']('تاریخ پخش با موفقیت تغییر کرد.', '', Config.settings.toastr);
+                            self.reLoad();
+                        });
+                    }
+                }
             });
         }
         , enableTagsEdit: function (tags) {
@@ -789,7 +801,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'تغییر اطلاعات', Config.settings.toastr);
-                    self.loadTab(null, true);
+                    // self.loadTab(null, true);
                     // reset editable field
                     if (typeof callback !== "undefined")
                         callback(id, params, self);
@@ -820,7 +832,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , scrollToTabContent: function (e) {
             var $target = $(e.target).is('.label') ? $(e.target) : $(e.target).parents('.label:first');
             var tab = $target.data('key');
-            $("html, body").animate({'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80}, 500);
+            if (tab === 'basic') {
+                $("html, body").animate({'scrollTop': 0}, 500);
+            } else {
+                $("html, body").animate({'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80}, 500);
+            }
         }
         , loadTab: function (e, force, el) {
             var self = this;
@@ -854,6 +870,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 case 'versions':
                     var params = {
                         id: self.getId()
+                        , overrideUrl: Config.api.versionsbyid
+                    };
+                    tmpl = ['resources/mediaitem', 'versions.partial'];
+                    model = new MediaitemModel(params);
+                    break;
+                case 'versions-next':
+                    var params = {
+                        id: self.getId()
                         , overrideUrl: Config.api.versionsbypid
                     };
                     tmpl = ['resources/mediaitem', 'versions.partial'];
@@ -882,7 +906,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     break;
                 case 'rush':
                     var params = {
-                        id: $("tr[data-type]").data('type') === 3 ? $("tr[data-pid]").data('pid') + '/3' : self.getId() + '/3'
+                        id: $("tr[data-type]").data('type') === 3 ? self.getParentId() + '/3' : self.getId() + '/3'
                         , overrideUrl: Config.api.versionsbypid
                     };
                     tmpl = ['resources/mediaitem', 'versions.partial'];
@@ -971,6 +995,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , getId: function () {
             return Backbone.history.getFragment().split("/").pop().split("?")[0];
+        }
+        , getParentId: function () {
+            var pid = $("tr[data-pid]").data('pid');
+            return pid !== 'undefined' && pid ? pid : null;
         }
         , render: function (params) {
             var self = this;

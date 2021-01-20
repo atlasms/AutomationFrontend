@@ -26,9 +26,11 @@
 <div id="mediaitem-page">
     <div class="row">
         <div class="filters-cache">
+            <span class="label label-primary" data-key="basic" data-value=""><i class="fa fa-info-circle"></i> اطلاعات پایه</span>
             <span class="label bg-green-steel bg-font-green-steel" data-key="workflow" data-value=""><i class="fa fa-exchange"></i> گردش کار<span><i class="spinner"></i></span></span>
             <span class="label bg-green-turquoise bg-font-green-turquoise" data-key="persons" data-value=""><i class="fa fa-user"></i> عوامل<span><i class="spinner"></i></span></span>
-            <span class="label bg-purple-plum bg-font-purple-plum" data-key="versions" data-value=""><i class="fa fa-copy"></i> تغییرات <span><i class="spinner"></i></span></span>
+            <span class="label bg-purple-plum bg-font-purple-plum" data-key="versions" data-value=""><i class="fa fa-copy"></i> نسخه قبلی <span><i class="spinner"></i></span></span>
+            <span class="label bg-purple-plum bg-font-purple-plum" data-key="versions-next" data-value=""><i class="fa fa-copy"></i> نسخه بعدی <span><i class="spinner"></i></span></span>
             <span class="label bg-purple-seance bg-font-purple-seance" data-key="schedule" data-value=""><i class="fa fa-tv"></i> سابقه پخش <span><i class="spinner"></i></span></span>
             <span class="label bg-yellow-casablanca bg-font-yellow-casablanca" data-key="rush" data-value=""><i class="fa fa-video-camera"></i> تصاویر راش <span><i class="spinner"></i></span></span>
             <span class="label bg-blue-madison bg-font-blue-madison" data-key="shotlist" data-value=""><i class="fa fa-file-movie-o"></i> شات‌لیست <span><i class="spinner"></i></span></span>
@@ -410,6 +412,7 @@
                 <li class="" data-service="persons"><a href="#tab-persons" data-toggle="tab">فهرست عوامل</a></li>
                 <li class="" data-service="workflow"><a href="#tab-workflow" data-toggle="tab">سابقه گردش کار</a></li>
                 <li class="" data-service="versions"><a href="#tab-versions" data-toggle="tab">سابقه تغییرات</a></li>
+                <li class="" data-service="versions-next"><a href="#tab-versions-next" data-toggle="tab">نسخه‌های بعدی</a></li>
                 <li class="" data-service="broadcast"><a href="#tab-schedule" data-toggle="tab">سابقه پخش</a></li>
                 <li class="" data-service="rush"><a href="#tab-rush" data-toggle="tab">تصاویر راش</a></li>
                 <li class="" data-service="shotlist"><a href="#tab-shotlist" data-toggle="tab">شات‌لیست</a></li>
@@ -466,11 +469,22 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-copy"></i>
-                        <span class="caption-subject font-dark bold uppercase">سابقه تغییرات</span>
+                        <span class="caption-subject font-dark bold uppercase">نسخه قبلی</span>
                     </div>
                 </div>
                 <div class="portlet-body">
                     <div class="tab-pane in active" id="tab-versions"></div>
+                </div>
+            </div>
+            <div class="portlet light note border-purple-plum">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-copy"></i>
+                        <span class="caption-subject font-dark bold uppercase">نسخه بعدی</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-pane in active" id="tab-versions-next"></div>
                 </div>
             </div>
             <div class="portlet light note border-purple-seance">
@@ -497,6 +511,7 @@
             </div>
             <div class="portlet light note border-blue-madison">
                 <div class="portlet-title">
+                    <a href="/resources/shotlist/" target="_blank" class="btn btn-default pull-right">ثبت یا ویرایش شات‌لیست</a>
                     <div class="caption">
                         <i class="fa fa-file-movie-o"></i>
                         <span class="caption-subject font-dark bold uppercase">شات‌لیست</span>
