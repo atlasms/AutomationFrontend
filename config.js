@@ -256,6 +256,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'stats/crawl': {'private': true, 'view': 'stats.crawl.view', 'action': 'StatsCrawlView', 'file': 'app/stats/crawl/crawl.view'}
             , 'stats/crawlprint': {'private': true, 'view': 'stats.crawlprint.view', 'skipLayout': true, 'action': 'StatsCrawlPrintView', 'file': 'app/stats/crawl/crawlprint.view'}
             , 'stats/ingest': {'private': true, 'view': 'stats.ingest.view', 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
+            , 'stats/tasks': {'private': true, 'view': 'stats.tasks.view', 'action': 'StatsTasksView', 'file': 'app/stats/tasks/tasks.view'}
             , 'stats/ingestprint': {'private': true, 'view': 'stats.ingestprint.view', 'skipLayout': true, 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/schedule': {'private': true, 'view': 'stats.schedule.view', 'action': 'StatsScheduleView', 'file': 'app/stats/schedule/schedule.view'}
             , 'stats/scheduleprint': {'private': true, 'view': 'stats.scheduleprint.view', 'skipLayout': true, 'action': 'StatsSchedulePrintView', 'file': 'app/stats/schedule/scheduleprint.view'}
@@ -297,6 +298,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , media2: 'media/list2'
             , mediaversions: 'media/history'
             , versionsbypid: 'media/historybypid'
+            , versionsbyid: 'media/historybyid'
 //            , 'review': 'metadata?categoryid=11'
             , definitions: 'dfn'
             , comments: 'comments'

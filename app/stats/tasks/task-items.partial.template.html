@@ -1,0 +1,73 @@
+<div class="note note-success" id="total-count">
+    مجموع زمان:
+    <strong data-type="duration">00:00:00</strong>
+    &nbsp;-&nbsp;
+    تعداد:
+    <strong data-type="count">0</strong>
+</div>
+<table class="table table-bordered table-striped table-condensed flip-content" id="items-table">
+    <thead>
+    <tr>
+        <th rowspan="2">#</th>
+        <th colspan="6" class="text-center">جزئیات ارجاع</th>
+        <th colspan="5" class="text-center">مدیا</th>
+    </tr>
+    <tr>
+        <th class="col-xs-1 text-center">عملیات</th>
+        <th class="col-xs-1 text-center">فرستنده</th>
+        <th class="col-xs-1 text-center">گیرنده</th>
+        <th class="text-center">وضعیت</th>
+        <th class="col-xs-2 text-center">زمان ارسال</th>
+        <th class="col-xs-2 text-center">زمان انجام</th>
+
+        <th class="text-center">شناسه</th>
+        <th class="col-xs-2 text-center">نام</th>
+        <th class="col-xs-1 text-center">تاریخ پخش</th>
+        <th class="col-xs-1 text-center">مدت</th>
+        <th class="col-xs-1 text-center">وضعیت</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each []}}
+    <tr data-id="{{Id}}">
+        <td>{{math @index '+' 1}}</td>
+        <td><div class="media-state text-center label label-{{resolveTaskLabel JobId}}">{{JobIdText}}</div></td>
+        <td>{{CreatedByText}}</td>
+        <td>
+            {{#if ToGroupId}}
+            گروه {{ToGroupIdText}}
+            {{else}}
+            {{ToUserIdText}}
+            {{/if}}
+        </td>
+        <td><div style="white-space: nowrap">{{StatusText}}</div></td>
+        <td class="text-right">
+            <div class="date">
+                {{extractTime CreatedDate}} {{extractDate CreatedDate}}
+            </div>
+        </td>
+        <td class="text-right">
+            <div class="date">
+                {{extractTime DoneDate}} {{extractDate DoneDate}}
+            </div>
+        </td>
+
+        <td>{{Media.Id}}</td>
+        <td>{{Media.Title}} ({{Media.EpisodeNumber}})</td>
+        <td>{{extractDate Media.RecommendedBroadcastDate}}</td>
+        <td>{{time Media.Duration}}</td>
+        <td>
+            <div class="media-state text-center label label-{{resolveLabel Media.State}}">{{Media.StateText}}</div>
+        </td>
+    </tr>
+    {{else}}
+    <tr>
+        <td colspan="100%" class="text-center">
+            <strong>
+                هیچ موردی پیدا نشد!
+            </strong>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
