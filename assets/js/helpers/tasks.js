@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'tas
         }
         , checkTasks: function () {
             var self = this;
-            var params = {path: '/mytask', query: 'status=0'};
+            var params = {path: '/mytask', query: 'status=0&count=10'};
             var $container = $(".tasks-list");
             var template = Template.template.load('shared', 'tasks.partial');
             new TasksModel(params).fetch({
