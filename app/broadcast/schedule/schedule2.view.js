@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'bootstrap/modal', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'bootstrap/modal', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree) {
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -317,6 +317,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (mode === 'tree') {
                 catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
             }
+            var defaultParams = {
+                q: ''
+                , type: 0
+                , offset: 0
+                , count: Config.defalutMediaListLimit
+                , categoryId: ''
+                , state: Config.mediaList.defaultStateValue
+                , episode: ''
+                , startdate: '1970-01-01T00:00:00'
+                , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                , subjects: ''
+                , tags: ''
+                , persons: ''
+                , users: ''
+                , duration: '0;180'
+                , recommendedBroadcastStartDate: ''
+                , recommendedBroadcastEndDate: ''
+                , broadcastStartdate: '1970-01-01T00:00:00'
+                , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                , structure: ''
+                , metaSubject: ''
+                , classification: ''
+                , MetaDataProductionGroup: ''
+                , ordering: 'MediaCreated desc'
+            }
             var params = {
                 q: $.trim($("[name=q]").val()),
                 type: $("[name=type]").val(),
@@ -331,7 +356,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     ? Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
                     : Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
             };
-            return params;
+            return $.extend({}, defaultParams, params);
         }
         , loadBroadcastMedia: function (e) {
             if (typeof e !== "undefined")
@@ -373,7 +398,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getParams();
             var data = $.param(params);
-            var model = new MediaModel(params);
+            // params.path = 'list';
+            var model = new Media2Model(params);
             model.fetch({
                 data: data
                 , success: function (items) {
