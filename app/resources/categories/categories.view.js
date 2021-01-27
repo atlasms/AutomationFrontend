@@ -37,6 +37,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var type = $("[name=" + key + "]").attr('data-validation');
                 data[key] = self.handleData(key, data[key], type);
             }
+            if (typeof data.ReviewNeeded === 'undefined' || !data.ReviewNeeded) {
+                data.ReviewNeeded = 1;
+            }
             new MetadataModel().save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
