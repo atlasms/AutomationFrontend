@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: 'اتوماسیون تولید و پخش اطلس',
-        version: '1.201120.2108',
+        version: '1.210125.0143',
         loginMessage: 'ورود به سامانه اتوماسیون شبکه قرآن',
         channel: 'قرآن',
         channelLogo: '/assets/data/qurantv.png',
@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         vendorLinkEnabled: false,
         env: 'dev',
         hqVideoFormat: 'mxf',
+        hqFilenameTemplate: '{id}__کلاکت{episodeNumber}__{title}__مدت-{duration}',
         showDashboardWorkspaceInbox: false,
         showDashboardTasks: true,
         placeholderImage: '/assets/img/placeholder.png',
@@ -36,6 +37,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         // 'initialRedirect': '/resources/media2',
         epgMediaPath: 'http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}',
         minimumRequiredPersons: 1,
+        mainMediaExtensions: ['_hq.mxf', '_lq.mp4'],
+        mainStatesExceptions: [2, 3],
         inputPolicies: {
             'ingest.Title': {uid: 'title', required: true, show: true, validation: 'text', min: 4},
             'ingest.EpisodeNumber': {uid: 'episode', required: true, show: true, validation: 'text', min: 0},
@@ -85,8 +88,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 advancedSearchTab2: {key: 'alt+a', title: 'انتخاب تاریخ پخش / جستجوی پیشرفته'},
                 custom: [
                     {
-                        key: 'alt+1', title: 'آرم استیشن 25 ثانیه', value: {
-                            'episode-title': 'آرم استیشن',
+                        key: 'alt+1', title: 'آرم تایم 25 ثانیه', value: {
+                            'episode-title': 'آرم تایم',
                             'duration': '00:00:25'
                         }
                     },
@@ -115,10 +118,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             review: {
                 markStart: {key: 'alt+i', title: 'محدوده شروع'},
                 markEnd: {key: 'alt+o', title: 'محدوده پایان'},
-                play: {key: 'space', title: 'پخش / متوقف ویدیو'},
+                togglePlayback: {key: 'space', title: 'پخش / متوقف ویدیو'},
+                stop: {key: 'alt+k', title: 'قطع ویدیو'},
                 speedUp: {key: 'alt+l', title: 'افزایش سرعت'},
                 speedDown: {key: 'alt+k', title: 'کاهش سرعت'},
-                stop: {key: 'alt+k', title: 'قطع ویدیو'},
                 showPersons: {key: 'alt+a', title: 'نمایش عوامل'}
             }
         },
@@ -249,6 +252,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'stats/crawl': {'private': true, 'view': 'stats.crawl.view', 'action': 'StatsCrawlView', 'file': 'app/stats/crawl/crawl.view'}
             , 'stats/crawlprint': {'private': true, 'view': 'stats.crawlprint.view', 'skipLayout': true, 'action': 'StatsCrawlPrintView', 'file': 'app/stats/crawl/crawlprint.view'}
             , 'stats/ingest': {'private': true, 'view': 'stats.ingest.view', 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
+            , 'stats/tasks': {'private': true, 'view': 'stats.tasks.view', 'action': 'StatsTasksView', 'file': 'app/stats/tasks/tasks.view'}
             , 'stats/ingestprint': {'private': true, 'view': 'stats.ingestprint.view', 'skipLayout': true, 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/schedule': {'private': true, 'view': 'stats.schedule.view', 'action': 'StatsScheduleView', 'file': 'app/stats/schedule/schedule.view'}
             , 'stats/scheduleprint': {'private': true, 'view': 'stats.scheduleprint.view', 'skipLayout': true, 'action': 'StatsSchedulePrintView', 'file': 'app/stats/schedule/scheduleprint.view'}
@@ -256,8 +260,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'newsroom/news': {'private': true, 'view': 'newsroom.news.view', 'action': 'NewsroomNewsView', 'file': 'app/newsroom/news/news.view'}
             , 'newsroom/workspace': {'private': true, 'view': 'newsroom.workspace.view', 'action': 'NewsroomWorkspaceView', 'file': 'app/newsroom/workspace/workspace.view'}
             , 'newsroom/itemprint': {'private': true, 'view': 'newsroom.itemprint.view', 'skipLayout': true, 'action': 'NewsroomItemPrintView', 'file': 'app/newsroom/item/itemprint.view'}
-            , 'newsroom/scheduleitemprint': {'private': true, 'view': 'newsroom.schedule.itemprint.view', 'skipLayout': true, 'action': 'NewsroomScheduleItemPrintView', 'file': 'app/newsroom/schedule/schedule-itemprint.view'}
             , 'newsroom/scheduleprint': {'private': true, 'view': 'newsroom.schedule.print.view', 'skipLayout': true, 'action': 'NewsroomSchedulePrintView', 'file': 'app/newsroom/schedule/schedule-print.view'}
+            , 'newsroom/scheduleitemprint': {'private': true, 'view': 'newsroom.schedule.itemprint.view', 'skipLayout': true, 'action': 'NewsroomScheduleItemPrintView', 'file': 'app/newsroom/schedule/schedule-itemprint.view'}
             , 'newsroom/schedule': {'private': true, 'view': 'newsroom.schedule.view', 'skipLayout': false, 'action': 'NewsroomScheduleView', 'file': 'app/newsroom/schedule/schedule.view'}
             , 'newsroom/conductor': {'private': true, 'view': 'newsroom.schedule.view', 'skipLayout': false, 'action': 'NewsroomScheduleView', 'file': 'app/newsroom/schedule/schedule.view'}
             , 'website': {'private': true, 'view': 'website.view', 'action': 'WebsiteView', 'file': 'app/website/website.view'}
@@ -290,6 +294,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , media2: 'media/list2'
             , mediaversions: 'media/history'
             , versionsbypid: 'media/historybypid'
+            , versionsbyid: 'media/historybyid'
 //            , 'review': 'metadata?categoryid=11'
             , definitions: 'dfn'
             , comments: 'comments'
@@ -395,8 +400,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             }
         ],
         mediaList: {
-            defaultStateValue: null,
-            enabledCreatedDateFields: false
+            defaultStateValue: "",
+            enabledCreatedDateFields: false,
+            showLastTask: true
+        },
+        schedule: {
+            fixedMediaStateFilter: true
         },
         temp: {
             titleTypes: {
@@ -406,6 +415,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     {Id: '3', Key: 'سه خطی', Value: '3'}
                 ]
             }
+        },
+        __: {
+            episode: 'کلاکت'
         }
     };
 
