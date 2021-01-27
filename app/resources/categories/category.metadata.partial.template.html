@@ -124,19 +124,18 @@
                     </select>
                 </div>
             </div>
-            {{#authorize 536870912}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">نیاز به بازبینی</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="ReviewNeeded">
+                    <select class="form-control" name="ReviewNeeded" {{#authorize 536870912}}{{else}}disabled{{/authorize}}>
                         {{#select ReviewNeeded}}
                         <option value="1">دارد</option>
                         <option value="0">ندارد</option>
+
                         {{/select}}
                     </select>
                 </div>
             </div>
-            {{/authorize}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">ژانر</label>
                 <div class="col-sm-6">
