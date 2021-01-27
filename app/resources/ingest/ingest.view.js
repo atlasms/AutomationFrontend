@@ -143,6 +143,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     data.Type = 1;
                     // for (var field in data)
                     //     data.field = $.trim(data.field);
+                    // new MetadataModel({type: 1}).save(null, {
                     new MetadataModel().save(null, {
                         data: JSON.stringify(data)
                         , contentType: 'application/json'
