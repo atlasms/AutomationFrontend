@@ -81,10 +81,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 ToUserId: $('[name="ToUserId"]').val(),
                 ToGroupId: 0,
                 Status: $('[name="Status"]').val(),
+                // taskDoneDatetime
                 CreatedStartDate: Global.jalaliToGregorian($('[name="startdate"]').val()),
                 CreatedEndDate: Global.jalaliToGregorian($('[name="enddate"]').val()),
                 recommendedBroadcastDate: '',
-                recommendedBroadcastEndDate: ''
+                recommendedBroadcastEndDate: '',
+                mediastate: $('[name="state"]').val()
             };
             var params = {path: '/report', query: $.param(modelParams)};
             var model = new TasksModel(params);
@@ -137,8 +139,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             definedStates[0].select.text = 'وضعیت';
             definedStates[0].select.options[3].default = true;
 
+            var definedMediaStates = toolbar.getDefinedToolbar(2, 'state');
+
             // var elements = $.merge([], self.toolbar);
-            var elements = $.merge($.merge([], self.toolbar), definedStates);
+            var elements = $.merge($.merge($.merge([], self.toolbar), definedMediaStates), definedStates);
             $.each(elements, function () {
                 var method = Object.getOwnPropertyNames(this);
                 toolbar[method](this[method]);
