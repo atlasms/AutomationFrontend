@@ -261,6 +261,12 @@
                 "alias": "stats_crawl",
                 "icon": "font",
                 "link": "/stats/crawl"
+            },
+            {
+                "title": "گزارش کارتابل",
+                "alias": "stats_tasks",
+                "icon": "inbox",
+                "link": "/stats/tasks"
             }
         ]
     },
