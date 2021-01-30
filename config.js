@@ -257,6 +257,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'stats/crawlprint': {'private': true, 'view': 'stats.crawlprint.view', 'skipLayout': true, 'action': 'StatsCrawlPrintView', 'file': 'app/stats/crawl/crawlprint.view'}
             , 'stats/ingest': {'private': true, 'view': 'stats.ingest.view', 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/tasks': {'private': true, 'view': 'stats.tasks.view', 'action': 'StatsTasksView', 'file': 'app/stats/tasks/tasks.view'}
+            , 'stats/tasksprint': {'private': true, 'view': 'stats.tasksprint.view', 'skipLayout': true, 'action': 'StatsTasksPrintView', 'file': 'app/stats/tasks/tasksprint.view'}
             , 'stats/ingestprint': {'private': true, 'view': 'stats.ingestprint.view', 'skipLayout': true, 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/schedule': {'private': true, 'view': 'stats.schedule.view', 'action': 'StatsScheduleView', 'file': 'app/stats/schedule/schedule.view'}
             , 'stats/scheduleprint': {'private': true, 'view': 'stats.scheduleprint.view', 'skipLayout': true, 'action': 'StatsSchedulePrintView', 'file': 'app/stats/schedule/scheduleprint.view'}

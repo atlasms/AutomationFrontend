@@ -181,6 +181,7 @@ require.config({
         , "stats.broadcastprint.view": ["../../app/stats/broadcast/broadcastprint.view"]
         , "stats.ingest.view": ["../../app/stats/ingest/ingest.view"]
         , "stats.tasks.view": ["../../app/stats/tasks/tasks.view"]
+        , "stats.tasksprint.view": ["../../app/stats/tasks/tasksprint.view"]
         , "stats.crawl.view": ["../../app/stats/crawl/crawl.view"]
         , "stats.crawlprint.view": ["../../app/stats/crawl/crawlprint.view"]
         , "stats.ingestprint.view": ["../../app/stats/ingest/ingestprint.view"]

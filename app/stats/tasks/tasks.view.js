@@ -2,7 +2,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
 ], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
     var StatsTasksView = Backbone.View.extend({
         toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            {'button': {cssClass: 'btn btn-default pull-right', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
+            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
             , {
@@ -24,6 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             'click [data-task=refresh-view]': 'reLoad'
             , 'click [data-task=show]': 'load'
             , 'click [data-task=refresh]': 'reLoad'
+            , 'click [data-task=print]': 'print'
         }
         , reLoad: function () {
             this.render();
@@ -73,9 +75,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 });
             });
         }
-        , loadItems: function () {
-            var self = this;
-            var modelParams = {
+        , getParams: function () {
+            return {
                 MasterId: 0,
                 JobId: 0,
                 ToUserId: $('[name="ToUserId"]').val(),
@@ -88,6 +89,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 recommendedBroadcastEndDate: '',
                 mediastate: $('[name="state"]').val()
             };
+        }
+        , loadItems: function () {
+            var self = this;
+            var modelParams = this.getParams();
             var params = {path: '/report', query: $.param(modelParams)};
             var model = new TasksModel(params);
             model.fetch({
@@ -207,6 +212,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         //         }
         //     });
         // }
+        , print: function (e) {
+            e.preventDefault();
+            var params = $.extend({}, this.getParams(), {username: $('[name="ToUserId"] option:selected').text()});
+            var url = '/stats/tasksprint?' + $.param(params);
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
         , updatePrintButton: function () {
             var $printButton = $(".print-btn");
             var dates = '/stats/scheduleprint?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
