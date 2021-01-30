@@ -58,6 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [href="#chats-history"]': 'loadHistory'
             , 'click #chats-history tr[data-id]': 'loadHistoryItem'
             , 'click #filters .label': 'scrollToTabContent'
+            , 'click .download-hq': 'checkHQDownload'
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
@@ -1262,6 +1263,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
+        }
+        , checkHQDownload: function (e) {
+            if ($('#files-table').length && $('#files-table tbody tr').length) {
+                var hqFile = {exists: false, size: 0, isOnline: false};
+                $('#files-table tbody tr').each(function () {
+                    if ($(this).find('td.ext').text().indexOf('_hq.') === 0) {
+                        hqFile.exists = true;
+                        hqFile.size = parseInt($(this).find('td.size').text());
+                        hqFile.isOnline = $.trim($(this).find('td.state').text()).toLowerCase() === 'online';
+                    }
+                });
+                if (hqFile.exists && hqFile.size > 0 && hqFile.isOnline) {
+                    return true;
+                }
+            }
+            toastr['error']('فایل مورد نظر آن‌لاین نیست', 'دانلود مدیا', Config.settings.toastr);
+            return false;
         }
     });
     return MediaitemView;

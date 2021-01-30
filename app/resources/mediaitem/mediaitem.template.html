@@ -363,7 +363,7 @@
                             {{/authorize}}
                             {{/ifCond}}
                             {{#authorize 2097152}}
-                            <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left" download><i
+                            <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left download-hq" download><i
                                     class="fa fa-download"></i> دریافت فایل HQ</a>
                             <!--                            <a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i-->
                             <!--                                    class="fa fa-download"></i> دریافت فایل HQ</a>-->
@@ -563,12 +563,12 @@
                             <tbody>
                             {{#each Files}}
                             <tr data-id="Id">
-                                <td>
+                                <td class="state">
                                     <div class="text-center label label-{{#ifCond State '==' 'online'}}success{{else}}warning{{/ifCond}}">{{State}}</div>
                                 </td>
                                 <td><div class="ltr text-right">{{Path}}</div></td>
-                                <td><div class="ltr text-right">{{Extension}}</div></td>
-                                <td><div class="ltr">{{SizeReadable}}</div></td>
+                                <td class="ext"><div class="ltr text-right">{{Extension}}</div></td>
+                                <td class="size"><div class="ltr">{{SizeReadable}}</div></td>
                                 <td>{{extractTime Created}} {{extractDate Created}}</td>
                                 <td>{{time Duration}}</td>
 
