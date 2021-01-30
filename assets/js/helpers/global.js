@@ -160,14 +160,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             return number;
         }
         , processTime: function (time) {
+            var seconds = 0;
             if (typeof time !== 'undefined') {
                 var times = time.split(":");
                 var hours = times[0];
                 var minutes = times[1];
-                var seconds = times[2];
+                seconds = times[2];
                 seconds = parseInt(seconds, 10) + (parseInt(minutes, 10) * 60) + (parseInt(hours, 10) * 3600);
-            } else {
-                var seconds = 0;
             }
             return seconds;
         }
@@ -200,7 +199,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         , createTime: function (timestamp, showSign) {
             var output;
             var sign;
-            showSign = (typeof showSign !== 'undefined') ? true : false;
+            showSign = (typeof showSign !== 'undefined');
             if (typeof timestamp !== 'undefined') {
                 sign = (timestamp !== Math.abs(timestamp)) ? '-' : '+';
                 timestamp = Math.abs(timestamp);
