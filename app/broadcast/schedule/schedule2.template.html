@@ -10,6 +10,12 @@
     .nowrap { white-space: nowrap; }
     #media-modal table tbody tr { cursor: pointer; }
     [readonly] { pointer-events: none; }
+    .prayers { list-style: none; margin: 0 0 10px; padding: 0; line-height: 20px; }
+    .prayers li { display: inline-block; }
+    .prayers li ~ li { margin-right: 20px; }
+    .prayers li span { display: inline-block; height: 20px; }
+    .prayers li .time { font-weight: bold; }
+    .prayers li .time:before { content: ': '; }
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -128,6 +134,34 @@
     </div>
 </div>
 <div id="schedule-page" class="portlet box">
+    <div class="prayer-times" style="text-align: center; display: none;">
+        <ul class="prayers">
+            <li data-type="fajr">
+                <span>اذان صبح</span>
+                <span class="time"></span>
+            </li>
+            <li data-type="sunrise">
+                <span>طلوع آفتاب</span>
+                <span class="time"></span>
+            </li>
+            <li data-type="dhuhr">
+                <span>اذان ظهر</span>
+                <span class="time"></span>
+            </li>
+            <li data-type="sunset">
+                <span>غروب خورشید</span>
+                <span class="time"></span>
+            </li>
+            <li data-type="maghrib">
+                <span>اذان مغرب</span>
+                <span class="time"></span>
+            </li>
+            <li data-type="midnight">
+                <span>نیمه‌شب شرعی</span>
+                <span class="time"></span>
+            </li>
+        </ul>
+    </div>
     <div class="portlet-body">
         <div class="mainbody">
             <div class="text-right">
@@ -259,7 +293,7 @@
                     <li><a href="#broadcast-date" data-toggle="tab">انتخاب تاریخ پخش</a></li>
                 </ul>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 75vh; overflow: hidden; overflow-y: auto;">
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="media-search">
                         <form class="media-filters form-inline" role="form">
@@ -285,8 +319,8 @@
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-list"></i></span>
                                     <select data-type="change-mode" class="form-control" name="change-mode">
-                                        <option value="latest">آخرین‌ها</option>
-                                        <option value="tree">انتخابی</option>
+                                        <option value="latest">همه برنامه‌ها</option>
+                                        <option value="tree">برنامه انتخاب شده</option>
                                     </select>
                                 </div>
                             </div>
@@ -334,7 +368,11 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control datepicker" name="media-broadcast-date" placeholder="" style="width: 110px;"/>
+                                    <input type="text" class="form-control datepicker" name="media-broadcast-date-start" placeholder="" style="width: 110px;"/>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control datepicker" name="media-broadcast-date-end" placeholder="" style="width: 110px;"/>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">

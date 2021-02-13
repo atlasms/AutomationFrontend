@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'bootstrap/modal', 'bootstrap/tab'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'prayer-times', 'bootstrap/modal', 'bootstrap/tab'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree, PrayerTimes) {
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -304,8 +304,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , getBroadcastMediaParams: function () {
             return {
-                RecommendedBroadcastDateStart: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val()),
-                RecommendedBroadcastDateEnd: Global.jalaliToGregorian($('[name="media-broadcast-date"]').val()),
+                RecommendedBroadcastDateStart: Global.jalaliToGregorian($('[name="media-broadcast-date-start"]').val()),
+                RecommendedBroadcastDateEnd: Global.jalaliToGregorian($('[name="media-broadcast-date-end"]').val()),
                 state: $('[name="media-broadcast-state"]').val()
             }
         }
@@ -821,6 +821,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
 
             $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+
+            this.loadPrayerTimes();
+        }
+        , loadPrayerTimes: function () {
+            var tehranCoords = ['35.6961', '51.4231'];
+            PrayerTimes.setMethod('Tehran');
+            var times = PrayerTimes.getTimes(new Date(GLOBAL.jalaliToGregorian($("#toolbar .datepicker").val())), [tehranCoords[0], tehranCoords[1]], 3.5);
+            var $list = $("ul.prayers");
+            $list.find("[data-type=fajr] .time").text(times.fajr);
+            $list.find("[data-type=dhuhr] .time").text(times.dhuhr);
+            $list.find("[data-type=maghrib] .time").text(times.maghrib);
+            $list.find("[data-type=sunrise] .time").text(times.sunrise);
+            $list.find("[data-type=sunset] .time").text(times.sunset);
+            $list.find("[data-type=midnight] .time").text(times.midnight);
+            $('.prayer-times').show();
         }
         , renderToolbar: function () {
             var self = this;
