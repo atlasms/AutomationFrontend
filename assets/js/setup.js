@@ -47,6 +47,8 @@ require.config({
         , "moment": ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
         , "moment-hijri": ["vendor/moment-hijri"]
+        , "dmath": ["vendor/prayer-times/dmath"]
+        , "prayer-times": ["vendor/prayer-times/prayertimes"]
         , "bootstrap": ["vendor/bootstrap"]
         , "toastr": ["vendor/toastr.min"]
         , "pdate": ["vendor/persian-date"]
