@@ -125,6 +125,17 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-3 control-label">ثبت مدیا</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="AddMedia" {{#authorize 2147483648}}{{else}}disabled{{/authorize}}>
+                        {{#select AddMedia}}
+                        <option value="1">فعال</option>
+                        <option value="0">غیرفعال</option>
+                        {{/select}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-3 control-label">نیاز به بازبینی</label>
                 <div class="col-sm-6">
                     <select class="form-control" name="ReviewNeeded" {{#authorize 536870912}}{{else}}disabled{{/authorize}}>
