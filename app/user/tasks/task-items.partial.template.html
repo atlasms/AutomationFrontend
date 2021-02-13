@@ -1,13 +1,13 @@
 {{#each []}}
 <tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
     <td>
-<!--        {{math @index '+' 1}}-->
+        <!--        {{math @index '+' 1}}-->
         <div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
-            <input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{Id}}" />
+            <input type="checkbox" name="assign-item" title="انتخاب برای ارجاع" id="check-{{Id}}"/>
             <label for="check-{{Id}}"></label>
         </div>
     </td>
-<!--    <td>{{Id}}</td>-->
+    <!--    <td>{{Id}}</td>-->
     <td>{{math @index '+' 1}}</td>
     <td>
         <span class="media-state text-center label label-{{resolveTaskLabel JobId}}">{{JobIdText}}</span>
@@ -37,14 +37,14 @@
             {{extractTime CreatedDate}} {{extractDate CreatedDate}}
         </div>
     </td>
-<!--    <td class="text-right">-->
-<!--        <div class="date">-->
-<!--            {{extractTime DoneDate}} {{extractDate DoneDate}}-->
-<!--        </div>-->
-<!--    </td>-->
-<!--    <td class="">-->
-<!--        <div class="name">{{DoneByText}}</div>-->
-<!--    </td>-->
+    <!--    <td class="text-right">-->
+    <!--        <div class="date">-->
+    <!--            {{extractTime DoneDate}} {{extractDate DoneDate}}-->
+    <!--        </div>-->
+    <!--    </td>-->
+    <!--    <td class="">-->
+    <!--        <div class="name">{{DoneByText}}</div>-->
+    <!--    </td>-->
     <td>
         <select class="form-control input-sm" data-type="change-state">
             {{#select Status}}
@@ -60,8 +60,14 @@
         </div>
     </td>
     <td>
-        {{#ifCond State '!=' 2}}
+        {{#ifCond Media.State '!=' '2'}}
+        {{#ifCond Media.State '!=' '3'}}
+        {{#ifCond Media.State '!=' '4'}}
+        {{#ifCond Media.State '!=' '5'}}
         {{>mediaOptions}}
+        {{/ifCond}}
+        {{/ifCond}}
+        {{/ifCond}}
         {{/ifCond}}
     </td>
 </tr>

@@ -17,6 +17,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             },
             {
                 'select': {
+                    cssClass: 'form-control', name: 'FromUserId', options: [
+                        {value: 0, text: 'همه'}
+                    ], addon: true, icon: 'fa fa-user', text: 'فرستنده'
+                }
+            },
+            {
+                'select': {
                     cssClass: 'form-control', name: 'mode', options: [
                         {value: 'mytask', text: 'دریافتی‌ها', default: true},
                         {value: 'sent', text: 'ارسالی‌ها'}
@@ -260,6 +267,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                                 }
                             }
                             $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                            $("[name=FromUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
                             self.usersCache.push(user);
                         }
                     });
@@ -332,9 +340,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 status: filters.status,
                 count: 1000,
                 recommendedBroadcastDate: filters.date,
-                recommendedBroadcastEndDate: filters.edate
+                recommendedBroadcastEndDate: filters.edate,
+                ToUserId: filters.ToUserId,
+                FromUserId: filters.FromUserId
             };
             this.load({query: $.param(modelParams)});
+            $('[name="FromUserId"]').parent().find('.input-group-addon').html(
+                $('[name="mode"]').val() === 'sent' ? '<i class="fa fa-user"></i> گیرنده' : '<i class="fa fa-user"></i> فرستنده'
+            );
         }
         , load: function (params) {
             var self = this;
@@ -362,6 +375,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 status: ~~$('[name="status"]').val(),
                 date: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="date"]').val()) : null,
                 edate: $('[name="filter-type"]').val() === 'date' ? Global.jalaliToGregorian($('[name="edate"]').val()) : null,
+                ToUserId: $('[data-type="mode"]').val() === 'sent' ? $('[name="FromUserId"]').val() : 0,
+                FromUserId: $('[data-type="mode"]').val() === 'sent' ? 0 : $('[name="FromUserId"]').val()
                 // date: $('[name="filter-type"]').val() === 'date' ? $('[name="date"]').val() : null,
             };
         }
@@ -372,7 +387,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 status: filters.status,
                 count: 1000,
                 recommendedBroadcastDate: filters.date,
-                recommendedBroadcastEndDate: filters.date
+                recommendedBroadcastEndDate: filters.date,
+                ToUserId: filters.ToUserId,
+                FromUserId: filters.FromUserId
             };
             return {
                 // path: '/' + mode + '?status=0'

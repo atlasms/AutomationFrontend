@@ -5,6 +5,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             {'button': {cssClass: 'btn btn-default pull-right', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
             , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
+            , {
+                'select': {
+                    cssClass: 'form-control', name: 'GroupByMedia', options: [
+                        {value: 0, text: 'نمایش همه مدیاها'},
+                        {value: 1, text: 'حذف تکراری‌ها'}
+                    ], addon: true, icon: 'fa fa-filter'
+                }
+            }
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
             , {
                 'input': {
@@ -82,6 +90,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 ToUserId: $('[name="ToUserId"]').val(),
                 ToGroupId: 0,
                 Status: $('[name="Status"]').val(),
+                GroupByMedia: $('[name="GroupByMedia"]').val(),
                 // taskDoneDatetime
                 CreatedStartDate: Global.jalaliToGregorian($('[name="startdate"]').val()),
                 CreatedEndDate: Global.jalaliToGregorian($('[name="enddate"]').val()),
