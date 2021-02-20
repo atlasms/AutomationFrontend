@@ -227,6 +227,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'resources/review': {'private': true, 'view': 'resources.review.view', 'action': 'ReviewView', 'file': 'app/resources/review/review.view'}
             , 'resources/returnees': {'private': true, 'view': 'resources.returnees.view', 'action': 'ReturneesView', 'file': 'app/resources/returnees/returnees.view'}
             , 'resources/mediaitem': {'private': true, 'view': 'resources.mediaitem.view', 'action': 'MediaitemView', 'file': 'app/resources/mediaitem/mediaitem.view'}
+            , 'resources/mediaitemprint': {'private': true, 'view': 'resources.mediaitem-print.view', 'skipLayout': true, 'action': 'MediaitemPrintView', 'file': 'app/resources/mediaitem/mediaitem-print.view'}
             , 'resources/broadcastprint': {'private': true, 'view': 'resources.broadcastprint.view', 'skipLayout': true, 'action': 'BroadcastPrintView', 'file': 'app/resources/mediaitem/broadcastprint.view'}
             , 'resources/persons': {'private': true, 'view': 'resources.persons.view', 'skipLayout': false, 'action': 'PersonsView', 'file': 'app/resources/persons/persons.view'}
             , 'resources/live': {'private': true, 'view': 'resources.live.view', 'action': 'LiveView', 'file': 'app/resources/live/live.view'}

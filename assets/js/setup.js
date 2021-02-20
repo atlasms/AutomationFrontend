@@ -156,6 +156,7 @@ require.config({
         , "resources.review.view": ["../../app/resources/review/review.view"]
         , "resources.returnees.view": ["../../app/resources/returnees/returnees.view"]
         , "resources.mediaitem.view": ["../../app/resources/mediaitem/mediaitem.view"]
+        , "resources.mediaitem-print.view": ["../../app/resources/mediaitem/mediaitem-print.view"]
         , "resources.broadcastprint.view": ["../../app/resources/mediaitem/broadcastprint.view"]
         , "resources.persons.view": ["../../app/resources/persons/persons.view"]
         , "resources.live.view": ["../../app/resources/live/live.view"]
