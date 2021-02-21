@@ -1,4 +1,78 @@
 <style>
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: normal;
+        src: url(../assets/font/vazir/v4.4.0/Vazir-FD.eot);
+        src: url(../assets/font/vazir/v4.4.0/Vazir-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v4.4.0/Vazir-FD.woff) format('woff'),
+        url(../assets/font/vazir/v4.4.0/Vazir-FD.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: 300;
+        src: url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.eot);
+        src: url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.woff) format('woff'),
+        url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: bold;
+        src: url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.eot);
+        src: url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.woff) format('woff'),
+        url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.ttf) format('truetype');
+    }
+    html, body {font-family: 'Vazir', 'Vazir2'; margin: 0; padding: 0;}
+    body { margin: 0; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
+    @page {
+        size: portrait;
+        orientation: portrait;
+        writing-mode: tb-rl;
+    }
+    @media print {
+        html, body { font-size: 12px; }
+    }
+    .wrapper { width: 94%; margin: auto; }
+    table { page-break-inside: auto; border-spacing: 0; border-collapse: collapse; }
+    h1 { text-align: center; margin-bottom: 0; }
+    tr { page-break-inside: avoid; page-break-after: auto }
+    tr.highlight td { background: #eee; }
+    table { width: 100%; border-bottom: 1px solid #555; }
+    table + table { margin-top: 20px; }
+    /*	table th { border: 0 none; width: 7%; }
+        table th.title { width: 35% }*/
+    table { border-bottom: 0 none; border-top: 0 none; }
+    table.metadata td span { display: inline-block; }
+    table.metadata td span:after { content: ':  '; }
+    table tr { border-bottom: 1px solid #555; }
+    table thead { border-top: 0 none; }
+    table thead th { border-top: 1px solid #555; }
+    tfoot { border-top: 1px solid; max-height: 1px; height: 0; border-right: 0 none; border-left: 0 none; }
+    th, td { border-right: 1px solid #555; padding: 2px 4px; }
+    table td { border-top: 1px solid #555; border-right: 1px solid #555; border-spacing: 0; }
+    th { padding: 4px 6px; }
+    th:last-child, td:last-child { border-left: 1px solid #555; }
+    p { margin: 0; font-size: 10.5px; text-align: justify; line-height: 16px; }
+    figure { padding: 0; margin: 0; max-height: 68px; overflow: hidden; height: 68px; }
+    figure img { display: block; width: 120px; height: auto; }
+    .ltr { direction: ltr; text-align: left; font-family: Tahoma; }
+    .date { font-size: 12px; text-align: left; }
+    .date.number-only { font-size: 14px; text-align: center; font-weight: bold }
+    .date.number-only span { display: inline-block; padding: 0 8px; }
+    code {border: 1px solid #e1e1e1;}
+    small { font-style: italic; font-size: 75%; }
+    small:before { content: ' (' }
+    small:after { content: ' )' }
+    small:empty { display: none; }
+    [data-type="state"] { font-family: 'Vazir', 'Vazir2'; pointer-events: none; border: 0 none; }
+
+    .spinner { position: fixed; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); top: 0; left: 0; }
+    .spinner img { display: block; position: fixed; top: 50%; left: 50%; margin: -11px 0 0 -11px; height: 50%; width: 22px; height: 22px; z-index: 1000; }
+
     .basic-details { position: relative; }
     .nav-tabs .badge { margin-right: 10px; }
     .btn-sm { height: 25px; line-height: 1; }
@@ -23,7 +97,84 @@
         to { transform: rotate(360deg); }
     }
 </style>
-<div id="mediaitem-page">
+<div id="mediaitem-page" style="padding: 20px;">
+    <!-- Media Metadata -->
+
+    <table class="table metadata">
+        <thead>
+        <tr>
+            <th colspan="4" style="text-align: center">
+                <h3>اطلاعات پایه</h3>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <span>شناسه</span>
+                <strong>{{Id}}</strong>
+            </td>
+            <td>
+                <span>نوع</span>
+                <strong>
+                    {{#ifCond Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
+                    {{#ifCond Type '==' 1}}<i class="fa fa-picture-o"></i> تصویر{{/ifCond}}
+                    {{#ifCond Type '==' 2}}<i class="fa fa-headphones"></i> صدا{{/ifCond}}
+                    {{#ifCond Type '==' 3}}<i class="fa fa-video-camera"></i> راش{{/ifCond}}
+                </strong>
+            </td>
+            <td>
+                <span>وضعیت بازبینی</span>
+                <strong>{{StateText}}</strong>
+            </td>
+            <td>
+                <span>وضعیت فایل‌ها</span>
+                <strong>{{FilesPercent}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span>عنوان {{config '__.episode'}}</span>
+                <strong>{{Title}}</strong>
+            </td>
+            <td>
+                <span>شماره {{config '__.episode'}}</span>
+                <strong>{{EpisodeNumber}}</strong>
+            </td>
+            <td>
+                <span>مدت</span>
+                <strong>{{time Duration}}</strong>
+            </td>
+        </tr>
+        <tr>
+            خلاصه
+
+            عوامل
+
+            کلیدواژه‌ها
+            محورها
+
+            عنوان برنامه
+            تاریخ پیشنهادی پخش
+            باند صدا
+            تعداد مجاز پخش
+            تعداد پخش شده
+
+            ورود اطلاعات
+            زمان بازبینی
+            بازبین
+            تایم مناسب زیرنویس
+
+            سابقه پخش
+
+        </tr>
+        </tbody>
+    </table>
+    <!-- Media Comments -->
+    <!-- Media System Hisory -->
+    <!-- Media Versions -->
+
+
     <div class="row">
         <div class="filters-cache">
             <span class="label label-primary" data-key="basic" data-value=""><i class="fa fa-info-circle"></i> اطلاعات پایه</span>
@@ -566,9 +717,15 @@
                                 <td class="state">
                                     <div class="text-center label label-{{#ifCond State '==' 'online'}}success{{else}}warning{{/ifCond}}">{{State}}</div>
                                 </td>
-                                <td><div class="ltr text-right">{{Path}}</div></td>
-                                <td class="ext"><div class="ltr text-right">{{Extension}}</div></td>
-                                <td class="size"><div class="ltr">{{SizeReadable}}</div></td>
+                                <td>
+                                    <div class="ltr text-right">{{Path}}</div>
+                                </td>
+                                <td class="ext">
+                                    <div class="ltr text-right">{{Extension}}</div>
+                                </td>
+                                <td class="size">
+                                    <div class="ltr">{{SizeReadable}}</div>
+                                </td>
                                 <td>{{extractTime Created}} {{extractDate Created}}</td>
                                 <td>{{time Duration}}</td>
 

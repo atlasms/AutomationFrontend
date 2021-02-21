@@ -1,9 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'toastr', 'toolbar', 'pdatepicker', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'shared.model'
 ], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, toastr, Toolbar, pDatepicker, TasksModel, MetadataModel, CategoriesModel, SharedModel) {
     var MediaitemPrintView = Backbone.View.extend({
-//        el: $(Config.positions.wrapper)
-        model: 'MediaitemModel'
-        , currentData: {}
+        currentData: {}
         , subjects: []
         , tags: []
         , toolbar: []
@@ -11,7 +9,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , flags: {}
         , usersCache: []
         , events: {}
-
         , loadUsersList: function () {
             var self = this;
             if ($("select[name=ToUserId] option").length > 1)
@@ -117,11 +114,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         return value;
             }
             return value;
-        }
-        , openItem: function (e) {
-            var $el = $(e.currentTarget);
-            var id = $el.attr("data-id");
-            window.open('/resources/mediaitem/' + id);
         }
         , loadComments: function (params) {
             var self = this;
@@ -307,19 +299,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.loadUsersList();
             this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
         }
-        , renderToolbar: function () {
-            var self = this;
-            var elements = self.toolbar;
-            if (elements.length) {
-                var toolbar = new Toolbar();
-                $.each(elements, function () {
-                    var method = Object.getOwnPropertyNames(this);
-                    toolbar[method](this[method]);
-                });
-                toolbar.render();
-//                self.flags.toolbarRendered = true;
-            }
-        }
         , prepareItems: function (items, params, disableConvert) {
             if (typeof items.query !== "undefined")
                 delete items.query;
@@ -342,7 +321,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             return output;
         }
         , prepareContent: function () {
-            this.renderToolbar();
         }
         , prepareSave: function () {
             data = null;
