@@ -74,7 +74,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         , render: function (params) {
             var self = this;
             var template = Template.template.load('stats/tasks', 'tasks');
-            var $container = $(Config.positions.wrapper);
+            var $container = $(Config.positions.main);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});

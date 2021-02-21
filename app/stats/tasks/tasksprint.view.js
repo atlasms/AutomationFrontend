@@ -6,7 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         , usersCache: []
         , flags: {}
         , events: {}
-        , loadUsersList: function () {
+        , loadUsersList: function (callback) {
             var self = this;
             $("body").prepend('<div class="spinner"><img src="/assets/img/loading-spinner-blue.gif" /></div>');
             if ($('select[name="ToUserId"] option').length > 1)
@@ -43,7 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
         , render: function (params) {
             var self = this;
             var template = Template.template.load('stats/tasks', 'tasksprint');
-            var $container = $(Config.positions.main);
+            var $container = $(Config.positions.wrapper);
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
@@ -59,6 +59,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
                 ToUserId: Global.getVar('ToUserId'),
                 ToGroupId: Global.getVar('ToGroupId'),
                 Status: Global.getVar('Status'),
+                GroupByMedia: Global.getVar('GroupByMedia'),
                 CreatedStartDate: Global.getVar('CreatedStartDate'),
                 CreatedEndDate: Global.getVar('CreatedEndDate'),
                 recommendedBroadcastDate: Global.getVar('recommendedBroadcastDate'),
