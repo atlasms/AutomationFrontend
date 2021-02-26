@@ -17,6 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , toolbar: [
             {'filters': {}},
             // {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}},
+            {'button': {cssClass: 'btn btn-default pull-right hidden', text: 'چاپ مجوز', type: 'button', icon: 'fa fa-print', task: 'print', style: 'margin-left: 10px;'}},
             {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'submit', icon: 'fa fa-share', task: 'open-assign-modal'}}
         ]
         , statusbar: []
@@ -55,6 +56,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="save-broadcast-date"]': 'saveBroadcastDate'
             , 'click [data-task="save-allowed-broadcast-count"]': 'saveAllowedBroadcastCount'
             , 'click [data-task="save-tags"]': 'saveTags'
+            , 'click [data-task="print"]': 'print'
             , 'click [href="#chats-history"]': 'loadHistory'
             , 'click #chats-history tr[data-id]': 'loadHistoryItem'
             , 'click #filters .label': 'scrollToTabContent'
@@ -202,6 +204,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
 
+        , print: function (e) {
+            e.preventDefault();
+            window.open('/resources/mediaitemprint/' + this.getId());
+            return false;
+        }
         , saveTags: function () {
             var id = this.getId();
             var self = this;
@@ -1030,6 +1037,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             $('#filters').empty();
             $('.filters-cache').appendTo('#filters');
+
+            if (~~item.State === 1 && item.FilesPercent === '4/4') {
+                $('[data-task="print"]').removeClass('hidden');
+            }
+
             // $('.filters-cache').unwrap();
             if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
                 // $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
