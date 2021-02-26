@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'toastr', 'toolbar', 'pdatepicker', 'tasks.model', 'resources.metadata.model', 'resources.categories.model', 'shared.model'
-], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, toastr, Toolbar, pDatepicker, TasksModel, MetadataModel, CategoriesModel, SharedModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.media.model', 'resources.mediaitem.model', 'users.manage.model', 'toastr', 'toolbar', 'pdatepicker', 'tasks.model', 'user.helper', 'resources.categories.model', 'shared.model'
+], function ($, _, Backbone, Template, Config, Global, moment, MediaModel, MediaitemModel, UsersManageModel, toastr, Toolbar, pDatepicker, TasksModel, UserHelper, CategoriesModel, SharedModel) {
     var MediaitemPrintView = Backbone.View.extend({
         currentData: {}
         , subjects: []
@@ -115,107 +115,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }
             return value;
         }
-        , loadComments: function (params) {
-            var self = this;
-            new ReviewModel(params).fetch({
-                success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
-                    var template = Template.template.load('resources/review', 'comments.partial');
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $("#comments-container").html(output);
-                        // After render
-                        // if ($("table").find(".scroller").length)
-                        //     $("table").find(".scroller").slimScroll({
-                        //         height: $("table").find(".scroller").height()
-                        //         , start: 'bottom'
-                        //     });
-
-                        if ($("input.time").length)
-                            $("input.time").mask('H0:M0:S0', {
-                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                            });
-                    });
-                }
-            });
-        }
-        , loadSidebarComments: function (params) {
+        , loadSidebarComments: function (params, callback) {
             var self = this;
             new MediaModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
-                    var template = Template.template.load('resources/review', 'comments-with-history.partial');
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-
-                        var reviewsCount = 0;
-                        for (var i in items) {
-                            if (items[i].Owner !== 1) {
-                                reviewsCount++;
-                            }
-                        }
-                        var $navLink = $('.chats-portlet .nav-tabs [href="#chats"]');
-                        if ($navLink.find('span').length) {
-                            $navLink.find('span').text(reviewsCount.toString());
-                        } else {
-                            $navLink.append('<span class="badge badge-danger">' + reviewsCount.toString() + '</span>');
-                        }
-                        $("#chats").html(output).promise().done(function () {
-                            // $('ul.chats li:last')[0].scrollIntoView();
-                            $('ul.chats').parent()[0].scrollTop = $('ul.chats li:last').offset().top;
-                        });
-                        // After render
-                        // if ($("#chats").find(".scroller").length)
-                        //     $("#chats").find(".scroller").slimScroll({
-                        //         height: $("#chats").find(".scroller").height()
-                        //         , start: 'bottom'
-                        //     });
-                        if ($("input.time").length)
-                            $("input.time").mask('H0:M0:S0', {
-                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
-                            });
-                    });
+                    callback(items);
                 }
             });
-        }
-        , loadHistoryItem: function (e) {
-            e.preventDefault();
-            var $tr = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr[data-id]:first');
-            // if (Config.mediaLinkTarget === '_blank') {
-            var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#review', '_blank');
-            win && win.focus();
-            // } else {
-            //     !Backbone.History.started && Backbone.history.start({pushState: true});
-            //     new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#review', {trigger: true});
-            // }
-        }
-        , loadHistory: function (e) {
-            var self = this;
-            var $target = $(e.target);
-            if ($('#chats-history').is(':empty')) {
-                var params = {
-                    path: 'comments/' + self.getId()
-                    , overrideUrl: Config.api.mediaversions
-                };
-                var model = new MediaModel(params);
-                model.fetch({
-                    success: function (data) {
-                        var items = self.prepareItems(data.toJSON(), params);
-                        items = Object.keys(items).map(function (k) {
-                            return items[k];
-                        });
-                        items = items.reverse();
-                        var template = Template.template.load('resources/review', 'comments-history.partial');
-                        template.done(function (data) {
-                            var handlebarsTemplate = Template.handlebars.compile(data);
-                            var output = handlebarsTemplate(items);
-                            $('#chats-history').html(output);
-                        });
-                    }
-                });
-            }
         }
         , reLoad: function () {
             this.load();
@@ -240,64 +147,60 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var id = self.getId();
             var params = {id: +id};
             var model = new MediaitemModel(params);
-            model.fetch({
-                success: function (items) {
-                    items = self.prepareItems(items.toJSON(), params);
-                    items = (Object.keys(items).length === 1) ? items[0] : items;
-                    self.currentData = items;
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-                            self.afterRender(items, params);
-                        });
+            var item = {
+                media: null,
+                persons: null,
+                comments: null,
+                alerts: [],
+                versions: null,
+                user: UserHelper.getUser(),
+                _created: Global.createDate() + 'T' + Global.createTime()
+            };
+            var commentsParams = {query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments};
+            self.loadSidebarComments(commentsParams, function (comments) {
+                item.comments = comments;
+                self.getMediaPersons(function (persons) {
+                    item.persons = persons;
+                    model.fetch({
+                        success: function (items) {
+                            items = self.prepareItems(items.toJSON(), params);
+                            items = (Object.keys(items).length === 1) ? items[0] : items;
+                            if (items.FilesPercent !== '4/4') {
+                                item.alerts.push('همه فایل‌های این مدیا آن‌لاین نیست');
+                            }
+                            if (~~items.State !== 1) {
+                                item.alerts.push('این مدیا تایید شده نیست!');
+                            }
+                            item.media = items;
+                            self.currentData = items;
+                            template.done(function (data) {
+                                var handlebarsTemplate = Template.handlebars.compile(data);
+                                var output = handlebarsTemplate(item);
+                                $container.html(output).promise().done(function () {
+                                    self.afterRender(items, params);
+                                });
+                            });
+                        }
                     });
+                })
+            })
+        }
+        , getMediaPersons: function (callback) {
+            var self = this;
+            var params = {overrideUrl: 'metadata/person', query: 'type=1&externalId=' + this.getId()};
+            var model = new SharedModel(params);
+            model.fetch({
+                success: function (persons) {
+                    persons = self.prepareItems(persons.toJSON(), params);
+                    callback(persons);
                 }
-            });
+            })
         }
         , getMedia: function (imageSrc) {
             return imageSrc.replace('.jpg', '_lq.mp4');
         }
         , afterRender: function (item, params) {
-            var self = this;
-            $('#filters').empty();
-            $('.filters-cache').appendTo('#filters');
-            // $('.filters-cache').unwrap();
-            if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
-                // $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
-                $("html, body").animate({'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50}, 500);
-            } else {
-                // self.loadTab();
-                $('.item-forms .nav-tabs li').each(function () {
-                    self.loadTab(undefined, true, $(this));
-                });
-            }
-            self.initEditables();
-            var media = {
-                thumbnail: item.Thumbnail
-                , video: self.getMedia(item.Thumbnail)
-                , duration: item.Duration
-            };
-            var playerConfig = {
-                file: media.video
-                , duration: media.duration
-                , playlist: [{
-                    image: media.thumbnail
-                    , sources: [
-                        {file: media.video, label: 'LQ', default: true}
-                    ]
-                }]
-            };
-            if (typeof Config.HDPlayback === 'undefined' || Config.HDPlayback) {
-                playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
-            }
-            var player = new Player('#player-container', playerConfig);
-            player.render();
-            this.player = player;
-            this.playerInstance = player.instance;
-            this.hotkeys();
-            this.loadUsersList();
-            this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
+            // this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
         }
         , prepareItems: function (items, params, disableConvert) {
             if (typeof items.query !== "undefined")
