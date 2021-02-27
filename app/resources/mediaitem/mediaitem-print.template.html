@@ -221,7 +221,7 @@
             <td colspan="3">
                 <span>تاریخ پخش</span>
                 <strong>
-                    {{#ifDate RecommendedBroadcastDate}}
+                    {{#ifDate media.RecommendedBroadcastDate}}
                     {{extractDate media.RecommendedBroadcastDate}}
                     {{else}}ندارد
                     {{/ifDate}}
@@ -230,7 +230,7 @@
             <td colspan="3">
                 <span>تعداد مجاز پخش</span>
                 <strong>
-                    {{#if AllowedBroadcastCount}}
+                    {{#if media.AllowedBroadcastCount}}
                     {{media.AllowedBroadcastCount}}
                     {{else}}ندارد
                     {{/if}}
@@ -243,7 +243,7 @@
             <td colspan="3">
                 <span>تایم مناسب زیرنویس</span>
                 <strong>
-                    {{#ifDate RecommendedSubtitleTime}}
+                    {{#ifDate media.RecommendedSubtitleTime}}
                     {{extractTime media.RecommendedSubtitleTime}}
                     {{else}}ندارد
                     {{/ifDate}}
