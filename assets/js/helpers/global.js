@@ -418,8 +418,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
                     }
                 }
             }
-            for (var key in avail) {
-                if (avail[key] === 0) {
+            for (var i in avail) {
+                if (avail[i] === 0) {
                     return false;
                 }
             }
