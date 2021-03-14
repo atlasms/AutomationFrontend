@@ -89,6 +89,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             // }
                         });
                     }
+                }, error: function (e, data) {
+                    toastr.error(e, 'خطا', Config.settings.toastr);
                 }
             });
         }
