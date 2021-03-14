@@ -1,16 +1,16 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab', 'easy-pie-chart'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox, tab) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab', 'easy-pie-chart'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaitemModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox, tab) {
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
         , model: 'MediaModel'
         , toolbar: [
-            {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید گروه', type: 'button', task: '6', access: 134217728}} // accept
-            , {'button': {cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید پخش', type: 'button', task: '1', access: 4}} // accept
-            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 134217728}} // reject
-            , {'button': {cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4}} // reject
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}}
+            { 'button': { cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید گروه', type: 'button', task: '6', access: 134217728 } } // accept
+            , { 'button': { cssClass: 'btn green-jungle pull-right hidden submit fade', text: 'تایید پخش', type: 'button', task: '1', access: 4 } } // accept
+            , { 'button': { cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 134217728 } } // reject
+            , { 'button': { cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4 } } // reject
+            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review' } }
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar' } }
             , {
                 'input': {
                     cssClass: 'form-control datepicker',
@@ -52,8 +52,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 var win = window.open('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', '_blank');
                 win && win.focus();
             } else {
-                !Backbone.History.started && Backbone.history.start({pushState: true});
-                new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', {trigger: true});
+                !Backbone.History.started && Backbone.history.start({ pushState: true });
+                new Backbone.Router().navigate('/resources/mediaitem/' + $tr.attr('data-id') + '#versions', { trigger: true });
             }
         }
         , loadHistory: function (e) {
@@ -103,7 +103,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
             // Loading review partial template
             var template = Template.template.load('resources/review', 'review-tabs.partial');
-            var params = {query: 'externalid=' + id + '&kind=1', overrideUrl: Config.api.comments};
+            var params = { query: 'externalid=' + id + '&kind=1', overrideUrl: Config.api.comments };
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
                 var output = handlebarsTemplate({});
@@ -115,12 +115,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             , playlist: [{
                                 image: media.thumbnail
                                 , sources: [
-                                    {file: media.video, label: 'LQ', default: true}
+                                    { file: media.video, label: 'LQ', default: true }
                                 ]
                             }]
                         };
                         if (typeof Config.HDPlayback === 'unedfined' || Config.HDPlayback) {
-                            playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
+                            playerConfig.playlist[0].sources.push({ file: media.video.replace('_lq', '_hq'), label: 'HQ' });
                         }
                         var player = new Player('#player-container', playerConfig);
                         player.render();
@@ -139,12 +139,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $button = $(e.target).is('button') ? $(e.target) : $(e.target).parents('button:first');
             var commentId = $button.parents('li:first').attr('data-id');
             var externalid = $form.parents(".preview-pane").prev().attr('data-id');
-            new ReviewModel({overrideUrl: Config.api.comments, id: commentId}).save({Key: 'state', Value: 1}, {
+            new ReviewModel({ overrideUrl: Config.api.comments, id: commentId }).save({ Key: 'state', Value: 1 }, {
                 patch: true
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'انتشار نظر', Config.settings.toastr);
-                    self.loadComments({query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments});
-                    self.loadSidebarComments({query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadComments({ query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments });
+                    self.loadSidebarComments({ query: 'externalid=' + externalid + '&kind=1', overrideUrl: Config.api.comments });
                 }
             });
         }
@@ -159,7 +159,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 start: $form.find('[data-type="clip-start"]').val()
                 , end: $form.find('[data-type="clip-end"]').val()
             });
-            new MediaModel({overrideUrl: Config.api.comments}).save(null, {
+            new MediaModel({ overrideUrl: Config.api.comments }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -169,7 +169,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , success: function (model, response) {
                     toastr.success('success', 'saved', Config.settings.toastr);
                     // TODO: reload comments
-                    var params = {query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments};
+                    var params = { query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments };
                     self.loadComments(params);
                 }
             });
@@ -193,7 +193,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             });
                         if ($("input.time").length)
                             $("input.time").mask('H0:M0:S0', {
-                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                placeholder: '00:00:00', translation: { 'H': { pattern: /[0-2]/ }, 'M': { pattern: /[0-5]/ }, 'S': { pattern: /[0-5]/ } }
                             });
                     });
                 }
@@ -202,59 +202,58 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , submit: function (e) {
             e.preventDefault();
             var self = this;
-            if ($(e.currentTarget).attr('data-task') == 2) {
-                bootbox.confirm({
-                    message: "آیتم انتخاب شده رد شود؟"
-                    , buttons: {
-                        confirm: {className: 'btn-success'}
-                        , cancel: {className: 'btn-danger'}
-                    }
-                    , callback: function (results) {
-                        if (results) {
-                            new MediaModel({id: $("tr.active").attr('data-id')}).save({
-                                key: 'State'
-                                , value: $(e.currentTarget).attr('data-task')
-                            }, {
-                                patch: true
-                                , error: function (e, data) {
-                                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+            var id = $("tr.active").attr('data-id');
+
+            var modelParams = { overrideUrl: Config.api.media + '/files', id: id };
+            new MediaitemModel(modelParams).fetch({
+                success: function (items) {
+                    var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
+                    var check = Global.checkMediaFilesAvailability(files);
+                    if (check) {
+                        // reject
+                        if ($(e.currentTarget).attr('data-task') == 2) {
+                            bootbox.confirm({
+                                message: "آیتم انتخاب شده رد شود؟"
+                                , buttons: {
+                                    confirm: { className: 'btn-success' }
+                                    , cancel: { className: 'btn-danger' }
                                 }
-                                , success: function (model, response) {
-                                    toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
-                                    self.reLoad();
+                                , callback: function (results) {
+                                    if (results) {
+                                        new MediaModel({ id: $("tr.active").attr('data-id') }).save({
+                                            key: 'State'
+                                            , value: $(e.currentTarget).attr('data-task')
+                                        }, {
+                                            patch: true
+                                            , error: function (e, data) {
+                                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                                            }
+                                            , success: function (model, response) {
+                                                toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
+                                                self.reLoad();
+                                            }
+                                        });
+                                    }
                                 }
                             });
-                        }
-                    }
-                });
-            } else {
-
-                var params = {
-                    key: 'State'
-                    , value: $(e.currentTarget).attr('data-task')
-                    , id: $("tr.active").attr('data-id')
-                };
-
-                var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
-                new MediaModel(modelParams).fetch({
-                    success: function (items) {
-                        var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
-                        var check = Global.checkMediaFilesAvailability(files);
-                        if (check) {
-                            self.setMediaParam(params);
                         } else {
-                            toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
+                            // accept
+                            var params = {
+                                key: 'State'
+                                , value: $(e.currentTarget).attr('data-task')
+                                , id: $("tr.active").attr('data-id')
+                            };
+                            self.setMediaParam(params);
                         }
-                        return;
+                    } else {
+                        toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
                     }
-                });
-
-
-            }
+                }
+            });
         }
         , setMediaParam: function (params) {
             var self = this;
-            new MediaModel({id: params.id}).save(params, {
+            new MediaModel({ id: params.id }).save(params, {
                 patch: true
                 , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
