@@ -236,6 +236,20 @@
         </tr>
         <tr>
             <td colspan="6">
+                <span>زمان بازبینی</span>
+                <strong>
+                    {{#if media.Published}}{{extractTime media.Published}} {{extractDate media.Published}}{{/if}}
+                </strong>
+            </td>
+            <td colspan="6">
+                <span>بازبین</span>
+                <strong style="font-size: 14.5px">
+                    {{#if media.Published}}{{media.PublishedByText}}{{/if}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
                 <span>تاریخ پخش</span>
                 <strong>
                     {{#ifDate media.RecommendedBroadcastDate}}
