@@ -3,28 +3,31 @@
         font-family: 'Vazir';
         font-style: normal;
         font-weight: normal;
-        src: url(../assets/font/vazir/v4.4.0/Vazir-FD.eot);
-        src: url(../assets/font/vazir/v4.4.0/Vazir-FD.eot?#iefix) format('embedded-opentype'),
-        url(../assets/font/vazir/v4.4.0/Vazir-FD.woff) format('woff'),
-        url(../assets/font/vazir/v4.4.0/Vazir-FD.ttf) format('truetype');
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot);
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot?#iefix) format('embedded-opentype'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.woff) format('woff'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.woff2) format('woff2'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.ttf) format('truetype');
     }
     @font-face {
         font-family: 'Vazir';
         font-style: normal;
         font-weight: 300;
-        src: url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.eot);
-        src: url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
-        url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.woff) format('woff'),
-        url(../assets/font/vazir/v4.4.0/Vazir-Light-FD.ttf) format('truetype');
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot);
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.woff) format('woff'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.woff2) format('woff2'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.ttf) format('truetype');
     }
     @font-face {
         font-family: 'Vazir';
         font-style: normal;
         font-weight: bold;
-        src: url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.eot);
-        src: url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
-        url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.woff) format('woff'),
-        url(../assets/font/vazir/v4.4.0/Vazir-Bold-FD.ttf) format('truetype');
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot);
+        src: url(../../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.woff) format('woff'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.woff2) format('woff2'),
+        url(../../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.ttf) format('truetype');
     }
     html, body {font-family: 'Vazir', 'Vazir2'; margin: 0; padding: 0;}
     body { margin: 0; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
@@ -33,10 +36,17 @@
         orientation: portrait;
         writing-mode: tb-rl;
     }
+    @page {
+        size: A5;
+        size: 8.5in 11in;
+    }
     @media print {
         html, body { font-size: 12px; }
     }
-    .wrapper { width: 94%; margin: auto; }
+    body {
+        height: 210mm; width: 148.5mm; margin: 0 auto;
+    }
+    /*.wrapper { width: 94%; margin: auto; }*/
     table { page-break-inside: auto; border-spacing: 0; border-collapse: collapse; }
     h1 { text-align: center; margin-bottom: 0; }
     h3 { margin-top: 4px; margin-bottom: 4px; }
@@ -114,10 +124,8 @@
     <!-- Media Metadata -->
     <table class="table header">
         <colgroup>
-            <col style="width: 25%">
-            <col style="width: 25%">
-            <col style="width: 25%">
-            <col style="width: 25%">
+            <col style="width: 50%">
+            <col style="width: 50%">
         </colgroup>
         <tr>
             <td>
@@ -125,14 +133,17 @@
                     <img style="display: block; max-height: 50px; width: auto;" src="{{config 'channelLogo'}}">
                 </div>
             </td>
-            <td colspan="2">
-                <h2 style="text-align: center">مجوز پخش برنامه‌های شبکه {{config 'channel'}}</h2>
-            </td>
+
             <td style="text-align: left">
                 <span>زمان چاپ</span>
                 <strong style="direction: ltr; display: inline-block;">{{extractDate _created}} {{extractTime _created}}</strong><br>
                 <span>چاپ توسط</span>
                 <strong>{{user.Name}} {{user.Family}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h2 style="text-align: center">مجوز پخش برنامه‌های شبکه {{config 'channel'}}</h2>
             </td>
         </tr>
     </table>
@@ -167,11 +178,11 @@
         </thead>
         <tbody>
         <tr>
-            <td colspan="3">
+            <td colspan="4">
                 <span>شناسه</span>
                 <strong>{{media.Id}}</strong>
             </td>
-            <td colspan="3">
+            <td colspan="4">
                 <span>نوع</span>
                 <strong>
                     {{#ifCond media.Type '==' 0}}<i class="fa fa-film"></i> ویدیو{{/ifCond}}
@@ -180,35 +191,41 @@
                     {{#ifCond media.Type '==' 3}}<i class="fa fa-video-camera"></i> راش{{/ifCond}}
                 </strong>
             </td>
-            <td colspan="3">
-                <span>وضعیت بازبینی</span>
+            <td colspan="4">
+                <span>وضعیت</span>
                 <strong>{{media.StateText}}</strong>
             </td>
+            <!--
             <td colspan="3">
                 <span>وضعیت فایل‌ها</span>
                 <strong>{{media.FilesPercent}}</strong>
             </td>
+            -->
         </tr>
         <tr>
-            <td colspan="6">
+            <td colspan="12">
                 <span>عنوان {{config '__.episode'}}</span>
                 <strong>{{media.Title}}</strong>
             </td>
-            <td colspan="3">
+        </tr>
+        <tr>
+            <td colspan="12">
+                <span>خلاصه</span>
+                <strong>{{media.Description}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
                 <span>شماره {{config '__.episode'}}</span>
                 <strong>{{media.EpisodeNumber}}</strong>
             </td>
-            <td colspan="3">
+            <td colspan="6">
                 <span>مدت</span>
                 <strong>{{time media.Duration}}</strong>
             </td>
         </tr>
         <tr>
-            <td colspan="6">
-                <span>خلاصه</span>
-                <strong>{{media.Description}}</strong>
-            </td>
-            <td colspan="3">
+            <td colspan="9">
                 <span>نام برنامه</span>
                 <strong>{{media.MetaCategoryName}}</strong>
             </td>
@@ -218,7 +235,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3">
+            <td colspan="6">
                 <span>تاریخ پخش</span>
                 <strong>
                     {{#ifDate media.RecommendedBroadcastDate}}
@@ -227,7 +244,7 @@
                     {{/ifDate}}
                 </strong>
             </td>
-            <td colspan="3">
+            <td colspan="6">
                 <span>تعداد مجاز پخش</span>
                 <strong>
                     {{#if media.AllowedBroadcastCount}}
@@ -236,11 +253,13 @@
                     {{/if}}
                 </strong>
             </td>
-            <td colspan="3">
+        </tr>
+        <tr>
+            <td colspan="6">
                 <span>تعداد پخش شده</span>
                 <strong>{{media.ConductorUseCount}}</strong>
             </td>
-            <td colspan="3">
+            <td colspan="6">
                 <span>تایم مناسب زیرنویس</span>
                 <strong>
                     {{#ifDate media.RecommendedSubtitleTime}}
@@ -250,6 +269,7 @@
                 </strong>
             </td>
         </tr>
+        <!--
         <tr>
             <td colspan="4">
                 <span>زمان ورود اطلاعات</span>
@@ -299,6 +319,7 @@
                 </strong>
             </td>
         </tr>
+        -->
         </tbody>
     </table>
     <table>
@@ -333,6 +354,7 @@
         </tbody>
     </table>
     <!-- Media Comments -->
+    <!--
     <table>
         <thead>
         <tr>
@@ -360,6 +382,7 @@
         {{/each}}
         </tbody>
     </table>
+    -->
     <!-- Media System Hisory -->
     <!-- Media Versions -->
     <div class="signature">
