@@ -85,6 +85,7 @@ require.config({
         , "axios": ["vendor/axios/axios.min"]
         , "file-download": ["vendor/file-download"]
         , "persian-rex": ["vendor/persian-rex/persian-rex.min"]
+        , "peak-meter": ["vendor/web-audio-peak-meter-2.0.0.min"]
 
         // Static files
         , "menu": ["json!../../app/menu"]

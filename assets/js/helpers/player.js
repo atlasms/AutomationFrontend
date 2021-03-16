@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'template', 'jwplayer'], function ($, _, Backbone, Config, ui, Global, Template, jwplayer) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'template', 'jwplayer', 'peak-meter'], function ($, _, Backbone, Config, ui, Global, Template, jwplayer, webAudioPeakMeter) {
     window.Player = function ($el, options, callback) {
         window.jwplayer = jwplayer;
         jwplayer.key = "FpSeV03GyHGC79+qOqe8bhrJJqPFYSWXcNh/Yg==";
@@ -31,11 +31,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 }
             }
             , debug: true
+            , crossOrigin: 'anonymous'
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
         if (typeof this.options.playlist !== "undefined" && this.options.playlist.length > 0 && typeof options.file !== "undefined") // Using playlist, thus adding VTT
-            this.options.playlist[0].tracks = [{file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails"}];
+            this.options.playlist[0].tracks = [{ file: options.file.replace('_lq.mp4', '.vtt'), kind: "thumbnails" }];
         this.callback = (typeof callback !== "undefined") ? callback : null;
 
         this.instance = null;
@@ -43,6 +44,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         this.isPlaying = false;
         this.position = 0;
         this.rangeValues = [0, 0];
+
+        this.ctx = {};
     };
 
     _.extend(Player.prototype, {
@@ -60,8 +63,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 $container.html(output).promise().done(function () {
                     var instance = $this.instance = jwplayer('player').setup($this.options);
                     $this.instance.onReady(function () {
-                        $this.setEvents();
-                        $this.setUI($this, instance);
+                        document.getElementsByTagName('video')[0].crossOrigin = 'anonymous';
+                        setTimeout(function () {
+                            $this.setEvents();
+                            $this.setUI($this, instance);
+                        });
                     });
                     $this.instance.onBeforePlay(function () {
                         if (Config.showVideoAspectRatio) {
@@ -147,12 +153,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             this.rangeValues = positions;
 //            $("#seekbar .range .inner:first").slider({values: []})
             if (setSlider) {
-                $("#seekbar .range .inner:first").slider({values: positions});
+                $("#seekbar .range .inner:first").slider({ values: positions });
             }
         }
         , setUI: function ($this, instance) {
             if ($this.options.template.controlbar === "fixed")
-                $('.jw-controlbar.jw-background-color.jw-reset:first').css({'display': 'block'});
+                $('.jw-controlbar.jw-background-color.jw-reset:first').css({ 'display': 'block' });
             if ($this.options.template.controls.volume) {
                 $("#volume .inner").slider({
                     value: $this.instance.getVolume()
@@ -222,6 +228,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         , setEvents: function (instance) {
             instance = this.getInstance(instance);
             var $this = this;
+            var meterSetUp = $this.initMeter(instance);
             // we don't have a duration yet, so start playing
 //            if (this.duration === 0 && this.isPlaying === false)
 //                instance.play();
@@ -243,6 +250,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 $this.isPlaying = true;
                 // For the sake of first time!
                 $('[data-type="controls"][data-task="play-pause"]').attr('data-state', 'pause');
+                // if ($this.hasMeter === false) {
+                //     $this.initMeter(instance);
+                // }
+                if (meterSetUp) {
+                    console.log($this.ctx);
+                    $this.ctx.resume();
+                }
             });
             instance.onPause(function () {
                 $this.isPlaying = false;
@@ -273,7 +287,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 }, 50);
             }
         }
-        , stop: function(instance) {
+        , stop: function (instance) {
             var $this = this;
             instance = this.getInstance(instance);
             this.instance.stop();
@@ -287,6 +301,40 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             instance = this.getInstance(instance);
             var position = instance.getPosition();
             instance.seek(position - this.options.steps);
+        }
+
+        , initMeter: function (instance, setEventListener) {
+            // instance = this.getInstance(instance);
+            var meterElement = document.getElementById('peak-meter');
+            var mediaElement = document.getElementsByTagName('video')[0];
+            var self = this;
+            try {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.ctx.crossOrigin = "anonymous";
+                console.log(JSON.stringify(mediaElement));
+                var sourceNode = this.ctx.createMediaElementSource(mediaElement);
+                sourceNode.crossOrigin = "anonymous";
+                setTimeout(function () {
+                    sourceNode.connect(self.ctx.destination);
+                    var meterNode = webAudioPeakMeter.createMeterNode(sourceNode, self.ctx);
+                    webAudioPeakMeter.createMeter(meterElement, meterNode, { audioMeterStandard: 'true-peak' });
+                });
+
+                // if (setEventListener === true) {
+                //     instance.onPlay(function () {
+                //     ctx.resume();
+                //     });
+                // } else {
+                //     ctx.resume();
+                // }
+                // mediaElement.addEventListener('play', function () {
+                // instance.onPlay(function () {
+
+                // });
+                return true;
+            } catch (e) {
+                console.error(e);
+            }
         }
     });
 
