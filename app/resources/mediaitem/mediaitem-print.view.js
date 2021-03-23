@@ -79,7 +79,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             if (this.subjects.length) {
                 this.enableSubjectsEdit(this.subjects);
             } else {
-                new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                new SharedModel({ overrideUrl: 'share/subjects' }).fetch({
                     success: function (subjects) {
                         subjects = subjects.toJSON();
                         self.enableSubjectsEdit(subjects);
@@ -145,7 +145,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var template = Template.template.load('resources/mediaitem', 'mediaitem-print');
             var $container = $(Config.positions.wrapper);
             var id = self.getId();
-            var params = {id: +id};
+            var params = { id: +id };
             var model = new MediaitemModel(params);
             var item = {
                 media: null,
@@ -156,7 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 user: UserHelper.getUser(),
                 _created: Global.createDate() + 'T' + Global.createTime()
             };
-            var commentsParams = {query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments};
+            var commentsParams = { query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments };
             self.loadSidebarComments(commentsParams, function (comments) {
                 item.comments = comments;
                 self.getMediaPersons(function (persons) {
@@ -165,7 +165,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         success: function (items) {
                             items = self.prepareItems(items.toJSON(), params);
                             items = (Object.keys(items).length === 1) ? items[0] : items;
-                            if (items.FilesPercent !== '4/4') {
+                            if (!Global.checkMediaFilesAvailability(items.Files)) {
                                 item.alerts.push('همه فایل‌های این مدیا آن‌لاین نیست');
                             }
                             if (~~items.State !== 1) {
@@ -187,7 +187,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , getMediaPersons: function (callback) {
             var self = this;
-            var params = {overrideUrl: 'metadata/person', query: 'type=1&externalId=' + this.getId()};
+            var params = { overrideUrl: 'metadata/person', query: 'type=1&externalId=' + this.getId() };
             var model = new SharedModel(params);
             model.fetch({
                 success: function (persons) {
@@ -248,7 +248,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if ($this.data('datepicker') == undefined) {
                     var dateTimePickerSettings = {
                         format: 'YYYY-MM-DD HH:mm:ss'
-                        , timePicker: {enabled: true}
+                        , timePicker: { enabled: true }
                     };
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
                         onSelect: function () {

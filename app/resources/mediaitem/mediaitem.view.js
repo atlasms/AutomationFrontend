@@ -1008,6 +1008,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var pid = $("tr[data-pid]").data('pid');
             return pid !== 'undefined' && pid ? pid : null;
         }
+        , getParentId: function () {
+            var pid = $("tr[data-pid]").data('pid');
+            return pid !== 'undefined' && pid ? pid : null;
+        }
         , render: function (params) {
             var self = this;
             var template = Template.template.load('resources/mediaitem', 'mediaitem');
@@ -1038,7 +1042,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             $('#filters').empty();
             $('.filters-cache').appendTo('#filters');
 
-            if (~~item.State === 1 && item.FilesPercent === '4/4') {
+            if (~~item.State === 1 && Global.checkMediaFilesAvailability(item.Files)) {
                 $('[data-task="print"]').removeClass('hidden');
             }
 
