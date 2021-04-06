@@ -4,6 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         version: '1.201120.2108',
         loginMessage: 'ورود به سامانه اتوماسیون',
         channel: 'ایران‌کالا',
+        channelLabel: 'iktv',
         channelLogo: '/assets/data/iktv.png',
         defaultUserImage: '/assets/data/avatar.png',
         storageKey: 'automation' + '_' + window.location.host.replace(/\./g, '').split(':')[0],
