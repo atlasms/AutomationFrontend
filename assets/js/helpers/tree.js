@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox', 'storage.helper', 'authorization'
-], function ($, _, Backbone, Config, jstree, modal, bootbox, Storage, Authorize) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox', 'storage.helper', 'authorization', 'toastr'
+], function ($, _, Backbone, Config, jstree, modal, bootbox, Storage, Authorize, toastr) {
     bootbox.setLocale('fa');
     var Tree = function ($el, api, callback, options) {
         var $this = this;
@@ -96,13 +96,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                     }
                     if (Authorize.access(32)) {
                         contextItems.Delete = {
-                            "label": "حذف"
+                            label: "حذف"
                             , icon: 'fa fa-trash'
-                            , "action": function (data) {
+                            , action: function (data) {
                                 var ref = $.jstree.reference(data.reference),
                                     sel = ref.get_selected();
-                                if (!sel.length || ref.is_closed(sel) || node.children.length)
+                                if (!sel.length || ref.is_closed(sel) || node.children.length) {
+                                    toastr.warning('امکان حذف این برنامه وجود ندارد', 'خطا', Config.settings.toastr);
                                     return false;
+                                }
                                 Callees.destroy(sel);
                             }
                         };
@@ -112,13 +114,14 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                         delete contextItems.Create;
                         delete contextItems.Delete;
                         contextItems.Acticate = {
-                            "label": "un-delete"
+                            label: "un-delete"
                             , icon: "fa fa-check"
-                            , "action": function (data) {
+                            , action: function (data) {
                                 // alert('UNDELETE!')
                                 var ref = $.jstree.reference(data.reference),
                                     obj = ref.get_node(data.reference);
                                 console.log(!obj.length, ref.is_closed(obj), node.children.length);
+
                                 // if (!obj.length || ref.is_closed(obj) || node.children.length)
                                 //     return false;
                                 // alert();
