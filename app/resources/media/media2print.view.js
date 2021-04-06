@@ -59,14 +59,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // , 'change select.form-control': 'reLoad'
         }
         , loadSharedParams: function (callback) {
-            var params = {tags: [], subjects: [], persons: []};
+            var params = { tags: [], subjects: [], persons: [] };
             new SharedModel().fetch({
                 success: function (tags) {
                     params.tags = tags.toJSON();
-                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                    new SharedModel({ overrideUrl: 'share/persons' }).fetch({
                         success: function (persons) {
                             params.persons = persons.toJSON();
-                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                            new SharedModel({ overrideUrl: 'share/subjects' }).fetch({
                                 success: function (subjects) {
                                     params.subjects = subjects.toJSON();
                                     if (typeof callback === "function")
@@ -82,7 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             var self = this;
             var $li = $(e.target).parents('li:first');
-            var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
+            var params = { task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id') };
             MediaOptionsHelper.update(params, function (response) {
                 if (response.error !== false)
                     toastr.error(response.error, 'خطا', Config.settings.toastr);
@@ -257,7 +257,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var defaultFields = this.fields;
             for (var field in fields) {
                 if (fields[field] !== defaultFields[field]) {
-                    this.filters.push({field: field, title: $('[data-type="' + field + '"]').parents('.mt-element-ribbon:first').find('.ribbon').text(), value: fields[field]});
+                    this.filters.push({ field: field, title: $('[data-type="' + field + '"]').parents('.mt-element-ribbon:first').find('.ribbon').text(), value: fields[field] });
                 }
             }
             this.updateFilters(this.filters);
@@ -356,11 +356,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $programs = $('.programs-list');
             var programIds = $programs.text();
             new CategoriesModel().fetch({
-                data: $.param({ids: programIds})
+                data: $.param({ ids: programIds })
                 , success: function (items) {
                     items = items.toJSON();
                     var output = '';
-                    $.each(items, function(i, item) {
+                    $.each(items, function (i, item) {
                         output += item.Value + '، ';
                     });
                     $programs.html(output.slice(0, -2));
@@ -369,7 +369,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadBasicData: function () {
             var self = this;
-            var params = {tags: [], subjects: [], persons: [], users: []};
+            var params = { tags: [], subjects: [], persons: [], users: [] };
             self.loadTags(function (tags) {
                 params.tags = tags;
                 self.loadSubjects(function (subjects) {
@@ -388,7 +388,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadSubjects: function (callback) {
             var self = this;
-            var queryParams = {overrideUrl: 'share/subjects'};
+            var queryParams = { overrideUrl: 'share/subjects' };
             new SharedModel(queryParams).fetch({
                 success: function (subjects) {
                     subjects = self.prepareItems(subjects.toJSON(), queryParams);
@@ -410,7 +410,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadPersons: function (callback) {
             var self = this;
-            var queryParams = {type: 0, q: '', overrideUrl: 'share/persons'};
+            var queryParams = { type: 0, q: '', overrideUrl: 'share/persons' };
             new SharedModel(queryParams).fetch({
                 success: function (persons) {
                     persons = self.resolvePersonTypes(self.prepareItems(persons.toJSON(), queryParams));
@@ -425,7 +425,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     users = users.toJSON();
                     var userList = [];
                     $.each(users, function (i, user) {
-                        userList.push({id: user.Id, title: user.Family + ' ' + user.Name});
+                        userList.push({ id: user.Id, title: user.Family + ' ' + user.Name });
                     });
                     if (typeof callback === 'function')
                         callback(userList);
@@ -440,7 +440,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 personTypeList[item.value] = item.text;
             });
             $.each(persons, function (i, person) {
-                personsList.push({id: person.id, title: person.family + ' ' + person.name + ' (' + personTypeList[person.type] + ')'});
+                personsList.push({ id: person.id, title: person.family + ' ' + person.name + ' (' + personTypeList[person.type] + ')' });
             });
             return personsList;
         }
@@ -474,7 +474,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 data: data
                 , success: function (items) {
                     items = items.toJSON();
-                    var template = Template.template.load('resources/media', 'mediaprint.items.partial');
+                    var templateFileName = Config.channelLabel === 'qtv' ? 'mediaprint.items.partial.qtv' : 'mediaprint.items.partial';
+                    var template = Template.template.load('resources/media', templateFileName);
                     var $container = $("#itemlist");
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
@@ -502,7 +503,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $("select.select2").each(function () {
                     if ($(this).hasClass("select2-hidden-accessible"))
                         $(this).select2('destroy');
-                    $(this).select2({dir: "rtl", multiple: true, tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first')});
+                    $(this).select2({ dir: "rtl", multiple: true, tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first') });
                 });
             }, 500);
 
