@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
     };
 
     String.prototype.toEnglishDigits = function () {
-        var id = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'};
+        var id = { '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9' };
         return this.replace(/[^0-9.]/g, function (w) {
             return id[w] || w;
         });
@@ -173,11 +173,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         , extractDate: function (value, bypassConvert) {
             if (value && (+value.split('-')[0] === 1900 || +value.split('-')[0] === 0))
                 return '';
-            var convert = !(typeof bypassConvert !== "undefined" && bypassConvert === true);
+            var bypassConvert = typeof bypassConvert !== "undefined" && !!bypassConvert === true;
             if (value && value.indexOf("T") !== -1)
-                return (convert) ? Global.gregorianToJalali(value.split('T')[0]) : value.split('T')[0];
+                return (bypassConvert) ? value.split('T')[0] : Global.gregorianToJalali(value.split('T')[0]);
             else
-                return (convert) ? Global.gregorianToJalali(value) : value;
+                return (bypassConvert) ? value : Global.gregorianToJalali(value);
         }
         , createTimeNoHours: function (timestamp) {
             if (typeof timestamp !== 'undefined') {
@@ -355,7 +355,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
                 if (this.Id === id) {
                     var $this = this;
                     for (i = 0; i < $this.Children.length; i++) {
-                        items.push({value: $this.Children[i].Value, text: $this.Children[i].Key});
+                        items.push({ value: $this.Children[i].Value, text: $this.Children[i].Key });
                     }
                 }
             });
