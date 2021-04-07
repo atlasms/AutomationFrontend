@@ -173,7 +173,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
         , extractDate: function (value, bypassConvert) {
             if (value && (+value.split('-')[0] === 1900 || +value.split('-')[0] === 0))
                 return '';
-            var bypassConvert = typeof bypassConvert !== "undefined" && !!bypassConvert === true;
+            // var bypassConvert = typeof bypassConvert !== "undefined" && !!bypassConvert === true;
             if (value && value.indexOf("T") !== -1)
                 return (bypassConvert) ? value.split('T')[0] : Global.gregorianToJalali(value.split('T')[0]);
             else

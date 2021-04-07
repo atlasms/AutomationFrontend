@@ -41,7 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     : useCount;
             });
             Handlebars.registerHelper('extractDate', function (value, bypassConvert, options) {
-                return Global.extractDate(value, bypassConvert);
+                return Global.extractDate(value, typeof bypassConvert !== "undefined" && !isNaN(bypassConvert) && !!bypassConvert === true);
             });
             Handlebars.registerHelper('htimes', function (n, block) { // Loop a block starting at 1 [human-readable times]
                 var accum = '';
