@@ -5,12 +5,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //        el: $(Config.positions.wrapper)
         model: 'ScheduleModel'
         , toolbar: [
-            {'button': {cssClass: 'btn red-mint pull-right', text: 'حذف آیتم‌ها', type: 'button', task: 'truncate-table', icon: 'fa fa-trash', access: '131072'}}
-            , {'button': {cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256'}}
-            , {'button': {cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save', access: '2'}}
-            , {'button': {cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128'}}
-            , {'button': {cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load'}}
+            {
+                'select': {
+                    cssClass: 'pull-right', text: '', name: 'change-theme', options: [
+                        { value: 'light', text: 'روشن' },
+                        { value: 'dark', text: 'تاریک' }
+                    ], addon: true, icon: 'fa fa-lightbulb-o'
+                }
+            }
+            , { 'button': { cssClass: 'btn red-mint pull-right', text: 'حذف آیتم‌ها', type: 'button', task: 'truncate-table', icon: 'fa fa-trash', access: '131072' } }
+            , { 'button': { cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256' } }
+            , { 'button': { cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save', access: '2' } }
+            , { 'button': { cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128' } }
+            , { 'button': { cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file' } }
+            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load' } }
             , {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
@@ -19,8 +27,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
         ]
         , statusbar: [
-            {type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info'}
-            , {type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa'}
+            { type: 'total-count', text: 'تعداد آیتم‌ها ', cssClass: 'badge badge-info' }
+            , { type: 'total-duration', text: 'مجموع زمان کنداکتور', cssClass: 'badge grey-salsa' }
         ]
         , $toolbarPortlets: "#sub-toolbar .portlet"
         , $duplicatePortlet: "#sub-toolbar .duplicate-schedule"
@@ -28,7 +36,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , defaultListLimit: Config.defalutMediaListLimit
         , timeArrays: {}
         , cache: {}
-        , flags: {toolbarRendered: false}
+        , flags: { toolbarRendered: false }
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
@@ -45,6 +53,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'focus input.time': 'selectInput'
             , 'click [data-task=show-titlerow]': 'showTitlesRow'
             , 'change [data-task=update-title-rows]': 'handleTitleRows'
+            , 'change [name=change-theme]': 'changeTheme'
             , 'click [data-task=save-titles]': 'saveTitles'
             , 'click [data-task=save-subtitle]': 'saveSubtitle'
             , 'click [data-task=edit-subtitle]': 'editSubtitle'
@@ -62,6 +71,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click .item-link': function (e) {
                 e.stopPropagation();
             }
+        }
+        , changeTheme: function (e) {
+            console.log($(e.target).val());
+            var $container = $('#schedule-page .portlet-body');
+            var method = $(e.target).val() === 'dark' ? 'addClass' : 'removeClass';
+            var cssClass = 'bg-dark bg-font-dark';
+            $container[method](cssClass);
         }
         , searchInMediaList: function (e) {
             var query = $(e.target).val();
@@ -125,8 +141,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             bootbox.confirm({
                 message: "تمامی موارد کنداکتور روز انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -172,8 +188,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             bootbox.confirm({
                 message: "تایتل انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -192,8 +208,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             bootbox.confirm({
                 message: "زیرنویس انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -372,7 +388,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             model.fetch({
                 data: data
                 , success: function (items) {
-                    var items = {items: self.prepareItems(items.toJSON(), params)};
+                    var items = { items: self.prepareItems(items.toJSON(), params) };
                     var template = Template.template.load('broadcast/schedule', 'media.items.partial');
                     var $container = $("#broadcast-itemlist");
                     template.done(function (data) {
@@ -427,7 +443,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($input.attr('data-type') === "array") {
                         if (typeof data[$input.attr('data-group')] === "undefined")
                             data[$input.attr('data-group')] = [];
-                        data[$input.attr('data-group')].push({text: $input.val()});
+                        data[$input.attr('data-group')].push({ text: $input.val() });
                     } else
                         data[$input.attr("name")] = (/^\d+$/.test($input.val()) || ($input.attr("data-validation") === 'digit')) ? +$input.val() : $input.val();
                 }
@@ -552,8 +568,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                             , playlist: [{
                                 image: media.thumbnail
                                 , sources: [
-                                    {file: media.video, label: 'LQ', default: true}
-                                    , {file: media.video.replace('_lq', '_hq'), label: 'HQ'}
+                                    { file: media.video, label: 'LQ', default: true }
+                                    , { file: media.video.replace('_lq', '_hq'), label: 'HQ' }
 //                                        , {file: media.video.replace('_lq', '_orig'), label: 'ORIG'}
                                 ]
                             }]
@@ -612,7 +628,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , destinationdate: Global.jalaliToGregorian($("#duplicate-schedule [name=destinationdate]").val()) + 'T' + $("#duplicate-schedule .destination[name=starttime]").val()
                 , force: +$("#duplicate-schedule [name=force]").val()
             };
-            new ScheduleModel({path: '/copy'}).save(null, {
+            new ScheduleModel({ path: '/copy' }).save(null, {
                 data: JSON.stringify(params)
                 , contentType: 'application/json'
                 , processData: false
@@ -643,14 +659,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             bootbox.confirm({
                 message: "آیا مطمئن هستید پلی‌لیست از روی جدول پخش انتخاب شده ساخته شود؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
                         var l = Ladda.create(e.currentTarget);
                         l.start();
-                        new ScheduleModel({path: '/export'}).save(null, {
+                        new ScheduleModel({ path: '/export' }).save(null, {
                             data: JSON.stringify(params)
                             , contentType: 'application/json'
                             , processData: false
@@ -682,7 +698,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(this.$duplicatePortlet).removeClass('hidden').addClass("in");
             else
                 $(this.$duplicatePortlet).removeClass("in").addClass("hidden");
-            $("html, body").animate({'scrollTop': 0});
+            $("html, body").animate({ 'scrollTop': 0 });
         }
         , showExportToolbar: function () {
             if ($(this.$toolbarPortlets).not(".export-schedule").is(":visible"))
@@ -691,7 +707,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $(this.$exportPortlet).removeClass('hidden').addClass("in");
             else
                 $(this.$exportPortlet).removeClass("in").addClass("hidden");
-            $("html, body").animate({'scrollTop': 0});
+            $("html, body").animate({ 'scrollTop': 0 });
         }
         , loadFile: function (e) {
             e.preventDefault();

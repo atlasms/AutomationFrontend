@@ -127,9 +127,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'authorization'
                         options += '<option value="' + args.options[i].value + '" ' + selected + '>' + args.options[i].text + '</option>';
                     }
             }
-            var output = '<div class="form-group"><div class="input-group">';
+            var output = '<div class="form-group ' + cssClass.replace('form-control', '') + '" ' + style + '><div class="input-group">';
             output += addon ? '<span class="input-group-addon' + (icon !== "" ? ' has-icon' : '') + '">' + icon + ' ' + label + '</span>' : '';
-            output += '<select data-type="' + name + '" class="' + cssClass + '" name="' + name + '"' + multi + placeholder + style + '>' + options + '</select></div></div>';
+            output += '<select data-type="' + name + '" class="form-control" name="' + name + '"' + multi + placeholder + '>' + options + '</select></div></div>';
             this.toolbar = (affix === "prepend") ? output + this.toolbar : this.toolbar + output;
         }
         , radio: function (args) {

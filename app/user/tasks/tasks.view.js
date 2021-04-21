@@ -9,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}},
             {
                 'select': {
-                    cssClass: 'form-control', name: 'sort', options: [
+                    name: 'sort', options: [
                         {value: 'broadcast-date', text: 'تاریخ پخش', default: true},
                         {value: 'created', text: 'زمان ارسال'}
                     ], addon: true, icon: 'fa fa-sort', text: 'ترتیب'
@@ -17,14 +17,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             },
             {
                 'select': {
-                    cssClass: 'form-control', name: 'FromUserId', options: [
+                    name: 'FromUserId', options: [
                         {value: 0, text: 'همه'}
                     ], addon: true, icon: 'fa fa-user', text: 'فرستنده'
                 }
             },
             {
                 'select': {
-                    cssClass: 'form-control', name: 'mode', options: [
+                    name: 'mode', options: [
                         {value: 'mytask', text: 'دریافتی‌ها', default: true},
                         {value: 'sent', text: 'ارسالی‌ها'}
                     ], addon: true, icon: 'fa fa-inbox', text: ''
@@ -44,7 +44,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             },
             {
                 'select': {
-                    cssClass: 'form-control', name: 'filter-type', options: [
+                    name: 'filter-type', options: [
                         {value: 'all', text: 'همه'},
                         {value: 'date', text: 'بر اساس تاریخ پخش'}
                     ], addon: true, icon: 'fa fa-list'

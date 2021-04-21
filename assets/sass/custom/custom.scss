@@ -374,11 +374,24 @@ div#schedule-table {
     transform: translateZ(0); backface-visibility: hidden; transform: translate3d(0, 0, 0);
     font-size: 16px;
     margin-bottom: 0;
+    .bg-dark & {
+        border-color: #666;
+    }
     .id, .r { padding: 0 6px; float: left; position: relative; box-sizing: border-box; }
     .id { width: 4.33333%; }
     .r { width: 3.33333%; }
     input, textarea { transition: none; }
     .form-group.form-md-line-input .form-control ~ label:after { transition: none; }
+    .form-control {
+        .bg-dark & {
+            color: #fff;
+        }
+        option {
+            .bg-dark & {
+                background: #121212;
+            }
+        }
+    }
     figure {
         overflow: hidden; margin: 0 auto; max-width: 100%;
         img { max-width: 100%; height: auto; }
@@ -391,6 +404,9 @@ div#schedule-table {
             padding: 0 6px; font-size: 15px;
             float: left; position: relative; box-sizing: border-box;
             outline: 1px solid #e7ecf1;
+            .bg-dark & {
+                outline-color: #666;
+            }
         }
         span {
             display: block; padding: 5px 0;
@@ -409,11 +425,29 @@ div#schedule-table {
         .table-row {
             @include clearfix;
             border-left: 5px solid #ddd; padding: 0; margin: 0;
-            &.active { background: #eef1f5; }
+            &.active {
+                background: #eef1f5;
+                .bg-dark & {
+                    background: #434343;
+                }
+            }
             .td {
                 height: 80px; outline: 1px solid #e7ecf1; padding: 8px 8px 0;
+                .bg-dark & {
+                    outline-color: #666;
+                }
                 &.ep { padding: 8px 0 0; }
                 &.img { padding: 6px 6px 0; }
+                .tt-menu {
+                    .bg-dark & {
+                        background: #121212;
+                        .tt-suggestion {
+                            &:hover, &.tt-cursor {
+                                background: #140e75;
+                            }
+                        }
+                    }
+                }
             }
             .id, .r { text-align: center; }
             textarea {
@@ -426,6 +460,10 @@ div#schedule-table {
                 .btn {
                     height: 50%;
                     &:hover { background: #c9c9c9; }
+                    .bg-dark & {
+                        background: #121212;
+                        &:hover { background: #333; }
+                    }
                 }
             }
 
