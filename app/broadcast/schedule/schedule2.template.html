@@ -4,11 +4,32 @@
     .advanced-search:hover { text-decoration: none; }
     .table-row.active .advanced-search { opacity: 1; visibility: visible; }
     .table.table-bordered thead > tr > th { white-space: nowrap; }
-    .modal .modal-header { border-bottom: 0 none; }
-    .modal .media-filters { padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #efefef; }
-    .modal .modal-body { padding-top: 0; }
+    #media-modal .modal-header { border-bottom: 0 none; }
+    #media-modal .modal-body { padding-top: 0; }
+    .modal .media-filters { padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #efefef; min-height: 50px; max-height: 65px; }
     .nowrap { white-space: nowrap; }
     #media-modal table tbody tr { cursor: pointer; }
+    #media-modal .modal-body { overflow: hidden !important; display: flex; flex-direction: column; }
+    #media-modal .modal-body .tab-content { overflow: hidden; max-height: 100%; display: flex; flex-direction: column; width: 100%; }
+    #media-modal .modal-body .tab-content .tab-pane { overflow: hidden; max-height: 100%; flex-direction: column; width: 100%; }
+    #media-modal .modal-body .tab-content .tab-pane.active { display: flex; }
+    #media-modal .modal-body .tab-content .tab-pane > * { flex: 0 1 auto; max-height: 100%; overflow: hidden; }
+    #media-search .row { display: flex; flex-direction: row; max-height: 100%; }
+    #media-search .row .search-sidebar { display: flex; flex-direction: column; max-height: 100%; position: relative; filter: blur(2px); }
+    #media-search .row .search-sidebar:before {
+        z-index: 999; display: block; position: absolute; content: ''; width: 100%; height: 100%; filter: blur(3px); transition: 0.2s all;
+    }
+    #media-search .row .search-sidebar.enabled { filter: none; }
+    #media-search .row .search-sidebar.enabled:before { display: none; }
+    #media-search .row .search-sidebar > * { flex: 1 1 auto; }
+    #media-search .row .search-sidebar .form-group { min-height: 34px; max-height: 50px; }
+    #tree { max-height: 100%; overflow: hidden; overflow-y: auto; }
+    #media-search .row .search-main { display: flex; flex-direction: column; max-height: 100%; }
+    #media-search .row .search-main > * { flex: 1 1 auto; }
+    #itemlist { max-height: 100%; overflow: hidden; overflow-y: auto; }
+    #itemlist tbody tr:not([media-state="1"]) { opacity: 0.5; pointer-events: none; cursor: not-allowed !important; }
+    #broadcast-itemlist { overflow-y: auto; }
+
     [readonly] { pointer-events: none; }
     .prayers { list-style: none; margin: 0 0 10px; padding: 0; line-height: 20px; }
     .prayers li { display: inline-block; }
@@ -16,6 +37,8 @@
     .prayers li span { display: inline-block; height: 20px; }
     .prayers li .time { font-weight: bold; }
     .prayers li .time:before { content: ': '; }
+
+
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -301,9 +324,9 @@
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
                                     <select data-type="state" class="form-control" name="state" {{#ifConfig 'schedule.fixedMediaStateFilter'}}readonly{{/ifConfig}}>
-                                        {{#select 1}}
-                                        {{{getDefinitionOptions 2}}}
-                                        {{/select}}
+                                    {{#select 1}}
+                                    {{{getDefinitionOptions 2}}}
+                                    {{/select}}
                                     </select>
                                 </div>
                             </div>
@@ -345,10 +368,14 @@
                             <button type="button" class="btn btn-success" data-task="load-media">جستجو</button>
                         </form>
                         <div class="row">
-                            <div class="col-xs-3">
+                            <div class="col-xs-3 search-sidebar">
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i> جستجو در برنامه‌ها</span>
+                                    <input type="text" placeholder="جستجو" class="form-control" data-type="tree-search"/>
+                                </div>
                                 <div id="tree"></div>
                             </div>
-                            <div class="col-xs-9">
+                            <div class="col-xs-9 search-main">
                                 <div id="itemlist"></div>
                             </div>
                         </div>
@@ -359,9 +386,9 @@
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-filter"></i></span>
                                     <select data-type="state" class="form-control" name="media-broadcast-state" {{#ifConfig 'schedule.fixedMediaStateFilter'}}readonly{{/ifConfig}}>
-                                        {{#select 1}}
-                                        {{{getDefinitionOptions 2}}}
-                                        {{/select}}
+                                    {{#select 1}}
+                                    {{{getDefinitionOptions 2}}}
+                                    {{/select}}
                                     </select>
                                 </div>
                             </div>
@@ -386,6 +413,19 @@
                         <div id="broadcast-itemlist"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade zoom-out" id="help-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content" class="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>راهنما</h4>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow: hidden; overflow-y: auto;">
+                {{config 'shortcuts.schedule'}}
             </div>
         </div>
     </div>

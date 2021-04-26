@@ -3,18 +3,19 @@
     <tr>
         <th class="col-xs-1">#</th>
         <th class="col-xs-1"></th>
-        <th class="col-xs-4">نام برنامه</th>
+        <th class="col-xs-3">نام برنامه</th>
         <th class="col-xs-1 text-center">قسمت</th>
         <th class="col-xs-2 text-center">زمان ثبت</th>
         <th class="col-xs-2 text-center">آخرین پخش</th>
         <th class="col-xs-1 text-center"># مجاز</th>
         <th class="col-xs-1 text-center"># پخش</th>
+        <th class="col-xs-1 text-center">وضعیت</th>
         <th class="col-xs-1 text-center">مدت</th>
     </tr>
     </thead>
     <tbody>
     {{#each items}}
-    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
+    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
         <td>
             <span class="idx">{{Id}}</span>
             <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
@@ -22,7 +23,7 @@
         <td class="text-center">
             {{config placeholderImage}}
             <figure>
-                <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+                <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
             </figure>
         </td>
         <td class="title-holder">
@@ -44,6 +45,9 @@
         </td>
         <td class="text-center" data-field="broadcast-count">
             <span class="">{{{checkAllowedBroadcastCount AllowedBroadcastCount ConductorUseCount}}}</span>
+        </td>
+        <td class="text-center">
+            <span class="label label-{{resolveLabel State}}" style="display: block; white-space: nowrap;">{{StateText}}</span>
         </td>
         <td class="text-center" data-field="Duration">
             <span class="time">{{time Duration}}</span>

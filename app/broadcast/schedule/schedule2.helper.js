@@ -87,7 +87,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             switch (type) {
                 case 'time':
                     $("input.time").mask('H0:M0:S0', {
-                        placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                        placeholder: '00:00:00', translation: { 'H': { pattern: /[0-2]/ }, 'M': { pattern: /[0-5]/ }, 'S': { pattern: /[0-5]/ } }
                     });
                     break;
             }
@@ -117,11 +117,16 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             });
 
             for (var key of Object.keys(keysMap)) {
+                // if (typeof keysMap[key].value === 'object') {
                 ScheduleHelper.initShortCutKey(key, scheduleInstance);
+                // }
+                // if (typeof keysMap[key].value === 'number') {
+                //     ScheduleHelper.initFolderSelectionShortCuts(key, scheduleInstance);
+                // }
             }
         }
         , checkActiveRowForEdit: function (activeRow) {
-            if (!activeRow.length) {
+            if (typeof activeRow === 'undefined' || !activeRow.length) {
                 toastr.warning('هیچ سطری انتخاب نشده است', '', Config.settings.toastr);
                 return false;
             }
@@ -131,7 +136,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             }
             return true;
         }
-        , initShortCutKey: function (type) {
+        // , initFolderSelectionShortCuts: function(key, )
+        , initShortCutKey: function (type, scheduleInstance) {
+            $(document).on('keydown', null, 'f1', function (e) {
+                scheduleInstance.showHelp(e);
+                e.preventDefault();
+            });
             switch (type) {
                 case 'down':
                     $(document).on('keydown', null, keysMap[type].key, function (e) {
@@ -217,6 +227,47 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         }
                     });
                     break;
+                case 'duplicate':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var clonedRow = activeRow.clone(true, true);
+                            if (clonedRow.hasClass('active')) {
+                                clonedRow.removeClass('active');
+                            }
+                            clonedRow.insertAfter(activeRow);
+                            ScheduleHelper.updateIndexes();
+                            ScheduleHelper.generateTimeArray();
+                            e.preventDefault();
+                        }
+                    });
+                    break;
+                case 'copy':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var clonedRow = activeRow.clone(true, true);
+                            if (clonedRow.hasClass('active')) {
+                                clonedRow.removeClass('active');
+                            }
+                            window['schedule-clipboard'] = clonedRow;
+                            toastr.info('سطر مورد نظر کپی شد', '', Config.settings.toastr);
+                            e.preventDefault();
+                        }
+                    });
+                    break;
+                case 'paste':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        var activeRow = $("#schedule-table .table-body li.active");
+                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var clonedRow = window['schedule-clipboard'].clone(true, true);
+                            clonedRow.insertAfter(activeRow);
+                            ScheduleHelper.updateIndexes();
+                            ScheduleHelper.generateTimeArray();
+                            e.preventDefault();
+                        }
+                    });
+                    break;
                 case 'showDuplicateForm':
                     $(document).on('keydown', null, keysMap[type].key, function (e) {
                         e.preventDefault();
@@ -265,22 +316,35 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             const item = $.extend({}, this);
                             $(document).on('keydown', null, item.key, function (e) {
                                 e.preventDefault();
-                                var activeRow = $("#schedule-table .table-body li.active");
-                                if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
-                                    var postfix = '';
-                                    if (typeof item.value.counter$ !== 'undefined' && item.value.counter$ > 0) {
-                                        if (typeof ScheduleHelper.counters[item.key] === 'undefined') {
-                                            ScheduleHelper.counters[item.key] = 1;
-                                        } else {
-                                            if (ScheduleHelper.counters[item.key] < item.value.counter$) {
-                                                ScheduleHelper.counters[item.key]++;
+                                if (typeof item.value === 'object') {
+                                    var activeRow = $("#schedule-table .table-body li.active");
+                                    if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                                        var postfix = '';
+                                        if (typeof item.value.counter$ !== 'undefined' && item.value.counter$ > 0) {
+                                            if (typeof ScheduleHelper.counters[item.key] === 'undefined') {
+                                                ScheduleHelper.counters[item.key] = 1;
+                                            } else {
+                                                if (ScheduleHelper.counters[item.key] < item.value.counter$) {
+                                                    ScheduleHelper.counters[item.key]++;
+                                                }
                                             }
+                                            postfix = ' - ' + ScheduleHelper.counters[item.key];
                                         }
-                                        postfix = ' - ' + ScheduleHelper.counters[item.key];
+                                        var cloneItem = $.extend({}, item.value, { 'episode-title': item.value['episode-title'] + postfix });
+                                        console.log(cloneItem);
+                                        ScheduleHelper.duplicateRow(activeRow, false, cloneItem);
                                     }
-                                    var cloneItem = $.extend({}, item.value, {'episode-title': item.value['episode-title'] + postfix});
-                                    console.log(cloneItem);
-                                    ScheduleHelper.duplicateRow(activeRow, false, cloneItem);
+                                }
+                                if (typeof item.value === 'number') {
+                                    var activeRow = $("#schedule-table .table-body li.active");
+                                    if (ScheduleHelper.checkActiveRowForEdit(activeRow)) {
+                                        $('#media-modal').modal('show');
+                                        $('#media-modal').find('[href="#media-search"]').click();
+                                        $('[data-type="change-mode"]').val('tree').change();
+                                        setTimeout(function () {
+                                            $('#tree').find('#' + item.value + '_anchor').click();
+                                        });
+                                    }
                                 }
                             });
                         });
@@ -324,7 +388,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var $gap = ScheduleHelper.duplicateRow($next, true);
         }
         , duplicateRow: function (row, isGap, data) {
-            console.log('------------------- ROW DUPLICATION -------------------');
             var isGap = (typeof isGap !== "undefined" && isGap === true);
             var rows = $("#schedule-table .table-body li");
             if (rows.length > 1) {
@@ -333,9 +396,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     return;
                 }
             }
-//            row.find('input[data-suggestion="true"]').typeahead("destroy");
             ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'), true);
-            console.time('cloning-row');
             var clone = row.clone();
             clone.addClass('error new').removeClass('gap fixed overlap').attr('title', 'اطلاعات سطر وارد نشده است.');
             clone.find('[id]').removeAttr('id');
@@ -360,26 +421,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 // Set gap duration
             }
             clone.insertAfter(row);
-            console.timeEnd('cloning-row');
-            console.time('ROW-duplication-method-calls');
-//            ScheduleHelper.rebuildTable();
-            console.time('updating-times');
             ScheduleHelper.updateTimes(row);
-            console.timeEnd('updating-times');
-            console.time('updating-indexes');
             ScheduleHelper.updateIndexes();
-            console.timeEnd('updating-indexes');
-            console.time('trigger-click');
             row.next().find("input:first").trigger('click');
-            console.timeEnd('trigger-click');
-            console.time('mask-times');
             ScheduleHelper.mask("time");
-            console.timeEnd('mask-times');
-            console.time('suggestions');
             ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'));
             ScheduleHelper.suggestion(row.next().find('input[data-suggestion="true"]'));
-            console.timeEnd('suggestions');
-            console.timeEnd('ROW-duplication-method-calls');
             return row.next();
         }
         , checkTable: function () {
@@ -591,7 +638,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         if ($currentInput.attr("data-suggestion-type") !== "cat" && parseInt($currentInput.parents("li:first").find("[name=ConductorMetaCategoryId]").val()) > 0)
                             settings.url += parseInt($currentInput.parents("li:first").find("[name=ConductorMetaCategoryId]").val());
                         settings.url += '&_t=' + (new Date()).getTime();
-                        settings.headers = {"Authorization": UserHelper.getToken()};
+                        settings.headers = { "Authorization": UserHelper.getToken() };
                         return settings;
                     }
                     , transform: function (response) {
@@ -717,8 +764,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 };
             };
             ScheduleHelper.handleStatusbar([
-                {"type": "count", "value": getRowsCount()}
-                , {"type": "duration", "value": getTotalTime()}
+                { "type": "count", "value": getRowsCount() }
+                , { "type": "duration", "value": getTotalTime() }
             ]);
         }
         , handleStatusbar: function (items) {
@@ -801,7 +848,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             var ends = $.extend([], starts);
             ends.push(last);
             if (typeof callback === "object")
-                callback.timeArrays = {starts: starts, ends: ends};
+                callback.timeArrays = { starts: starts, ends: ends };
             if ($startSelect.length) {
 //                if (!$startSelect.hasClass('destination')) {
                 $startSelect.empty();

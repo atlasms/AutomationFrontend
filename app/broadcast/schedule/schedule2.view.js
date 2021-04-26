@@ -3,9 +3,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
-        model: 'ScheduleModel'
+        autoSaveInterval: null
+        , model: 'ScheduleModel'
         , toolbar: [
             {
+                'select': {
+                    cssClass: 'pull-right', text: 'ذخیره خودکار', name: 'auto-save', options: [
+                        { value: '0', text: 'خاموش' },
+                        { value: '5', text: 'هر پنج دقیقه' },
+                        { value: '10', text: 'هر ده دقیقه' },
+                        { value: '15', text: 'هر پانزده دقیقه' }
+                    ], addon: true, icon: 'fa fa-save'
+                }
+            }
+            , {
                 'select': {
                     cssClass: 'pull-right', text: '', name: 'change-theme', options: [
                         { value: 'light', text: 'روشن' },
@@ -13,12 +24,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     ], addon: true, icon: 'fa fa-lightbulb-o'
                 }
             }
+            , { 'button': { cssClass: 'btn btn-default pull-right', text: 'راهنما', type: 'button', task: 'help', icon: 'fa fa-life-ring' } }
             , { 'button': { cssClass: 'btn red-mint pull-right', text: 'حذف آیتم‌ها', type: 'button', task: 'truncate-table', icon: 'fa fa-trash', access: '131072' } }
-            , { 'button': { cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256' } }
-            , { 'button': { cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save', access: '2' } }
-            , { 'button': { cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128' } }
-            , { 'button': { cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file' } }
-            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load' } }
+            , { 'button': { cssClass: 'btn purple-wisteria pull-right', text: 'کپی', type: 'button', task: 'show-duplicate-form', access: '256', icon: 'fa fa-copy' } }
+            , { 'button': { cssClass: 'btn green-jungle pull-right hidden fade', text: 'ذخیره', type: 'submit', task: 'save', access: '2', icon: 'fa fa-save' } }
+            , { 'button': { cssClass: 'btn red-flamingo', text: 'ارسال پلی‌لیست', type: 'button', task: 'show-export-form', access: '128', icon: 'fa fa-upload' } }
+            , { 'button': { cssClass: 'btn c-btn-border-1x c-btn-grey-salsa', text: 'PDF', type: 'pdf', task: 'file', icon: 'fa fa-file-pdf-o' } }
+            , { 'button': { cssClass: 'btn btn-default', text: 'نسخه چاپی', type: 'print', task: 'print', icon: 'fa fa-print' } }
+            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load', icon: 'fa fa-monitor' } }
             , {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
@@ -43,17 +56,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'keyup input.time': 'processTime'
             , 'click [data-task=load]': 'load'
             , 'click [data-task=file]': 'loadFile'
+            , 'click [data-task=print]': 'openPrintWindow'
             , 'click [data-task=show-duplicate-form]': 'showDuplicateToolbar'
             , 'click [data-task=show-export-form]': 'showExportToolbar'
             , 'click [data-task=duplicate]': 'duplicate'
             , 'click [data-task=export]': 'exportPlaylist'
             , 'click [data-task=refresh]': 'refreshList'
+            , 'click [data-task=help]': 'showHelp'
             , 'change [name=force]': 'warnForceDuplicate'
             , 'change [name=CondcutorIsFixed]': 'fixRow'
             , 'focus input.time': 'selectInput'
             , 'click [data-task=show-titlerow]': 'showTitlesRow'
             , 'change [data-task=update-title-rows]': 'handleTitleRows'
             , 'change [name=change-theme]': 'changeTheme'
+            , 'change [name=auto-save]': 'toggleAutoSave'
             , 'click [data-task=save-titles]': 'saveTitles'
             , 'click [data-task=save-subtitle]': 'saveSubtitle'
             , 'click [data-task=edit-subtitle]': 'editSubtitle'
@@ -66,8 +82,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="load-media"]': 'loadMedia'
             , 'click [data-task="load-broadcast-media"]': 'loadBroadcastMedia'
             , 'click #media-modal table tbody tr': 'setMedia'
-            , 'change [data-type="change-mode"]': 'toggleAdvancedSearchDatepickers'
+            , 'change [data-type="change-mode"]': 'toggleMode'
             , 'keyup #media-broadcast-date-search': 'searchInMediaList'
+            , 'keyup [data-type="tree-search"]': 'searchTree'
+            , 'click #tree .jstree-anchor': 'loadTreeItems'
             , 'click .item-link': function (e) {
                 e.stopPropagation();
             }
@@ -93,19 +111,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 });
             }
         }
+        , openPrintWindow: function (e) {
+            e.preventDefault();
+            var win = window.open('/broadcast/scheduleprint?startdate=' + Global.jalaliToGregorian($('[name="startdate"]').val()), '_blank');
+            win && win.focus();
+        }
         , showAdvancedSearchModal: function (e) {
             e.preventDefault();
             $('#media-modal').modal('show');
         }
-        , toggleAdvancedSearchDatepickers: function (e) {
+        , toggleMode: function (e) {
             var value = $(e.target).val();
             if (value === 'tree') {
-                $('[name="media-search-startdate"]').attr('disabled', true);
-                $('[name="media-search-enddate"]').attr('disabled', true);
+                this.toggleAdvancedSearchDatepickers(true);
+                this.toggleTreeSidebar(false);
             } else {
-                $('[name="media-search-startdate"]').attr('disabled', false);
-                $('[name="media-search-enddate"]').attr('disabled', false);
+                this.toggleAdvancedSearchDatepickers(false);
+                this.toggleTreeSidebar(true);
             }
+        }
+        , toggleTreeSidebar: function (disable) {
+            if (disable) {
+                $('.search-sidebar').removeClass('enabled');
+            } else {
+                $('.search-sidebar').addClass('enabled');
+            }
+        }
+        , toggleAdvancedSearchDatepickers: function (disable) {
+            $('[name="media-search-startdate"]').attr('disabled', disable);
+            $('[name="media-search-enddate"]').attr('disabled', disable);
         }
         , setMedia: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
@@ -582,9 +616,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }, 300);
         }
         , submit: function (e) {
-            e.preventDefault();
-//            $("button[type=submit]").prop('disabled', true).addClass('disabled');
-            var $this = this;
+            if (typeof e !== 'undefined' && e !== null) {
+                e.preventDefault();
+            }
             var helper = new ScheduleHelper.validate();
             if (!helper.beforeSave())
                 return;
@@ -607,6 +641,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
                 }
             });
+        }
+        , toggleAutoSave: function (e) {
+            var self = this;
+            var value = $(e.target).val();
+            if (this.autoSaveInterval !== null) {
+                clearInterval(this.autoSaveInterval);
+            }
+            if (parseInt(value) !== 0) {
+                toastr.info('ذخیره خودکار برای هر ' + value + ' دقیقه فعال شد', '', Config.settings.toastr);
+                this.autoSaveInterval = setInterval(function () {
+                    self.submit();
+                }, parseInt(value) * 1000 * 60);
+            } else {
+                toastr.info('ذخیره خودکار غیرفعال شد', '', Config.settings.toastr);
+            }
         }
         , selectInput: function (e) {
             $(e.target).trigger('select');
@@ -776,8 +825,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (typeof this.flags.helperLoaded === "undefined") {
                 ScheduleHelper.init(false, this);
                 this.flags.helperLoaded = true;
-            } else
+            } else {
                 ScheduleHelper.init(true, this);
+            }
 
             var dateParts = $("[name=startdate]").val().split('-');
             for (var i = 0; i < dateParts.length; i++)
@@ -836,9 +886,57 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
 
-            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
-
+            this.renderTree();
             this.loadPrayerTimes();
+        }
+        , renderTree: function () {
+            var self = this;
+            var $tree = $("#tree");
+            if ($tree.length) {
+                $tree.bind("loaded.jstree", function (e, data) {
+                    var instance = $tree.jstree(true);
+                    self.treeInstance = instance;
+                    instance.open_all();
+                    // self.load();
+                });
+                new Tree($("#tree"), Config.api.tree, this).render();
+            }
+        }
+        , searchTree: function (e) {
+            $('#tree').jstree(true).show_all();
+            $('#tree').jstree('search', $(e.target).val());
+        }
+        , loadTreeItems: function (e) {
+            var id;
+            if (typeof e === "object") {
+                var $target = $(e.target);
+                id = $target.parent().attr('id');
+                if ($target.hasClass('jstree-disabled') || $target.parent().data('disabled') === 'true') {
+                    toastr.warning('برنامه انتخاب شده حذف شده است.', 'خطا', Config.settings.toastr);
+                    return false;
+                }
+            } else {
+                id = e;
+            }
+            if (typeof id !== "undefined" && id) {
+                this.cache.currentPathId = id = parseInt(id);
+                var self = this;
+                var mediaItemsParams = { query: $.param({ categoryId: id, offset: 0, count: this.defaultListLimit }) };
+                var itemsModel = new MediaModel(mediaItemsParams);
+                // Loading folder media
+                itemsModel.fetch({
+                    success: function (items) {
+                        items = items.toJSON();
+                        var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+                        var $container = $("#itemlist");
+                        template.done(function (data) {
+                            var handlebarsTemplate = Template.handlebars.compile(data);
+                            var output = handlebarsTemplate(items);
+                            $container.html(output);
+                        });
+                    }
+                })
+            }
         }
         , loadPrayerTimes: function () {
             var tehranCoords = ['35.6961', '51.4231'];
@@ -956,6 +1054,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     data.push(row);
             });
             return data;
+        }
+        , showHelp: function (e) {
+            e.preventDefault();
+            var shorcuts = Config.shortcuts.schedule;
+            var template = Template.template.load('shared', 'help');
+            var $container = $("#help-modal .modal-body");
+            template.done(function (data) {
+                var handlebarsTemplate = Template.handlebars.compile(data);
+                var output = handlebarsTemplate(shorcuts);
+                $container.html(output).promise().done(function () {
+                    $("#help-modal").modal('show');
+                });
+            })
         }
     });
     return ScheduleView2;

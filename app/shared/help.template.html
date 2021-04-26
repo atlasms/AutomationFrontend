@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-xs-6">
+        <p><strong>میان‌بر‌های اصلی</strong></p>
+        <table class="table table-condensed table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="col-xs-2">کلید</th>
+                <th class="col-xs-9">عملکرد</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each []}}
+            {{#ifCond @key '!=' 'custom'}}
+            <tr>
+                <td><kbd>{{key}}</kbd></td>
+                <td>{{title}}</td>
+            </tr>
+            {{/ifCond}}
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <p><strong>سایر میان‌بر‌ها</strong></p>
+        <table class="table table-condensed table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="col-xs-2">کلید</th>
+                <th class="col-xs-9">عملکرد</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each custom}}
+            <tr>
+                <td><kbd>{{key}}</kbd></td>
+                <td>{{title}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+</div>
