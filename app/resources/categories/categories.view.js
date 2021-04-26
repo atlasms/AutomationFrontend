@@ -26,7 +26,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'keyup [data-type="tree-search"]': 'searchTree'
         }
         , searchTree: function(e) {
-            $('#tree').jstree(true).search($(e.target).val());
+            $('#tree').jstree(true).show_all();
+            $('#tree').jstree('search', $(e.target).val());
         }
         , saveMetadata: function (e) {
             e.preventDefault();

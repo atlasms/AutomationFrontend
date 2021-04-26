@@ -588,7 +588,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("#broadcastCount").ionRangeSlider({type: "double", grid: true, min: 0, max: 999, from: 0, to: 999, prefix: ""})
         }
         , searchTree: function(e) {
-            $('#tree').jstree(true).search($(e.target).val());
+            $('#tree').jstree(true).show_all();
+            $('#tree').jstree('search', $(e.target).val());
         }
         , loadTree: function () {
             var self = this;
