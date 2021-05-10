@@ -305,7 +305,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             e.preventDefault();
             var self = this;
             var $li = $(e.target).parents('li:first');
-            var params = {task: $li.data('task'), value: $li.data('value'), id: $(e.target).parents('tr:first').data('id')};
+            var $item = $(e.target).parents('tr:first');
+            var params = {task: $li.data('task'), value: $li.data('value'), id: $item.data('id')};
+
+            if (parseInt($item.data('state'), 10) === parseInt(params.value, 10)) {
+                toastr.warning('تغییر وضعیت به وضعیت فعلی امکان‌پذیر نیست.', 'خطا', Config.settings.toastr);
+                return;
+            }
 
             if (~~$li.data('type') !== 0 || Config.mainStatesExceptions.indexOf(~~params.value) !== -1) {
                 this.setMediaParam(params);
