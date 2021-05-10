@@ -365,7 +365,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var state = $("[name=state]").val();
             var catid = '';
             if (mode === 'tree') {
-                catid = typeof self.cache.currentCategory !== "undefined" ? self.cache.currentCategory : $('#tree li[aria-selected="true"]').attr("id");
+                var $tree = $('#tree');
+                var nodeChildren = $tree.jstree('get_node', $tree.jstree('get_selected')[0]).children_d;
+                catid = typeof self.cache.currentCategory !== "undefined"
+                    ? self.cache.currentCategory
+                    : $('#tree li[aria-selected="true"]').attr("id");
+                catid += nodeChildren.length ? ',' + nodeChildren.join(',') : '';
             }
             var defaultParams = {
                 q: ''
@@ -918,25 +923,36 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             } else {
                 id = e;
             }
-            if (typeof id !== "undefined" && id) {
-                this.cache.currentPathId = id = parseInt(id);
-                var self = this;
-                var mediaItemsParams = { query: $.param({ categoryId: id, offset: 0, count: this.defaultListLimit }) };
-                var itemsModel = new MediaModel(mediaItemsParams);
-                // Loading folder media
-                itemsModel.fetch({
-                    success: function (items) {
-                        items = items.toJSON();
-                        var template = Template.template.load('broadcast/schedule', 'media.items.partial');
-                        var $container = $("#itemlist");
-                        template.done(function (data) {
-                            var handlebarsTemplate = Template.handlebars.compile(data);
-                            var output = handlebarsTemplate(items);
-                            $container.html(output);
-                        });
-                    }
-                })
-            }
+            var params = this.getMediaParams();
+            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            this.loadMediaItems(params);
+            // return;
+            // if (typeof id !== "undefined" && id) {
+            //     this.cache.currentPathId = id = parseInt(id);
+            //     var self = this;
+            //     var mediaItemsParams = {
+            //         query: $.param({
+            //             categoryId: id,
+            //             offset: 0,
+            //             count: 2000,
+            //             state: $('#media-search [name="state"]').val()
+            //         })
+            //     };
+            //     var itemsModel = new MediaModel(mediaItemsParams);
+            //     // Loading folder media
+            //     itemsModel.fetch({
+            //         success: function (items) {
+            //             items = items.toJSON();
+            //             var template = Template.template.load('broadcast/schedule', 'media.items.partial');
+            //             var $container = $("#itemlist");
+            //             template.done(function (data) {
+            //                 var handlebarsTemplate = Template.handlebars.compile(data);
+            //                 var output = handlebarsTemplate(items);
+            //                 $container.html(output);
+            //             });
+            //         }
+            //     })
+            // }
         }
         , loadPrayerTimes: function () {
             var tehranCoords = ['35.6961', '51.4231'];
