@@ -92,6 +92,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 duplicate: { key: 'alt+d', title: 'تکرار سطر' },
                 copy: { key: 'alt+c', title: 'کپی کردن سطر' },
                 paste: { key: 'alt+v', title: 'جاگذاری سطر کپی شده' },
+                save: { key: 'alt+s', title: 'ذخیره' },
                 advancedSearchTab1: { key: 'alt+m', title: 'جستجوی مدیا / جستجوی پیشرفته' },
                 advancedSearchTab2: { key: 'alt+a', title: 'انتخاب تاریخ پخش / جستجوی پیشرفته' },
                 custom: [

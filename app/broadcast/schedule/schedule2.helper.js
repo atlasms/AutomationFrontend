@@ -274,6 +274,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $('[data-task="show-duplicate-form"]')[0].click();
                     });
                     break;
+                case 'save':
+                    $(document).on('keydown', null, keysMap[type].key, function (e) {
+                        e.preventDefault();
+                        scheduleInstance.submit();
+                    });
+                    break;
                 case 'showExportForm':
                     $(document).on('keydown', null, keysMap[type].key, function (e) {
                         e.preventDefault();
