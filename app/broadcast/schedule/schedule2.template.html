@@ -196,10 +196,16 @@
                     <div class="c1"><span>تصویر</span></div>
                     <div class="r"><span>فیکس</span></div>
                     <div class="c1"><span>شروع</span></div>
+                    {{#ifConfig 'schedule.moveDurationColumn'}}
+                    {{else}}
                     <div class="c1"><span>مدت</span></div>
+                    {{/ifConfig}}
                     <div class="c2"><span>برنامه</span></div>
                     <div class="c2"><span>عنوان {{config '__.episode'}}</span></div>
                     <div class="id"><span>{{config '__.episode'}}</span></div>
+                    {{#ifConfig 'schedule.moveDurationColumn'}}
+                    <div class="c1"><span>مدت</span></div>
+                    {{/ifConfig}}
                     <div class="co"><span># پخش</span></div>
                     <div class="c4"><span>توضیحات</span></div>
                     <div class="c1"><span>نوع آیتم</span></div>
@@ -236,12 +242,15 @@
                                 <label for="st{{@index}}">{{extractDate CondcutorStartTime}}</label>
                             </div>
                         </div>
+                        {{#ifConfig 'schedule.moveDurationColumn'}}
+                        {{else}}
                         <div class="c1 td text-center">
                             <div class="form-group form-md-line-input">
                                 <input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
                                 <label></label>
                             </div>
                         </div>
+                        {{/ifConfig}}
                         <div class="c2 td">
                             <div class="form-group form-md-line-input fixed-label">
                                 <input type="hidden" name="ConductorMetaCategoryId" value="{{ConductorMetaCategoryId}}"/>
@@ -267,6 +276,14 @@
                                 <input type="text" class="form-control text-center" data-type="episode-number" name="ConductorEpisodeNumber" value="{{ConductorEpisodeNumber}}">
                             </div>
                         </div>
+                        {{#ifConfig 'schedule.moveDurationColumn'}}
+                        <div class="c1 td text-center">
+                            <div class="form-group form-md-line-input">
+                                <input type="text" class="time form-control" data-before-save="timestamp" data-type="duration" step="2" name="ConductorDuration" id="ConductorDuration_{{@index}}" value="{{time ConductorDuration}}" required>
+                                <label></label>
+                            </div>
+                        </div>
+                        {{/ifConfig}}
                         <div class="co td">
                             <div class="form-group form-md-line-input fixed-label">
                                 <input type="text" readonly class="form-control text-center" data-type="broadcast-count" name="ConductorUseCount" value="{{ConductorUseCount}}">

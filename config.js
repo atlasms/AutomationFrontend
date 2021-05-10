@@ -429,7 +429,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             showLastTask: false
         },
         schedule: {
-            fixedMediaStateFilter: false
+            fixedMediaStateFilter: false,
+            moveDurationColumn: true
         },
         temp: {
             titleTypes: {
