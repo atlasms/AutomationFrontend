@@ -7,15 +7,15 @@
         <th class="col-xs-1 text-center">قسمت</th>
         <th class="col-xs-2 text-center">زمان ثبت</th>
         <th class="col-xs-2 text-center">آخرین پخش</th>
-        <th class="col-xs-1 text-center"># مجاز</th>
-        <th class="col-xs-1 text-center"># پخش</th>
+        <th class="text-center"># مجاز</th>
+        <th class="text-center"># پخش</th>
         <th class="col-xs-1 text-center">وضعیت</th>
         <th class="col-xs-1 text-center">مدت</th>
     </tr>
     </thead>
     <tbody>
     {{#each items}}
-    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
+    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
         <td>
             <span class="idx">{{Id}}</span>
             <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
@@ -26,7 +26,7 @@
                 <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
             </figure>
         </td>
-        <td class="title-holder">
+        <td class="title-holder" title="{{Description}}">
             <span class="title">{{Title}}</span>
             <small class="help-block text-muted clip-line">{{Description}}</small>
             {{#if RecommendedBroadcastDate}}
