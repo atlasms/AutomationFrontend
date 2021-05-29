@@ -22,7 +22,8 @@ require.config({
         , "bootstrap/tooltip": {deps: ["jquery"], exports: "$.fn.tooltip"}
         , "bootstrap/popover": {deps: ["jquery", "bootstrap/tooltip"], exports: "$.fn.popover"}
         , "bootstrap/transition": {deps: ["jquery"], exports: "$.fn.transition"}
-        , "bootstrap-table": {deps: ["jquery"], exports: "$.fn.bootstrapTable"}
+        , "bootstrap-table": {deps: ['jquery', 'vendor/bootstrap-table.min'], exports: "$.fn.bootstrapTable"}
+        // , "bootstrap-table-locale": {deps: ['bootstrap-table']}
         , "x-editable": {deps: ["jquery", "bootstrap/tooltip", "bootstrap/popover"], exports: "$.fn.editable"}
         , "hotkeys": {deps: ["jquery"], exports: "jQuery"}
         , "jwplayer": {exports: "jwplayer"}
@@ -71,7 +72,8 @@ require.config({
         , "notifications": ["helpers/notifications"]
         , "tasks": ["helpers/tasks"]
         , "ticker": ["helpers/ticker"]
-        , "bootstrap-table": ["vendor/bootstrap-table.min"]
+        , "bootstrap-table": ["vendor/bootstrap-table-fa-IR.min"]
+        // , 'bootstrap-table-locale': ['vendor/bootstrap-table-fa-IR.min.js']
         , "pace": ["vendor/pace.min"]
         , "clusterize": ["vendor/clusterize.min"]
         , "typeahead": ["vendor/typeahead.jquery"]
