@@ -471,11 +471,11 @@ div#schedule-table {
                 border-left-color: #cbcbcb;
                 .tools { left: -42px; opacity: 1; visibility: visible; }
             }
-            &.new { border-left-color: lightgreen; }
-            &.error { border-left-color: red !important; }
-            &.edited { border-left-color: #6C9EE0; }
-            &.fixed { border-left-color: #1BA39C }
-            &.gap { border-left-color: #333 }
+            &.new { border-left-color: lightgreen; background-color: transparentize(lightgreen, 0.85); }
+            &.error { border-left-color: red !important; background-color: transparentize(red, 0.85); }
+            &.edited { border-left-color: #6C9EE0; background-color: transparentize(#6C9EE0, 0.85); }
+            &.fixed { border-left-color: #1BA39C; background-color: transparentize(#1BA39C, 0.85); }
+            &.gap { border-left-color: #333; background-color: transparentize(#333, 0.85); }
             &.selected { background-color: #E5E5E5 !important; }
             &.overlap { animation: border_blink 1s step-end infinite; }
         }
@@ -893,7 +893,7 @@ div#schedule-table {
         list-style: none; padding: 0; margin: 0; height: 35px; overflow: hidden;
         li { line-height: 35px; height: 35px; overflow: hidden; white-space: nowrap; cursor: pointer; }
         h3 { margin: 0; color: #eee; font-size: 14px; line-height: 35px; }
-        .source { display: inline-block; background: rgba(255, 255, 255, 0.15); line-height: 1; padding: 4px 6px; margin-right: 10px; color: #fff; font-weight: bold; }
+        .source { display: inline-block; background: rgba(255, 255, 255, 0.85); line-height: 1; padding: 4px 6px; margin-right: 10px; color: #fff; font-weight: bold; }
         .date { display: inline-block; font-size: 13px; margin-left: 30px; color: #ddd; }
     }
 }
