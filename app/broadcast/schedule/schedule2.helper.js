@@ -7,11 +7,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
         , init: function (reinit, scheduleInstance) {
             if (typeof reinit !== "undefined" && reinit === true) {
                 ScheduleHelper.tableHelper();
-                ScheduleHelper.suggestion();
+                if (typeof Config.schedule.typeaheadEnabled !== 'undefined' && Config.schedule.typeaheadEnabled !== false) {
+                    ScheduleHelper.suggestion();
+                }
             } else {
                 ScheduleHelper.hotkeys(scheduleInstance);
                 ScheduleHelper.tableHelper();
-                ScheduleHelper.suggestion();
+                if (typeof Config.schedule.typeaheadEnabled !== 'undefined' && Config.schedule.typeaheadEnabled !== false) {
+                    ScheduleHelper.suggestion();
+                }
                 ScheduleHelper.handleEdits();
             }
             ScheduleHelper.setStates();
@@ -70,7 +74,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 var currentTime = (new Date()).getTime();
                 var timeDiff = currentTime - suggestionCreated;
                 if ($(this).val() === "" && $cell.find('[name=ConductorMediaId]').val() === "" && timeDiff > 1000) {
-                    $('input[data-suggestion="true"]').typeahead("destroy");
+                    try {
+                        $('input[data-suggestion="true"]').typeahead("destroy");
+                    } catch(e) {
+                        // Typeahead not found
+                    }
                     var clone = $cell.find("> div").clone();
                     $cell.empty();
                     clone.appendTo($cell).promise().done(function () {
@@ -411,7 +419,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             clone.find('input[type="hidden"]').val('');
             clone.find('input[type="text"]').val('');
             clone.find('input[data-suggestion="true"]').parent().find("label").text('');
-            clone.find('input[type="checkbox"]').val(0).removeAttr('checked');
+            clone.find('input[type="checkbox"]').val(0).prop('checked', false);
             clone.find('.item-link, .remove-meta').remove();
             if (typeof data !== 'undefined' && data) {
                 for (var key of Object.keys(data)) {
@@ -619,11 +627,12 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             $row2.remove();
         }
         , suggestion: function ($obj, destroy) {
+            if (typeof Config.schedule.typeaheadEnabled !== 'undefined' && Config.schedule.typeaheadEnabled === false) {
+                return false;
+            }
             var destroy = (typeof destroy !== "undefined") ? destroy : false;
             if (destroy && typeof $obj !== "undefined") {
-                console.log('destroy typeahead')
                 $obj.typeahead('destroy');
-//                $obj.unbind(); //and then you can dynamically unbind this plugin
                 return false;
             }
             var $obj = (typeof $obj !== "undefined") ? $obj : $('input[data-suggestion="true"]');

@@ -27,7 +27,7 @@
     #media-search .row .search-main { display: flex; flex-direction: column; max-height: 100%; }
     #media-search .row .search-main > * { flex: 1 1 auto; }
     #itemlist { max-height: 100%; overflow: hidden; overflow-y: auto; }
-    #itemlist tbody tr:not([media-state="1"]) { opacity: 0.5; pointer-events: none; cursor: not-allowed !important; }
+    #itemlist tbody tr:not([data-media-state="1"]) { opacity: 0.5; pointer-events: none; cursor: not-allowed !important; }
     #broadcast-itemlist { overflow-y: auto !important; }
 
     [readonly] { pointer-events: none; }
@@ -367,7 +367,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon has-icon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control datepicker" name="media-search-startdate" placeholder="" style="width: 110px;"/>
+                                    <input type="text" class="form-control datepicker" name="media-search-startdate" value="1971-01-01" placeholder="" style="width: 110px;"/>
                                 </div>
                             </div>
                             <div class="form-group">

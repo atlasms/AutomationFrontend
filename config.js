@@ -22,7 +22,6 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         tickerInterval: 5000,
         tickerUpdateInterval: 60000,
         notificationsCount: 10,
-        schedulePageLimit: 100,
         characterLimit: 130,
         wordLimit: 15,
         defaultEditorFontSize: 20,
@@ -122,6 +121,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                             'duration': '00:15:00'
                         }
                     },
+                    { key: 'alt+5', title: 'آرم‌استیشن‌های پخش', value: 68 },
                     { key: 'shift+f1', title: 'ادعیه‌ها', value: 133 },
                     { key: 'shift+f2', title: 'نمازها', value: 139 },
                     { key: 'shift+f3', title: 'اذان‌ها', value: 143 },
@@ -171,6 +171,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                     detailOpen: 'fa fa-plus',
                     detailClose: 'fa fa-minus'
                 }
+                , hideLoading: true
                 , pagination: true
                 , pageSize: 50
                 , search: true
@@ -430,7 +431,10 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         },
         schedule: {
             fixedMediaStateFilter: false,
-            moveDurationColumn: true
+            moveDurationColumn: true,
+            // typeaheadEnabled: false,
+            pageLimit: 100,
+            pagination: false,
         },
         temp: {
             titleTypes: {

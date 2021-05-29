@@ -1,9 +1,10 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'prayer-times', 'bootstrap/modal', 'bootstrap/tab'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'prayer-times', 'bootstrap/modal', 'bootstrap/tab', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree, PrayerTimes) {
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
         autoSaveInterval: null
+        , lastSave: ''
         , model: 'ScheduleModel'
         , toolbar: [
             {
@@ -376,7 +377,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 q: ''
                 , type: 0
                 , offset: 0
-                , count: Config.defalutMediaListLimit
+                , count: 10000
                 , categoryId: ''
                 , state: Config.mediaList.defaultStateValue
                 , episode: ''
@@ -389,19 +390,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , duration: '0;180'
                 , recommendedBroadcastStartDate: ''
                 , recommendedBroadcastEndDate: ''
-                , broadcastStartdate: '1970-01-01T00:00:00'
-                , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                , broadcastStartdate: ''
+                , broadcastEnddate: ''
                 , structure: ''
                 , metaSubject: ''
                 , classification: ''
                 , MetaDataProductionGroup: ''
                 , ordering: 'MediaCreated desc'
-            }
+            };
             var params = {
                 q: $.trim($("[name=q]").val()),
                 type: $("[name=type]").val(),
                 offset: 0,
-                count: self.defaultListLimit,
+                count: 10000,
                 categoryId: catid,
                 state: state,
                 startdate: $("[name=media-search-startdate]").is('[disabled]')
@@ -466,6 +467,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
 //                            self.afterRender(items, params);
+//                             $container.find('table:first').bootstrapTable($.extend({}, Config.settings.bootstrapTable, {sortable: true, search: false}));
                         });
                     });
                 }
@@ -621,6 +623,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }, 300);
         }
         , submit: function (e) {
+            var self = this;
             if (typeof e !== 'undefined' && e !== null) {
                 e.preventDefault();
             }
@@ -628,11 +631,18 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if (!helper.beforeSave())
                 return;
             var data = this.prepareSave();
+            if (this.autoSaveInterval !== null) {
+                if (this.lastSave === JSON.stringify(data)) {
+                    toastr.warning('هیچ تغییری برای ثبت وجود ندارد.', '', Config.settings.toastr);
+                    return false;
+                }
+            }
             new ScheduleModel().save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
                 , success: function () {
+                    self.lastSave = JSON.stringify(data);
                     toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', Config.settings.toastr);
 //                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
 //                    $this.reLoad();
@@ -652,6 +662,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var value = $(e.target).val();
             if (this.autoSaveInterval !== null) {
                 clearInterval(this.autoSaveInterval);
+                this.autoSaveInterval = null;
             }
             if (parseInt(value) !== 0) {
                 toastr.info('ذخیره خودکار برای هر ' + value + ' دقیقه فعال شد', '', Config.settings.toastr);
@@ -786,7 +797,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var params = this.getParams();
             this.render(params);
         }
-        , getParams: function () {
+        , getParams: function (extend) {
             var params = {
                 startdate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , enddate: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T23:59:59'
@@ -848,45 +859,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $(this).find("input, textarea, select").attr('disabled', 'disabled');
             });
 
-            var $items = $("#schedule-table .table-body li");
-            var itemsCount = $items.length;
-            if (itemsCount > Config.schedulePageLimit) {
-                var itemsPerPage = Config.schedulePageLimit;
-                var pagesCount = (Math.floor(itemsCount / itemsPerPage) !== (itemsCount / itemsPerPage)) ? (Math.floor(itemsCount / itemsPerPage) + 1) : Math.floor(itemsCount / itemsPerPage);
-                var pages = [];
-                console.log('-------------- Pagination ---------------');
-                console.time('generating-pagination-links');
-                for (var i = 0; i < pagesCount; i++)
-                    pages.push('<li data-page="' + (i + 1) + '" ' + ((i === 0) ? ' class="active"' : '') + '><a href="#">' + (i + 1) + '</a></li>');
-                $("#schedule-page .pagination").html(pages.join(''));
-                console.timeEnd('generating-pagination-links');
-                console.time('assigning-page-numbers-to-rows');
-                $items.each(function () {
-                    $(this).attr('data-page', Math.floor($(this).index() / itemsPerPage) + 1);
-                });
-                console.timeEnd('assigning-page-numbers-to-rows');
-                console.time('hiding-other-pages');
-                $items.slice(itemsPerPage).addClass('hide');
-                console.timeEnd('hiding-other-pages');
-                $(document).on('click', "#schedule-page .pagination a", function (e) {
-                    console.log('-------------- Pagination: Page Change ---------------');
-                    console.time('handling-active-page-classes');
-                    var page = $(this).text();
-                    $("#schedule-page .pagination").find("li").removeClass('active');
-                    $("#schedule-page .pagination").find("li[data-page=" + page + "]").addClass('active');
-                    console.timeEnd('handling-active-page-classes');
-                    console.time('hiding-all-items');
-                    var $items = $(".table-body li");
-                    $items.addClass('hide');
-                    console.timeEnd('hiding-all-items');
-                    console.time('showing-requested-page-items');
-                    $items.parent().find("[data-page=" + page + "]").removeClass('hide').promise().done(function () {
-                        console.timeEnd('showing-requested-page-items');
+            if (typeof Config.schedule.pagination === 'undefined' || Config.schedule.pagination) {
+                var $items = $("#schedule-table .table-body li");
+                var itemsCount = $items.length;
+                if (itemsCount > Config.schedule.pageLimit) {
+                    var itemsPerPage = Config.schedule.pageLimit;
+                    var pagesCount = (Math.floor(itemsCount / itemsPerPage) !== (itemsCount / itemsPerPage)) ? (Math.floor(itemsCount / itemsPerPage) + 1) : Math.floor(itemsCount / itemsPerPage);
+                    var pages = [];
+                    for (var i = 0; i < pagesCount; i++)
+                        pages.push('<li data-page="' + (i + 1) + '" ' + ((i === 0) ? ' class="active"' : '') + '><a href="#">' + (i + 1) + '</a></li>');
+                    $("#schedule-page .pagination").html(pages.join(''));
+                    $items.each(function () {
+                        $(this).attr('data-page', Math.floor($(this).index() / itemsPerPage) + 1);
                     });
-                    e.preventDefault();
+                    $items.slice(itemsPerPage).addClass('hide');
+                    $(document).on('click', "#schedule-page .pagination a", function (e) {
+                        var page = $(this).text();
+                        $("#schedule-page .pagination").find("li").removeClass('active');
+                        $("#schedule-page .pagination").find("li[data-page=" + page + "]").addClass('active');
+                        var $items = $(".table-body li");
+                        $items.addClass('hide');
+                        $items.parent().find("[data-page=" + page + "]").removeClass('hide');
+                        e.preventDefault();
+                        $items = {};
+                    });
                     $items = {};
-                });
-                $items = {};
+                }
             }
 
             $(".datepicker.source, .datepicker.destination").val($("#toolbar .datepicker").val());
@@ -924,7 +922,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 id = e;
             }
             var params = this.getMediaParams();
-            params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.loadMediaItems(params);
             // return;
             // if (typeof id !== "undefined" && id) {
