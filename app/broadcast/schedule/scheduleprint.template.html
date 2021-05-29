@@ -74,11 +74,20 @@
 		<thead>
 			<tr>
 				<th style="width: 40px; text-align: center;">ردیف</th>
+				{{#ifConfig 'schedule.showDescInPrint'}}
+				{{else}}
 				<th style="width: 115px;"></th>
+				{{/ifConfig}}
 				<th style="width: 70px; text-align: center;">شروع</th>
+				{{#ifConfig 'schedule.moveDurationColumn'}}
+				{{else}}
 				<th style="width: 70px; text-align: center;">مدت</th>
-				<th style="width: 300px;">نام برنامه</th>
+				{{/ifConfig}}
+				<th style="width: {{#ifConfig 'schedule.showDescInPrint'}}415{{else}}300{{/ifConfig}}px;">نام برنامه</th>
 				<th style="width: 40px; text-align: center;">قسمت</th>
+				{{#ifConfig 'schedule.moveDurationColumn'}}
+				<th style="width: 70px; text-align: center;">مدت</th>
+				{{/ifConfig}}
 				<th style="width: 150px; text-align: center;">نام فایل</th>
 				<th>توضیحات</th>
 				<th style="width: 120px;">نوع برنامه</th>
@@ -93,29 +102,46 @@
 				<td style="text-align: center;">
 					{{math @index "+" 1}}
 				</td>
+				{{#ifConfig 'schedule.showDescInPrint'}}
+				{{else}}
 				<td>
 					<figure>
 						<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
 					</figure>
 				</td>
+				{{/ifConfig}}
 				<td style="text-align: center;">
 					<span>{{extractTime CondcutorStartTime}}</span>
 				</td>
+				{{#ifConfig 'schedule.moveDurationColumn'}}
+				{{else}}
 				<td style="text-align: center;">
 					<span>{{time ConductorDuration}}</span>
 				</td>
+				{{/ifConfig}}
 				<td>
 					{{#if ConductorCategoryTitle}}
 					{{ConductorCategoryTitle}}
 					<br />
 					{{/if}}
 					<strong>{{ConductorTitle}}</strong>
+					{{#ifConfig 'schedule.showDescInPrint'}}
+					<br />
+					<i>{{ConductorMediaDescription}}</i>
+					{{/ifConfig}}
 				</td>
 				<td style="text-align: center;">
 					<span>{{ConductorEpisodeNumber}}</span>
 				</td>
+				{{#ifConfig 'schedule.moveDurationColumn'}}
+				<td style="text-align: center;">
+					<span>{{time ConductorDuration}}</span>
+				</td>
+				{{/ifConfig}}
 				<td style="text-align: left; font-family: Tahoma; direction: ltr;">
+					{{#if ConductorMediaId}}
 					<code>{{zeroFillIndex @index 3}}_{{ConductorMediaId}}.mp4</code>
+					{{/if}}
 				</td>
 				<td>
 					{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
