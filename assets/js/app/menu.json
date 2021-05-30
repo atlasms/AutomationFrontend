@@ -161,6 +161,12 @@
                 "alias": "monitoring_crawl",
                 "icon": "wpforms",
                 "link": "/monitoring/crawl"
+            },
+            {
+                "title": "حجم برنامه‌ها",
+                "alias": "monitoring_storage",
+                "icon": "hdd-o",
+                "link": "/monitoring/storage"
             }
         ]
     },
