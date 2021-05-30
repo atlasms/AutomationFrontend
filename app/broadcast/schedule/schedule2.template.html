@@ -3,6 +3,16 @@
     .advanced-search { display: block; position: absolute; top: 0; left: 0; font-size: 11px; text-decoration: none; opacity: 0; visibility: hidden; transition: 0.2s all; }
     .advanced-search:hover { text-decoration: none; }
     .table-row.active .advanced-search { opacity: 1; visibility: visible; }
+    .table-row:not([data-media-id="0"]):not([data-media-state="1"]) { position: relative; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/XV3/M8L4YM7u3YxgARgHxGZE5oAEAMDJDo311ujtAAAAAElFTkSuQmCC) !important; }
+    .table-row:not([data-media-id="0"]):not([data-media-state="1"]):before {
+        display: block; content: attr(data-media-state-text) !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
+        font-weight: bold; color: red; z-index: 100;
+    }
+    .table-row:not([data-media-id="0"]):not([data-has-hq="true"]) { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/V6z4zwjjgzkREYxgARgHxGZE5oAEAPNyD1MmeippAAAAAElFTkSuQmCC) !important; }
+    .table-row:not([data-media-id="0"]):not([data-has-hq="true"]):before {
+        display: block; content: 'نقص فایل' !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
+        font-weight: bold; color: red; z-index: 100;
+    }
     .table.table-bordered thead > tr > th { white-space: nowrap; }
     #media-modal .modal-header { border-bottom: 0 none; }
     #media-modal .modal-body { padding-top: 0; }
@@ -37,8 +47,8 @@
     .prayers li span { display: inline-block; height: 20px; }
     .prayers li .time { font-weight: bold; }
     .prayers li .time:before { content: ': '; }
-
-
+    #schedule-table .hide { display: block !important; }
+    #schedule-table.pageable .hide { display: none !important; }
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -190,7 +200,7 @@
             <div class="text-right">
                 <ul class="pagination"></ul>
             </div>
-            <div id="schedule-table" class="table table-bordered table-striped table-condensed flip-content">
+            <div id="schedule-table" class="table table-bordered table-striped table-condensed flip-content {{#ifConfig 'schedule.pagination'}}pageable{{/ifConfig}}">
                 <nav class="table-header clearfix">
                     <div class="id"><span>#</span></div>
                     <div class="c1"><span>تصویر</span></div>
@@ -214,13 +224,13 @@
                 </nav>
                 <ul class="table-body">
                     {{#each []}}
-                    <li class="table-row" data-id="{{ConductorId}}" class="{{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}{{#ifCond 200 '>' @index}} hide{{/ifCond}}">
+                    <li data-media-state="{{ConductorMediaState}}" data-media-state-text="{{ConductorMediaStateText}}" data-media-id="{{ConductorMediaId}}" data-has-hq="{{ConductorMediaHasHq}}" data-id="{{ConductorId}}" class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
                         <div class="td id">
                             <input type="hidden" name="titles" value=""/>
                             <input type="hidden" name="subtitles" value=""/>
                             <input type="text" class="focus-helper"/>
                             <span class="idx">{{math @index "+" 1}}</span>
-                            {{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>{{/if}}
+                            {{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
                             {{#authorize 2}}
                             {{> scheduleRowTools}}
                             {{/authorize}}

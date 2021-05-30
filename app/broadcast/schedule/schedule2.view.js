@@ -145,6 +145,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , setMedia: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
             var $activeRow = $('#schedule-table').find('.table-row.active');
+            $activeRow.attr('data-media-state', $row.attr('data-media-state'))
+                .attr('data-media-id', $row.attr('data-id'))
+                .attr('data-has-hq', 'true');
             $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
             $activeRow.find('[data-type="duration"]').val($row.data('duration'));
             $activeRow.find('[data-type="title"]').val($row.data('program-title'));
@@ -637,6 +640,33 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     return false;
                 }
             }
+            var onSaveError = [];
+            $('#schedule-table .table-row').each(function (i) {
+                if (~~$(this).attr('data-media-id') !== 0 && ~~$(this).attr('data-media-state') !== 1) {
+                    onSaveError.push('در سطر ' + (i + 1) + ' از فایل تایید نشده استفاده شده است.');
+                }
+                if (~~$(this).attr('data-media-id') !== 0 && $(this).attr('data-has-hq') !== 'true') {
+                    onSaveError.push('در سطر ' + (i + 1) + ' فایل مربوط به پخش وجود ندارد و در زمان ارسال پلی‌لیست ارسال نخواهد شد.');
+                }
+            });
+            if (onSaveError.length) {
+                bootbox.confirm({
+                    message: onSaveError.join('<br>') + '<br><br>' + '<strong>آیا از ثبت اطمینان دارید؟</strong>'
+                    , buttons: {
+                        confirm: { className: 'btn-success' }
+                        , cancel: { className: 'btn-danger' }
+                    }
+                    , callback: function (results) {
+                        if (results) {
+                            self.saveSchedule(data);
+                        }
+                    }
+                });
+            } else {
+                this.saveSchedule(data);
+            }
+        }
+        , saveSchedule: function (data) {
             new ScheduleModel().save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -644,16 +674,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , success: function () {
                     self.lastSave = JSON.stringify(data);
                     toastr.success('با موفقیت انجام شد', 'ذخیره کنداکتور', Config.settings.toastr);
-//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
-//                    $this.reLoad();
                 }
                 , error: function () {
-                    alert('error');
-//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
-                }
-                , fail: function () {
-                    alert('fail');
-//                    $("button[type=submit]").prop("disabled", false).removeClass('disabled');
+                    toastr.error('خطا در ثبت اطلاعات', 'ذخیره کنداکتور', Config.settings.toastr);
                 }
             });
         }

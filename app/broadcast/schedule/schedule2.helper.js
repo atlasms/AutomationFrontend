@@ -211,11 +211,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     break;
                 case 'moveDown':
                     $(document).on('keydown', null, keysMap[type].key, function (e) {
-                        var activeRow = $("#schedule-table .table-body li.active");
-                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
-                            var $next = activeRow.find("+ li");
+                        var $activeRow = $("#schedule-table .table-body li.active");
+                        if ($activeRow.length && !($activeRow.find('input[data-type="title"], select').is(":focus") || $activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var $next = $activeRow.find("+ li");
                             if (typeof $next !== 'undefined' && $next && $next.length) {
-                                activeRow.insertAfter($next);
+                                var $twoBefore = $next.prev().length ? $next.prev() : $next;
+                                $activeRow.insertAfter($next);
+                                ScheduleHelper.updateTimes($twoBefore, true);
                                 ScheduleHelper.generateTimeArray();
                                 e.preventDefault();
                             }
@@ -224,11 +226,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     break;
                 case 'moveUp':
                     $(document).on('keydown', null, keysMap[type].key, function (e) {
-                        var activeRow = $("#schedule-table .table-body li.active");
-                        if (activeRow.length && !(activeRow.find('input[data-type="title"], select').is(":focus") || activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
-                            var $prev = activeRow.prev('li');
+                        var $activeRow = $("#schedule-table .table-body li.active");
+                        if ($activeRow.length && !($activeRow.find('input[data-type="title"], select').is(":focus") || $activeRow.find('input[data-type="episode-title"], select').is(":focus"))) {
+                            var $prev = $activeRow.prev('li');
                             if (typeof $prev !== 'undefined' && $prev && $prev.length) {
-                                activeRow.insertBefore($prev);
+                                $activeRow.insertBefore($prev);
+                                var $twoBefore = $activeRow.prev().length ? $activeRow.prev() : $activeRow;
+                                ScheduleHelper.updateTimes($twoBefore, true);
                                 ScheduleHelper.generateTimeArray();
                                 e.preventDefault();
                             }
@@ -413,6 +417,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             ScheduleHelper.suggestion(row.find('input[data-suggestion="true"]'), true);
             var clone = row.clone();
             clone.addClass('error new').removeClass('gap fixed overlap').attr('title', 'اطلاعات سطر وارد نشده است.');
+            clone.attr('data-media-state', '')
+                .attr('data-media-id', '')
+                .attr('data-has-hq', 'false');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
             clone.find('textarea').val('');
@@ -453,19 +460,13 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     $this.addClass('gap');
             });
         }
-        , updateTimes: function ($row) {
-            console.log('------------------- PROCESSING TIMES -------------------');
-            console.time('processing-time-finished');
+        , updateTimes: function ($row, skipOverload) {
             // Updated times from current row to the last row
             // If a fixed item is found, return
             var $rows = $row.nextAll().addBack();
             var stack = 0;
             var fixedTime = 0;
             var error = false;
-//            if ($rows.length <= 2)
-//                return;
-            // Look table for any overlaps or gaps [error]
-            console.time('looping-through-items');
             $rows.each(function (i) {
                 var $this = $(this);
                 // Found a gap => mark it as gap!
@@ -504,7 +505,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     }
                 }
             });
-            console.timeEnd('looping-through-items');
             if (error) {
                 $row.addClass('error').addClass(error).attr('title', 'تایم برنامه‌ها همپوشانی دارد.');
                 return false;
@@ -513,18 +513,18 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     var rowStart = Global.createTime(Global.processTime($row.prev().find("[data-type=start]").val()) + Global.processTime($row.prev().find("[data-type=duration]").val()));
                     $row.find("[data-type=start]").val(rowStart);
                 }
-                console.time('looping-through-items-again');
                 $rows.each(function () {
                     var $this = $(this);
-
                     var nextStart = Global.processTime($this.find("[data-type=start]").val()) + Global.processTime($this.find("[data-type=duration]").val());
                     if (!(/^\d+$/.test(nextStart)))
                         $this.addClass("error").attr('title', 'مقدار شروع اشتباه است.');
                     else
                         $this.removeClass("error").removeAttr('title');
-                    // Prevent items from starting tomorrow
-                    if ($this.prev().length && ScheduleHelper.getTimeInSeconds($this.find("[data-type=start]").val()) < ScheduleHelper.getTimeInSeconds($this.prev().find("[data-type=start]").val())) {
-                        $this.addClass('error').attr('title', 'تایم شروع از امروز خارج شده است.');
+                    if (typeof skipOverload === 'undefined' || !skipOverload) {
+                        // Prevent items from starting tomorrow
+                        if ($this.prev().length && ScheduleHelper.getTimeInSeconds($this.find("[data-type=start]").val()) < ScheduleHelper.getTimeInSeconds($this.prev().find("[data-type=start]").val())) {
+                            $this.addClass('error').attr('title', 'تایم شروع از امروز خارج شده است.');
+                        }
                     }
 
                     if ($this.next().length) {
@@ -534,15 +534,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         $this.next().find("[data-type=start]").val(Global.createTime(nextStart));
                     }
                 });
-                console.timeEnd('looping-through-items-again');
             }
-            console.time('process-gaps');
             ScheduleHelper.processGaps();
-            console.timeEnd('process-gaps');
-            console.time('set-footer-stats');
             ScheduleHelper.setStates();
-            console.timeEnd('set-footer-stats');
-            console.timeEnd('processing-time-finished');
         }
         , getTimeInSeconds: function (value) {
             if (typeof value !== "undefined" && value.indexOf(':') !== "undefined")
@@ -747,7 +741,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             this.beforeSave = function () {
                 if ($("#schedule-table .table-body li.error").length) {
                     var idx = $("#schedule-table .table-body li.error:first .idx").text();
-                    var msg = 'Please fix the error in row [' + idx + ']';
+                    var msg = 'می‌بایست خطای سطر مشخص شده را اصلاح نمایید [' + idx + ']';
                     toastr.error(msg, 'خطا', Config.settings.toastr);
                     return false;
                 }
