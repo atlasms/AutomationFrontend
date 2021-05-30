@@ -167,18 +167,18 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         conditionValue = conditionValue[values[i]];
                     if (typeof conditionValue === "string" && conditionValue.indexOf(',') !== -1) {
                         $.each(values, function () {
-                            $el.find('[value="' + this + '"]').attr({'selected': 'selected'});
+                            $el.find('[value="' + this + '"]').attr({ 'selected': 'selected' });
                         });
                     } else {
-                        $el.find('[value="' + conditionValue + '"]').attr({'selected': 'selected'});
+                        $el.find('[value="' + conditionValue + '"]').attr({ 'selected': 'selected' });
                     }
                 } else if (typeof value === "string" && value.indexOf(',') !== -1) {
                     var values = value.split(',');
                     $.each(values, function () {
-                        $el.find('[value=' + this + ']').attr({'selected': 'selected'});
+                        $el.find('[value=' + this + ']').attr({ 'selected': 'selected' });
                     });
                 } else
-                    $el.find('[value=' + value + ']').attr({'selected': 'selected'});
+                    $el.find('[value=' + value + ']').attr({ 'selected': 'selected' });
                 return $el.html();
             });
             Handlebars.registerHelper('createDate', function (offset, options) {
@@ -565,9 +565,8 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             });
         }
     };
-    var handlebars = Handlebars;
     return {
-        handlebars: handlebars
+        handlebars: Handlebars
         , template: template
     };
 

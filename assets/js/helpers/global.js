@@ -425,6 +425,25 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             }
             return true;
         }
+        // TODO: make it work with all kinds of flat data
+        , unFlattenTreeData: function (array, parent, tree) {
+            tree = typeof tree !== 'undefined' ? tree : [];
+            parent = typeof parent !== 'undefined' ? parent : { CategoryId: 0 };
+            var children = _.filter(array, function (child) {
+                return child.CategoryPid === parent.CategoryId;
+            });
+            if (!_.isEmpty(children)) {
+                if (parent.CategoryId === 0) {
+                    tree = children;
+                } else {
+                    parent['children'] = children
+                }
+                _.each(children, function (child) {
+                    Global.unFlattenTreeData(array, child)
+                });
+            }
+            return tree;
+        }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
         , Cache: {

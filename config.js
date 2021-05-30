@@ -271,6 +271,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'monitoring/ualogs': { 'private': true, 'view': 'monitoring.ualogs.view', 'action': 'UserActivityLogsView', 'file': 'app/monitoring/ualogs/ualogs.view' }
             , 'monitoring/prices': { 'private': true, 'view': 'monitoring.prices.view', 'action': 'PricesLogsView', 'file': 'app/monitoring/prices/prices.view' }
             , 'monitoring/crawl': { 'private': true, 'view': 'monitoring.crawl.view', 'action': 'CrawlLogsView', 'file': 'app/monitoring/crawl/crawl.view' }
+            , 'monitoring/storage': { 'private': true, 'view': 'monitoring.storage.view', 'action': 'MonitoringStorageView', 'file': 'app/monitoring/storage/storage.view' }
             , 'stats/broadcast': { 'private': true, 'view': 'stats.broadcast.view', 'action': 'StatsBroadcastView', 'file': 'app/stats/broadcast/broadcast.view' }
             , 'stats/broadcastprint': { 'private': true, 'view': 'stats.broadcastprint.view', 'skipLayout': true, 'action': 'StatsBroadcastView', 'file': 'app/stats/broadcast/broadcast.view' }
             , 'stats/crawl': { 'private': true, 'view': 'stats.crawl.view', 'action': 'StatsCrawlView', 'file': 'app/stats/crawl/crawl.view' }
