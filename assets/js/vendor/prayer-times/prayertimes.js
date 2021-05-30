@@ -3,10 +3,6 @@ define(['dmath'], function (DMath) {
 
         var PrayerTimes = {};
 
-        // var DMath = require('./dmath');
-
-            console.log(DMath);
-
         var timeNames = {
             imsak: 'Imsak',
             fajr: 'Fajr',
