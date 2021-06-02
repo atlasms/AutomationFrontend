@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         { value: '5', text: 'هر پنج دقیقه' },
                         { value: '10', text: 'هر ده دقیقه' },
                         { value: '15', text: 'هر پانزده دقیقه' }
-                    ], addon: true, icon: 'fa fa-save'
+                    ], addon: true, icon: 'fa fa-save', access: '2'
                 }
             }
             , {
