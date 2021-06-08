@@ -3,82 +3,85 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
     var MonitoringStorageView = Backbone.View.extend({
         $modal: "#schedule-log-modal"
         , toolbar: [
-            { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh' } }
+            { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh' } },
+            { 'button': { cssClass: 'btn btn-default', text: 'باز کردن / بستن همه', type: 'button', task: 'collapse-all', icon: 'fa fa-fullscreen' } }
         ]
         , events: {
             'click [data-task=filter_rows]': 'filter'
             , 'click [data-task=refresh-view]': 'reLoad'
+            , 'click #storage-table tr': 'toggleChildren'
+            , 'click [data-task="collapse-all"]': 'collapseAll'
         }
-        , flags: {}
+        , flags: {
+            allOpen: false
+        }
         , idx: 0
         , reLoad: function () {
             this.load();
+        }
+        , toggleChildren: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
+            if ($row.next().is('.children-row')) {
+                if ($row.next().is(':visible')) {
+                    $row.next().stop().slideUp();
+                } else {
+                    $row.next().stop().slideDown();
+                }
+            }
+        }
+        , collapseAll: function (e) {
+            e.preventDefault();
+            if (!this.flags.allOpen) {
+                $('#storage-table .children-row').slideDown();
+                this.flags.allOpen = true;
+            } else {
+                $('#storage-table .children-row').slideUp();
+                this.flags.allOpen = false;
+            }
         }
         , load: function (extend) {
             var params = {};
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
         }
-        // , unflatten: function (items) {
-        //     return items.reduce(this.insert, {
-        //         res: [],
-        //         map: {}
-        //     }).res;
-        // }
-        // , insert: function (obj, item) {
-        //     var parent = item.CategoryPid;
-        //     var map = obj.map;
-        //     map[item.CategoryId] = item;
-        //
-        //     console.log(parent, item);
-        //     if (parent === null) {
-        //         obj.res.push(item);
-        //     } else {
-        //         var parentItem = map[parent];
-        //
-        //         if (parentItem.hasOwnProperty("Children"))
-        //             parentItem.Children.push(item);
-        //         else parentItem.Children = [item];
-        //     }
-        //
-        //     return obj;
-        // }
-        , registerHelper: function() {
-            Handlebars.registerHelper('recursiveHelper', function(context, options) {
-                return options.fn('<table class="table table-condensed table-bordered table-striped">\n' +
-                    '                    <thead>\n' +
-                    '                    <tr>\n' +
-                    '                        <th class="col-xs-2">نام برنامه</th>\n' +
-                    '                        <th class="col-xs-2">حجم</th>\n' +
-                    '                        <th class="col-xs-2">تعداد مدیا</th>\n' +
-                    '                        <th class="col-xs-2">جمع مدت</th>\n' +
-                    '                        <th class="col-xs-2">استفاده کنداکتور</th>\n' +
-                    '                        <th class="col-xs-2">آخرین پخش</th>\n' +
-                    '                    </tr>\n' +
-                    '                    </thead>\n' +
-                    '                    <tbody>\n' +
-                    '                    {{#each []}}\n' +
-                    '                        <tr>\n' +
-                    '                            <td>{{CategoryTitle}}</td>\n' +
-                    '                            <td><strong style="direction: ltr; text-align: left;">{{CategoryOnlineFilesSizeReadble}}</strong></td>\n' +
-                    '                            <td>{{CategoryMediasCount}}</td>\n' +
-                    '                            <td>{{time2 CategoryMediasDuration}}</td>\n' +
-                    '                            <td>{{CategoryConductorCount}}</td>\n' +
-                    '                            <td>{{extractTime CategoryLastMediaIngest}} {{extractDate CategoryLastMediaIngest}}</td>\n' +
-                    '                        </tr>\n' +
-                    '                        {{#if children}}\n' +
-                    '                            <tr>\n' +
-                    '                                <td colspan="100%">\n' +
-                    '                                    {{{recursiveHelper children}}}\n' +
-                    '                                </td>\n' +
-                    '                            </tr>\n' +
-                    '                        {{/if}}\n' +
-                    '                    {{/each}}\n' +
-                    '                    </tbody>\n' +
-                    '                </table>')
-            });
+        , registerHelper: function () {
+            Handlebars.registerPartial('recursiveHelper', '<table class="table table-condensed table-bordered {{#if this.0.children}}has-children{{/if}}">\n' +
+                '                    <thead>\n' +
+                '                    <tr>\n' +
+                '                        <th class="col-xs-2">نام برنامه</th>\n' +
+                '                        <th class="col-xs-2">حجم</th>\n' +
+                '                        <th class="col-xs-2">تعداد مدیا</th>\n' +
+                '                        <th class="col-xs-2">جمع مدت</th>\n' +
+                '                        <th class="col-xs-2">استفاده کنداکتور</th>\n' +
+                '                        <th class="col-xs-2">آخرین پخش</th>\n' +
+                '                    </tr>\n' +
+                '                    </thead>\n' +
+                '                    <tbody>\n' +
+                '                    {{#each []}}\n' +
+                '                        <tr>\n' +
+                '                            <td>{{CategoryTitle}}</td>\n' +
+                '                            <td style="direction: ltr; text-align: left;"><strong>{{CategoryOnlineFilesSizeReadble}}</strong></td>\n' +
+                '                            <td class="text-center">{{CategoryMediasCount}}</td>\n' +
+                '                            <td class="text-center">{{time2 CategoryMediasDuration}}</td>\n' +
+                '                            <td class="text-center">{{CategoryConductorCount}}</td>\n' +
+                '                            <td>{{extractTime CategoryLastMediaIngest}} {{extractDate CategoryLastMediaIngest}}</td>\n' +
+                '                        </tr>\n' +
+                '                        {{#if children}}\n' +
+                '                            <tr class="children-row">\n' +
+                '                                <td colspan="100%">\n' +
+                '                                    {{>recursiveHelper children}}\n' +
+                '                                </td>\n' +
+                '                            </tr>\n' +
+                '                        {{/if}}\n' +
+                '                    {{/each}}\n' +
+                '                    </tbody>\n' +
+                '                </table>'
+            );
         }
         , render: function (givenParams) {
+            this.renderToolbar();
             var self = this;
             var params = $.extend({}, givenParams, { overrideUrl: Config.api.tree, path: '/size' });
             var model = new CategoriesModel(params);
@@ -102,6 +105,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , afterRender: function () {
             $('[data-toggle="tooltip"]').tooltip();
+            $('.children-row').each(function () {
+                $parent = $(this).prev().is('tr') ? $(this).prev() : null;
+                if ($parent && $parent.length) {
+                    $parent.addClass('collapsible');
+                }
+            });
         }
         , renderToolbar: function () {
             var elements = this.toolbar;

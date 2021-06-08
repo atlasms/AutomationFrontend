@@ -1,7 +1,18 @@
+<style>
+    .table, tr, td, th { margin: 0; border-color: #cdcdcd !important; }
+    .children-row { display: none; }
+    .children-row > td { padding: 20px !important; }
+    tbody tr, thead, thead tr { cursor: default; }
+    .table { cursor: default; }
+    .collapsible { cursor: pointer; }
+    .collapsible, .collapsible + .children-row { background: #efefef; }
+</style>
 <div id="monitoring-page" class="portlet box">
     <div class="portlet-body">
         <div class="mainbody">
-            {{{recursiveHelper []}}}
+            <div id="storage-table">
+            {{>recursiveHelper []}}
+            </div>
         </div>
     </div>
 </div>
