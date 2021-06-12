@@ -51,11 +51,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                    <thead>\n' +
                 '                    <tr>\n' +
                 '                        <th class="col-xs-2">نام برنامه</th>\n' +
-                '                        <th class="col-xs-2">حجم</th>\n' +
-                '                        <th class="col-xs-2">تعداد مدیا</th>\n' +
-                '                        <th class="col-xs-2">جمع مدت</th>\n' +
-                '                        <th class="col-xs-2">استفاده کنداکتور</th>\n' +
+                '                        <th class="col-xs-1">حجم</th>\n' +
+                '                        <th class="col-xs-1">تعداد مدیا</th>\n' +
+                '                        <th class="col-xs-1">جمع مدت</th>\n' +
+                '                        <th class="col-xs-2">آخرین اینجست</th>\n' +
+                '                        <th class="col-xs-1">استفاده کنداکتور</th>\n' +
                 '                        <th class="col-xs-2">آخرین پخش</th>\n' +
+                '                        <th class="col-xs-2">مدت نگهداری</th>\n' +
                 '                    </tr>\n' +
                 '                    </thead>\n' +
                 '                    <tbody>\n' +
@@ -65,8 +67,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                            <td style="direction: ltr; text-align: left;"><strong>{{CategoryOnlineFilesSizeReadble}}</strong></td>\n' +
                 '                            <td class="text-center">{{CategoryMediasCount}}</td>\n' +
                 '                            <td class="text-center">{{time2 CategoryMediasDuration}}</td>\n' +
-                '                            <td class="text-center">{{CategoryConductorCount}}</td>\n' +
                 '                            <td>{{extractTime CategoryLastMediaIngest}} {{extractDate CategoryLastMediaIngest}}</td>\n' +
+                '                            <td class="text-center">{{CategoryConductorCount}}</td>\n' +
+                '                            <td>{{extractTime CategoryLastConductorUse}} {{extractDate CategoryLastConductorUse}}</td>\n' +
+                '                            <td>' +
+                '                               <select>\n' +
+                '                               {{#select KeepDuration}}\n' +
+                '                                <option value="-1">دائم</option>\n' +
+                '                                <option value="10">10 روز</option>\n' +
+                '                                <option value="14">دو هفته</option>\n' +
+                '                                <option value="21">سه هفته</option>\n' +
+                '                                <option value="30">یک ماه</option>\n' +
+                '                                <option value="60">دو ماه</option>\n' +
+                '                                <option value="90">سه ماه</option>\n' +
+                '                                <option value="180">شش ماه</option>\n' +
+                '                                <option value="360">یک سال</option>\n' +
+                '                               {{/select}}' +
+                '                               </select>' +
+                '                           </td>\n' +
                 '                        </tr>\n' +
                 '                        {{#if children}}\n' +
                 '                            <tr class="children-row">\n' +
@@ -79,6 +97,20 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                    </tbody>\n' +
                 '                </table>'
             );
+            /*
+
+                        {{#select KeepDuration}}
+                    <option value="-1">دائم</option>
+                            <option value="10">10 روز</option>
+                        <option value="14">دو هفته</option>
+                        <option value="21">سه هفته</option>
+                        <option value="30">یک ماه</option>
+                        <option value="60">دو ماه</option>
+                        <option value="90">سه ماه</option>
+                        <option value="180">شش ماه</option>
+                        <option value="360">یک سال</option>
+                        {{/select}}
+            */
         }
         , render: function (givenParams) {
             this.renderToolbar();

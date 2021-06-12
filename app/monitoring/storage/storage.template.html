@@ -6,12 +6,19 @@
     .table { cursor: default; }
     .collapsible { cursor: pointer; }
     .collapsible, .collapsible + .children-row { background: #efefef; }
+    #monitoring-page select {
+        border: 0 none;
+        background: transparent;
+        pointer-events: none;
+        color: #000;
+        appearance: initial;
+    }
 </style>
 <div id="monitoring-page" class="portlet box">
     <div class="portlet-body">
         <div class="mainbody">
             <div id="storage-table">
-            {{>recursiveHelper []}}
+                {{>recursiveHelper []}}
             </div>
         </div>
     </div>
