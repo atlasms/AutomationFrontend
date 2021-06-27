@@ -975,7 +975,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // }
         }
         , loadPrayerTimes: function () {
-            var tehranCoords = ['35.6961', '51.4231'];
+            // var tehranCoords = ['35.6961', '51.4231'];
+            var tehranCoords = ['35.7', '51.42'];
             PrayerTimes.setMethod('Tehran');
             var times = PrayerTimes.getTimes(new Date(GLOBAL.jalaliToGregorian($("#toolbar .datepicker").val())), [tehranCoords[0], tehranCoords[1]], 3.5);
             var $list = $("ul.prayers");
