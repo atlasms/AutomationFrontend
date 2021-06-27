@@ -57,7 +57,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                        <th class="col-xs-2">آخرین اینجست</th>\n' +
                 '                        <th class="col-xs-1">استفاده کنداکتور</th>\n' +
                 '                        <th class="col-xs-2">آخرین پخش</th>\n' +
-                '                        <th class="col-xs-2">مدت نگهداری</th>\n' +
+                '                        <th class="col-xs-1">مدت نگهداری</th>\n' +
+                '                        <th class="col-xs-1">وضعیت</th>\n' +
                 '                    </tr>\n' +
                 '                    </thead>\n' +
                 '                    <tbody>\n' +
@@ -72,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                            <td>{{extractTime CategoryLastConductorUse}} {{extractDate CategoryLastConductorUse}}</td>\n' +
                 '                            <td>' +
                 '                               <select>\n' +
-                '                               {{#select KeepDuration}}\n' +
+                '                               {{#select CategoryOnlineTime}}\n' +
                 '                                <option value="-1">دائم</option>\n' +
                 '                                <option value="10">10 روز</option>\n' +
                 '                                <option value="14">دو هفته</option>\n' +
@@ -84,7 +85,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                                <option value="360">یک سال</option>\n' +
                 '                               {{/select}}' +
                 '                               </select>' +
-                '                           </td>\n' +
+                '                            </td>\n' +
+                '                            <td style="text-align: center;">' +
+                '                               {{#ifCond CategoryState "==" 1}}<div class="label label-success">فعال</div>{{/ifCond}}' +
+                '                               {{#ifCond CategoryState "==" 2}}<div class="label label-warning">در حال حذف</div>{{/ifCond}}' +
+                '                               {{#ifCond CategoryState "==" 3}}<div class="label label-danger">حذف شده</div>{{/ifCond}}' +
+                '                            </td>\n' +
                 '                        </tr>\n' +
                 '                        {{#if children}}\n' +
                 '                            <tr class="children-row">\n' +
