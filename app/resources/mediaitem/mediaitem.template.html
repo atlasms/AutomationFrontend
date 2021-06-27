@@ -302,6 +302,16 @@
                                                     {{/if}}
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>زمان حذف</td>
+                                                <td>
+                                                    {{#if WillExpireTime}}
+                                                    <span class="label label-warning label-sm">{{extractTime WillExpireTime}} {{extractDate WillExpireTime}}</span>
+                                                    {{else}}
+                                                    <span class="label label-info label-sm">ندارد</span>
+                                                    {{/if}}
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
