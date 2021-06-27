@@ -1008,10 +1008,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var pid = $("tr[data-pid]").data('pid');
             return pid !== 'undefined' && pid ? pid : null;
         }
-        , getParentId: function () {
-            var pid = $("tr[data-pid]").data('pid');
-            return pid !== 'undefined' && pid ? pid : null;
-        }
         , render: function (params) {
             var self = this;
             var template = Template.template.load('resources/mediaitem', 'mediaitem');
@@ -1072,8 +1068,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     ]
                 }]
             };
-            if (typeof Config.HDPlayback === 'undefined' || Config.HDPlayback) {
-                playerConfig.playlist[0].sources.push({file: media.video.replace('_lq', '_hq'), label: 'HQ'});
+            if (this.checkHQDownload(undefined, true)) {
+                if (typeof Config.HDPlayback === 'undefined' || Config.HDPlayback) {
+                    playerConfig.playlist[0].sources.push({ file: media.video.replace('_lq', '_hq'), label: 'HQ' });
+                }
             }
             var player = new Player('#player-container', playerConfig);
             player.render();
@@ -1280,7 +1278,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
-        , checkHQDownload: function (e) {
+        , checkHQDownload: function (e, disableToast) {
+            // if (typeof e === 'object' && e !== null) {
+            //     e.preventDefault();
+            // }
+            disableToast = !!(typeof disableToast !== 'undefined' && disableToast);
             if ($('#files-table').length && $('#files-table tbody tr').length) {
                 var hqFile = {exists: false, size: 0, isOnline: false};
                 $('#files-table tbody tr').each(function () {
@@ -1294,7 +1296,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     return true;
                 }
             }
-            toastr['error']('فایل مورد نظر آن‌لاین نیست', 'دانلود مدیا', Config.settings.toastr);
+            if (!disableToast) {
+                toastr['error']('فایل مورد نظر آن‌لاین نیست', 'دانلود مدیا', Config.settings.toastr);
+            }
             return false;
         }
     });
