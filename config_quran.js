@@ -3,7 +3,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         title: 'اتوماسیون تولید و پخش اطلس',
         version: '1.210125.0143',
         loginMessage: 'ورود به سامانه اتوماسیون شبکه قرآن',
-        channel: 'قرآن',
+        channel: 'قرآن و معارف سیما',
+        channelLabel: 'qtv',
         channelLogo: '/assets/data/qurantv.png',
         defaultUserImage: '/assets/data/qurantv_icon.png',
         storageKey: 'automation' + '_' + window.location.host.replace(/\./g, '').split(':')[0],
@@ -21,14 +22,13 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         tickerInterval: 5000,
         tickerUpdateInterval: 60000,
         notificationsCount: 10,
-        schedulePageLimit: 100,
         characterLimit: 130,
         wordLimit: 15,
         defaultEditorFontSize: 20,
         defalutMediaListLimit: 25,
         mediaScheduleGroupItems: 1,
         loginMode: 'default',
-        mediaLinkTarget: '_self',
+        mediaLinkTarget: '_blank',
         assignUserAccess: 'all', // 'all' or 'access'
         groupsFilterId: 14, // 166: iktv or 14: qtv
         HDPlayback: false,
@@ -84,25 +84,26 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 showDuplicateForm: {key: 'ctrl+f2', title: 'نمایش فرم کپی'},
                 showExportForm: {key: 'ctrl+f3', title: 'ارسال پلی‌لیست'},
                 fix: {key: 'alt+f', title: 'فیکس آیتم'},
+                save: { key: 'alt+s', title: 'ذخیره' },
                 advancedSearchTab1: {key: 'alt+m', title: 'جستجوی مدیا / جستجوی پیشرفته'},
                 advancedSearchTab2: {key: 'alt+a', title: 'انتخاب تاریخ پخش / جستجوی پیشرفته'},
                 custom: [
                     {
                         key: 'alt+1', title: 'آرم تایم 25 ثانیه', value: {
-                            'episode-title': 'آرم تایم',
+                            'episode-title': 'آرم معرفی برنامه',
                             'duration': '00:00:25'
                         }
                     },
                     {
                         key: 'alt+2', title: 'اعلام‌برنامه 66 ثانیه', value: {
-                            'episode-title': 'اعلام برنامه',
+                            'episode-title': 'اعلام برنامه‌های شبکه',
                             'duration': '00:01:06',
                             counter$: 10
                         }
                     },
                     {
                         key: 'alt+3', title: 'بعدی 50 ثانیه', value: {
-                            'episode-title': 'بعدی',
+                            'episode-title': 'اعلام برنامه بعدی',
                             'duration': '00:00:50',
                             counter$: 10
                         }
@@ -112,7 +113,20 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                             'episode-title': 'اخبار قرآنی',
                             'duration': '00:15:00'
                         }
-                    }
+                    },
+                    { key: 'alt+5', title: 'آرم‌استیشن‌های پخش', value: 68 },
+                    { key: 'shift+f1', title: 'ادعیه‌ها', value: 133 },
+                    { key: 'shift+f2', title: 'نمازها', value: 139 },
+                    { key: 'shift+f3', title: 'اذان‌ها', value: 143 },
+                    { key: 'shift+f4', title: 'دعای قبل از اذان', value: 123 },
+                    { key: 'shift+f5', title: 'اوقات شرعی', value: 166 },
+                    { key: 'shift+f6', title: 'پیام ثقلین', value: 155 },
+                    { key: 'shift+f7', title: 'مواهب', value: 164 },
+                    { key: 'shift+f8', title: 'همخوانی', value: 148 },
+                    { key: 'shift+f9', title: 'مناجات عرفانی', value: 230 },
+                    { key: 'shift+f10', title: 'تلاوت', value: 329 },
+                    { key: 'shift+f11', title: 'دعای روز', value: 127 },
+                    { key: 'shift+f12', title: 'میان‌برنامه اذانگاهی', value: 162 }
                 ]
             },
             review: {
@@ -223,6 +237,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'resources/review': {'private': true, 'view': 'resources.review.view', 'action': 'ReviewView', 'file': 'app/resources/review/review.view'}
             , 'resources/returnees': {'private': true, 'view': 'resources.returnees.view', 'action': 'ReturneesView', 'file': 'app/resources/returnees/returnees.view'}
             , 'resources/mediaitem': {'private': true, 'view': 'resources.mediaitem.view', 'action': 'MediaitemView', 'file': 'app/resources/mediaitem/mediaitem.view'}
+            , 'resources/mediaitemprint': {'private': true, 'view': 'resources.mediaitem-print.view', 'skipLayout': true, 'action': 'MediaitemPrintView', 'file': 'app/resources/mediaitem/mediaitem-print.view'}
             , 'resources/broadcastprint': {'private': true, 'view': 'resources.broadcastprint.view', 'skipLayout': true, 'action': 'BroadcastPrintView', 'file': 'app/resources/mediaitem/broadcastprint.view'}
             , 'resources/persons': {'private': true, 'view': 'resources.persons.view', 'skipLayout': false, 'action': 'PersonsView', 'file': 'app/resources/persons/persons.view'}
             , 'resources/live': {'private': true, 'view': 'resources.live.view', 'action': 'LiveView', 'file': 'app/resources/live/live.view'}
@@ -247,12 +262,14 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'monitoring/ualogs': {'private': true, 'view': 'monitoring.ualogs.view', 'action': 'UserActivityLogsView', 'file': 'app/monitoring/ualogs/ualogs.view'}
             , 'monitoring/prices': {'private': true, 'view': 'monitoring.prices.view', 'action': 'PricesLogsView', 'file': 'app/monitoring/prices/prices.view'}
             , 'monitoring/crawl': {'private': true, 'view': 'monitoring.crawl.view', 'action': 'CrawlLogsView', 'file': 'app/monitoring/crawl/crawl.view'}
+            , 'monitoring/storage': { 'private': true, 'view': 'monitoring.storage.view', 'action': 'MonitoringStorageView', 'file': 'app/monitoring/storage/storage.view' }
             , 'stats/broadcast': {'private': true, 'view': 'stats.broadcast.view', 'action': 'StatsBroadcastView', 'file': 'app/stats/broadcast/broadcast.view'}
             , 'stats/broadcastprint': {'private': true, 'view': 'stats.broadcastprint.view', 'skipLayout': true, 'action': 'StatsBroadcastView', 'file': 'app/stats/broadcast/broadcast.view'}
             , 'stats/crawl': {'private': true, 'view': 'stats.crawl.view', 'action': 'StatsCrawlView', 'file': 'app/stats/crawl/crawl.view'}
             , 'stats/crawlprint': {'private': true, 'view': 'stats.crawlprint.view', 'skipLayout': true, 'action': 'StatsCrawlPrintView', 'file': 'app/stats/crawl/crawlprint.view'}
             , 'stats/ingest': {'private': true, 'view': 'stats.ingest.view', 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/tasks': {'private': true, 'view': 'stats.tasks.view', 'action': 'StatsTasksView', 'file': 'app/stats/tasks/tasks.view'}
+            , 'stats/tasksprint': {'private': true, 'view': 'stats.tasksprint.view', 'skipLayout': true, 'action': 'StatsTasksPrintView', 'file': 'app/stats/tasks/tasksprint.view'}
             , 'stats/ingestprint': {'private': true, 'view': 'stats.ingestprint.view', 'skipLayout': true, 'action': 'StatsIngestView', 'file': 'app/stats/ingest/ingest.view'}
             , 'stats/schedule': {'private': true, 'view': 'stats.schedule.view', 'action': 'StatsScheduleView', 'file': 'app/stats/schedule/schedule.view'}
             , 'stats/scheduleprint': {'private': true, 'view': 'stats.scheduleprint.view', 'skipLayout': true, 'action': 'StatsSchedulePrintView', 'file': 'app/stats/schedule/scheduleprint.view'}
@@ -405,7 +422,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             showLastTask: true
         },
         schedule: {
-            fixedMediaStateFilter: true
+            fixedMediaStateFilter: false,
+            moveDurationColumn: true,
+            typeaheadEnabled: false,
+            pageLimit: 100,
+            pagination: false,
+            showDescInPrint: true
         },
         temp: {
             titleTypes: {
