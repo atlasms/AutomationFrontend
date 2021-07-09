@@ -1,22 +1,14 @@
 define(['jquery', 'underscore', 'backbone', 'config', 'storage.helper'], function ($, _, Backbone, Config, Storage) {
-//    var Authorize = function (action, alias, permissions, params) {
-//        var permit = false;
-//        var key = (typeof action === "undefined") ? 'access' : action;
-//        var permissions = (typeof permissions === "undefined") ? Storage('Access') : permissions;
-//        $.each(permissions, function () {
-//            if (this.Key == key && this.Value == alias)
-//                permit = true;
-//        });
-//        return permit;
-//    };
     var Authorize = {
-        access: function (action, permissions, type) {
+        access: function (action, permList, requestedType) {
             var permit = false;
-            var permissions = (typeof permissions !== "undefined" && permissions) ? permissions : Storage('Access');
-            var type = (typeof type !== "undefined" && type) ? type : 'access';
+            var permissions = (typeof permList !== "undefined" && permList) ? permList : Storage('Access');
+            var type = (typeof requestedType !== "undefined" && requestedType) ? requestedType : 'access';
             $.each(permissions, function () {
-                if (this.Key === type && this.Value == action)
+                // if (this.Key === type && String(this.Value) === String(action)) {
+                if (this.Key === type && parseInt(this.Value, 10) === parseInt(action, 10)) {
                     permit = true;
+                }
             });
             return permit;
         }

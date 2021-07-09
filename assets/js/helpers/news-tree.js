@@ -1,5 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox', 'storage.helper', 'authorization'
-], function ($, _, Backbone, Config, jstree, modal, bootbox, Storage, Authorize) {
+define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal', 'bootbox'], function ($, _, Backbone, Config, jstree, modal, bootbox) {
     bootbox.setLocale('fa');
     var NewsTree = function ($el, api, callback, options) {
         var $this = this;
@@ -19,15 +18,15 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                         return $this.api;
                     }
                     , 'data': function (node) {
-                        return {'pid': node.id.replace('#', 0)};
+                        return { 'pid': node.id.replace('#', 0) };
                     }
                 }
             }
             , "types": {
-                "default": {"icon": 'hidden'}
-                , "file": {"icon": 'hidden'}
+                "default": { "icon": 'hidden' }
+                , "file": { "icon": 'hidden' }
             }
-            , "state": {"key": "news-tree"}
+            , "state": { "key": "news-tree" }
             // , "plugins": ["contextmenu", "state", "types"]
             , "plugins": ["state", "types"]
             , "checkbox": {
@@ -73,7 +72,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             });
             $(self.$el).on('ready.jstree', function (e, data) {
                 window.setTimeout(function () {
-                    var params = {method: 'ready', id: self.selected.id, task: '', text: self.selected.text, parent: null};
+                    var params = { method: 'ready', id: self.selected.id, task: '', text: self.selected.text, parent: null };
                     if (self.callback && typeof self.callback['handleTreeCallbacks'] !== "undefined")
                         self.callback['handleTreeCallbacks'](params, $(self.$el));
                 }, 500);
