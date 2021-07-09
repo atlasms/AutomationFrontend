@@ -15,10 +15,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , subjects: []
         , tags: []
         , toolbar: [
-            {'filters': {}},
+            { 'filters': {} },
             // {'button': {cssClass: 'btn green-jungle pull-right', text: 'ذخیره', type: 'submit', task: 'save'}},
-            {'button': {cssClass: 'btn btn-default pull-right hidden', text: 'چاپ مجوز', type: 'button', icon: 'fa fa-print', task: 'print', style: 'margin-left: 10px;'}},
-            {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'submit', icon: 'fa fa-share', task: 'open-assign-modal'}}
+            { 'button': { cssClass: 'btn btn-default pull-right hidden', text: 'چاپ مجوز', type: 'button', icon: 'fa fa-print', task: 'print', style: 'margin-left: 10px;' } },
+            { 'button': { cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'submit', icon: 'fa fa-share', task: 'open-assign-modal' } }
         ]
         , statusbar: []
         , flags: {}
@@ -212,11 +212,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , saveTags: function () {
             var id = this.getId();
             var self = this;
-            var data = {tags: [], subjects: []};
+            var data = { tags: [], subjects: [] };
             $('[name="Tags"]').find('option:selected').each(function () {
-                data.tags.push({id: ~~$(this).attr('value')});
+                data.tags.push({ id: ~~$(this).attr('value') });
             });
-            new MediaitemModel({overrideUrl: 'shotlist/metadata', id: id}).save(null, {
+            new MediaitemModel({ overrideUrl: 'shotlist/metadata', id: id }).save(null, {
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 processData: false,
@@ -264,11 +264,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , saveSubjects: function () {
             var id = this.getId();
             var self = this;
-            var data = {tags: [], subjects: []};
+            var data = { tags: [], subjects: [] };
             $('[name="Subjects"]').find('option:selected').each(function () {
-                data.subjects.push({id: ~~$(this).attr('value')});
+                data.subjects.push({ id: ~~$(this).attr('value') });
             });
-            new MediaitemModel({overrideUrl: 'shotlist/metadata', id: id}).save(null, {
+            new MediaitemModel({ overrideUrl: 'shotlist/metadata', id: id }).save(null, {
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 processData: false,
@@ -291,8 +291,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             bootbox.confirm({
                 message: "پس از ثبت تاریخ پخش جدید وضعیت این آیتم به بازبینی نشده تغییر خواهد کرد، مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -339,7 +339,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             if (this.subjects.length) {
                 this.enableSubjectsEdit(this.subjects);
             } else {
-                new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                new SharedModel({ overrideUrl: 'share/subjects' }).fetch({
                     success: function (subjects) {
                         subjects = subjects.toJSON();
                         self.enableSubjectsEdit(subjects);
@@ -371,7 +371,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             // $("select.select2").each(function () {
             if ($select.hasClass("select2-hidden-accessible"))
                 $select.select2('destroy');
-            $select.select2({dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body')});
+            $select.select2({ dir: "rtl", multiple: true, tags: false, width: '100%', dropdownParent: $('body') });
             // });
         }
         , updateMediaParams: function (e) {
@@ -389,7 +389,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 return;
             }
 
-            var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+            var modelParams = { overrideUrl: Config.api.media + '/files', id: params.id };
             new MediaitemModel(modelParams).fetch({
                 success: function (items) {
                     var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
@@ -422,7 +422,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , DestApp: 'telegram'
                 , Cmd: 'publish'
             };
-            new MediaitemModel({overrideUrl: Config.api.social}).save(null, {
+            new MediaitemModel({ overrideUrl: Config.api.social }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -444,7 +444,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , DestApp: 'website'
                 , Cmd: 'publish'
             };
-            new MediaitemModel({overrideUrl: Config.api.social}).save(null, {
+            new MediaitemModel({ overrideUrl: Config.api.social }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -531,12 +531,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             var $button = $(e.target).is('button') ? $(e.target) : $(e.target).parents('button:first');
             var commentId = $button.parents('li:first').attr('data-id');
-            new ReviewModel({overrideUrl: Config.api.comments, id: commentId}).save({Key: 'state', Value: 1}, {
+            new ReviewModel({ overrideUrl: Config.api.comments, id: commentId }).save({ Key: 'state', Value: 1 }, {
                 patch: true
                 , success: function (model, response) {
                     toastr.success('عملیات با موفقیت انجام شد', 'انتشار نظر', Config.settings.toastr);
-                    self.loadComments({query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments});
-                    self.loadSidebarComments({query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadComments({ query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments });
+                    self.loadSidebarComments({ query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments });
                 }
             });
         }
@@ -551,7 +551,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 start: $form.find('[data-type="clip-start"]').val()
                 , end: $form.find('[data-type="clip-end"]').val()
             });
-            new ReviewModel({overrideUrl: Config.api.comments}).save(null, {
+            new ReviewModel({ overrideUrl: Config.api.comments }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -560,8 +560,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
                 , success: function (model, response) {
                     toastr.success('success', 'saved', Config.settings.toastr);
-                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
-                    self.loadSidebarComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
+                    self.loadComments({ query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments });
+                    self.loadSidebarComments({ query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments });
                 }
             });
             e.preventDefault();
@@ -586,7 +586,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 
                         if ($("input.time").length)
                             $("input.time").mask('H0:M0:S0', {
-                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                placeholder: '00:00:00', translation: { 'H': { pattern: /[0-2]/ }, 'M': { pattern: /[0-5]/ }, 'S': { pattern: /[0-5]/ } }
                             });
                     });
                 }
@@ -616,7 +616,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         }
                         $("#chats").html(output).promise().done(function () {
                             // $('ul.chats li:last')[0].scrollIntoView();
-                            $('ul.chats').parent()[0].scrollTop = $('ul.chats li:last').offset().top;
+                            try {
+                                $('ul.chats').parent()[0].scrollTop = $('ul.chats li:last').offset().top;
+                            } catch (e) {
+                                // ignore
+                            }
                         });
                         // After render
                         // if ($("#chats").find(".scroller").length)
@@ -626,7 +630,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         //     });
                         if ($("input.time").length)
                             $("input.time").mask('H0:M0:S0', {
-                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                placeholder: '00:00:00', translation: { 'H': { pattern: /[0-2]/ }, 'M': { pattern: /[0-5]/ }, 'S': { pattern: /[0-5]/ } }
                             });
                     });
                 }
@@ -676,12 +680,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             bootbox.confirm({
                 message: "آیتم فعلی حذف و آیتم جدید با ویدیوی انتخاب شده جایگزین خواهد شد. آیا مطمئن هستید؟<br />نکته: پس از جابجایی موفقیت‌آمیز به آیتم جدید هدایت خواهید شد."
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
-                        new IngestModel({id: self.getId(), overrideUrl: Config.api.media}).save({
+                        new IngestModel({ id: self.getId(), overrideUrl: Config.api.media }).save({
                             FileName: $item.attr('data-filename'),
                             Duration: $item.attr('data-duration')
                         }, {
@@ -694,8 +698,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     toastr.success('با موفقیت انجام شد', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                                     $(self.modal_storage).find("form").trigger('reset');
                                     $(self.modal_storage).modal('hide');
-                                    !Backbone.History.started && Backbone.history.start({pushState: true});
-                                    new Backbone.Router().navigate('resources/mediaitem/' + id, {trigger: true});
+                                    !Backbone.History.started && Backbone.history.start({ pushState: true });
+                                    new Backbone.Router().navigate('resources/mediaitem/' + id, { trigger: true });
                                 }
                             }
                         });
@@ -706,7 +710,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , changeVideo: function (e) {
             e.preventDefault();
             var self = this;
-            var params = {path: '/files'};
+            var params = { path: '/files' };
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
             var $modal = $(self.modal_storage);
             var model = new IngestModel(params);
@@ -738,7 +742,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             else
                 $("#mediaitem-page").prepend('<style>[aria-labelledby="' + id + '_anchor"] a { background: lightgreen !important }</style>');
 
-            var params = {path: '/getparents/' + $(e.currentTarget).attr('data-id')};
+            var params = { path: '/getparents/' + $(e.currentTarget).attr('data-id') };
             var $modal = $(self.modal_tree);
             var model = new CategoriesModel(params);
             model.fetch({
@@ -750,7 +754,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     STORAGE.setItem("tree", '{"state":{"core":{"open":' + JSON.stringify(path) + ',"scroll":{"left":0,"top":0},"selected":["' + id + '"]}},"ttl":false,"sec":' + +new Date() + '}');
                     $modal.modal('show');
                     if ($("#tree").length) {
-                        self.treeInstance = new Tree($("#tree"), Config.api.tree, self, {contextmenu: false});
+                        self.treeInstance = new Tree($("#tree"), Config.api.tree, self, { contextmenu: false });
                         self.treeInstance.render();
                     }
                 }
@@ -761,7 +765,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             bootbox.confirm({
                 message: "برنامه تعویض خواهد شد. آیا مطمئن هستید؟"
-                , buttons: {confirm: {className: 'btn-success'}, cancel: {className: 'btn-danger'}}
+                , buttons: { confirm: { className: 'btn-success' }, cancel: { className: 'btn-danger' } }
                 , callback: function (results) {
                     if (results) {
                         self.handleEditables(self.getId(), {
@@ -797,12 +801,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         }
         , initEditables: function () {
             var self = this;
-            var editable = new Editable({service: Config.api.url + Config.api.media}, self);
+            var editable = new Editable({ service: Config.api.url + Config.api.media }, self);
             editable.init();
         }
         , handleEditables: function (id, params, callback) {
             var self = this;
-            new MediaitemModel({id: id}).save(params, {
+            new MediaitemModel({ id: id }).save(params, {
                 patch: true
                 , error: function (e, data) {
                     toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
@@ -841,9 +845,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var $target = $(e.target).is('.label') ? $(e.target) : $(e.target).parents('.label:first');
             var tab = $target.data('key');
             if (tab === 'basic') {
-                $("html, body").animate({'scrollTop': 0}, 500);
+                $("html, body").animate({ 'scrollTop': 0 }, 500);
             } else {
-                $("html, body").animate({'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80}, 500);
+                $("html, body").animate({ 'scrollTop': $('#tab-' + tab).parents(".portlet").offset().top - 80 }, 500);
             }
         }
         , loadTab: function (e, force, el) {
@@ -871,7 +875,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     model = 'sequential-comments';
                     break;
                 case 'workflow':
-                    var params = {query: 'masterid=' + self.getId() + '&touserid=0&togroupid=0&jobid=0&status=0'};
+                    var params = { query: 'masterid=' + self.getId() + '&touserid=0&togroupid=0&jobid=0&status=0' };
                     tmpl = ['user/tasks', 'workflow.partial'];
                     model = new TasksModel(params);
                     break;
@@ -908,7 +912,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 case 'metadata':
                     var catid = $('[data-task="change-category"]').attr('data-id');
                     var masterId = self.getId();
-                    var params = {query: 'MasterId=' + masterId, type: 1};
+                    var params = { query: 'MasterId=' + masterId, type: 1 };
                     tmpl = ['resources/mediaitem', 'mediaitem.metadata.partial'];
                     model = new MetadataModel(params);
                     break;
@@ -937,7 +941,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                             items = self.prepareItems(items.toJSON(), params, (service === "metadata"));
                             template.done(function (data) {
                                 if (service === "metadata") {
-                                    var mediaItemsParams = {query: $.param({categoryId: catid, offset: 0, count: self.defaultListLimit})};
+                                    var mediaItemsParams = { query: $.param({ categoryId: catid, offset: 0, count: self.defaultListLimit }) };
                                     var itemsModel = new MediaModel(mediaItemsParams);
                                     itemsModel.fetch({
                                         success: function (mediaItems) {
@@ -950,7 +954,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                             $container.html(output).promise().done(function () {
                                                 // After metadata form loaded
                                                 self.attachDatepickers();
-                                                var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                                var overrideConfig = { search: true, showPaginationSwitch: false, pageSize: 20 };
                                                 $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
                                             });
                                         }
@@ -959,10 +963,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     var handlebarsTemplate = Template.handlebars.compile(data);
                                     if (service === "broadcast") {
                                         self.setLabelValue('schedule', items.length);
-                                        items = {items: items, params: {}};
+                                        items = { items: items, params: {} };
                                     } else if (service === 'persons') {
                                         self.setLabelValue('persons', items.length);
-                                        items = {items: items, cols: true, placeholder: false};
+                                        items = { items: items, cols: true, placeholder: false };
                                     } else {
                                         self.setLabelValue(service, items.length);
                                     }
@@ -978,7 +982,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                             });
                                         if ($("input.time").length)
                                             $("input.time").mask('H0:M0:S0', {
-                                                placeholder: '00:00:00', translation: {'H': {pattern: /[0-2]/}, 'M': {pattern: /[0-5]/}, 'S': {pattern: /[0-5]/}}
+                                                placeholder: '00:00:00', translation: { 'H': { pattern: /[0-2]/ }, 'M': { pattern: /[0-5]/ }, 'S': { pattern: /[0-5]/ } }
                                             });
                                         if (service === 'shotlist') {
                                             $('.shotlist-link a').attr('href', $('.shotlist-link a').attr('href') + self.getId());
@@ -991,7 +995,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 } else {
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate({item: true});
+                        var output = handlebarsTemplate({ item: true });
                         $container.html(output).promise().done(function () {
                             if (model.split('-')[1] === "comments")
                                 self.loadComments(params);
@@ -1013,7 +1017,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var template = Template.template.load('resources/mediaitem', 'mediaitem');
             var $container = $(Config.positions.main);
             var id = self.getId();
-            var params = {id: +id};
+            var params = { id: +id };
             var model = new MediaitemModel(params);
             model.fetch({
                 success: function (items) {
@@ -1045,7 +1049,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             // $('.filters-cache').unwrap();
             if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
                 // $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
-                $("html, body").animate({'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50}, 500);
+                $("html, body").animate({ 'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50 }, 500);
             } else {
                 // self.loadTab();
                 $('.item-forms .nav-tabs li').each(function () {
@@ -1064,7 +1068,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 , playlist: [{
                     image: media.thumbnail
                     , sources: [
-                        {file: media.video, label: 'LQ', default: true}
+                        { file: media.video, label: 'LQ', default: true }
                     ]
                 }]
             };
@@ -1079,7 +1083,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.playerInstance = player.instance;
             this.hotkeys();
             this.loadUsersList();
-            this.loadSidebarComments({query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments})
+            this.loadSidebarComments({ query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments })
         }
         , renderToolbar: function () {
             var self = this;
@@ -1143,7 +1147,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if ($this.data('datepicker') == undefined) {
                     var dateTimePickerSettings = {
                         format: 'YYYY-MM-DD HH:mm:ss'
-                        , timePicker: {enabled: true}
+                        , timePicker: { enabled: true }
                     };
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
                         onSelect: function () {
@@ -1199,8 +1203,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , searchPersons: function (e) {
             e.preventDefault();
             var self = this;
-            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
-            var params = {overrideUrl: Config.api.persons};
+            var data = $.param({ q: $('#person-q').val(), type: $('[data-type="person-type"]').val() });
+            var params = { overrideUrl: Config.api.persons };
             new MediaitemModel(params).fetch({
                 data: data
                 , success: function (items) {
@@ -1247,8 +1251,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             bootbox.confirm({
                 message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -1265,7 +1269,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
                 items.push(~~$(this).attr('data-id'));
             });
-            new MediaitemModel({overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + self.getId()}).save(null, {
+            new MediaitemModel({ overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + self.getId() }).save(null, {
                 data: JSON.stringify(items)
                 , contentType: 'application/json'
                 , processData: false
@@ -1284,7 +1288,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             // }
             disableToast = !!(typeof disableToast !== 'undefined' && disableToast);
             if ($('#files-table').length && $('#files-table tbody tr').length) {
-                var hqFile = {exists: false, size: 0, isOnline: false};
+                var hqFile = { exists: false, size: 0, isOnline: false };
                 $('#files-table tbody tr').each(function () {
                     if ($(this).find('td.ext').text().indexOf('_hq.') === 0) {
                         hqFile.exists = true;
