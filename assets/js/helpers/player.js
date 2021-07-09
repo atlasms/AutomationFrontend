@@ -157,9 +157,11 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             }
         }
         , setUI: function ($this, instance) {
+            instance.setVolume(100);
             if ($this.options.template.controlbar === "fixed")
                 $('.jw-controlbar.jw-background-color.jw-reset:first').css({ 'display': 'block' });
             if ($this.options.template.controls.volume) {
+                // console.log($this.instance.getVolume());
                 $("#volume .inner").slider({
                     value: $this.instance.getVolume()
                     , change: function (e, ui) {
