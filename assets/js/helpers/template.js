@@ -242,7 +242,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var date = (value && value.indexOf("T") !== -1) ? value.split('T')[0].split('-') : value.split('-');
                 for (var i = 0; i < date.length; i++)
                     date[i] = (i === 1) ? parseInt(date[i]) - 1 : parseInt(date[i]);
-                return new moment(date).format(format);
+                return new moment(date).subtract(1, 'days').format(format);
             });
             Handlebars.registerHelper('getMedia', function (value, hq, options) {
                 var hq = typeof hq !== "undefined" && hq == true;
