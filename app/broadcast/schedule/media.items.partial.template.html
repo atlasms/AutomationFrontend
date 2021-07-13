@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     {{#each items}}
-    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="MetaCategoryId">
+    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="{{MetaCategoryId}}">
         <td>
             <span class="idx">{{Id}}</span>
             <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
