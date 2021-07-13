@@ -35,7 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , tags: ''
             , persons: ''
             , users: ''
-            , duration: '0;180'
+            , duration: '0;360'
             // , broadcastCount: '0;999'
             // , broadcastStartdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')) + 'T00:00:00'
             , recommendedBroadcastStartDate: ''
@@ -590,7 +590,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
 
         , handleRangeSliders: function () {
-            $("#duration").ionRangeSlider({type: "double", grid: true, min: 0, max: 180, from: 0, to: 180, prefix: ""})
+            $("#duration").ionRangeSlider({type: "double", grid: true, min: 0, max: 360, from: 0, to: 360, prefix: ""})
             $("#broadcastCount").ionRangeSlider({type: "double", grid: true, min: 0, max: 999, from: 0, to: 999, prefix: ""})
         }
         , searchTree: function(e) {
