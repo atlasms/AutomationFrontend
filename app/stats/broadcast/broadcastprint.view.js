@@ -75,11 +75,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var range = {
                 start: $_GET['startdate']
                 , end: $_GET['enddate']
+                , q: $_GET['q']
             };
             var params = {
 //                overrideUrl: Config.api.schedule + '/mediausecountbydate?id=0&startdate=' + range.start + '&enddate=' + range.end
                 overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $_GET['type'] + '&startdate=' + range.start + '&enddate=' + range.end
             };
+            if (range.q !== null && range.q !== '') {
+                params.overrideUrl += '&q=' + range.q;
+            }
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);
             var model = new MediaitemModel(params);

@@ -5,10 +5,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $itemsPlace: "#items-place"
         , model: 'MediaitemModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))}}
+            { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
+            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show' } }
+            , { 'input': { cssClass: 'form-control', placeholder: 'عبارت جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search' } }
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar' } } //persianDate().format('YYYY-MM-DD')
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker',
+                    placeholder: '',
+                    type: 'text',
+                    name: 'startdate',
+                    addon: true,
+                    icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))
+                }
+            }
         ]
         , statusbar: []
         , flags: {}
@@ -23,10 +34,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return false;
             var value = typeof e === "object" ? $(e.target).val() : e;
             var $printButton = $(".print-btn");
-            var href  = '/stats/broadcastprint?type=' + $('[data-type=type]').val();
-                href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var href = '/stats/broadcastprint?type=' + $('[data-type=type]').val();
+            href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59' + '&q=' + $("[name=q]").val();
             $printButton.attr('href', href);
-            
+
             var $rows = $("#items-table tbody").find("tr");
             if (value == -1)
                 $rows.show();
@@ -35,7 +46,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 if (value == 4)
                     $rows.each(function () {
                         if ($(this).data('broadcast-count') > 0)
-                            $(this).show(); 
+                            $(this).show();
                     });
                 else
                     $rows.each(function () {
@@ -85,7 +96,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }));
                 }
             });
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 self.filterStates($("[name=state]").val());
             }, 500);
         }
@@ -135,13 +146,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             return data;
         }
         , updateStats: function ($rows) {
-            var stats = {duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0};
+            var stats = { duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0 };
             $rows.each(function () {
                 if ($(this).is(":visible")) {
                     stats.count++;
                     stats.duration += $(this).data('duration');
                     $(this).find(".idx").html(stats.count);
-                    
+
                     if ($(this).find(".broadcast-count").text() > 0) {
                         stats.totalbroadcast += ($(this).data('duration'));
                     }
@@ -152,11 +163,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("[data-type=totalbroadcast]").html(Global.createTime(stats.totalbroadcast));
         }
         , processSum: function (items) {
-            var data = {items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: true};
+            var data = { items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: true };
             $.each(items, function () {
-                    data.count++;
-                    data.duration += this.ConductorDuration;
-                    data.totalbroadcast += this.ConductorDuration;
+                data.count++;
+                data.duration += this.ConductorDuration;
+                data.totalbroadcast += this.ConductorDuration;
             });
             console.log(data);
             return data;
@@ -166,10 +177,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var range = {
                 start: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , end: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                , q: $("[name=q]").val()
             };
             var params = {
                 overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $('[data-type=type]').val() + '&startdate=' + range.start + '&enddate=' + range.end
             };
+            if (range.q !== null && range.q !== '') {
+                params.overrideUrl += '&q=' + range.q;
+            }
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);
             var model = new MediaitemModel(params);
@@ -186,9 +201,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             });
         }
-        , updatePrintButton: function() {
+        , updatePrintButton: function () {
             var $printButton = $(".print-btn");
-            var dates = '/stats/broadcastprint?type=' + $('[data-type=type]').val() + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00' + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59';
+            var dates = '/stats/broadcastprint?type=' + $('[data-type=type]').val()
+                + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
+                + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
+                + '&q=' + $('[name=q]').val();
             if ($printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + dates);
         }

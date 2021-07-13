@@ -1,27 +1,36 @@
-<table class="table table-bordered table-striped flip-content">
+<table class="table table-bordered table-striped flip-content header-table">
 	<tr class="active">
 		<td class="col-xs-2">
 			<div class="stat-holder">
-				تعداد آیتم‌ها
+				تعداد آیتم‌ها:
 				<span data-type="count" class="label label-info label-sm">{{count}}</span>
 			</div>
 		</td>
 		<td class="col-xs-2">
 			<div class="stat-holder">
-				محموع زمان
+				محموع زمان:
 				<span data-type="totalbroadcast" class="label label-info label-sm">{{time2 totalbroadcast}}</span>
 			</div>
 		</td>
 		<td class="col-xs-2">
 			{{#if header}}
 			{{else}}
+			از:
 			<strong style="direction: ltr">{{$_get 'startdate' 1}}</strong>
 			{{/if}}
 		</td>
-		<td class="col-xs-6">
+		<td class="col-xs-2">
 			{{#if header}}
 			{{else}}
+			تا:
 			<strong>{{$_get 'enddate' 1}}</strong>
+			{{/if}}
+		</td>
+		<td class="col-xs-2">
+			{{#if header}}
+			{{else}}
+			عبارت جستجو:
+			<strong>{{$_get 'q' 0}}</strong>
 			{{/if}}
 		</td>
 		{{#if header}}
@@ -31,9 +40,13 @@
 			</a>
 		</td>
 		{{else}}
-		<td>
+		<td class="col-xs-2">
 			<div class="stat-holder">
-				<span class="label label-info label-sm">{{#each items}}{{#if @first}}{{MetaCategoryName}}{{/if}}{{/each}}</span>
+				<span class="label label-info label-sm">
+					برنامه:
+					<strong>{{$_get 'category' 0}}</strong>
+<!--					{{#each items}}{{#if @first}}{{MetaCategoryName}}{{/if}}{{/each}}-->
+				</span>
 			</div>
 		</td>
 		{{/if}}

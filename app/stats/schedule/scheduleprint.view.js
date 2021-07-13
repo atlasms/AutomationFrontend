@@ -5,15 +5,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $itemsPlace: "#items-place"
         , model: 'MediaitemModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))}}
+            { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
+            , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show' } }
+            , { 'input': { cssClass: 'form-control', placeholder: 'عبارت جستجو', type: 'text', name: 'q', addon: true, icon: 'fa fa-search' } }
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar' } } //persianDate().format('YYYY-MM-DD')
+            , {
+                'input': {
+                    cssClass: 'form-control datepicker',
+                    placeholder: '',
+                    type: 'text',
+                    name: 'startdate',
+                    addon: true,
+                    icon: 'fa fa-calendar',
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))
+                }
+            }
         ]
         , statusbar: []
         , flags: {}
-        , events: {
-        }
+        , events: {}
         , reLoad: function () {
             this.load();
         }
@@ -60,14 +70,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , prepareContent: function () {
             this.renderToolbar();
         }
-        , processSum: function (items) {   
-            var data = {items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: false};
+        , processSum: function (items) {
+            var data = { items: items, duration: 0, count: 0, totalbroadcast: 0, totalrepeats: 0, header: false, q: '' };
             $.each(items, function () {
-                    data.count++;
-                    data.duration += this.ConductorDuration;
-                        data.totalbroadcast += this.ConductorDuration;
+                data.count++;
+                data.duration += this.ConductorDuration;
+                data.totalbroadcast += this.ConductorDuration;
             });
-            console.log(data);
             return data;
         }
         , loadItems: function () {
@@ -75,11 +84,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var range = {
                 start: $_GET['startdate']
                 , end: $_GET['enddate']
+                , q: $_GET['q']
             };
             var params = {
-//                overrideUrl: Config.api.schedule + '/mediausecountbydate?id=0&startdate=' + range.start + '&enddate=' + range.end
                 overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $_GET['CategoryId'] + '&startdate=' + range.start + '&enddate=' + range.end
             };
+            if (range.q !== null && range.q !== '') {
+                params.overrideUrl += '&q=' + range.q;
+            }
             var template = Template.template.load('stats/broadcast', 'items.partial');
             var $container = $(self.$itemsPlace);
             var model = new MediaitemModel(params);
