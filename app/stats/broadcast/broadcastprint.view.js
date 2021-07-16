@@ -67,7 +67,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     data.duration += this.ConductorDuration;
                         data.totalbroadcast += this.ConductorDuration;
             });
-            console.log(data);
             return data;
         }
         , loadItems: function () {
