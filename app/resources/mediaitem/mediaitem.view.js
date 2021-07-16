@@ -830,6 +830,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.render(params);
         }
         , setLabelValue: function (type, value) {
+            console.log(type, value)
             if (type === 'schedule' && value === 0) {
                 value = 'ندارد';
             }
@@ -1047,15 +1048,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             }
 
             // $('.filters-cache').unwrap();
-            if (location.hash && $('li[data-service="' + location.hash.replace('#', '') + '"]').length) {
-                // $('li[data-service="' + location.hash.replace('#', '') + '"]').find("a").trigger("click");
-                $("html, body").animate({ 'scrollTop': $('li[data-service="' + location.hash.replace('#', '') + '"]').parents(".portlet").offset().top - 50 }, 500);
-            } else {
-                // self.loadTab();
-                $('.item-forms .nav-tabs li').each(function () {
-                    self.loadTab(undefined, true, $(this));
-                });
-            }
+
             self.initEditables();
             var media = {
                 thumbnail: item.Thumbnail
@@ -1083,7 +1076,25 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             this.playerInstance = player.instance;
             this.hotkeys();
             this.loadUsersList();
-            this.loadSidebarComments({ query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments })
+            this.loadSidebarComments({ query: 'externalid=' + this.getId() + '&kind=1', overrideUrl: Config.api.comments });
+            this.checkForLocationHash();
+            this.renderMetadataPanels();
+        }
+        , renderMetadataPanels: function () {
+            var self = this;
+            $('.item-forms .nav-tabs li').each(function () {
+                self.loadTab(undefined, true, $(this));
+            });
+        }
+        , checkForLocationHash: function () {
+            setTimeout(function () {
+                var hash = window.location.hash;
+                var $el = $(hash);
+                if (hash && $el.length) {
+                    $("html, body").animate({ 'scrollTop': $el.offset().top + 50  }, 500);
+                }
+            }, 500);
+
         }
         , renderToolbar: function () {
             var self = this;
