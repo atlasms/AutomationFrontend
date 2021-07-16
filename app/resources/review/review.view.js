@@ -209,44 +209,44 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 success: function (items) {
                     var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
                     var check = Global.checkMediaFilesAvailability(files);
-                    if (check) {
-                        // reject
-                        if ($(e.currentTarget).attr('data-task') == 2) {
-                            bootbox.confirm({
-                                message: "آیتم انتخاب شده رد شود؟"
-                                , buttons: {
-                                    confirm: { className: 'btn-success' }
-                                    , cancel: { className: 'btn-danger' }
+                    // reject
+                    if ($(e.currentTarget).attr('data-task') == 2) {
+                        bootbox.confirm({
+                            message: "آیتم انتخاب شده رد شود؟"
+                            , buttons: {
+                                confirm: { className: 'btn-success' }
+                                , cancel: { className: 'btn-danger' }
+                            }
+                            , callback: function (results) {
+                                if (results) {
+                                    new MediaModel({ id: $("tr.active").attr('data-id') }).save({
+                                        key: 'State'
+                                        , value: $(e.currentTarget).attr('data-task')
+                                    }, {
+                                        patch: true
+                                        , error: function (e, data) {
+                                            toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                                        }
+                                        , success: function (model, response) {
+                                            toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
+                                            self.reLoad();
+                                        }
+                                    });
                                 }
-                                , callback: function (results) {
-                                    if (results) {
-                                        new MediaModel({ id: $("tr.active").attr('data-id') }).save({
-                                            key: 'State'
-                                            , value: $(e.currentTarget).attr('data-task')
-                                        }, {
-                                            patch: true
-                                            , error: function (e, data) {
-                                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
-                                            }
-                                            , success: function (model, response) {
-                                                toastr.success('عملیات با موفقیت انجام شد', 'بازبینی', Config.settings.toastr);
-                                                self.reLoad();
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        } else {
-                            // accept
+                            }
+                        });
+                    } else {
+                        // accept
+                        if (check) {
                             var params = {
                                 key: 'State'
                                 , value: $(e.currentTarget).attr('data-task')
                                 , id: $("tr.active").attr('data-id')
                             };
                             self.setMediaParam(params);
+                        } else {
+                            toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
                         }
-                    } else {
-                        toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
                     }
                 }
             });
