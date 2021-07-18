@@ -974,7 +974,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     var output = handlebarsTemplate(items);
                                     $container.html(output).promise().done(function () {
                                         if (service === 'persons') {
-                                            $('#persons-table').clone().appendTo('.basic-details');
+                                            $('#persons-table').clone().attr('id', '').appendTo('.basic-details');
                                         }
                                         if ($container.find(".scroller").length)
                                             $container.find(".scroller").slimScroll({
@@ -1091,7 +1091,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 var hash = window.location.hash;
                 var $el = $(hash);
                 if (hash && $el.length) {
-                    $("html, body").animate({ 'scrollTop': $el.offset().top + 50  }, 500);
+                    $("html, body").animate({ 'scrollTop': $el.offset().top + 50 }, 500);
                 }
             }, 500);
 
@@ -1276,7 +1276,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             e.preventDefault();
             var self = this;
             var items = [];
-            $('#persons-table tbody tr').each(function () {
+            $('#persons table tbody tr').each(function () {
                 // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
                 items.push(~~$(this).attr('data-id'));
             });
