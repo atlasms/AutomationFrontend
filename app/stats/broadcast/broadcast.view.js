@@ -177,7 +177,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var range = {
                 start: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , end: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
-                , q: $("[name=q]").val()
+                , q: $("[name=q]").val().replace('«', '&lrm;').replace('»', '&rlm;')
             };
             var params = {
                 overrideUrl: Config.api.schedule + '/typecountbydate?type=' + $('[data-type=type]').val() + '&startdate=' + range.start + '&enddate=' + range.end

@@ -74,7 +74,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var range = {
                 start: $_GET['startdate']
                 , end: $_GET['enddate']
-                , q: $_GET['q']
+                , q: $_GET['q'].replace('«', '&lrm;').replace('»', '&rlm;')
             };
             var params = {
 //                overrideUrl: Config.api.schedule + '/mediausecountbydate?id=0&startdate=' + range.start + '&enddate=' + range.end
