@@ -258,7 +258,9 @@
                     </select>
                 </div>
                 <div class="col-sm-2">
+                    {{#authorize 4294967296}}
                     <button class="btn btn-danger" data-task="remove-website">حذف</button>
+                    {{/authorize}}
                 </div>
             </div>
             <div class="form-group">

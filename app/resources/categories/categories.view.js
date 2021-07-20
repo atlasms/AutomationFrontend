@@ -22,8 +22,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="submit-persons"]': 'submitPersons'
             , 'click [data-task="revoke-access"]': 'revokeAccess'
             , 'click [data-task="grant-access"]': 'grantAccess'
+            , 'click [data-task="remove-website"]': 'removeFromWebsite'
 
             , 'keyup [data-type="tree-search"]': 'searchTree'
+        }
+        , removeFromWebsite: function(e) {
+            e.preventDefault();
+            var self = this;
+            var data = {
+                cmd: 'deletesiteprogramswithchilds',
+                params: this.getId()
+            };
+            bootbox.confirm({
+                message: "مورد انتخابی از روی وب‌سایت حذف خواهد شد، مطمئن هستید؟"
+                , buttons: {
+                    confirm: {className: 'btn-success'}
+                    , cancel: {className: 'btn-danger'}
+                }
+                , callback: function (results) {
+                    if (results) {
+                        new MetadataModel({ overrideUrl: Config.api.hsm }).save(null, {
+                            data: JSON.stringify(data)
+                            , contentType: 'application/json'
+                            , processData: false
+                            , error: function (e, data) {
+                                toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                            }
+                            , success: function (model, response) {
+                                toastr.success('با موفقیت انجام شد', 'حذف برنامه از وب‌سایت', Config.settings.toastr);
+                            }
+                        });
+                    }
+                }
+            });
         }
         , searchTree: function(e) {
             $('#tree').jstree(true).show_all();
