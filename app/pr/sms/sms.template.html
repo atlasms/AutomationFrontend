@@ -1,39 +1,44 @@
 <div id="pr-sms-page" class="portlet box">
-	<div class="portlet-body">
-		<div class="mainbody">
-			<table class="table table-bordered table-striped table-condensed flip-content table-hover">
-				<thead>
-					<tr>
-						<th></th>
-						<th class="">شناسه</th>
-						<th class="col-xs-10">پیام</th>
-						<th class="col-xs-1 text-center">فرستنده</th>
-						<th class="col-xs-1 text-center">زمان دریافت</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each []}}
-					<tr data-id="{{Id}}" data-index="{{math @index "+" 1}}">
-						<td>
-							{{#if showCheckbox}}
-							<div class="checkbox checkbox-danger checkbox-circle">
-								<input name="selected" data-validation="digit" id="checkbox_{{@index}}" value="" type="checkbox">
-								<label for="checkbox_{{@index}}"></label>
-							</div>
-							{{/if}}
-						</td>
-						<td>{{math @index "+" 1}}</td>
-						<td class="body"><span class="" style="word-break: break-all;">{{Msg}}</span></td>
-						<td class=" text-right">
-							<span class="ltr">{{From}}</span>
-						</td>
-						<td class="text-right">
-							<span class="" style="white-space: nowrap;">{{extractTime Received}} {{extractDate Received}}</span>
-						</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <div class="portlet-body">
+        <div class="mainbody">
+            <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th class="">شناسه</th>
+                    <th class="col-xs-19">پیام</th>
+                    <th class="col-xs-1 text-center">فرستنده</th>
+                    <th class="col-xs-1 text-center">گیرنده</th>
+                    <th class="col-xs-1 text-center">زمان دریافت</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each []}}
+                <tr data-id="{{Id}}" data-index="{{math @index " +
+                " 1}}">
+                <td>
+                    {{#if showCheckbox}}
+                    <div class="checkbox checkbox-danger checkbox-circle">
+                        <input name="selected" data-validation="digit" id="checkbox_{{@index}}" value="" type="checkbox">
+                        <label for="checkbox_{{@index}}"></label>
+                    </div>
+                    {{/if}}
+                </td>
+                <td>{{math @index "+" 1}}</td>
+                <td class="body"><span class="" style="word-break: break-all;">{{Msg}}</span></td>
+                <td class="text-right">
+                    <span class="ltr">{{From}}</span>
+                </td>
+                <td class="text-right">
+                    <span class="ltr">{{To}}</span>
+                </td>
+                <td class="text-right">
+                    <span class="" style="white-space: nowrap;">{{extractTime Received}} {{extractDate Received}}</span>
+                </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

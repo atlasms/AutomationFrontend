@@ -3,10 +3,31 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
     var PRSMSView = Backbone.View.extend({
         modal_register: '#register-modal'
         , toolbar: [
-            {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'filter_rows'}}
+            { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'filter_rows' } }
 //            , {'input': {cssClass: 'form-control', placeholder: 'جستجو', type: 'text', name: 'q', value: "", text: "جستجو", addon: true, icon: 'fa fa-search'}}
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'end', value: Global.jalaliToGregorian(persianDate().format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'start', value: Global.jalaliToGregorian(persianDate().subtract('days', 1).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar'}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'end', value: Global.jalaliToGregorian(persianDate().format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar' } } //persianDate().format('YYYY-MM-DD')
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'start', value: Global.jalaliToGregorian(persianDate().subtract('days', 1).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar' } } // moment().subtract(7, 'day').format('YYYY-MM-DD')
+            , {
+                select: {
+                    cssClass: 'form-control', name: 'to', value: '', addon: true, icon: 'fa fa-volume-control-phone', options: [
+                        { value: '', text: 'همه شماره‌ها' },
+                        { value: '1000019', text: '1000019 (خدماتی)' },
+                        { value: '1000029', text: '1000029 (خدماتی)' },
+                        { value: '1000039', text: '1000039 (خدماتی)' },
+                        { value: '10000100002', text: '10000100002' },
+                        { value: '10000100003', text: '10000100003' },
+                        { value: '10000100004', text: '10000100004' },
+                        { value: '10000100005', text: '10000100005' },
+                        { value: '10000100006', text: '10000100006' },
+                        { value: '10000100007', text: '10000100007' },
+                        { value: '10000100008', text: '10000100008' },
+                        { value: '10000100009', text: '10000100009 (خدماتی)' },
+                        { value: '1000012', text: '1000012 (خدماتی)' },
+                        { value: '1000013', text: '1000013' },
+                        { value: '1000014', text: '1000014' }
+                    ]
+                }
+            }
         ]
         , events: {
             'click [data-task=filter_rows]': 'filter'
@@ -28,15 +49,17 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
             this.load();
         }
         , load: function (extend) {
-            console.info('Loading items');
             var params = this.defatulFilter;
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
+            if ($('[name="to"]').val() !== '') {
+                params.to = $('[name="to"]').val();
+            }
             this.render(params);
         }
         , render: function (params) {
             var self = this;
             var params = (typeof params === "object") ? $.extend({}, this.defatulFilter, params) : this.defatulFilter;
-            var model = new PRModel({query: $.param(params)});
+            var model = new PRModel({ query: $.param(params) });
             var template = Template.template.load('pr/sms', 'sms');
             var $container = $(Config.positions.main);
             model.fetch({
