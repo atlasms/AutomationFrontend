@@ -22,6 +22,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.
                         { value: '10000100007', text: '10000100007' },
                         { value: '10000100008', text: '10000100008' },
                         { value: '10000100009', text: '10000100009 (خدماتی)' },
+                        { value: '1000010', text: '1000010' },
+                        { value: '1000011', text: '1000011' },
                         { value: '1000012', text: '1000012 (خدماتی)' },
                         { value: '1000013', text: '1000013' },
                         { value: '1000014', text: '1000014' }
