@@ -49,6 +49,9 @@
     .prayers li .time:before { content: ': '; }
     #schedule-table .hide { display: block !important; }
     #schedule-table.pageable .hide { display: none !important; }
+    .item-link { margin-top: 0 !important; }
+    .item-link + small { color: #aaa; }
+    .idx { display: block; }
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -228,9 +231,12 @@
                         <div class="td id">
                             <input type="hidden" name="titles" value=""/>
                             <input type="hidden" name="subtitles" value=""/>
-                            <input type="text" class="focus-helper"/>
+                            <input type="text" class="focus-helper" style="display: inherit;"/>
                             <span class="idx">{{math @index "+" 1}}</span>
-                            {{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>{{/if}}
+                            {{#if ConductorMediaId}}
+                            <a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="_blank"><i class="fa fa-info-circle"></i></a>
+                            <small class="text-muted" data-type="media-id">{{ConductorMediaId}}</small>
+                            {{/if}}
                             {{#authorize 2}}
                             {{> scheduleRowTools}}
                             {{/authorize}}
