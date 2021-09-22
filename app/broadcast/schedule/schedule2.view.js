@@ -156,7 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $activeRow.find('[data-type="episode-title"]').val($row.find('span.title').text());
             $activeRow.find('[data-type="episode-title"]').parents('.form-group:first').find('label[for^="ep"]').text($row.find('span.title').text());
             $activeRow.find('[name="ConductorMediaId"]').val($row.data('id'));
-            $activeRow.find('[data-type="media-id"]').val($row.data('id'));
+            $activeRow.find('[data-type="media-id"]').text($row.data('id'));
             $activeRow.find('[data-type="episode-number"]').val($.trim($row.find('[data-field="EpisodeNumber"]').text()));
             $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
             if (!$activeRow.find('[name="ConductorMediaId"]').next().is('.remove-meta')) {
