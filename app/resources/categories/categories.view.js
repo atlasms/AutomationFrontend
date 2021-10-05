@@ -26,23 +26,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 
             , 'keyup [data-type="tree-search"]': 'searchTree'
         }
-        , removeFromWebsite: function(e) {
+        , removeFromWebsite: function (e) {
             e.preventDefault();
             var self = this;
             var data = {
+                file1: '',
+                file2: '',
+                cmdGroup: null,
                 cmd: 'deletesiteprogramswithchilds',
                 params: this.getId()
             };
             bootbox.confirm({
                 message: "مورد انتخابی از روی وب‌سایت حذف خواهد شد، مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
-                        new MetadataModel({ overrideUrl: Config.api.hsm }).save(null, {
-                            data: JSON.stringify(data)
+                        new MediaModel({ overrideUrl: Config.api.hsm }).save(null, {
+                            data: JSON.stringify([data])
                             , contentType: 'application/json'
                             , processData: false
                             , error: function (e, data) {
@@ -56,7 +59,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
-        , searchTree: function(e) {
+        , searchTree: function (e) {
             $('#tree').jstree(true).show_all();
             $('#tree').jstree('search', $(e.target).val());
         }
@@ -123,14 +126,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             if (typeof id !== "undefined" && id) {
                 this.cache.currentPathId = id = parseInt(id);
                 var self = this;
-                var mediaItemsParams = {query: $.param({categoryId: id, offset: 0, count: this.defaultListLimit})};
+                var mediaItemsParams = { query: $.param({ categoryId: id, offset: 0, count: this.defaultListLimit }) };
                 var itemsModel = new MediaModel(mediaItemsParams);
                 // Loading folder media
                 itemsModel.fetch({
                     success: function (mediaItems) {
                         mediaItems = mediaItems.toJSON();
                         // Loading metadata
-                        var params = {query: 'MasterId=' + id};
+                        var params = { query: 'MasterId=' + id };
                         var model = new MetadataModel(params);
                         model.fetch({
                             success: function (item) {
@@ -150,7 +153,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                                     $container.html(output).promise().done(function () {
                                         // After Render
                                         self.attachDatepickers();
-                                        var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                                        var overrideConfig = { search: true, showPaginationSwitch: false, pageSize: 20 };
                                         $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
                                     });
                                 });
@@ -183,7 +186,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 if ($this.data('datepicker') == undefined) {
                     var dateTimePickerSettings = {
                         format: 'YYYY-MM-DD HH:mm:ss'
-                        , timePicker: {enabled: true}
+                        , timePicker: { enabled: true }
                     };
                     $this.pDatepicker($.extend({}, CONFIG.settings.datepicker, dateTimePickerSettings, {
                         onSelect: function () {
@@ -228,7 +231,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 return false;
             switch (params.method) {
                 case 'delete':
-                    new CategoriesModel({id: params.id}).destroy({
+                    new CategoriesModel({ id: params.id }).destroy({
                         success: function (d) {
                             var node = $tree.jstree(true).get_node(params.id, true);
                             node.attr('deleted', 'true');
@@ -253,7 +256,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                     break;
                 case 'undelete':
-                    new CategoriesModel({path: 'active', id: params.id}).save({}, {
+                    new CategoriesModel({ path: 'active', id: params.id }).save({}, {
                         patch: true
                         , pid: params.parent
                         , error: function (e, data) {
@@ -267,7 +270,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     });
                     break;
                 case 'put':
-                    new CategoriesModel({id: params.id}).save({
+                    new CategoriesModel({ id: params.id }).save({
                         text: params.text
                         , pid: params.parent
                         , error: function (e, data) {
@@ -326,7 +329,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 return false;
             var self = this;
             var item = {};
-            var categoryAccessParams = {overrideUrl: Config.api.tree, path: '/users', query: 'id=' + id};
+            var categoryAccessParams = { overrideUrl: Config.api.tree, path: '/users', query: 'id=' + id };
             var categoryAccessModel = new CategoriesModel(categoryAccessParams);
             categoryAccessModel.fetch({
                 success: function (data) {
@@ -342,7 +345,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         $container.html(output).promise().done(function () {
                             // After Render
                             self.attachDatepickers();
-                            var overrideConfig = {search: true, showPaginationSwitch: false, pageSize: 20};
+                            var overrideConfig = { search: true, showPaginationSwitch: false, pageSize: 20 };
                             $(".categories-metadata-form table").bootstrapTable($.extend({}, Config.settings.bootstrapTable, overrideConfig));
                         });
                     });
@@ -353,7 +356,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             if (typeof categoryId === 'undefined' || categoryId <= 0)
                 return false;
             var self = this;
-            var params = {overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId};
+            var params = { overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId };
             var model = new MediaModel(params);
             var $container = $('#persons-group');
             $container.empty();
@@ -364,7 +367,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate({items: items, cols: true, placeholder: false});
+                        var output = handlebarsTemplate({ items: items, cols: true, placeholder: false });
                         $container.html(output).promise().done(function () {
                         });
                     });
@@ -374,8 +377,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , searchPersons: function (e) {
             e.preventDefault();
             var self = this;
-            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
-            var params = {overrideUrl: Config.api.persons};
+            var data = $.param({ q: $('#person-q').val(), type: $('[data-type="person-type"]').val() });
+            var params = { overrideUrl: Config.api.persons };
             new MediaModel(params).fetch({
                 data: data
                 , success: function (items) {
@@ -422,8 +425,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             bootbox.confirm({
                 message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -440,7 +443,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
                 items.push(~~$(this).attr('data-id'));
             });
-            new MediaModel({overrideUrl: Config.api.mediapersons + '?type=2&externalid=' + self.getId()}).save(null, {
+            new MediaModel({ overrideUrl: Config.api.mediapersons + '?type=2&externalid=' + self.getId() }).save(null, {
                 data: JSON.stringify(items)
                 , contentType: 'application/json'
                 , processData: false
@@ -463,12 +466,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             bootbox.confirm({
                 message: "آیا مطمئن هستید می‌خواهید  دسترسی کاربر انتخاب شده را لغو کنید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
-                        var params = {overrideUrl: Config.api.tree, id: 'users', query: 'uid=' + uid + '&cid=' + cid};
+                        var params = { overrideUrl: Config.api.tree, id: 'users', query: 'uid=' + uid + '&cid=' + cid };
                         new CategoriesModel(params).destroy({
                             success: function (d) {
                                 toastr.success('با موفقیت انجام شد', 'عملیات حذف', Config.settings.toastr);
@@ -484,7 +487,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             var self = this;
             var uid = $('select[name="uid"]').val();
             var cid = this.getId();
-            var params = {overrideUrl: Config.api.tree, path: '/users', query: 'uid=' + uid + '&cid=' + cid};
+            var params = { overrideUrl: Config.api.tree, path: '/users', query: 'uid=' + uid + '&cid=' + cid };
             new CategoriesModel(params).save(null, {
                 success: function (d) {
                     toastr.success('با موفقیت انجام شد', 'اعطای دسترسی', Config.settings.toastr);
