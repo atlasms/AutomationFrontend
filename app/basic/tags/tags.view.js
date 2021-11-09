@@ -4,8 +4,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
         playerInstance: null
         , modal: '#tags-modal'
         , toolbar: [
-            {'button': {cssClass: 'btn blue-sharp', text: 'مورد جدید ', type: 'button', task: 'add', icon: 'fa fa-plus'}}
-            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh'}}
+            { 'button': { cssClass: 'btn blue-sharp', text: 'مورد جدید ', type: 'button', task: 'add', icon: 'fa fa-plus' } }
+            , { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh-view', icon: 'fa fa-refresh' } }
         ]
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
@@ -14,6 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
             , 'change [name="IsActive"]': 'changeItemState'
         }
         , flags: {}
+        , cache: []
         , reLoad: function () {
             this.load();
         }
@@ -23,7 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
             this.render(params);
         }
         , getParams: function (id) {
-            var params = {path: 'manage'};
+            var params = { path: 'manage' };
             if (typeof id !== 'undefined')
                 params.id = id;
             return params;
@@ -38,6 +39,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
                     template.done(function (data) {
+                        self.cache = [];
+                        for(var item in items){
+                            self.cache.push(items[item]);
+                        }
+                        // self.cache = items;
                         var handlebarsTemplate = Template.handlebars.compile(data);
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
@@ -49,7 +55,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
         }
         , initEditables: function () {
             var self = this;
-            var editable = new Editable({simple: true}, self);
+            var editable = new Editable({ simple: true }, self);
             editable.init();
         }
         , handleEditables: function (id, params) {
@@ -63,7 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
                 }
             });
         }
-        , changeItemState: function(e) {
+        , changeItemState: function (e) {
             var state = e.target.checked;
             this.handleEditables($(e.target).parents('tr:first').data('id'), {
                 key: 'state',
@@ -77,6 +83,16 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'bas
             var $modal = $(self.modal);
             var data = $form.serializeObject();
             var params = this.getParams();
+            if (this.cache.length) {
+                var currentValue = $('[name="title"]').val();
+                var index = this.cache.findIndex(function (tag) {
+                    return tag.title === currentValue;
+                });
+                if (index !== -1) {
+                    toastr.error('عنوان تگ تکراری است', 'خطا', Config.settings.toastr);
+                    return;
+                }
+            }
             new Model(params).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
