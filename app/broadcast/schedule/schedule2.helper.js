@@ -76,7 +76,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 if ($(this).val() === "" && $cell.find('[name=ConductorMediaId]').val() === "" && timeDiff > 1000) {
                     try {
                         $('input[data-suggestion="true"]').typeahead("destroy");
-                    } catch(e) {
+                    } catch (e) {
                         // Typeahead not found
                     }
                     var clone = $cell.find("> div").clone();
@@ -748,39 +748,45 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                 return true;
             };
         }
+        , getRowsCount: function () {
+            if ($("#schedule-table .table-body li").length)
+                return $("#schedule-table .table-body li").length;
+            return 0;
+        }
+        , getTotalTime: function () {
+            var $rows = $("#schedule-table .table-body li");
+            if ($rows.length > 1) {
+                var duration = 0;
+                $.each($rows, function () {
+                    duration += Global.processTime($(this).find("[data-type=duration]").val());
+                });
+                return Global.createTime2(duration);
+            }
+            if ($rows.length === 1) {
+                return $rows.find("[data-type=duration]").val();
+            }
+            return '00:00:00';
+        }
         , setStates: function () {
-            var getRowsCount = function () {
-                return function () {
-                    if ($("#schedule-table .table-body li").length)
-                        return $("#schedule-table .table-body li").length;
-                    return 0;
-                };
-            };
-            var getTotalTime = function () {
-                return function () {
-                    var $rows = $("#schedule-table .table-body li");
-                    if ($rows.length > 1) {
-                        var duration = 0;
-                        $.each($rows, function () {
-                            duration += Global.processTime($(this).find("[data-type=duration]").val());
-                        });
-                        return Global.createTime2(duration);
-                    }
-                    if ($rows.length === 1) {
-                        return $rows.find("[data-type=duration]").val();
-                    }
-                    return '00:00:00';
-                };
-            };
+            var self = this;
+            var count = self.getRowsCount();
+            var duration = self.getTotalTime();
             ScheduleHelper.handleStatusbar([
-                { "type": "count", "value": getRowsCount() }
-                , { "type": "duration", "value": getTotalTime() }
+                { "type": "count", "value": count }
+                , { "type": "duration", "value": duration }
             ]);
         }
         , handleStatusbar: function (items) {
             if (typeof items !== "undefined") {
                 for (var i in items) {
                     $(Config.positions.status).find('.total-' + items[i].type).find("span").text(items[i].value);
+                }
+                try {
+                    if (Global.processTime(this.getTotalTime()) >= 86400) {
+                        toastr.warning('مدت زمان کنداکتور بیشتر از 23:59:59 است', '', Config.settings.toastr);
+                    }
+                } catch (e) {
+                    console.log(e);
                 }
             }
         }

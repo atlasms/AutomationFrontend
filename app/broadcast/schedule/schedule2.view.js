@@ -642,6 +642,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
             }
             var onSaveError = [];
+            if (Global.processTime(ScheduleHelper.getTotalTime()) >= 86400) {
+                onSaveError.push('مدت زمان کنداکتور بیشتر از 23:59:59 است');
+            }
             $('#schedule-table .table-row').each(function (i) {
                 if (~~$(this).attr('data-media-id') !== 0 && ~~$(this).attr('data-media-state') !== 1) {
                     onSaveError.push('در سطر ' + (i + 1) + ' از فایل تایید نشده استفاده شده است.');
