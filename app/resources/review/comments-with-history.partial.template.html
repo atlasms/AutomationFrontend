@@ -1,3 +1,6 @@
+<style>
+    textarea.form-control[name="Body"] { height: 34px; }
+</style>
 <div style="height: 325px; overflow: hidden; overflow-y: auto; padding: 0 8px; border: 1px solid #e9eff3;">
     <ul class="chats">
         {{#each []}}
@@ -48,7 +51,9 @@
         </div>
     </div>
     <div class="input-cont">
-        <input class="form-control" type="text" name="Body" placeholder="توضیحات..." />
+        <textarea class="form-control" type="text" name="Body" placeholder="توضیحات..."
+                  onkeyup="if (this.value === '') { this.style.height = '34px' } else { this.style.height = '1px'; this.style.height = (33+this.scrollHeight) + 'px'}"
+        ></textarea>
     </div>
     <div class="btn-cont">
         <span class="arrow"> </span>
