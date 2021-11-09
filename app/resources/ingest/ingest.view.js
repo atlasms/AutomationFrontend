@@ -6,14 +6,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , $metadataPlace: "#metadata-place"
         , model: 'IngestModel'
         , toolbar: [
-            {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
-            , {'button': {cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add'}}
+            { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
+            , { 'button': { cssClass: 'btn blue-sharp disabled', text: 'ثبت اطلاعات ', type: 'button', task: 'add' } }
         ]
         , defaultListLimit: Config.defalutMediaListLimit
         , statusbar: []
         , flags: {}
         , cache: {
-            currentPathId: ''
+            currentPathId: '',
+            currentPath: '',
         }
         , events: {
             'click [type=submit]': 'submit'
@@ -33,9 +34,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="download-original"]': 'downloadOriginal'
             , 'click [name="enable-recommended"]': 'toggleRecommendedDate'
 
+            , 'click [data-task="load-all-folder-items"]': 'loadAllFolderItems'
+
             , 'mouseenter tbody tr': 'loadWebp'
             , 'mouseleave tbody tr': 'unloadWebp'
             // , 'click [data-task="submit-persons"]': 'submitPersons'
+
+            , 'keyup [data-type="tree-search"]': 'searchTree'
         }
         , toggleRecommendedDate: function (e) {
             var state = e.target.checked;
@@ -53,7 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadWebp: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
             var $img = $row.find('img[data-webp]');
-            $img.parent().css({'position': 'relative'});
+            $img.parent().css({ 'position': 'relative' });
             if ($row.find('.proxy-thumb').length) {
                 if ($row.find('.proxy-thumb').not('.has-error').length) {
                     $img.attr('src', $img.attr('data-webp'));
@@ -65,7 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $img.parent().append($("<div><dt/><dd/></div>").attr("class", "webp-progress"));
                 $(".webp-progress").width((50 + Math.random() * 30) + "%");
                 $('.proxy-thumb').on('load', function () {
-                    $(this).css({'display': 'none'});
+                    $(this).css({ 'display': 'none' });
                     $img.attr('src', $img.attr('data-webp'));
                     if ($row.hasClass('video'))
                         $row.removeClass('video').addClass('video1');
@@ -76,7 +81,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($row.hasClass('video1'))
                         $row.removeClass('video1').addClass('video');
                     $(this).addClass('has-error');
-                    $(this).css({'display': 'none'});
+                    $(this).css({ 'display': 'none' });
                     $(this).parent().find(".webp-progress").remove();
                     if ($img.attr('src') !== $img.attr('data-orig'))
                         $img.attr('src', $img.attr('data-orig'));
@@ -126,7 +131,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 toastr.warning('عنوان وب‌سایت کوتاه است', 'ذخیره اطلاعات برنامه', Config.settings.toastr);
                 return false;
             }
-            new IngestModel({overrideUrl: Config.api.media}).save(null, {
+            new IngestModel({ overrideUrl: Config.api.media }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
                 , processData: false
@@ -154,6 +159,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                                 $(self.$modal).find("form").trigger('reset');
                                 $(self.$modal).modal('hide');
                                 $("#storagefiles tr.active").addClass('disabled').removeClass('active success');
+                                setTimeout(function () {
+                                    $("[data-type=path]").length && $("[data-type=path]").val(self.cache.currentPath);
+                                    $("[data-type=path-id]").length && $("[data-type=path-id]").val(self.cache.currentPathId);
+                                });
                             });
                         }
                     });
@@ -171,7 +180,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     $("select.select2").each(function () {
                         if ($(this).hasClass("select2-hidden-accessible"))
                             $(this).select2('destroy');
-                        $(this).select2({dir: "rtl", multiple: true, tags: false, width: '100%', placeholder: $(this).parent().parent().find('label').text(), dropdownParent: $(this).parents('.modal-body')});
+                        $(this).select2({ dir: "rtl", multiple: true, tags: false, width: '100%', placeholder: $(this).parent().parent().find('label').text(), dropdownParent: $(this).parents('.modal-body') });
                     });
                 }, 500);
                 $('[name="enable-recommended"]').prop('checked', false);
@@ -190,7 +199,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             if ($row.hasClass("disabled"))
                 return false;
             var filename = $row.attr('data-filename');
-            var checkParams = {query: 'filename=' + filename};
+            var checkParams = { query: 'filename=' + filename };
             new CheckInfoModel(null, checkParams).fetch({
                 success: function (data) {
                     toastr.info(data.toJSON().content, '', Config.settings.toastr);
@@ -232,14 +241,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , getTags: function (callback) {
-            var params = {tags: [], subjects: [], persons: []};
+            var params = { tags: [], subjects: [], persons: [] };
             new SharedModel().fetch({
                 success: function (tags) {
                     params.tags = tags.toJSON();
-                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                    new SharedModel({ overrideUrl: 'share/persons' }).fetch({
                         success: function (persons) {
                             params.persons = persons.toJSON();
-                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                            new SharedModel({ overrideUrl: 'share/subjects' }).fetch({
                                 success: function (subjects) {
                                     params.subjects = subjects.toJSON();
                                     if (typeof callback === "function")
@@ -255,7 +264,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             typeof e !== "undefined" && e.preventDefault();
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
             var $container = $("#storagefiles-place");
-            var params = {path: '/files'};
+            var params = { path: '/files' };
             var model = new IngestModel(params);
             var self = this;
             $container.fadeOut();
@@ -338,7 +347,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         case 'Persons':
                             var metadata = [];
                             $.each($input.val(), function () {
-                                metadata.push({id: ~~this});
+                                metadata.push({ id: ~~this });
                             });
                             data[0][$input.attr("name")] = metadata;
                             break;
@@ -369,16 +378,24 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , handleTreeCalls: function (routes, path) {
             var self = this;
             var pathId = routes.pop().toString();
-            var params = {overrideUrl: Config.api.media};
 
             this.cache.currentPathId = pathId;
+            this.cache.currentPath = path.toString();
+
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
 
+            this.loadTreeItems(pathId, self.defaultListLimit, function () {
+                self.loadPersonsList(pathId);
+            });
+        }
+        , loadTreeItems: function (pathId, count, callback) {
+            var self = this;
+            var params = { overrideUrl: Config.api.media };
             var template = Template.template.load('resources/ingest', 'metadata.partial');
             var $container = $(self.$metadataPlace);
             var model = new IngestModel(params);
-            var data = {categoryId: pathId, count: self.defaultListLimit, offset: 0};
+            var data = { categoryId: pathId, count: count, offset: 0 };
             model.fetch({
                 data: $.param(data)
                 , success: function (data) {
@@ -388,21 +405,34 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $('[data-type="total-count"]').html(items.count);
-//                            self.afterRender();
-                            self.loadPersonsList(pathId);
+                            //                            self.afterRender();
+                            if (typeof callback === "function") {
+                                callback();
+                            }
                         });
                     });
                 }
-//                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
-//                }
             });
+        }
+        , searchTree: function (e) {
+            $('#tree').jstree(true).show_all();
+            $('#tree').jstree('search', $(e.target).val());
+        }
+        , loadAllFolderItems: function (event) {
+            event.preventDefault();
+            var maxItemsCount = $('.portlet.itemlist [data-type="total-count"]').text();
+            var currentLoadedItems = $('.portlet.itemlist table tbody tr').length;
+            if (maxItemsCount !== currentLoadedItems) {
+                this.loadTreeItems(this.cache.currentPathId, maxItemsCount + 100, function () {
+                    $('[data-task="load-all-folder-items"]').fadeOut();
+                });
+            }
         }
         , loadPersonsList: function (categoryId) {
             if (typeof categoryId === 'undefined' || categoryId <= 0)
                 return false;
             var self = this;
-            var params = {overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId};
+            var params = { overrideUrl: Config.api.mediapersons + '/?type=2&externalid=' + categoryId };
             var model = new IngestModel(params);
             var $container = $('#persons-group');
             $container.empty();
@@ -412,7 +442,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     var template = Template.template.load('resources/mediaitem', 'persons.partial');
                     template.done(function (tmplData) {
                         var handlebarsTemplate = Template.handlebars.compile(tmplData);
-                        var output = handlebarsTemplate({items: items, cols: true, placeholder: true});
+                        var output = handlebarsTemplate({ items: items, cols: true, placeholder: true });
                         $container.html(output).promise().done(function () {
                         });
                     });
@@ -422,8 +452,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , searchPersons: function (e) {
             e.preventDefault();
             var self = this;
-            var data = $.param({q: $('#person-q').val(), type: $('[data-type="person-type"]').val()});
-            var params = {overrideUrl: Config.api.persons};
+            var data = $.param({ q: $('#person-q').val(), type: $('[data-type="person-type"]').val() });
+            var params = { overrideUrl: Config.api.persons };
             new IngestModel(params).fetch({
                 data: data
                 , success: function (items) {
@@ -472,8 +502,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             bootbox.confirm({
                 message: "مورد انتخابی حذف خواهد شد، مطمئن هستید؟"
                 , buttons: {
-                    confirm: {className: 'btn-success'}
-                    , cancel: {className: 'btn-danger'}
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
                 }
                 , callback: function (results) {
                     if (results) {
@@ -490,7 +520,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 // items.push({id: $(this).attr('data-id'), name: '', family: '', type: ''});
                 items.push(~~$(this).attr('data-id'));
             });
-            new IngestModel({overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + id}).save(null, {
+            new IngestModel({ overrideUrl: Config.api.mediapersons + '?type=1&externalid=' + id }).save(null, {
                 data: JSON.stringify(items)
                 , contentType: 'application/json'
                 , processData: false
