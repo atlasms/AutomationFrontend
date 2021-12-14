@@ -380,8 +380,16 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return html.replace(new RegExp('<a ', 'g'), '<a target="_blank" ');
             });
             Handlebars.registerHelper('authorize', function (action, options) {
-                if (Authorize.access(action))
+                if (Authorize.access(action)) {
                     return options.fn(this);
+                }
+                return options.inverse(this);
+            });
+            Handlebars.registerHelper('authorizeByType', function (action, type, options) {
+                var requestType = typeof type !== 'undefined' && type ? type : null;
+                if (Authorize.access(action, null, requestType)) {
+                    return options.fn(this);
+                }
                 return options.inverse(this);
             });
             Handlebars.registerHelper('zeroFill', function (number, size, options) {
