@@ -11,6 +11,12 @@
                 "link": "/broadcast/schedule2"
             },
             {
+                "title": "گزارش کنداکتور",
+                "alias": "broadcast_schedulereport",
+                "icon": "list",
+                "link": "/broadcast/schedulereport"
+            },
+            {
                 "title": "مدیریت کرال",
                 "alias": "broadcast_crawl",
                 "icon": "font",

@@ -17,7 +17,10 @@
 								<li role="presentation"><a href="#tab_news-schedule" aria-controls="کنداکتور خبر" role="tab" data-toggle="tab">کنداکتور خبر</a></li>
 								<li role="presentation"><a href="#tab_lantv" aria-controls="پخش زنده" role="tab" data-toggle="tab">پخش زنده</a></li>
 								<li role="presentation"><a href="#tab_groups" aria-controls="گروه‌های کاربری" role="tab" data-toggle="tab">گروه‌های کاربری</a></li>
-								<li role="presentation"><a href="#tab_defenitions" aria-controls="تعاریف" role="tab" data-toggle="tab">زیرنویس</a></li>
+								<li role="presentation"><a href="#tab_definitions" aria-controls="تعاریف" role="tab" data-toggle="tab">زیرنویس</a></li>
+								{{#authorize 8388608}}
+								<li role="presentation"><a href="#tab_schedule-report" aria-controls="گزارش کنداکتور" role="tab" data-toggle="tab">گزارش کنداکتور</a></li>
+								{{/authorize}}
 							</ul>
 						</div>
 						<div class="col-xs-9">
@@ -103,7 +106,7 @@
 									{{{getDefinitionCheckboxes 14 'checkbox' 'li'}}}
 									</ul>
 								</div>
-								<div role="tabpanel" class="tab-pane fade" id="tab_defenitions">
+								<div role="tabpanel" class="tab-pane fade" id="tab_definitions">
 									<div class="row">
 										<div class="col-sm-4">
 											<strong>دسته‌های انبار</strong>
@@ -115,6 +118,99 @@
 											<strong>گروه</strong>
 											<ul class="row" data-type="crawl">
 											{{{getDefinitionCheckboxesById 63 'checkbox' 'li'}}}
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div role="tabpanel" class="tab-pane fade" id="tab_schedule-report">
+									<div class="row">
+										<div class="col-xs-12">
+											<strong>انتخاب ستون‌ها</strong>
+											<ul data-type="schedule-report">
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-0" value="row" type="checkbox">
+														<label for="checkbox_sr-0">ردیف</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-1" value="thumbnail" type="checkbox">
+														<label for="checkbox_sr-1">تصویر</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-2" value="fix" type="checkbox">
+														<label for="checkbox_sr-2">فیکس</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-3" value="start" type="checkbox">
+														<label for="checkbox_sr-3">زمان شروع</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-4" value="category" type="checkbox">
+														<label for="checkbox_sr-4">برنامه</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-5" value="episode" type="checkbox">
+														<label for="checkbox_sr-5">عنوان {{config '__.episode'}}</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-6" value="episode-number" type="checkbox">
+														<label for="checkbox_sr-6">{{config '__.episode'}}</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-7" value="duration" type="checkbox">
+														<label for="checkbox_sr-7">مدت</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-8" value="broadcast-count" type="checkbox">
+														<label for="checkbox_sr-8"># پخش</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-9" value="description" type="checkbox">
+														<label for="checkbox_sr-9">توضیحات</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-10" value="type" type="checkbox">
+														<label for="checkbox_sr-10">نوع آیتم</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-11" value="repeat" type="checkbox">
+														<label for="checkbox_sr-11">تکرار</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-12" value="feature" type="checkbox">
+														<label for="checkbox_sr-12">منتخب</label>
+													</div>
+												</li>
+												<li>
+													<div class="checkbox checkbox-primary checkbox-circle col-xs-12">
+														<input name="schedule" id="checkbox_sr-13" value="filename" type="checkbox">
+														<label for="checkbox_sr-13">نام فایل</label>
+													</div>
+												</li>
 											</ul>
 										</div>
 									</div>

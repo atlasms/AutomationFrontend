@@ -1,166 +1,199 @@
 <style>
-	@font-face{
-		font-family:'Vazir';font-style:normal;font-weight:normal;
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot);
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot?#iefix) format('embedded-opentype'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.woff) format('woff'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.ttf) format('truetype');
-	}
-	@font-face{
-		font-family:'Vazir';font-style:normal;font-weight:300;
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot);
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.woff) format('woff'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.ttf) format('truetype');
-	}
-	@font-face{
-		font-family:'Vazir';font-style:normal;font-weight:bold;
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot);
-		src:url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.woff) format('woff'),
-			url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.ttf) format('truetype');
-	}
-	html,body{font-family:'Vazir2'; margin: 0; padding: 0;}
-	@page { size: landscape; orientation: landscape; writing-mode: tb-rl; }
-	body { margin: 0; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
-	.wrapper { width: 94%; margin: auto; }
-	table { page-break-inside:auto; }
-	h1 { text-align: center; margin-bottom: 0; }
-	tr { page-break-inside:avoid; page-break-after:auto }
-	tr.highlight td { background: #eee; }
-	table.metadata { width: 100%; border-top: 0 solid transparent; }
-	table.metadata td { border: 0 none; }
-	table.schedule { border-bottom: 0 none; border-top: 0 none; }
-	table.schedule tr { border-bottom: 1px solid #555; }
-	table.schedule thead { border-top: 0 none; }
-	table.schedule thead th { border-top: 1px solid #555; }
-	tfoot { border-top: 1px solid; max-height: 1px; height: 0; border-right: 0 none; border-left: 0 none; }
-	th, td { border-right: 1px solid #555; padding: 2px 4px; }
-	table.schedule td { border-top: 1px solid #555; }
-	th { padding: 4px 6px; }
-	th:last-child, td:last-child { border-left: 1px solid #555; }
-	p { margin: 0; font-size: 10.5px; text-align: justify; line-height: 16px; }
-	figure { padding: 0; margin: 0; max-height: 68px; overflow: hidden; height: 68px; }
-	figure img { display: block; width: 120px; height: auto; }
-	.ltr { direction: ltr; text-align: left; font-family: Tahoma; }
-	.date { font-size: 12px; text-align: left; }
-	.date.number-only { font-size: 14px; text-align: center; font-weight: bold }
-	.date.number-only span { display: inline-block; padding: 0 8px; }
-	code{border:1px solid #e1e1e1;}
-	select { border: 0 none; color: #000; background: transparent; -webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: ''; }
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: normal;
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot);
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.woff) format('woff'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Regular-FD.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: 300;
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot);
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.woff) format('woff'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Light-FD.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Vazir';
+        font-style: normal;
+        font-weight: bold;
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot);
+        src: url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.eot?#iefix) format('embedded-opentype'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.woff) format('woff'),
+        url(../assets/font/vazir/v27.2.2/FD/Vazir-Bold-FD.ttf) format('truetype');
+    }
+    html, body {font-family: 'Vazir'; margin: 0; padding: 0;}
+    @page {
+        size: landscape;
+        orientation: landscape;
+        writing-mode: horizontal-tb;
+        counter-increment: page;
+        margin: 0;
+    }
+    @page {
+        @bottom-right {
+            content: counter(page) " از " counter(pages);
+        }
+		@top-center {
+			content: element(pageHeader);
+		}
+    }
+    body { margin: 0 0 1cm; padding: 0; width: 100%; direction: rtl; text-align: right; font-family: Vazir, Tahoma; font-size: 13px; padding-bottom: 30px; }
+    .wrapper { width: 94%; margin: auto; }
+    table { page-break-inside: auto; }
+    h1 { text-align: center; margin-bottom: 0; }
+    tr { page-break-inside: avoid; page-break-after: auto }
+    tr.highlight td { background: #eee; }
+    table.metadata { width: 100%; border-top: 0 solid transparent; }
+    table.metadata td { border: 0 none; }
+    table.schedule { border-bottom: 0 none; border-top: 0 none; }
+    table.schedule tr { border-bottom: 1px solid #555; }
+    table.schedule thead { border-top: 0 none; }
+    table.schedule thead th { border-top: 1px solid #555; }
+    tfoot { border-top: 1px solid #555; height: auto; border-right: 0 none; border-left: 0 none; }
+	tfoot tr,tfoot td { border: 0 none; font-style: italic; }
+	tfoot .jalali { float: left; }
+    th, td { border-right: 1px solid #555; padding: 2px 4px; }
+    table.schedule td { border-top: 1px solid #555; }
+    th { padding: 4px 6px; }
+    th:last-child, td:last-child { border-left: 1px solid #555; }
+    p { margin: 0; font-size: 10.5px; text-align: justify; line-height: 16px; }
+    figure { padding: 0; margin: 0; max-height: 68px; overflow: hidden; height: 68px; }
+    figure img { display: block; width: 120px; height: auto; }
+    .ltr { direction: ltr; text-align: left; font-family: Tahoma; }
+    .date { font-size: 12px; text-align: left; }
+    .date.number-only { font-size: 14px; text-align: center; font-weight: bold }
+    .date.number-only span { display: inline-block; padding: 0 8px; }
+    code {border: 1px solid #e1e1e1;}
+    select { border: 0 none; color: #000; background: transparent; -webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: ''; }
 </style>
 <div class="wrapper">
-	<table class="metadata" cellspacing="0" cellpadding="0" style="">
-		<tbody>
-			<tr>
-				<td rowspan="2" style="width: 28%;">
-					<img src="/assets/img/logo-light.png" alt="" />
-				</td>
-				<td rowspan="2" style="width: 54%;">
-					<h1>جدول پخش برنامه‌های شبکه {{config "channel"}}</h1>
-					<div class="date number-only">
-						<span class="jalali">{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd YYYY/MM/DD"}}{{/if}}{{/each}}</span>
-					</div>
-				</td>
-				<td class="date" style="width: 28%;">
-					<div class="jalali">{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd، DD MMMM YYYY"}}{{/if}}{{/each}}</div>
-					<div class="hijri">{{#each []}}{{#if @first}}{{formatHijri CondcutorStartTime "iDD iMMMM iYYYYهـ"}}{{/if}}{{/each}}</div>
-					<div class="gregorial ltr">{{#each []}}{{#if @first}}{{formatGregorian CondcutorStartTime "ddd, DD MMMM YYYY"}}{{/if}}{{/each}}</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<table class="schedule" cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 0.5cm;">
-		<thead>
-			<tr>
-				<th style="width: 40px; text-align: center;">ردیف</th>
-				{{#ifConfig 'schedule.showDescInPrint'}}
-				{{else}}
-				<th style="width: 115px;"></th>
-				{{/ifConfig}}
-				<th style="width: 70px; text-align: center;">شروع</th>
-				{{#ifConfig 'schedule.moveDurationColumn'}}
-				{{else}}
-				<th style="width: 70px; text-align: center;">مدت</th>
-				{{/ifConfig}}
-				<th style="width: {{#ifConfig 'schedule.showDescInPrint'}}415{{else}}300{{/ifConfig}}px;">نام برنامه</th>
-				<th style="width: 40px; text-align: center;">قسمت</th>
-				{{#ifConfig 'schedule.moveDurationColumn'}}
-				<th style="width: 70px; text-align: center;">مدت</th>
-				{{/ifConfig}}
-				<th style="width: 150px; text-align: center;">نام فایل</th>
-				<th>توضیحات</th>
-				<th style="width: 120px;">نوع برنامه</th>
-				<th style="width: 40px; text-align: center;">تکرار</th>
-				<th style="width: 40px; text-align: center;">منتخب</th>
-			</tr>
-		</thead>
-		<tfoot><tr><td colspan="100%"></td></tr></tfoot>
-		<tbody>
-			{{#each []}}
-			<tr data-id="{{ConductorId}}" class="{{#if CondcutorFeatured}}highlight{{/if}}">
-				<td style="text-align: center;">
-					{{math @index "+" 1}}
-				</td>
-				{{#ifConfig 'schedule.showDescInPrint'}}
-				{{else}}
-				<td>
-					<figure>
-						<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
-					</figure>
-				</td>
-				{{/ifConfig}}
-				<td style="text-align: center;">
-					<span>{{extractTime CondcutorStartTime}}</span>
-				</td>
-				{{#ifConfig 'schedule.moveDurationColumn'}}
-				{{else}}
-				<td style="text-align: center;">
-					<span>{{time ConductorDuration}}</span>
-				</td>
-				{{/ifConfig}}
-				<td>
-					{{#if ConductorCategoryTitle}}
-					{{ConductorCategoryTitle}}
-					<br />
-					{{/if}}
-					<strong>{{ConductorTitle}}</strong>
-					{{#ifConfig 'schedule.showDescInPrint'}}
-					<br />
-					<i>{{ConductorMediaDescription}}</i>
-					{{/ifConfig}}
-				</td>
-				<td style="text-align: center;">
-					<span>{{ConductorEpisodeNumber}}</span>
-				</td>
-				{{#ifConfig 'schedule.moveDurationColumn'}}
-				<td style="text-align: center;">
-					<span>{{time ConductorDuration}}</span>
-				</td>
-				{{/ifConfig}}
-				<td style="text-align: left; font-family: Tahoma; direction: ltr;">
-					{{#if ConductorMediaId}}
-					<code>{{zeroFillIndex @index 3}}_{{ConductorMediaId}}.mp4</code>
-					{{/if}}
-				</td>
-				<td>
-					{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
-				</td>
-				<td>
-					<select name="ConductorType" disabled>
-						{{#select ConductorType}}
-						{{{getDefinitionOptions 71}}}
-						{{/select}}
-					</select>
-				</td>
-				<td style="text-align: center;">
-					{{#if ConductorRepeat}}&times;{{/if}}
-				</td>
-				<td style="text-align: center;">
-					{{#if CondcutorFeatured}}&times;{{/if}}
-				</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
+    <table class="metadata" cellspacing="0" cellpadding="0" style="">
+        <tbody>
+        <tr>
+            <td rowspan="2" style="width: 28%;">
+                <img src="/assets/img/logo-light.png" alt=""/>
+            </td>
+            <td rowspan="2" style="width: 54%;">
+                <h1>جدول پخش برنامه‌های شبکه {{config "channel"}}</h1>
+                <div class="date number-only">
+                    <span class="jalali">{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd YYYY/MM/DD"}}{{/if}}{{/each}}</span>
+                </div>
+            </td>
+            <td class="date" style="width: 28%;">
+                <div class="jalali">{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd، DD MMMM YYYY"}}{{/if}}{{/each}}</div>
+                <div class="hijri">{{#each []}}{{#if @first}}{{formatHijri CondcutorStartTime "iDD iMMMM iYYYYهـ"}}{{/if}}{{/each}}</div>
+                <div class="gregorial ltr">{{#each []}}{{#if @first}}{{formatGregorian CondcutorStartTime "ddd, DD MMMM YYYY"}}{{/if}}{{/each}}</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="schedule" cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 0.5cm;">
+        <thead>
+        <tr>
+            <th style="width: 40px; text-align: center;">ردیف</th>
+            {{#ifConfig 'schedule.showDescInPrint'}}
+            {{else}}
+            <th style="width: 115px;"></th>
+            {{/ifConfig}}
+            <th style="width: 70px; text-align: center;">شروع</th>
+            {{#ifConfig 'schedule.moveDurationColumn'}}
+            {{else}}
+            <th style="width: 70px; text-align: center;">مدت</th>
+            {{/ifConfig}}
+            <th style="width: {{#ifConfig 'schedule.showDescInPrint'}}415{{else}}300{{/ifConfig}}px;">نام برنامه</th>
+            <th style="width: 40px; text-align: center;">قسمت</th>
+            {{#ifConfig 'schedule.moveDurationColumn'}}
+            <th style="width: 70px; text-align: center;">مدت</th>
+            {{/ifConfig}}
+            <th style="width: 150px; text-align: center;">نام فایل</th>
+            <th>توضیحات</th>
+            <th style="width: 120px;">نوع برنامه</th>
+            <th style="width: 40px; text-align: center;">تکرار</th>
+            <th style="width: 40px; text-align: center;">منتخب</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="100%">
+				<div class="jalali">
+					{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd، DD MMMM YYYY"}}{{/if}}{{/each}}
+				</div>
+				<div class="sign">
+				جدول پخش برنامه‌های شبکه {{config "channel"}}
+				</div>
+			</td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {{#each []}}
+        <tr data-id="{{ConductorId}}" class="{{#if CondcutorFeatured}}highlight{{/if}}">
+            <td style="text-align: center;">
+                {{math @index "+" 1}}
+            </td>
+            {{#ifConfig 'schedule.showDescInPrint'}}
+            {{else}}
+            <td>
+                <figure>
+                    <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
+                </figure>
+            </td>
+            {{/ifConfig}}
+            <td style="text-align: center;">
+                <span>{{extractTime CondcutorStartTime}}</span>
+            </td>
+            {{#ifConfig 'schedule.moveDurationColumn'}}
+            {{else}}
+            <td style="text-align: center;">
+                <span>{{time ConductorDuration}}</span>
+            </td>
+            {{/ifConfig}}
+            <td>
+                {{#if ConductorCategoryTitle}}
+                {{ConductorCategoryTitle}}
+                <br/>
+                {{/if}}
+                <strong>{{ConductorTitle}}</strong>
+                {{#ifConfig 'schedule.showDescInPrint'}}
+                <br/>
+                <i>{{ConductorMediaDescription}}</i>
+                {{/ifConfig}}
+            </td>
+            <td style="text-align: center;">
+                <span>{{ConductorEpisodeNumber}}</span>
+            </td>
+            {{#ifConfig 'schedule.moveDurationColumn'}}
+            <td style="text-align: center;">
+                <span>{{time ConductorDuration}}</span>
+            </td>
+            {{/ifConfig}}
+            <td style="text-align: left; font-family: Tahoma; direction: ltr;">
+                {{#if ConductorMediaId}}
+                <code>{{zeroFillIndex @index 3}}_{{ConductorMediaId}}.mp4</code>
+                {{/if}}
+            </td>
+            <td>
+                {{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
+            </td>
+            <td>
+                <select name="ConductorType" disabled>
+                    {{#select ConductorType}}
+                    {{{getDefinitionOptions 71}}}
+                    {{/select}}
+                </select>
+            </td>
+            <td style="text-align: center;">
+                {{#if ConductorRepeat}}&times;{{/if}}
+            </td>
+            <td style="text-align: center;">
+                {{#if CondcutorFeatured}}&times;{{/if}}
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
 </div>

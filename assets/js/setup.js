@@ -140,6 +140,7 @@ require.config({
         , "broadcast.schedule.view": ["../../app/broadcast/schedule/schedule.view"]
         , "broadcast.schedule2.view": ["../../app/broadcast/schedule/schedule2.view"]
         , "broadcast.scheduleprint.view": ["../../app/broadcast/schedule/scheduleprint.view"]
+        , "broadcast.schedulereport.view": ["../../app/broadcast/schedule/schedulereport.view"]
         , "broadcast.crawl.view": ["../../app/broadcast/crawl/crawl.view"]
         , "broadcast.prices.view": ["../../app/broadcast/prices/prices.view"]
         , "broadcast.photos.view": ["../../app/broadcast/photos/photos.view"]

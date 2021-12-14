@@ -1,0 +1,141 @@
+<div class="portlet box">
+	<div class="portlet-body">
+		<div class="mainbody">
+			<table class="table table-bordered table-striped table-condensed flip-content table-hover" id="schedule-report">
+				<thead>
+				<tr>
+					{{#authorizeByType 'row' 'schedule-report'}}
+					<th>#</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'thumbnail' 'schedule-report'}}
+					<th>تصویر</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'fix' 'schedule-report'}}
+					<th>فیکس</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'start' 'schedule-report'}}
+					<th class="col-xs-2">شروع</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'category' 'schedule-report'}}
+					<th class="col-xs-3">برنامه</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'episode' 'schedule-report'}}
+					<th class="col-xs-3">عنوان {{config '__.episode'}}</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'episode-number' 'schedule-report'}}
+					<th>{{config '__.episode'}}</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'duration' 'schedule-report'}}
+					<th class="col-xs-2">مدت</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'filename' 'schedule-report'}}
+					<th class="col-xs-2">نام فایل</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'broadcast-count' 'schedule-report'}}
+					<th># پخش</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'description' 'schedule-report'}}
+					<th class="col-xs-3">توضیحات</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'type' 'schedule-report'}}
+					<th class="col-xs-2">نوع آیتم</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'repeat' 'schedule-report'}}
+					<th>تکرار</th>
+					{{/authorizeByType}}
+					{{#authorizeByType 'feature' 'schedule-report'}}
+					<th>منتخب</th>
+					{{/authorizeByType}}
+				</tr>
+				</thead>
+				<tfoot><tr><td colspan="100%"></td></tr></tfoot>
+				<tbody>
+				{{#each []}}
+				<tr data-id="{{ConductorId}}" class="{{#if CondcutorFeatured}}highlight{{/if}}">
+					{{#authorizeByType 'row' 'schedule-report'}}
+					<td>
+						{{math @index "+" 1}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'thumbnail' 'schedule-report'}}
+					<td>
+						<figure>
+							<img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
+						</figure>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'fix' 'schedule-report'}}
+					<td class="text-center">
+						{{#if CondcutorIsFixed}}&times;{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'start' 'schedule-report'}}
+					<td class="text-center">
+						<span>{{extractTime CondcutorStartTime}}</span>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'category' 'schedule-report'}}
+					<td>
+						{{#if ConductorCategoryTitle}}
+						{{ConductorCategoryTitle}}
+						{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'episode' 'schedule-report'}}
+					<td>
+						<strong>{{ConductorTitle}}</strong>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'episode-number' 'schedule-report'}}
+					<td class="text-center">
+						<span>{{ConductorEpisodeNumber}}</span>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'duration' 'schedule-report'}}
+					<td>
+						<span>{{time ConductorDuration}}</span>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'filename' 'schedule-report'}}
+					<td class="ltr">
+						{{#if ConductorMediaId}}
+						<code>{{zeroFillIndex @index 3}}_{{ConductorMediaId}}.{{config 'hqVideoFormat'}}</code>
+						{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'broadcast-count' 'schedule-report'}}
+					<td class="text-center">
+						{{#if ConductorUseCount}}{{ConductorUseCount}}{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'description' 'schedule-report'}}
+					<td>
+						{{#if ConductorNote}}<p>{{ConductorNote}}</p>{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'type' 'schedule-report'}}
+					<td>
+						<select name="ConductorType" disabled>
+							{{#select ConductorType}}
+							{{{getDefinitionOptions 71}}}
+							{{/select}}
+						</select>
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'repeat' 'schedule-report'}}
+					<td class="text-center">
+						{{#if ConductorRepeat}}&times;{{/if}}
+					</td>
+					{{/authorizeByType}}
+					{{#authorizeByType 'feature' 'schedule-report'}}
+					<td class="text-center">
+						{{#if CondcutorFeatured}}&times;{{/if}}
+					</td>
+					{{/authorizeByType}}
+				</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -228,7 +228,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'broadcast/schedule': { 'private': true, 'view': 'broadcast.schedule.view', 'action': 'ScheduleView', 'file': 'app/broadcast/schedule/schedule.view' }
             , 'broadcast/schedule2': { 'private': true, 'view': 'broadcast.schedule2.view', 'action': 'ScheduleView2', 'file': 'app/broadcast/schedule/schedule2.view' }
             , 'broadcast/prices': { 'private': true, 'view': 'broadcast.prices.view', 'action': 'PricesView', 'file': 'app/broadcast/prices/prices.view' }
-            , 'broadcast/scheduleprint': { 'private': false, 'view': 'broadcast.scheduleprint.view', 'skipLayout': true, 'action': 'ScheduleView', 'file': 'app/broadcast/schedule/schedule.view' }
+            , 'broadcast/scheduleprint': { 'private': false, 'view': 'broadcast.scheduleprint.view', 'skipLayout': true, 'action': 'SchedulePrintView', 'file': 'app/broadcast/schedule/scheduleprint.view' }
+            , 'broadcast/schedulereport': { 'private': false, 'view': 'broadcast.schedulereport.view', 'action': 'ScheduleReportView', 'file': 'app/broadcast/schedule/schedulereport.view' }
             , 'broadcast/crawl': { 'private': true, 'view': 'broadcast.crawl.view', 'action': 'CrawlView', 'file': 'app/broadcast/crawl/crawl.view' }
             , 'broadcast/photos': { 'private': true, 'view': 'broadcast.photos.view', 'action': 'BroadcastPhotosView', 'file': 'app/broadcast/photos/photos.view' }
             , 'resources/ingest': { 'private': true, 'view': 'resources.ingest.view', 'action': 'IngestView', 'file': 'app/resources/ingest/ingest.view' }
