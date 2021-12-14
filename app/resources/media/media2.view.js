@@ -47,6 +47,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , classification: ''
             , MetaDataProductionGroup: ''
             , ordering: 'MediaCreated desc'
+            // , creator: -1
         }
         , treeInstance: {}
         , events: {
