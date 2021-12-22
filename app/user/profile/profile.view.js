@@ -28,7 +28,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'inb
                 toastr['warning']('لطفاً اطلاعات وارد شده را بررسی کنید.', 'خطا', Config.settings.toastr);
                 return false;
             }
-            new UserModel({path: '/checkpassword', query: 'pwd=' + data.Password}).fetch({
+            new UserModel({path: '/checkpassword'}).save(null, {
+                data: JSON.stringify({pwd: data.Password}),
+                contentType: 'application/json',
                 success: function (res) {
                     var response = res.toJSON();
                     delete response.path;

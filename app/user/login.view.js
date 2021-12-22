@@ -101,7 +101,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
                 this.showUpdatePasswordMessage(msg);
                 return false;
             }
-            new User({path: '/checkpassword', query: 'pwd=' + data.Password}).fetch({
+            new User({path: '/checkpassword'}).save(null, {
+                data: JSON.stringify({pwd: data.Password}),
+                contentType: 'application/json',
                 success: function (res) {
                     var response = res.toJSON();
                     delete response.path;
@@ -115,6 +117,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'user', 'users
                         new UsersManageModel({id: 'resetpassword/' + self.userData.data.Id}).save(null, {
                             data: JSON.stringify({key: 'Password', Value: data.Password})
                             , contentType: 'application/json'
+                            , headers: {
+                                'Authorization': self.userData.token
+                            }
                             , success: function (d) {
                                 toastr['success']('عملیات با موفقیت انجام شد.', 'تغییر رمز عبور', Config.settings.toastr);
                                 self.afterLogin(self.userData);

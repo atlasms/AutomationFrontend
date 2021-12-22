@@ -4,12 +4,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 //        el: $(Config.positions.wrapper),
         model: 'Media2Model'
         , toolbar: [
-            {'filters': {}}
-            , {'button': {cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter'}}
-            , {'button': {cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search'}}
-            , {'button': {cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;'}}
-            , {'button': {cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
-            , {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
+            { 'filters': {} }
+            , { 'button': { cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter' } }
+            , { 'button': { cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search' } }
+            , { 'button': { cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;' } }
+            , { 'button': { cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;' } }
+            , { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
         ]
         , statusbar: []
         , defaultListLimit: Config.defalutMediaListLimit
@@ -47,7 +47,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , classification: ''
             , MetaDataProductionGroup: ''
             , ordering: 'MediaCreated desc'
-            // , creator: -1
+            , ingestuser: ''
+            , baravord: ''
         }
         , treeInstance: {}
         , events: {
@@ -143,35 +144,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // $this.parents('dl:first').find('select').prop('disabled', 'disabled');
             // $('[name="' + $this.attr('data-toggle') + '"]').prop('disabled', false);
         }
-        , loadUsersList: function () {
+        , loadUsersList: function (items) {
             var self = this;
             if ($("select[name=ToUserId] option").length > 1)
                 return false;
-            new UsersManageModel({}).fetch({
-                success: function (items) {
-                    var items = items.toJSON();
+            // new UsersManageModel({}).fetch({
+            //     success: function (items) {
+            //         var items = items.toJSON();
 
-                    self.usersCache = [];
-                    $.each(items, function () {
-                        if (this.State) {
-                            var user = {
-                                id: this.Id,
-                                name: this.Name !== '' ? this.Family + '، ' + this.Name : this.Family,
-                                groups: []
-                            };
-                            if (typeof this.Access !== 'undefined' && this.Access.length) {
-                                for (var i = 0; i < this.Access.length; i++) {
-                                    if (this.Access[i].Key === 'groups') {
-                                        user.groups.push(this.Access[i].Value);
-                                    }
-                                }
+            self.usersCache = [];
+            $.each(items, function () {
+                if (this.State) {
+                    var user = {
+                        id: this.Id,
+                        name: this.Name !== '' ? this.Family + '، ' + this.Name : this.Family,
+                        groups: []
+                    };
+                    if (typeof this.Access !== 'undefined' && this.Access.length) {
+                        for (var i = 0; i < this.Access.length; i++) {
+                            if (this.Access[i].Key === 'groups') {
+                                user.groups.push(this.Access[i].Value);
                             }
-                            $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
-                            self.usersCache.push(user);
                         }
-                    });
+                    }
+                    $("[name=ToUserId]").append('<option value="' + this.Id + '" data-groups="' + user.groups.join(',') + '">' + user.name + '</option>');
+                    self.usersCache.push(user);
                 }
             });
+            //     }
+            // });
         }
         , updateUserList: function (e) {
             var value = $(e.target).val();
@@ -231,7 +232,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadWebp: function (e) {
             var $row = $(e.target).is('tr') ? $(e.target) : $(e.target).parents('tr:first');
             var $img = $row.find('img[data-webp]');
-            $img.parent().css({'position': 'relative'});
+            $img.parent().css({ 'position': 'relative' });
             if ($row.find('.proxy-thumb').length) {
                 if ($row.find('.proxy-thumb').not('.has-error').length) {
                     $img.attr('src', $img.attr('data-webp'));
@@ -243,7 +244,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $img.parent().append($("<div><dt/><dd/></div>").attr("class", "webp-progress"));
                 $(".webp-progress").width((50 + Math.random() * 30) + "%");
                 $('.proxy-thumb').on('load', function () {
-                    $(this).css({'display': 'none'});
+                    $(this).css({ 'display': 'none' });
                     $img.attr('src', $img.attr('data-webp'));
                     if ($row.hasClass('video'))
                         $row.removeClass('video').addClass('video1');
@@ -254,7 +255,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     if ($row.hasClass('video1'))
                         $row.removeClass('video1').addClass('video');
                     $(this).addClass('has-error');
-                    $(this).css({'display': 'none'});
+                    $(this).css({ 'display': 'none' });
                     $(this).parent().find(".webp-progress").remove();
                     if ($img.attr('src') !== $img.attr('data-orig'))
                         $img.attr('src', $img.attr('data-orig'));
@@ -283,14 +284,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , loadSharedParams: function (callback) {
-            var params = {tags: [], subjects: [], persons: []};
+            var params = { tags: [], subjects: [], persons: [] };
             new SharedModel().fetch({
                 success: function (tags) {
                     params.tags = tags.toJSON();
-                    new SharedModel({overrideUrl: 'share/persons'}).fetch({
+                    new SharedModel({ overrideUrl: 'share/persons' }).fetch({
                         success: function (persons) {
                             params.persons = persons.toJSON();
-                            new SharedModel({overrideUrl: 'share/subjects'}).fetch({
+                            new SharedModel({ overrideUrl: 'share/subjects' }).fetch({
                                 success: function (subjects) {
                                     params.subjects = subjects.toJSON();
                                     if (typeof callback === "function")
@@ -307,7 +308,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var $li = $(e.target).parents('li:first');
             var $item = $(e.target).parents('tr:first');
-            var params = {task: $li.data('task'), value: $li.data('value'), id: $item.data('id')};
+            var params = { task: $li.data('task'), value: $li.data('value'), id: $item.data('id') };
 
             if (parseInt($item.data('state'), 10) === parseInt(params.value, 10)) {
                 toastr.warning('تغییر وضعیت به وضعیت فعلی امکان‌پذیر نیست.', 'خطا', Config.settings.toastr);
@@ -319,7 +320,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return;
             }
 
-            var modelParams = {overrideUrl: Config.api.media + '/files', id: params.id};
+            var modelParams = { overrideUrl: Config.api.media + '/files', id: params.id };
             new MediaitemModel(modelParams).fetch({
                 success: function (items) {
                     var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
@@ -488,7 +489,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             this.handleFilterLabels(fields);
 
-            this.currentPageUrl = '?' + $.param(fields);
+            this.currentPageUrl = '?' + decodeURIComponent($.param(fields));
 
             // DEV
             // $('pre.alert-danger').html(JSON.stringify(fields, null, 2));
@@ -526,7 +527,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var defaultFields = this.fields;
             for (var field in fields) {
                 if (fields[field] !== defaultFields[field]) {
-                    this.filters.push({field: field, title: $('[data-type="' + field + '"]').parents('.mt-element-ribbon:first').find('.ribbon').text(), value: fields[field]});
+                    this.filters.push({ field: field, title: $('[data-type="' + field + '"]').parents('.mt-element-ribbon:first').find('.ribbon').text(), value: fields[field] });
                 }
             }
             this.updateFilters(this.filters);
@@ -591,10 +592,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
 
         , handleRangeSliders: function () {
-            $("#duration").ionRangeSlider({type: "double", grid: true, min: 0, max: 360, from: 0, to: 360, prefix: ""})
-            $("#broadcastCount").ionRangeSlider({type: "double", grid: true, min: 0, max: 999, from: 0, to: 999, prefix: ""})
+            $("#duration").ionRangeSlider({ type: "double", grid: true, min: 0, max: 360, from: 0, to: 360, prefix: "" })
+            $("#broadcastCount").ionRangeSlider({ type: "double", grid: true, min: 0, max: 999, from: 0, to: 999, prefix: "" })
         }
-        , searchTree: function(e) {
+        , searchTree: function (e) {
             $('#tree').jstree(true).show_all();
             $('#tree').jstree('search', $(e.target).val());
         }
@@ -626,13 +627,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 //     });
                 //     // self.load();
                 // });
-                self.tree = new Tree($("#tree"), Config.api.tree, null, {hasCheckboxes: true});
+                self.tree = new Tree($("#tree"), Config.api.tree, null, { hasCheckboxes: true });
                 self.tree.render();
             }
         }
         , loadBasicData: function () {
             var self = this;
-            var params = {tags: [], subjects: [], persons: [], users: []};
+            var params = { tags: [], subjects: [], persons: [], users: [], ingestuser: [] };
             self.loadTags(function (tags) {
                 params.tags = tags;
                 self.loadSubjects(function (subjects) {
@@ -641,6 +642,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         params.persons = persons;
                         self.loadUsers(function (users) {
                             params.users = users;
+                            params.ingestuser = users;
 
                             // load data
                             self.renderBasicData(params);
@@ -651,7 +653,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadSubjects: function (callback) {
             var self = this;
-            var queryParams = {overrideUrl: 'share/subjects'};
+            var queryParams = { overrideUrl: 'share/subjects' };
             new SharedModel(queryParams).fetch({
                 success: function (subjects) {
                     subjects = self.prepareItems(subjects.toJSON(), queryParams);
@@ -673,7 +675,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadPersons: function (callback) {
             var self = this;
-            var queryParams = {type: 0, q: '', overrideUrl: 'share/persons'};
+            var queryParams = { type: 0, q: '', overrideUrl: 'share/persons' };
             new SharedModel(queryParams).fetch({
                 success: function (persons) {
                     persons = self.resolvePersonTypes(self.prepareItems(persons.toJSON(), queryParams));
@@ -683,13 +685,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
         }
         , loadUsers: function (callback) {
+            var self = this;
             new UsersManageModel({}).fetch({
                 success: function (users) {
                     users = users.toJSON();
                     var userList = [];
                     $.each(users, function (i, user) {
-                        userList.push({id: user.Id, title: user.Family + ' ' + user.Name});
+                        userList.push({ id: user.Id, title: user.Family + ' ' + user.Name });
                     });
+                    self.loadUsersList(users);
                     if (typeof callback === 'function')
                         callback(userList);
                 }
@@ -703,7 +707,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 personTypeList[item.value] = item.text;
             });
             $.each(persons, function (i, person) {
-                personsList.push({id: person.id, title: person.family + ' ' + person.name + ' (' + personTypeList[person.type] + ')'});
+                personsList.push({ id: person.id, title: person.family + ' ' + person.name + ' (' + personTypeList[person.type] + ')' });
             });
             return personsList;
         }
@@ -728,7 +732,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getParams();
             // set date from url query
-            var data = $.param(params);
+            var data = decodeURIComponent($.param(params));
             var model = new Media2Model(params);
             model.fetch({
                 data: data
@@ -758,7 +762,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 $("select.select2").each(function () {
                     if ($(this).hasClass("select2-hidden-accessible"))
                         $(this).select2('destroy');
-                    $(this).select2({dir: "rtl", multiple: true, tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first')});
+                    $(this).select2({ dir: "rtl", multiple: !$(this).is('[name="ingestuser"]'), tags: true, placeholder: $(this).parent().find('span').text(), dropdownParent: $(this).parents('form:first') });
                 });
 
                 var $charts = $('.chart');

@@ -5,7 +5,7 @@ define(["jquery", "underscore", "backbone"
             this.config = config;
         }
         , url: function() {
-            return this.config.api.url + this.config.api.definitions;
+            return this.config.api.url + this.config.api.definitions + '?_=20211221';
         }
     });
     return DefinitionsModel;
