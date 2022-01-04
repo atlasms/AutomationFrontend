@@ -33,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task=select-folder]': 'setCategory'
             , 'click [data-task=return-item]': 'returnItem'
             , 'click [data-seek]': 'seekPlayer'
-            , 'submit .chat-form': 'insertComment'
+            , 'submit .chat-form': 'saveComment'
             , 'click [data-task="change-comment-state"]': 'changeCommentState'
             , 'click .open-item': 'openItem'
             , 'click .item-forms > .nav-tabs li a': 'loadTab'
@@ -66,6 +66,75 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="assign-item"]': 'assign'
             , 'click [name="to-type"]': 'changeSendRecipient'
             , 'change [name="ToGroupId"]': 'updateUserList'
+            // comment tools
+            , 'click [data-task="reply-comment"]': 'replyComment'
+            , 'click [data-task="delete-comment"]': 'deleteComment'
+            , 'click [data-task="edit-comment"]': 'editComment'
+            , 'click [data-task="cancel-comment-reply"]': 'cancelCommentReply'
+            , 'click [data-task="cancel-comment-edit"]': 'cancelCommentEdit'
+        }
+
+        , cancelCommentEdit: function (e) {
+            if (typeof e != 'undefined') {
+                e.preventDefault();
+            }
+            var $edit = $('.edit-text');
+            $edit.attr('data-cid', '');
+            $edit.attr('data-reply', '');
+            $edit.find('span:first').text('');
+            $edit.addClass('hide');
+            $('.chats li').removeClass('editing')
+        }
+        , cancelCommentReply: function (e) {
+            if (typeof e != 'undefined') {
+                e.preventDefault();
+            }
+            var $reply = $('.reply-text');
+            $reply.attr('data-cid', '');
+            $reply.attr('data-user', '');
+            $reply.find('span:first').text('');
+            $reply.addClass('hide');
+        }
+        , replyComment: function (e) {
+            e.preventDefault();
+            this.cancelCommentEdit();
+            var $comment = $(e.target).parents('li:first')
+            var commentId = $comment.data('id');
+            var text = $comment.find('.body span').text();
+            var originalWriter = $comment.find('.name').text();
+            var $reply = $('.reply-text');
+            $reply.attr('data-cid', commentId.toString());
+            $reply.attr('data-user', originalWriter);
+            $reply.find('span:first').text(text);
+            $reply.removeClass('hide');
+        }
+        , deleteComment: function (e) {
+            e.preventDefault();
+            var self = this;
+            var $comment = $(e.target).parents('li:first');
+            var commentId = $comment.data('id');
+            new ReviewModel({ overrideUrl: Config.api.comments, id: commentId }).save({
+                Key: 'State',
+                Value: 3
+            }, {
+                patch: true,
+                success: function (d) {
+                    self.loadSidebarComments({ query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments });
+                }
+            })
+        }
+        , editComment: function (e) {
+            this.cancelCommentReply();
+            var $comment = $(e.target).parents('li:first');
+            var commentId = $comment.data('id');
+            var commentBody = $comment.find('.body span').text();
+            var $edit = $('.edit-text');
+            $comment.addClass('editing');
+            $edit.attr('data-reply', $comment.find('blockquote').length ? '1' : '0');
+            $edit.attr('data-cid', commentId.toString());
+            $edit.find('span:first').text(commentBody);
+            $edit.removeClass('hide');
+            $('.chat-form [name="Body"]').val(commentBody);
         }
 
         , assign: function (e) {
@@ -540,6 +609,41 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 }
             });
         }
+        , saveComment: function (e) {
+            if (!$('.chat-form [name="Body"]').val()) {
+                toastr.error('متن نظر خالی است', 'ذخیره نظر', Config.settings.toastr);
+                return false;
+            }
+            if ($('.edit-text').is(':visible') && $('.edit-text').data('cid') !== '') {
+                this.updateComment(e);
+            } else {
+                this.insertComment(e);
+            }
+        }
+        , updateComment: function (e) {
+            var self = this;
+            var text = $('.chat-form [name="Body"]').val();
+            var $editingComment = $('.chats li.editing blockquote');
+            var commentId = $('.edit-text').data('cid');
+            if ($('.edit-text').attr('data-reply') == 1) {
+                text = $editingComment.find('strong').text()
+                    + '░░░' + $editingComment.find('p').text()
+                    + '░░░' + text
+            }
+            text += '▓▓▓' + $('.chats li.editing .body span').text();
+            var params = { Key: 'Body', Value: text };
+            console.log(params);
+            new ReviewModel({ overrideUrl: Config.api.comments, id: commentId }).save(params, {
+                patch: true
+                , success: function (model, response) {
+                    toastr.success('عملیات با موفقیت انجام شد', 'ویرایش نظر', Config.settings.toastr);
+                    self.loadSidebarComments({ query: 'externalid=' + self.getId() + '&kind=1', overrideUrl: Config.api.comments });
+                    $('.edit-text').hide();
+                }
+            });
+            e.preventDefault();
+            return false;
+        }
         , insertComment: function (e) {
             var self = this;
             var $form = $(e.currentTarget);
@@ -551,6 +655,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 start: $form.find('[data-type="clip-start"]').val()
                 , end: $form.find('[data-type="clip-end"]').val()
             });
+            if ($('.reply-text').data('cid') !== '' && $.trim($('.reply-text').find('span:first').text()) !== '') {
+                data[0].Body = $.trim($('.reply-text').data('user'))
+                    + '░░░' + $('.reply-text').find('span:first').text()
+                    + '░░░' + data[0].Body;
+            }
             new ReviewModel({ overrideUrl: Config.api.comments }).save(null, {
                 data: JSON.stringify(data)
                 , contentType: 'application/json'
@@ -559,7 +668,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                     toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
                 }
                 , success: function (model, response) {
-                    toastr.success('success', 'saved', Config.settings.toastr);
+                    toastr.success('با موفقیت انجام شد', 'ثبت نظر', Config.settings.toastr);
                     self.loadComments({ query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments });
                     self.loadSidebarComments({ query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments });
                 }
@@ -593,10 +702,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             });
         }
         , loadSidebarComments: function (params) {
+
+            this.cancelCommentEdit();
+            this.cancelCommentReply();
+
+            var userId = Global.Cache.getStorage().data.Id;
             var self = this;
             new MediaModel(params).fetch({
                 success: function (items) {
                     items = self.prepareItems(items.toJSON(), params);
+                    items.forEach(function (item) {
+                        item.isMine = parseInt(item.FromUserId, 10) === parseInt(userId, 10);
+                        if (item.Body.indexOf('░░░') > -1) {
+                            item.replyToUser = item.Body.split('░░░')[0];
+                            item.replyBody = item.Body.split('░░░')[1];
+                            item.Body = item.Body.split('░░░')[2];
+                        }
+                        if (item.Body.indexOf('▓▓▓') > -1) {
+                            item.history = item.Body.split('▓▓▓')[1];
+                            item.Body = item.Body.split('▓▓▓')[0];
+                        }
+                    });
                     var template = Template.template.load('resources/review', 'comments-with-history.partial');
                     template.done(function (data) {
                         var handlebarsTemplate = Template.handlebars.compile(data);
