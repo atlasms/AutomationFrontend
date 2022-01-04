@@ -381,7 +381,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 q: ''
                 , type: 0
                 , offset: 0
-                , count: 10000
+                , count: 100
                 , categoryId: ''
                 , state: Config.mediaList.defaultStateValue
                 , episode: ''
@@ -406,7 +406,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 q: $.trim($("[name=q]").val()),
                 type: $("[name=type]").val(),
                 offset: 0,
-                count: 10000,
+                count: 100,
                 categoryId: catid,
                 state: state,
                 startdate: $("[name=media-search-startdate]").is('[disabled]')
@@ -427,10 +427,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadBroadcastMediaItems: function (params) {
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getBroadcastMediaParams();
-            var data = $.param(params);
+            var data = decodeURIComponent($.param(params));
             var model = new MediaModel(params);
             model.fetch({
+            // model.save(null, {
                 data: data
+                // data: JSON.stringify(params)
+                // , contentType: 'application/json'
                 , success: function (items) {
                     var items = { items: self.prepareItems(items.toJSON(), params) };
                     var template = Template.template.load('broadcast/schedule', 'media.items.partial');
@@ -457,11 +460,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , loadMediaItems: function (params) {
             var self = this;
             var params = (typeof params !== "undefined") ? params : self.getParams();
-            var data = $.param(params);
+            var data = decodeURIComponent($.param(params));
             // params.path = 'list';
             var model = new Media2Model(params);
-            model.fetch({
-                data: data
+            // model.fetch({
+            model.save(null, {
+                // data: data
+                data: JSON.stringify(params)
+                , contentType: 'application/json'
                 , success: function (items) {
                     items = items.toJSON();
                     var template = Template.template.load('broadcast/schedule', 'media.items.partial');
