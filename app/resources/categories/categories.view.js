@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'users.manage.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap-table'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'resources.categories.model', 'resources.media.model', 'resources.metadata.model', 'users.manage.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootbox', 'bootstrap/tab', 'bootstrap-table', 'bootstrap/modal'
 ], function ($, _, Backbone, Template, Config, Global, moment, CategoriesModel, MediaModel, MetadataModel, UsersManageModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, bootbox) {
     bootbox.setLocale('fa');
     var CategoriesView = Backbone.View.extend({
@@ -8,7 +8,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
         , defaultListLimit: Config.defalutMediaListLimit
         , flags: {}
         , cache: {
-            currentPathId: ''
+            currentPathId: '',
+            samtData: []
         }
         , events: {
             'click [data-task=refresh-view]': 'reLoad'
@@ -23,8 +24,71 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click [data-task="revoke-access"]': 'revokeAccess'
             , 'click [data-task="grant-access"]': 'grantAccess'
             , 'click [data-task="remove-website"]': 'removeFromWebsite'
+            , 'click [data-task="get-samt-data"]': 'getSamtData'
+            , 'click [data-task="set-samt-data"]': 'setSamtData'
 
             , 'keyup [data-type="tree-search"]': 'searchTree'
+        }
+        , setSamtData: function (e) {
+            var self = this;
+            bootbox.confirm({
+                message: "اطلاعات انتخاب شده جایگزین اطلاعات موجود خواهد شد. پس از بررسی یا اعمال تغییرات، فشردن دکمه ثبت اطلاعات را فراموش نکنید!"
+                , buttons: {
+                    confirm: { className: 'btn-success' }
+                    , cancel: { className: 'btn-danger' }
+                }
+                , callback: function (results) {
+                    if (results) {
+                        var samtId = $(e.target).parents('[data-id]:first').data('id');
+                        var samtData = null;
+                        self.cache.samtData.find(function (item) {
+                            if (parseInt(item.samtId, 10) === parseInt(samtId, 10)) {
+                                samtData = item;
+                                return true;
+                            }
+                        });
+                        if (samtData) {
+                            $('[name="PublicTitle"]').val(samtData.title);
+                            $('[name="BroadcastMode"]').val(samtData.isLive ? '1' : '2');
+                            $('[name="Classification"]').val(samtData.grade);
+                            $('[name="PublicDescr"]').val(samtData.summary);
+                            $('[name="Genre"]').filter(function () {
+                                return $(this).text() === samtData.structure;
+                            }).prop('selected', true);
+                            $('[name="ProductionDate"]').val(moment(samtData.productionStartDate).format('x'));
+
+                            // TODO: update persons and subjects
+
+                            $('#samt-modal').modal('hide');
+                            toastr.success('اطلاعات با موفقیت به روز رسانی شد.');
+                        } else {
+                            toastr.error('خطا در دریافت اطلاعات');
+                        }
+                    }
+                }
+            });
+        }
+        , getSamtData: function (e) {
+            e.preventDefault();
+            var self = this;
+            var estimate = $('[name="Baravord"]').val();
+            if (estimate) {
+                // TODO: get data from server
+                $.ajax({
+                    url: '//api.hbbtv.ir/samt/' + estimate,
+                    data: $.param({ channelId: Config.samtChannelId }),
+                    success: function (data) {
+                        self.cache.samtData = data.data;
+                        var template = Template.template.load('resources/categories', 'samt-suggestions.partial');
+                        template.done(function (tmpl) {
+                            var handlebarsTemplate = Template.handlebars.compile(tmpl);
+                            var output = handlebarsTemplate(data.data);
+                            $('#samt-results').empty().html(output);
+                            $('#samt-modal').modal('show');
+                        });
+                    }
+                })
+            }
         }
         , removeFromWebsite: function (e) {
             e.preventDefault();

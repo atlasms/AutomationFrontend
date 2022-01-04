@@ -1,0 +1,63 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    {{#each []}}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="heading-{{@index}}" data-id="{{samtId}}">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{@index}}">
+                    {{title}}
+                </a>
+            </h4>
+        </div>
+        <div id="collapse-{{@index}}" class="panel-collapse collapse" role="tabpanel" data-id="{{samtId}}">
+            <div class="panel-body">
+                <table class="table table-condensed table-bordered table-striped">
+                    <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <button class="pull-right btn blue-ebonyclay" data-task="set-samt-data">انتخاب</button>
+                            <div class="clearfix"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">عنوان</th>
+                        <td class="col-xs-9">{{title}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">شماره براورد</th>
+                        <td class="col-xs-9">{{estimateId}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">شماره مجوز</th>
+                        <td class="col-xs-9">{{licenseId}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">نحوه پخش</th>
+                        <td class="col-xs-9">{{#if isLive}}زنده{{else}}ضبطی{{/if}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">طبقه</th>
+                        <td class="col-xs-9">{{grade}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">توضیحات</th>
+                        <td class="col-xs-9">{{summary}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">تهیه کننده</th>
+                        <td class="col-xs-9">{{#each producer}}{{firstName}} {{lastName}}{{/each}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">شروع تولید</th>
+                        <td class="col-xs-9">{{extractDate productionStartDate}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-xs-3">ساختار</th>
+                        <td class="col-xs-9">{{structure}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>

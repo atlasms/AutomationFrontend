@@ -34,6 +34,8 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         HDPlayback: true,
         newsTicker: false,
         showVideoAspectRatio: false,
+        samtEnabled: true,
+        samtChannelId: 59,
         // 'initialRedirect: '/resources/media2',
         epgMediaPath: 'http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}',
         minimumRequiredPersons: 2,
