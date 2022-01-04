@@ -49,6 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , ordering: 'MediaCreated desc'
             , ingestuser: ''
             , baravord: ''
+            , showtask: Config.mediaList.showLastTask ? 1 : 0
         }
         , treeInstance: {}
         , events: {
@@ -438,7 +439,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
         }
         , checkActive: function (field) {
-            return $('[data-type="' + field + '"]').parents('.pane').find('.checkbox input')[0].checked;
+            try {
+                checked = $('[data-type="' + field + '"]').parents('.pane').find('.checkbox input')[0].checked;
+            } catch (e) {
+                checked = false;
+            }
+            return checked;
         }
         , resolveLabel: function ($element, value) {
             return $element.find('option[value="' + value + '"]').text();
@@ -734,8 +740,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // set date from url query
             var data = decodeURIComponent($.param(params));
             var model = new Media2Model(params);
-            model.fetch({
-                data: data
+            model.save(null, {
+                // data: data
+                data: JSON.stringify(params)
+                , contentType: 'application/json'
                 , success: function (items) {
                     items = items.toJSON();
                     var template = Template.template.load('resources/media', 'media2.items.partial');
