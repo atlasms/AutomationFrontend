@@ -385,9 +385,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $("[data-type=path]").length && $("[data-type=path]").val(path.toString());
             $("[data-type=path-id]").length && $("[data-type=path-id]").val(pathId.toString());
 
+            this.loadCategoryMetadata(pathId);
             this.loadTreeItems(pathId, self.defaultListLimit, function () {
                 self.loadPersonsList(pathId);
             });
+        }
+        , loadCategoryMetadata: function(pathId) {
+            var self = this;
+            var $container = $('#category-metadata');
+            var params = { query: 'MasterId=' + pathId };
+            $container.empty();
+            new MetadataModel(params).fetch({
+                success: function(data) {
+                    var item = self.prepareItems(data.toJSON(), params);
+                    var template = Template.template.load('resources/categories', 'category.metadata-condensed.partial');
+                    template.done(function(tmpl) {
+                        var handlebarTemplate = Template.handlebars.compile(tmpl);
+                        var html = handlebarTemplate(item);
+                        $container.html(html);
+                    });
+                }
+            })
         }
         , loadTreeItems: function (pathId, count, callback) {
             var self = this;

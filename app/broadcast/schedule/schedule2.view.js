@@ -159,6 +159,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $activeRow.find('[data-type="media-id"]').text($row.data('id'));
             $activeRow.find('[data-type="episode-number"]').val($.trim($row.find('[data-field="EpisodeNumber"]').text()));
             $activeRow.find('[data-type="broadcast-count"]').val($row.find('[data-field="broadcast-count"]').text());
+            if (Config.schedule.disableExtraBroadcast) {
+                if (~~$row.find('[data-field="allowed-broadcast-count"]').text() !== 0
+                    && ~~$row.find('[data-field="allowed-broadcast-count"]').text() >= ~~$row.find('[data-field="broadcast-count"]').text()) {
+                    $activeRow.attr('data-invalid-extra', 'true');
+                }
+            }
             if (!$activeRow.find('[name="ConductorMediaId"]').next().is('.remove-meta')) {
                 $activeRow.find('[name="ConductorMediaId"]').after('<a href="#" class="remove-meta">×</a>');
             }
@@ -657,6 +663,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 if (~~$(this).attr('data-media-id') !== 0 && $(this).attr('data-has-hq') !== 'true') {
                     onSaveError.push('در سطر ' + (i + 1) + ' فایل مربوط به پخش وجود ندارد و در زمان ارسال پلی‌لیست ارسال نخواهد شد.');
+                }
+                if (Config.schedule.disableExtraBroadcast) {
+                    if (~~$(this).attr('data-media-id') !== 0 && $(this).attr('data-invalid-extra') !== 'true') {
+                        onSaveError.push('در سطر ' + (i + 1) + ' تعداد مجاز پخش بیش از حد تعیین شده است.');
+                    }
                 }
             });
             if (onSaveError.length) {

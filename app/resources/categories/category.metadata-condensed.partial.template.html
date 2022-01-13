@@ -1,0 +1,125 @@
+<style>
+    #category-metadata-table { margin: 0; }
+    #category-metadata-table select {
+        appearance: none; font-weight: bold; padding: 0; margin: 0; border: 0 none; pointer-events: none;
+        box-shadow: none; background: transparent; display: inline-block; width: auto; float: left; height: auto;
+        text-align: left;
+    }
+    #category-metadata-table strong { float: left; }
+</style>
+<div class="portlet box yellow" style="border: 1px solid #c49f47">
+    <div class="portlet-title" style="background-color: #c49f47">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+            خلاصه اطلاعات برنامه
+        </div>
+    </div>
+    <div class="portlet-body" style="padding: 0;">
+        <div class="mainbody">
+            <table class="table table-condensed table-bordered" id="category-metadata-table">
+                <tbody>
+                <tr>
+                    <td class="col-sm-3 active">
+                        عنوان برنامه
+                        <strong>{{PublicTitle}}</strong>
+                    </td>
+                    <td class="col-sm-3">
+                        شماره براورد
+                        <strong>{{Baravord}}</strong>
+                    </td>
+                    <td class="col-sm-3 active">
+                        نحوه پخش
+                        <select class="form-control" name="BroadcastMode">
+                            {{#select BroadcastMode}}
+                            {{{getDefinitionOptions 164}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3">
+                        ساختار
+                        <select class="form-control" name="Structure">
+                            {{#select Structure}}
+                            {{{getDefinitionOptions 149}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-3">
+                        موضوع
+                        <select class="form-control" name="Subject">
+                            {{#select Subject}}
+                            {{{getDefinitionOptions 152}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3 active">
+                        طبقه
+                        <select class="form-control" name="Classification">
+                            {{#select Classification}}
+                            {{{getDefinitionOptions 154}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3">
+                        نوع برنامه
+                        <select class="form-control" name="Kind">
+                            {{#select Kind}}
+                            {{{getDefinitionOptions 36}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3 active">
+                        جنس برنامه
+                        <select class="form-control" name="SupplyType">
+                            {{#select SupplyType}}
+                            {{{getDefinitionOptions 160}}}
+                            {{/select}}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-3 active">
+                        میزان نگهداری
+                        <select class="form-control" name="KeepDuration">
+                            {{#select KeepDuration}}
+                            <option value="-1">دائم</option>
+                            <option value="10">10 روز</option>
+                            <option value="14">دو هفته</option>
+                            <option value="21">سه هفته</option>
+                            <option value="30">یک ماه</option>
+                            <option value="60">دو ماه</option>
+                            <option value="90">سه ماه</option>
+                            <option value="180">شش ماه</option>
+                            <option value="360">یک سال</option>
+                            {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3">
+                        ثبت مدیا
+                        <select class="form-control" name="AddMedia" {{#authorize 2147483648}}{{else}}disabled{{/authorize}}>
+                        {{#select AddMedia}}
+                        <option value="1">فعال</option>
+                        <option value="0">غیرفعال</option>
+                        {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3 active">
+                        نیاز به بازبینی
+                        <select class="form-control" name="ReviewNeeded" {{#authorize 536870912}}{{else}}disabled{{/authorize}}>
+                        {{#select ReviewNeeded}}
+                        <option value="1">دارد</option>
+                        <option value="0">ندارد</option>
+                        {{/select}}
+                        </select>
+                    </td>
+                    <td class="col-sm-3">
+                        شروع تولید
+                        <strong>{{extractDate ProductionDate}}</strong>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

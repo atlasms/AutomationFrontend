@@ -436,9 +436,15 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         schedule: {
             fixedMediaStateFilter: false,
             moveDurationColumn: true,
-            // typeaheadEnabled: false,
+            typeaheadEnabled: true,
             pageLimit: 100,
             pagination: false,
+            showDescInPrint: true,
+            disableExtraBroadcast: false,
+        },
+        ingest: {
+            showFileNameWarning: false,
+            showCategoryMetadata: true,
         },
         temp: {
             titleTypes: {

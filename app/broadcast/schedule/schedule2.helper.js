@@ -419,7 +419,8 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
             clone.addClass('error new').removeClass('gap fixed overlap').attr('title', 'اطلاعات سطر وارد نشده است.');
             clone.attr('data-media-state', '')
                 .attr('data-media-id', '')
-                .attr('data-has-hq', 'false');
+                .attr('data-has-hq', 'false')
+                .attr('data-invalid-extra', 'false');
             clone.find('[id]').removeAttr('id');
             clone.find('img').attr('src', Config.placeholderImage);
             clone.find('textarea').val('');
@@ -689,8 +690,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                         if (parseInt(data.kind) !== 3) {
                             $parent.find("label").text(data.text);
                             $parent.find('[name="ConductorCategoryTitle"]').val(data.text);
-                            if (!$parent.find(".remove-meta").length)
+                            if (!$parent.find(".remove-meta").length) {
                                 $parent.find('[name="ConductorMetaCategoryId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
+                            }
                             $row.find('[name="ConductorMediaId"]').parent().find(".remove-meta").trigger('click');
                         } else {
                             $parent.find("label").text('');
@@ -704,20 +706,28 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $parent.find("label").html(data.text + ' (' + data.episode + ')');
                             $row.find("img").attr('src', data.thumbnail);
                             $parent.find('[name="ConductorTitle"]').val(data.text);
-                            if (!$parent.find(".remove-meta").length)
+                            if (!$parent.find(".remove-meta").length) {
                                 $parent.find('[name="ConductorMediaId"]').val(data.externalId).after('<a href="#" class="remove-meta">&times;</a>');
-                            if ($row.find(".item-link").length)
+                            }
+                            if ($row.find(".item-link").length) {
                                 $row.find(".item-link").remove();
+                            }
                             $row.find('.idx').after('<a class="item-link" href="/resources/mediaitem/' + data.externalId + '" target="_blank"><i class="fa fa-info-circle"></i></a>');
                             $row.find('[name="ConductorDuration"]').val(Global.createTime(data.duration));
                             $row.find('[name="ConductorEpisodeNumber"]').val(data.episode);
 //                            if (!$row.find('[name="ConductorMetaCategoryId"]').val()) {
                             $row.find('[name="ConductorCategoryTitle"]').val(data.metaCategoryTitle);
                             $row.find('[name="ConductorMetaCategoryId"]').parent().find(".remove-meta").remove();
-                            if (!$row.find('[name="ConductorMetaCategoryId"]').parents(".td:first").find(".remove-meta").length)
+                            if (!$row.find('[name="ConductorMetaCategoryId"]').parents(".td:first").find(".remove-meta").length) {
                                 $row.find('[name="ConductorMetaCategoryId"]').val(data.metaCategoryId).after('<a href="#" class="remove-meta">&times;</a>');
+                            }
                             $row.find('[name="ConductorMetaCategoryId"]').parent().find("label").text(data.metaCategoryTitle);
 //                            }
+                            if (Config.schedule.disableExtraBroadcast) {
+                                if (data.ConductorUseCount !== 0 && data.ConductorUseCount >= AllowedBroadcastCount) {
+                                    $row.attr('data-invalid-extra', 'true');
+                                }
+                            }
                         } else {
                             $parent.find("label").html('');
                             $parent.find(".remove-meta, .item-link").remove();

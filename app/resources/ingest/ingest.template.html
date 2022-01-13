@@ -22,8 +22,17 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-9">
+                    {{#ifConfig "ingest.showFileNameWarning"}}
+                    <div class="alert alert-danger">
+                        <i class="fa fa-warning"></i>
+                        برای جلوگیری از بروز خطا در ورود اطلاعات از به کار بردن حروف غیر انگلیسی و بیش از یک خط تیره «-» متوالی در نام‌گذاری فایل خودداری کنید.
+                    </div>
+                    {{/ifConfig}}
                     <div id="storagefiles-place"></div>
                     <hr/>
+                    {{#ifConfig "ingest.showCategoryMetadata"}}
+                    <div id="category-metadata"></div>
+                    {{/ifConfig}}
                     <div id="metadata-place"></div>
                 </div>
             </div>

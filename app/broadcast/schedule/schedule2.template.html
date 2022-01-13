@@ -13,6 +13,11 @@
         display: block; content: 'نقص فایل' !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
         font-weight: bold; color: red; z-index: 100;
     }
+    .table-row:not([data-media-id="0"]):not([data-invalid-extra="false"]) { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/V6z4zwjjgzkREYxgARgHxGZE5oAEAPNyD1MmeippAAAAAElFTkSuQmCC) !important; }
+    .table-row:not([data-media-id="0"]):not([data-invalid-extra="false"]):before {
+        display: block; content: 'تعداد پخش غیرمجاز' !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
+        font-weight: bold; color: red; z-index: 100;
+    }
     .table.table-bordered thead > tr > th { white-space: nowrap; }
     #media-modal .modal-header { border-bottom: 0 none; }
     #media-modal .modal-body { padding-top: 0; }
@@ -227,7 +232,7 @@
                 </nav>
                 <ul class="table-body">
                     {{#each []}}
-                    <li data-media-state="{{ConductorMediaState}}" data-media-state-text="{{ConductorMediaStateText}}" data-media-id="{{ConductorMediaId}}" data-has-hq="{{ConductorMediaHasHq}}" data-id="{{ConductorId}}" class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
+                    <li data-media-state="{{ConductorMediaState}}" data-media-state-text="{{ConductorMediaStateText}}" data-invalid-extra="false" data-media-id="{{ConductorMediaId}}" data-has-hq="{{ConductorMediaHasHq}}" data-id="{{ConductorId}}" class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
                         <div class="td id">
                             <input type="hidden" name="titles" value=""/>
                             <input type="hidden" name="subtitles" value=""/>
