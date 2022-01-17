@@ -2,6 +2,7 @@
     .table-header { white-space: nowrap; }
     .advanced-search { display: block; position: absolute; top: 0; left: 0; font-size: 11px; text-decoration: none; opacity: 0; visibility: hidden; transition: 0.2s all; }
     .advanced-search:hover { text-decoration: none; }
+    .table-row { position: relative; }
     .table-row.active .advanced-search { opacity: 1; visibility: visible; }
     .table-row:not([data-media-id="0"]):not([data-media-state="1"]) { position: relative; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/XV3/M8L4YM7u3YxgARgHxGZE5oAEAMDJDo311ujtAAAAAElFTkSuQmCC) !important; }
     .table-row:not([data-media-id="0"]):not([data-media-state="1"]):before {
@@ -13,8 +14,8 @@
         display: block; content: 'نقص فایل' !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
         font-weight: bold; color: red; z-index: 100;
     }
-    .table-row:not([data-media-id="0"]):not([data-invalid-extra="false"]) { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/V6z4zwjjgzkREYxgARgHxGZE5oAEAPNyD1MmeippAAAAAElFTkSuQmCC) !important; }
-    .table-row:not([data-media-id="0"]):not([data-invalid-extra="false"]):before {
+    .table-row[data-invalid-extra="1"]:not([data-media-id="0"]) { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQYV2NkQAL/V6z4zwjjgzkREYxgARgHxGZE5oAEAPNyD1MmeippAAAAAElFTkSuQmCC) !important; }
+    .table-row[data-invalid-extra="1"]:not([data-media-id="0"]):before {
         display: block; content: 'تعداد پخش غیرمجاز' !important; position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
         font-weight: bold; color: red; z-index: 100;
     }
@@ -232,7 +233,16 @@
                 </nav>
                 <ul class="table-body">
                     {{#each []}}
-                    <li data-media-state="{{ConductorMediaState}}" data-media-state-text="{{ConductorMediaStateText}}" data-invalid-extra="false" data-media-id="{{ConductorMediaId}}" data-has-hq="{{ConductorMediaHasHq}}" data-id="{{ConductorId}}" class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}">
+                    <li data-media-state="{{ConductorMediaState}}"
+                        data-media-state-text="{{ConductorMediaStateText}}"
+                        data-use-count="{{ConductorUseCount}}"
+                        data-use-limit="{{ConductorUseLimit}}"
+                        data-media-id="{{ConductorMediaId}}"
+                        data-has-hq="{{ConductorMediaHasHq}}"
+                        data-id="{{ConductorId}}"
+                        class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}"
+                        {{#validateBroadcastCount ConductorUseCount ConductorUseLimit}}{{else}}data-invalid-extra="1"{{/validateBroadcastCount}}
+                    >
                         <div class="td id">
                             <input type="hidden" name="titles" value=""/>
                             <input type="hidden" name="subtitles" value=""/>

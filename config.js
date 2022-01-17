@@ -440,7 +440,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             pageLimit: 100,
             pagination: false,
             showDescInPrint: true,
-            disableExtraBroadcast: false,
+            disableExtraBroadcast: true,
         },
         ingest: {
             showFileNameWarning: false,

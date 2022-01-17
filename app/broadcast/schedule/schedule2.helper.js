@@ -644,7 +644,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                     , url: CONFIG.api.url + CONFIG.api.schedule + '/suggestion?q=%QUERY&type=%TYPE&category='
                     , prepare: function (query, settings) {
                         var $currentInput = $('[data-suggestion]:focus');
-                        settings.url = settings.url.replace('%QUERY', query).replace('%TYPE', $currentInput.attr("data-suggestion-type"));
+                        settings.url = settings.url.replace('%QUERY', decodeURIComponent(query)).replace('%TYPE', $currentInput.attr("data-suggestion-type"));
                         if ($currentInput.attr("data-suggestion-type") !== "cat" && parseInt($currentInput.parents("li:first").find("[name=ConductorMetaCategoryId]").val()) > 0)
                             settings.url += parseInt($currentInput.parents("li:first").find("[name=ConductorMetaCategoryId]").val());
                         settings.url += '&_t=' + (new Date()).getTime();
@@ -724,7 +724,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'global', 'moment-with-loc
                             $row.find('[name="ConductorMetaCategoryId"]').parent().find("label").text(data.metaCategoryTitle);
 //                            }
                             if (Config.schedule.disableExtraBroadcast) {
-                                if (data.ConductorUseCount !== 0 && data.ConductorUseCount >= AllowedBroadcastCount) {
+                                if (data.ConductorUseCount !== 0 && data.ConductorUseCount > data.ConductorUseLimit) {
                                     $row.attr('data-invalid-extra', 'true');
                                 }
                             }
