@@ -313,6 +313,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                         , processData: false
                         , error: function (e, data) {
                             toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
+                            $tree.jstree(true).delete_node(node)
                         }
                         , success: function (model, response) {
                             $tree.jstree(true).set_id(node, response);
