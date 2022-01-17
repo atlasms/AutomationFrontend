@@ -87,6 +87,14 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                         return options.inverse(this);
                 }
             });
+            Handlebars.registerHelper('validateBroadcastCount', function (broadcastCount, broadcastLimit, options) {
+                if (parseInt(broadcastCount) === 0 || parseInt(broadcastLimit) === 0) {
+                    return options.fn(this);
+                }
+                if (parseInt(broadcastCount) > parseInt(broadcastLimit)) {
+                    return options.inverse(this);
+                }
+            });
             Handlebars.registerHelper('ifDate', function (value, options) {
                 return (value && value.indexOf('1970-01') === -1) ? options.fn(this) : options.inverse(this);
             });
