@@ -114,7 +114,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                     if ($(node).get(0).li_attr.deleted == true) {
                         delete contextItems.Create;
                         delete contextItems.Delete;
-                        contextItems.Acticate = {
+                        contextItems.Activate = {
                             label: 'un-delete'
                             , icon: 'fa fa-check'
                             , action: function (data) {
@@ -130,7 +130,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                             }
                         }
                     } else {
-                        delete contextItems.Acticate;
+                        delete contextItems.Activate;
                     }
 //                    console.log($(node).get(0).li_attr.deleted);
                     return contextItems;
