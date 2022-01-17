@@ -54,7 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             });
         }
         , afterRender: function () {
-            $('#schedule-report').bootstrapTable($.extend({}, Config.settings.bootstrapTable, {pageSize: 100}));
+            $('#schedule-report').bootstrapTable($.extend({}, Config.settings.bootstrapTable, {pageSize: 500}));
         }
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
