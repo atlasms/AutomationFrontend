@@ -55,6 +55,7 @@
 					{{#authorizeByType 'row' 'schedule-report'}}
 					<td>
 						{{math @index "+" 1}}
+						{{#if ConductorMediaId}}<a class="item-link" href="/resources/mediaitem/{{ConductorMediaId}}" target="{{config 'mediaLinkTarget'}}"><i class="fa fa-info-circle"></i></a>{{/if}}
 					</td>
 					{{/authorizeByType}}
 					{{#authorizeByType 'thumbnail' 'schedule-report'}}
