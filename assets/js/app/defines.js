@@ -79,6 +79,15 @@ define(["config", "jquery", "underscore", "backbone", "router", "template", "glo
                     404: function () {
                         toastr.error('سرویس پیدا نشد! [404]', 'خطا');
                     },
+                    406: function (res) {
+                        if (typeof res.responseText !== 'undefined' && res.responseText) {
+                            toastr.error(res.responseText, 'خطا');
+                        } else if (typeof res.responseJSON !== 'undefined' && typeof res.responseJSON.Message !== 'undefined' && res.responseJSON.Message) {
+                            toastr.error(res.responseJSON.Message, 'خطا');
+                        } else {
+                            toastr.error('درخواست شما قابل قبول نیست، لطفاً از صحت ورودی‌ها اطمینان حاصل کنید. [406]', 'خطا');
+                        }
+                    },
                     409: function () {
                         toastr.error('کاربر تکراری!', 'خطا');
                     },
