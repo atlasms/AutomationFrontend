@@ -4,6 +4,7 @@
             <table id="users-manage-table" class="table table-bordered table-striped table-condensed flip-content table-hover" data-toggle="table">
                 <thead>
                 <tr>
+                    <th class="">ردیف</th>
                     <th class="">شناسه</th>
                     <!--                    <th class="col-xs-1"></th>-->
                     <th class="col-xs-2">نام</th>
@@ -19,48 +20,48 @@
                 </thead>
                 <tbody>
                 {{#each []}}
-                <tr data-id="{{Id}}" data-index="{{math @index " +
-                " 1}}">
-                <td>{{math @index "+" 1}}</td>
-                <!--                <td class="text-center">-->
-                <!--                    <figure>-->
-                <!--                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />-->
-                <!--                    </figure>-->
-                <!--                </td>-->
-                <td class="">
-                    <span class="">{{Name}} {{Family}}</span>
-                </td>
-                <td>
-                    {{#ifCond this.State '==' 1}}<span class="btn default green-stripe btn-xs btn-block" data-task="deactivate"><i class="fa fa-unlock"></i> فعال</span>{{/ifCond}}
-                    {{#ifCond this.State '==' 0}}<span class="btn default red-stripe btn-xs btn-block" data-task="activate"><i class="fa fa-ban"></i> غیرفعال</span>{{/ifCond}}
-                </td>
-                <td class=" text-right">
-                    <span class="ltr">{{UserName}}</span>
-                </td>
-                <!--						<td class="text-right">
-                                            <span class="">{{Email}}</span>
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="">{{Phone}}</span>
-                                        </td>-->
-                <td class="text-right">
-                    {{extractTime LastPasswordChanged}} {{extractDate LastPasswordChanged}}
-                </td>
-                <td class="text-right">
-                    {{extractTime LoginDate}} {{extractDate LoginDate}}
-                </td>
-                <td class="ltr text-center">
-                    {{LoginIp}}
-                </td>
-                <td class="">
-                    {{Roles}}
-                    <a target="_blank" href="/user/acl/{{Id}}" class="btn default  btn-sm">
-                        <i class="fa fa-cog"></i> دسترسی‌ها
-                    </a>
-                    <button class="btn btn-sm grey" data-task="reset-password">
-                        <i class="fa fa-pencil-square-o"></i> ریست رمزعبور
-                    </button>
-                </td>
+                <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}">
+                    <td>{{math @index "+" 1}}</td>
+                    <td>{{Id}}</td>
+                    <!--                <td class="text-center">-->
+                    <!--                    <figure>-->
+                    <!--                        <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />-->
+                    <!--                    </figure>-->
+                    <!--                </td>-->
+                    <td class="">
+                        <span class="">{{Name}} {{Family}}</span>
+                    </td>
+                    <td>
+                        {{#ifCond this.State '==' 1}}<span class="btn default green-stripe btn-xs btn-block" data-task="deactivate"><i class="fa fa-unlock"></i> فعال</span>{{/ifCond}}
+                        {{#ifCond this.State '==' 0}}<span class="btn default red-stripe btn-xs btn-block" data-task="activate"><i class="fa fa-ban"></i> غیرفعال</span>{{/ifCond}}
+                    </td>
+                    <td class=" text-right">
+                        <span class="ltr">{{UserName}}</span>
+                    </td>
+                    <!--						<td class="text-right">
+                                                <span class="">{{Email}}</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="">{{Phone}}</span>
+                                            </td>-->
+                    <td class="text-right">
+                        {{extractTime LastPasswordChanged}} {{extractDate LastPasswordChanged}}
+                    </td>
+                    <td class="text-right">
+                        {{extractTime LoginDate}} {{extractDate LoginDate}}
+                    </td>
+                    <td class="ltr text-center">
+                        {{LoginIp}}
+                    </td>
+                    <td class="">
+                        {{Roles}}
+                        <a target="_blank" href="/user/acl/{{Id}}" class="btn default btn-sm">
+                            <i class="fa fa-cog"></i> دسترسی‌ها
+                        </a>
+                        <button class="btn btn-sm grey" data-task="reset-password">
+                            <i class="fa fa-pencil-square-o"></i> ریست رمزعبور
+                        </button>
+                    </td>
                 </tr>
                 {{/each}}
                 </tbody>
@@ -93,13 +94,13 @@
                         <p> لطفاً با توجه به قوانین زیر رمز عبور جدیدی انتخاب کنید تا خطر سرقت رمز عبور شما کاهش پیدا کند.</p>
                         <p>رمز عبور جدید باید شامل موارد زیر باشد:</p>
                         <p>
-                        <ul style="direction: rtl;">
-                            <li>دست کم 6 حرف باشد</li>
-                            <li>دست کم یک حرف لاتین کوچک؛ مثل a</li>
-                            <li>دست کم یک حرف لاتین بزرگ؛ مثل A</li>
-                            <li>دست کم یک عدد؛ مثل 123</li>
-                            <li>دست کم یک کاراکتر علامت؛ مثل @#$</li>
-                        </ul>
+                            <ul style="direction: rtl;">
+                                <li>دست کم 6 حرف باشد</li>
+                                <li>دست کم یک حرف لاتین کوچک؛ مثل a</li>
+                                <li>دست کم یک حرف لاتین بزرگ؛ مثل A</li>
+                                <li>دست کم یک عدد؛ مثل 123</li>
+                                <li>دست کم یک کاراکتر علامت؛ مثل @#$</li>
+                            </ul>
                         </p>
                     </div>
                     <div class="alert alert-danger" style="display: none;">
