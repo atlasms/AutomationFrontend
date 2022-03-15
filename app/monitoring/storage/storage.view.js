@@ -52,6 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                    <tr>\n' +
                 '                        <th class="col-xs-2">نام برنامه</th>\n' +
                 '                        <th class="col-xs-1">حجم</th>\n' +
+                '                        <th class="col-xs-1">حجم زیرمجموعه‌ها</th>\n' +
                 '                        <th class="col-xs-1">تعداد مدیا</th>\n' +
                 '                        <th class="col-xs-1">جمع مدت</th>\n' +
                 '                        <th class="col-xs-2">آخرین اینجست</th>\n' +
@@ -66,6 +67,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 '                        <tr>\n' +
                 '                            <td>{{CategoryTitle}}</td>\n' +
                 '                            <td style="direction: ltr; text-align: left;"><strong>{{CategoryOnlineFilesSizeReadble}}</strong></td>\n' +
+                '                            <td style="direction: ltr; text-align: left;"><strong>{{CategoryTotalOnlineFilesSizeReadble}}</strong></td>\n' +
                 '                            <td class="text-center">{{CategoryMediasCount}}</td>\n' +
                 '                            <td class="text-center">{{time2 CategoryMediasDuration}}</td>\n' +
                 '                            <td>{{extractTime CategoryLastMediaIngest}} {{extractDate CategoryLastMediaIngest}}</td>\n' +
