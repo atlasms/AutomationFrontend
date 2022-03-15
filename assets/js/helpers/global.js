@@ -425,6 +425,36 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             }
             return true;
         }
+        , humanFileSize: function (bytes, si, dp) {
+            if (typeof si === 'undefined' || si === null) {
+                si = false;
+            }
+            if (typeof dp === 'undefined' || dp === null) {
+                dp = 1;
+            }
+            if (typeof bytes === 'undefined' || bytes === null || isNaN(bytes)) {
+                return '-';
+            }
+            var thresh = si ? 1000 : 1024;
+
+            if (Math.abs(bytes) < thresh) {
+                return bytes + ' B';
+            }
+
+            var units = si
+                ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+                : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+            var u = -1;
+            var r = Math.pow(10, dp);
+
+            do {
+                bytes /= thresh;
+                ++u;
+            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+
+            return bytes.toFixed(dp) + ' ' + units[u];
+        }
         // TODO: make it work with all kinds of flat data
         , unFlattenTreeData: function (array, parent, tree) {
             tree = typeof tree !== 'undefined' ? tree : [];

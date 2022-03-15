@@ -472,6 +472,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
             Handlebars.registerHelper('stringify', function (json) {
                 return JSON.stringify(json);
             });
+            Handlebars.registerHelper('size', function (value) {
+                return Global.humanFileSize(value);
+            });
             Handlebars.registerHelper('input', function (value, options) {
                 var policy = Global.getInputPolicy(value);
                 var $el = $(options.fn(this));
