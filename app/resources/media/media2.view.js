@@ -7,6 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             { 'filters': {} }
             , { 'button': { cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter' } }
             , { 'button': { cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search' } }
+            , { 'button': { cssClass: 'btn green pull-right', text: 'دانلود', type: 'button', task: 'download-batch', icon: 'fa fa-download', style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
@@ -68,6 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-batch"]': 'openAssignBatchModal'
+            , 'click [data-task="download-batch"]': 'downloadBatch'
             , 'click [data-task="assign-item"]': 'assign'
             , 'change [name="ToGroupId"]': 'updateUserList'
             , 'click [name="assign-item"]': function (e) {
@@ -139,6 +141,35 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
             $('[name="MasterId"]').val(selectedItems.join('$$'));
             $('#assign-modal').modal('toggle');
+        }
+        , downloadBatch: function (e) {
+            e.preventDefault();
+            var selectedMedia = [];
+            $('#metadata-page tbody tr').each(function () {
+                if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
+                    selectedMedia.push($(this).find('img:first').attr('src').replace('.jpg', '_hq.mxf'));
+                }
+            });
+            if (selectedMedia.length) {
+                this.download(selectedMedia);
+            } else {
+                toastr.warning('هیچ موردی انتخاب نشده است.', 'خطا', Config.settings.toastr);
+            }
+        }
+        , download: function (list) {
+            for (var i = 0; i < list.length; i++) {
+                var iframe = $('<iframe style="visibility: collapse;"></iframe>');
+                $('body').append(iframe);
+                var content = iframe[0].contentDocument;
+                var form = '<form action="' + list[i] + '" method="GET"></form>';
+                content.write(form);
+                $('form', content).submit();
+                setTimeout((function (iframe) {
+                    return function () {
+                        iframe.remove();
+                    }
+                })(iframe), 2000);
+            }
         }
         , changeSendRecipient: function (e) {
             var $this = $(e.target);
