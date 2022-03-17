@@ -24,7 +24,7 @@
     .modal-content { min-height: 400px; }
     .chart { position: relative; display: inline-block; width: 48px; height: 48px; text-align: center; margin-top: 4px; margin-bottom: 0; }
     .chart canvas { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-    .percent { display: inline-block; line-height: 48px; z-index: 2;  font-size: .8em; }
+    .percent { display: inline-block; line-height: 48px; z-index: 2; font-size: .8em; }
     .percent:after { content: '%'; margin-left: 0.1em; font-size: .7em; }
 </style>
 <div id="metadata-page" class="portlet box">
@@ -43,7 +43,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-search"></i></span>
                                 <input data-type="q" type="text" class="form-control" name="q" placeholder="جستجو" value="">
-<!--                                <input data-type="sorting" type="hidden" name="sorting" value="" />-->
+                                <!--                                <input data-type="sorting" type="hidden" name="sorting" value="" />-->
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="ribbon-content">
                         <div class="form-group">
-                            <input data-type="duration" id="duration" type="text" name="duration" value="0;360" placeholder="مدت" />
+                            <input data-type="duration" id="duration" type="text" name="duration" value="0;360" placeholder="مدت"/>
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon has-icon"><i class="fa fa-sort-numeric-asc"></i></span>
-                                <input type="number" placeholder="شماره قسمت" class="form-control" data-type="episode" name="episode" />
+                                <input type="number" placeholder="شماره قسمت" class="form-control" data-type="episode" name="episode"/>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@
                     <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>
                     <div class="ribbon ribbon-color-primary uppercase">
                         <div class="checkbox checkbox-default checkbox-circle">
-                            <input id="filter_161"  type="checkbox">
+                            <input id="filter_161" type="checkbox">
                             <label for="filter_161"><i class="fa fa-tv"></i> بازه پخش شده</label>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                     </div>
                 </div>
                 <div class="pane mt-element-ribbon bg-white collapsed">
-<!--                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>-->
+                    <!--                    <button type="button" class="toggle-pane"><i class="fa fa-compress"></i></button>-->
                     <button type="button" class="toggle-tree-modal"><i class="fa fa-share-square-o"></i></button>
                     <div class="modal fade" id="tree-modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog container" role="document">
@@ -218,7 +218,7 @@
                                 <div class="modal-body">
                                     <div class="form-group input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i> جستجو در برنامه‌ها</span>
-                                        <input type="text" placeholder="جستجو" class="form-control" data-type="tree-search" />
+                                        <input type="text" placeholder="جستجو" class="form-control" data-type="tree-search"/>
                                     </div>
                                     <div data-type="categoryId" id="tree"></div>
                                 </div>
@@ -232,14 +232,14 @@
                         </div>
                     </div>
                     <div class="ribbon-content">
-<!--                        <div class="form-group">-->
-<!--                            <div class="input-group">-->
-<!--                                <span class="input-group-addon has-icon"><i class="fa fa-sitemap"></i></span>-->
-<!--                                <select data-type="change-mode" class="form-control select2" name="change-mode">-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div data-type="categoryId" id="tree"></div>-->
+                        <!--                        <div class="form-group">-->
+                        <!--                            <div class="input-group">-->
+                        <!--                                <span class="input-group-addon has-icon"><i class="fa fa-sitemap"></i></span>-->
+                        <!--                                <select data-type="change-mode" class="form-control select2" name="change-mode">-->
+                        <!--                                </select>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+                        <!--                        <div data-type="categoryId" id="tree"></div>-->
                     </div>
                 </div>
                 <div class="pane mt-element-ribbon bg-white collapsed">
@@ -449,7 +449,7 @@
                                     <option value="100">100</option>
                                     <option value="200">200</option>
                                     <option value="500">500</option>
-<!--                                    <option value="1000">1000</option>-->
+                                    <!--                                    <option value="1000">1000</option>-->
                                 </select>
                             </div>
                         </div>
@@ -469,12 +469,12 @@
                                 <select data-type="ordering" class="form-control" name="ordering" placeholder="ترتیب">
                                     <option value="MediaCreated asc">تاریخ ایجاد صعودی</option>
                                     <option value="MediaCreated desc" selected>تاریخ ایجاد نزولی</option>
-<!--                                    <option value="MediaTitle asc">نام قسمت صعودی</option>-->
-<!--                                    <option value="MediaTitle desc">نام قسمت نزولی</option>-->
+                                    <!--                                    <option value="MediaTitle asc">نام قسمت صعودی</option>-->
+                                    <!--                                    <option value="MediaTitle desc">نام قسمت نزولی</option>-->
                                     <option value="MediaId asc">شناسه صعودی</option>
                                     <option value="MediaId desc">شناسه نزولی</option>
-<!--                                    <option value="MediaMetaCategoryName asc">نام برنامه صعودی</option>-->
-<!--                                    <option value="MediaMetaCategoryName desc">نام برنامه نزولی</option>-->
+                                    <!--                                    <option value="MediaMetaCategoryName asc">نام برنامه صعودی</option>-->
+                                    <!--                                    <option value="MediaMetaCategoryName desc">نام برنامه نزولی</option>-->
                                     <option value="MediaEpisodeNumber asc">شماره قسمت صعودی</option>
                                     <option value="MediaEpisodeNumber desc">شماره قسمت نزولی</option>
                                     <option value="MediaDuration asc">مدت صعودی</option>
@@ -491,9 +491,9 @@
                 <div id="itemlist" class="mainbody"></div>
             </div>
             {{#authorize 8388608}}
-<!--            <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>-->
-<!--            <div class="alert alert-success ltr" style="direction: ltr; text-align: left">-->
-<!--            </div>-->
+            <!--            <pre class="alert alert-danger" style="direction: ltr; text-align: left"></pre>-->
+            <!--            <div class="alert alert-success ltr" style="direction: ltr; text-align: left">-->
+            <!--            </div>-->
             {{/authorize}}
         </div>
     </div>
@@ -506,7 +506,7 @@
                 <h4 class="modal-title">ارجاع</h4>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="MasterId" value="{{Id}}" />
+                <input type="hidden" name="MasterId" value="{{Id}}"/>
                 <label>گیرنده</label>
                 <dl class="dl-horizontal">
                     <dt>
@@ -531,7 +531,7 @@
                         </div>
                     </dd>
                 </dl>
-                <hr />
+                <hr/>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-xs-3">
@@ -550,7 +550,7 @@
                             <label for="Title">عنوان</label>
                         </div>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان" />
+                            <input type="text" class="form-control" name="Title" id="Title" placeholder="عنوان"/>
                         </div>
                     </div>
                 </div>
@@ -567,6 +567,24 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-info" data-task="assign-item">ارجاع</button>
+            </div>
+        </form><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="download-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog container" role="document">
+        <form class="modal-content" role="form">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">دانلود دسته‌ای</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <textarea class="form-group" rows="20" style="width: 100%; direction: ltr; text-align: left;" readonly></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info" data-task="download-list">دانلود</button>
             </div>
         </form><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

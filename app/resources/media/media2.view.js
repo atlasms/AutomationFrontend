@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             { 'filters': {} }
             , { 'button': { cssClass: 'btn btn-default pull-left', text: 'فیلترها', type: 'button', task: 'toggle-sidebar', icon: 'fa fa-filter' } }
             , { 'button': { cssClass: 'btn btn-success pull-left', text: 'جستجو', type: 'button', task: 'refresh', icon: 'fa fa-search' } }
-            , { 'button': { cssClass: 'btn green pull-right', text: 'دانلود', type: 'button', task: 'download-batch', icon: 'fa fa-download', style: 'margin-left: 10px;' } }
+            , { 'button': { cssClass: 'btn green pull-right', text: 'دانلود', type: 'button', task: 'download-batch', icon: 'fa fa-download', access: 137438953472, style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn purple-medium pull-right', text: 'ارجاع', type: 'button', task: 'assign-batch', icon: 'fa fa-share', style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn btn-default pull-right', text: '', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;' } }
             , { 'button': { cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh' } }
@@ -70,6 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-batch"]': 'openAssignBatchModal'
             , 'click [data-task="download-batch"]': 'downloadBatch'
+            , 'click [data-task="download-list"]': 'download'
             , 'click [data-task="assign-item"]': 'assign'
             , 'change [name="ToGroupId"]': 'updateUserList'
             , 'click [name="assign-item"]': function (e) {
@@ -144,19 +145,29 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , downloadBatch: function (e) {
             e.preventDefault();
-            var selectedMedia = [];
-            $('#metadata-page tbody tr').each(function () {
-                if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
-                    selectedMedia.push($(this).find('img:first').attr('src').replace('.jpg', '_hq.mxf'));
-                }
-            });
+            var selectedMedia = this.getDownloadList();
             if (selectedMedia.length) {
-                this.download(selectedMedia);
+                this.showBatchDownloadModal(selectedMedia);
             } else {
                 toastr.warning('هیچ موردی انتخاب نشده است.', 'خطا', Config.settings.toastr);
             }
         }
-        , download: function (list) {
+        , getDownloadList() {
+            var selectedMedia = [];
+            $('#metadata-page tbody tr').each(function () {
+                if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
+                    var $row = $(this);
+                    selectedMedia.push($row.attr('data-url'));
+                }
+            });
+            return selectedMedia;
+        }
+        , showBatchDownloadModal(selectedMedia) {
+            var $modal = $('#download-modal');
+            $modal.find('textarea').html(selectedMedia.join('\n'));
+            $modal.modal('show');
+        }
+        , download2: function (list) {
             for (var i = 0; i < list.length; i++) {
                 var iframe = $('<iframe style="visibility: collapse;"></iframe>');
                 $('body').append(iframe);
@@ -170,6 +181,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 })(iframe), 2000);
             }
+        },
+        download: function (e) {
+            e.preventDefault();
+            var files = this.getDownloadList();
+
+            function downloadNextUrl(i) {
+                if (i >= files.length) {
+                    return;
+                }
+                var a = document.createElement('a');
+                a.href = files[i];
+                a.target = '_parent';
+                // Use a.download if available, it prevents plugins from opening.
+                if ('download' in a) {
+                    a.download = files[i];
+                }
+                (document.body || document.documentElement).appendChild(a);
+                if (a.click) {
+                    a.click(); // The click method is supported by most browsers.
+                } else {
+                    $(a).click(); // Backup using jquery
+                }
+                // Delete the temporary link.
+                a.parentNode.removeChild(a);
+                // Download the next file with a small timeout. The timeout is necessary
+                // for IE, which will otherwise only download the first file.
+                setTimeout(function () {
+                    downloadNextUrl(i + 1);
+                }, 1000);
+            }
+
+            // Initiate the first download.
+            downloadNextUrl(0);
         }
         , changeSendRecipient: function (e) {
             var $this = $(e.target);
