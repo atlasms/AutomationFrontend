@@ -12,6 +12,10 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             , singleMode: true
             , type: 0
             , titles: false
+            , localMode: false
+            , callbacks: {
+                playShot: null,
+            }
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
@@ -222,18 +226,26 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                 template.done(function (data) {
                     var handlebarsTemplate = Template.handlebars.compile(data);
                     var output = handlebarsTemplate(item);
-                    if (initial)
+                    if (initial) {
                         self.clearShots();
+                    }
                     $container.append(output).promise().done(function () {
-                        if (self.options.singleMode && !initial)
-                            self.saveShot(item, $container.find('> tr:last'));
-                        if (self.options.sortable)
+                        var event = new CustomEvent('shotSaved', {detail: item.shots[0]});
+                        document.dispatchEvent(event);
+                        if (self.options.singleMode && !initial) {
+                            if (!self.options.localMode) {
+                                self.saveShot(item, $container.find('> tr:last'));
+                            }
+                        }
+                        if (self.options.sortable) {
                             self.initSortable(true);
-                        self.updateTotalDuration();
-                        if (typeof initial !== "undefined" && initial)
+                        }
+                        if (typeof initial !== "undefined" && initial) {
                             window.setTimeout(function () {
                                 $("#shotlist-table tbody tr:first").trigger('click');
                             }, 500);
+                        }
+                        self.updateTotalDuration();
                     });
                 });
             }
@@ -293,7 +305,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
         }
         , _getShotData: function () {
             var self = this;
-            var $form = $("#shotlist form");
+            var $form = $(".shotlist-form");
             var shotData = $form.serializeObject();
             if (shotData.start && shotData.end && Global.processTime(shotData.start) < Global.processTime(shotData.end)) {
                 shotData['shotDuration'] = Global.processTime(shotData.end) - Global.processTime(shotData.start);
@@ -329,8 +341,23 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             this._getMedia($shot, ~~$shot.data('type'), function (url) {
                 self.renderPlayer(url, duration, function (instance) {
                     self.player.setRange([start, end], undefined, true);
-                    if (self.options.metadata)
+                    if (self.options.metadata) {
                         self.setMetadata(metadata);
+                    }
+                    var shotParams = {
+                        itemId: $shot.data('external-id'),
+                        duration: duration,
+                        start: start,
+                        end: end,
+                        tags: metadata.tags,
+                        persons: metadata.persons,
+                        subjects: metadata.subjects
+                    };
+                    if (typeof self.options.callbacks.playShot === 'function') {
+                        self.options.callbacks.playShot(shotParams);
+                    }
+                    var event = new CustomEvent('shotPlayed', {detail: shotParams});
+                    document.dispatchEvent(event);
                 });
             });
         }
@@ -399,7 +426,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             // TODO: Demo!
             var data = (typeof data !== "undefined") ? data : demoData;
             var timeline = JSON.parse(data.replace(/[\u0000-\u0019]+/g, ""));
-            timeline.items.forEach(function(item) {
+            timeline.items.forEach(function (item) {
                 item.video = item.img.replace('.jpg', '_lq.mp4');
             });
             timeline['options'] = this.options;

@@ -39,6 +39,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , classification: ''
             , MetaDataProductionGroup: ''
             , ordering: 'MediaCreated desc'
+			, ingestuser: ''
+            , baravord: ''
+            , showtask: Config.mediaList.showLastTask ? 1 : 0
         }
         , treeInstance: {}
         , events: {
@@ -468,10 +471,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // set date from url query
             params.count = 1000000;
             params.offset = 0;
-            var data = $.param(params);
+            // var data = $.param(params);
+            // var model = new Media2Model(params);
+			var data = decodeURIComponent($.param(params));
             var model = new Media2Model(params);
-            model.fetch({
-                data: data
+            model.save(null, {
+                data: JSON.stringify(params)
+				, contentType: 'application/json'
                 , success: function (items) {
                     items = items.toJSON();
                     var templateFileName = Config.channelLabel === 'qtv' ? 'mediaprint.items.partial.qtv' : 'mediaprint.items.partial';

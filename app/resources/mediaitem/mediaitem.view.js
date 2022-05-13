@@ -463,7 +463,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
                 success: function (items) {
                     var files = Global.objectListToArray(self.prepareItems(items.toJSON(), modelParams));
                     var check = Global.checkMediaFilesAvailability(files);
-                    if (check) {
+                    if (check || $('tr[data-live]').data('live')) {
                         self.setMediaParam(params);
                     } else {
                         toastr.error('پیش از اتمام کانورت مدیا امکان تغییر وضعیت وجود ندارد.', 'خطا', Config.settings.toastr);
@@ -1427,10 +1427,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             if ($('#files-table').length && $('#files-table tbody tr').length) {
                 var hqFile = { exists: false, size: 0, isOnline: false };
                 $('#files-table tbody tr').each(function () {
-                    if ($(this).find('td.ext').text().indexOf('_hq.') === 0) {
+                    if ($.trim($(this).find('td.ext').text().indexOf('_hq.')) == 0) {
                         hqFile.exists = true;
                         hqFile.size = parseInt($(this).find('td.size').text());
-                        hqFile.isOnline = $.trim($(this).find('td.state').text()).toLowerCase() === 'online';
+                        hqFile.isOnline = $.trim($(this).find('td.state').text()).toLowerCase().indexOf('online') === 0;
                     }
                 });
                 if (hqFile.exists && hqFile.size > 0 && hqFile.isOnline) {

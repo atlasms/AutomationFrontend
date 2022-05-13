@@ -209,6 +209,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         if ($('input[name="' + $(this).attr('data-prop') + '"]').length)
                             $('input[name="' + $(this).attr('data-prop') + '"]').val($.trim($(this).text()));
                     });
+					if ($('input[data-type="filename"]').val() === 'LIVE') {
+						IngestHelper.mask('time');
+						$('input[data-type="duration"]').val('').prop("readonly", false);
+					} else {
+						$('input[data-type="duration"]').attr('readonly', 'readonly');
+					}
 //            $('button[data-task=add]').removeClass('disabled').find("span").html($.trim($row.find('[data-type="index"]').text()));
                     $('button[data-task=add]').removeClass('disabled');
                 },

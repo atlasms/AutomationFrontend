@@ -5,6 +5,7 @@
     .sortable.asc span:after {content: "\f062"}
     .sortable.desc span:after {content: "\f063"}
     .assign-checkbox { margin-top: 10px; }
+	.is-live { display: flex; width: 20px; height: 20px; position: absolute; background: rgba(0, 0, 0, .75); justify-content: center; align-items: center; color: red; text-align: center; }
 </style>
 <div class="portlet itemlist box">
     <div class="portlet-title" style="background: #3598dc">
@@ -46,7 +47,7 @@
                 </thead>
                 <tbody>
                 {{#each items}}
-                <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}" data-state="{{State}}" data-url="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}">
+                <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-type="{{Type}}" data-live="{{LiveStatus}}" data-state="{{State}}" data-url="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}">
                     <td>
                         {{Id}}
                         <div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
@@ -55,7 +56,10 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <figure>
+                        <figure style="min-height: 20px">
+							{{#if LiveStatus}}
+							<span class="is-live" title="زنده"><i class="fa fa-circle"></i></span>
+							{{/if}}
                             <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
                         </figure>
                     </td>
@@ -77,6 +81,7 @@
                     </td>
                     <td class="text-left">
                         <span class="">{{MetaCategoryName}}</span>
+						<small class="help-block text-muted clip-line" style="display: block; font-style: italic; font-weight: bold;">ش. ب.: {{#if Baravord}}{{Baravord}}{{else}}-{{/if}}</small>
                     </td>
                     <td class="text-right">
                         <span class="">{{#if Created}}{{extractTime Created}} {{extractDate Created}}{{/if}}</span>

@@ -1,5 +1,5 @@
 {{#each []}}
-<tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
+<tr data-id="{{Id}}" data-media-id="{{Media.Id}}" data-status="{{Status}}" data-date="{{extractDate Media.RecommendedBroadcastDate}}" data-live="{{Media.LiveStatus}}" class="{{#if ToGroupId}}{{else}}to-user{{/if}}">
     <td>
         <!--        {{math @index '+' 1}}-->
         <div class="checkbox checkbox-primary checkbox-circle assign-checkbox">
@@ -14,7 +14,11 @@
     </td>
     <!--                                    <td> {{Title}}</td>-->
     <td><strong>{{Media.Id}}</strong></td>
-    <td> {{Media.Title}} ({{Media.EpisodeNumber}})</td>
+    <td> {{Media.Title}} ({{Media.EpisodeNumber}})
+        {{#if Media.Baravord}}
+        <small class="text-muted" style="display: block">ش. ب.: {{Media.Baravord}}</small>
+        {{/if}}
+    </td>
     <td>
         <div class="date">
             {{time Media.Duration}}

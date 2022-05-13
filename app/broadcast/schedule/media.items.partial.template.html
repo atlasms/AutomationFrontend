@@ -1,3 +1,7 @@
+<style>
+    .is-live { display: flex; width: 20px; height: 20px; position: absolute; background: rgba(0, 0, 0, .75); justify-content: center; align-items: center; color: red; text-align: center; }
+    #itemlist [data-live="1"] figure:after { display: none; }
+</style>
 <table class="table table-bordered table-striped table-condensed flip-content">
     <thead>
     <tr>
@@ -15,7 +19,7 @@
     </thead>
     <tbody>
     {{#each items}}
-    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="{{MetaCategoryId}}">
+    <tr data-id="{{Id}}" data-index="{{math @index '+' 1}}" data-media-state="{{State}}" data-duration="{{time Duration}}" data-type="{{Type}}" data-program-title="{{MetaCategoryName}}" data-program-id="{{MetaCategoryId}}" data-live="{{LiveStatus}}">
         <td>
             <span class="idx">{{Id}}</span>
             <a class="item-link" href="/resources/mediaitem/{{Id}}" target="_blank"><i class="fa fa-info-circle"></i></a>
@@ -23,6 +27,9 @@
         <td class="text-center">
             {{config placeholderImage}}
             <figure>
+                {{#if LiveStatus}}
+                <span class="is-live" title="زنده"><i class="fa fa-circle"></i></span>
+                {{/if}}
                 <img src="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config " placeholderImage"}}'" />
             </figure>
         </td>

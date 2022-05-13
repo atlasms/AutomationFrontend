@@ -58,6 +58,10 @@
     .item-link { margin-top: 0 !important; }
     .item-link + small { color: #aaa; }
     .idx { display: block; }
+
+    [data-live="1"] figure { position: relative; }
+    [data-live="1"] figure:after { content: '●'; display: flex; width: 20px; height: 20px; position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, .75); justify-content: center; align-items: center; color: red; text-align: center; }
+
 </style>
 <div class="portlet box toolbar-box" id="sub-toolbar">
     <div class="portlet light bg-inverse duplicate-schedule hidden">
@@ -238,8 +242,9 @@
                         data-use-count="{{ConductorUseCount}}"
                         data-use-limit="{{ConductorUseLimit}}"
                         data-media-id="{{ConductorMediaId}}"
-                        data-has-hq="{{ConductorMediaHasHq}}"
+                        data-has-hq="{{#ifCond ConductorMediaLiveStatus '==' 0}}{{ConductorMediaHasHq}}{{else}}true{{/ifCond}}"
                         data-id="{{ConductorId}}"
+                        data-live="{{ConductorMediaLiveStatus}}"
                         class="table-row {{#if CondcutorIsFixed}} fixed{{/if}}{{#if gap}} gap{{/if}}"
                         {{#validateBroadcastCount ConductorUseCount ConductorUseLimit}}{{else}}data-invalid-extra="1"{{/validateBroadcastCount}}
                     >

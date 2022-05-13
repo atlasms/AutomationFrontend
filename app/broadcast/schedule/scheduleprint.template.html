@@ -56,7 +56,8 @@
     table.schedule thead th { border-top: 1px solid #555; }
     tfoot { border-top: 1px solid #555; height: auto; border-right: 0 none; border-left: 0 none; }
 	tfoot tr,tfoot td { border: 0 none; font-style: italic; }
-	tfoot .jalali { float: left; }
+	/* tfoot .jalali { float: left; } */
+	.footer-items { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
     th, td { border-right: 1px solid #555; padding: 2px 4px; }
     table.schedule td { border-top: 1px solid #555; }
     th { padding: 4px 6px; }
@@ -120,11 +121,19 @@
         <tfoot>
         <tr>
             <td colspan="100%">
-				<div class="jalali">
-					{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd، DD MMMM YYYY"}}{{/if}}{{/each}}
-				</div>
-				<div class="sign">
-				جدول پخش برنامه‌های شبکه {{config "channel"}}
+				<div class="footer-items">
+					<div class="sign">
+					جدول پخش برنامه‌های شبکه {{config "channel"}}
+					</div>
+					<div class="jalali">
+						{{#each []}}{{#if @first}}{{formatJalali CondcutorStartTime "dddd، DD MMMM YYYY"}}{{/if}}{{/each}}
+					</div>
+					<div>
+					آخرین ویرایش
+					<span style="display: inline-block; direction: ltr;">{{#each []}}{{#if @first}}{{extractDate ConductorCreated}} {{extractTime ConductorCreated}}{{/if}}{{/each}}</span>
+					توسط
+					{{#each []}}{{#if @first}}{{CondcutorCreatedByText}}{{/if}}{{/each}}
+					</div>
 				</div>
 			</td>
         </tr>

@@ -391,7 +391,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 return;
             }
 
-            if (~~$li.data('type') !== 0 || Config.mainStatesExceptions.indexOf(~~params.value) !== -1) {
+            if (~~$li.data('type') !== 0 || Config.mainStatesExceptions.indexOf(~~params.value) !== -1 || ~~$item.data('live') !== 0) {
                 this.setMediaParam(params);
                 return;
             }

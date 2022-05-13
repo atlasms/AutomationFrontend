@@ -147,7 +147,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var $activeRow = $('#schedule-table').find('.table-row.active');
             $activeRow.attr('data-media-state', $row.attr('data-media-state'))
                 .attr('data-media-id', $row.attr('data-id'))
-                .attr('data-has-hq', 'true');
+                .attr('data-has-hq', 'true')
+                .attr('data-live', $row.attr('data-live'));
             $activeRow.find('.thumbnail').attr('src', $row.find('img:first').attr('src'));
             $activeRow.find('[data-type="duration"]').val($row.data('duration'));
             $activeRow.find('[data-type="title"]').val($row.data('program-title'));

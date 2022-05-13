@@ -34,7 +34,7 @@
             <span class="label bg-purple-seance bg-font-purple-seance" data-key="schedule" data-value=""><i class="fa fa-tv"></i> سابقه پخش <span><i class="spinner"></i></span></span>
             <span class="label bg-yellow-casablanca bg-font-yellow-casablanca" data-key="rush" data-value=""><i class="fa fa-video-camera"></i> تصاویر راش <span><i class="spinner"></i></span></span>
             <span class="label bg-blue-madison bg-font-blue-madison" data-key="shotlist" data-value=""><i class="fa fa-file-movie-o"></i> شات‌لیست <span><i class="spinner"></i></span></span>
-            <span class="label label-warning" data-key="files" data-value=""><i class="fa fa-server"></i> فایل‌ها <span>{{FilesPercent}}</span></span>
+            {{#ifCond LiveStatus '==' 1}}{{else}}<span class="label label-warning" data-key="files" data-value=""><i class="fa fa-server"></i> فایل‌ها <span>{{FilesPercent}}</span></span>{{/ifCond}}
         </div>
         <div class="item-details col-md-12">
             <div class="portlet light">
@@ -52,7 +52,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr data-type="{{Type}}" data-pid="{{Pid}}">
+                                    <tr data-type="{{Type}}" data-pid="{{Pid}}" data-live="{{#if LiveStatus}}1{{else}}0{{/if}}">
                                         <td>
                                             <strong>شناسه:</strong> {{Id}}
                                             {{#ifCond Type '==' 3}}
@@ -66,22 +66,25 @@
                                             {{#ifCond Type '==' 1}}<i class="fa fa-picture-o"></i> تصویر{{/ifCond}}
                                             {{#ifCond Type '==' 2}}<i class="fa fa-headphones"></i> صدا{{/ifCond}}
                                             {{#ifCond Type '==' 3}}<i class="fa fa-video-camera"></i> راش{{/ifCond}}
+                                            {{#if LiveStatus}}<span class="label label-sm label-danger"><i class="fa fa-circle"></i> زنده</span>{{/if}}
                                         </td>
                                         <td>
                                             <strong>وضعیت:</strong>
                                             <span class="label label-sm label-{{resolveLabel State}}">{{StateText}}</span>
                                             {{#ifCond State '==' 2}}
-                                            {{#authorize 32768}}
-                                            <button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}">
-                                                {{else}}
-                                                <button type="button" class="btn btn-default btn-xs pull-right" data-task="return-item" data-id="{{Id}}" disabled>
-                                                    {{/authorize}}
-                                                    <i class="fa fa-reply"></i> بازگشت به بازبینی
-                                                </button>
-                                                {{/ifCond}}
-                                                {{#ifCond State '!=' 2}}
-                                                <div class="pull-right">{{>mediaOptions small='true'}}</div>
-                                                {{/ifCond}}
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-default btn-xs pull-right"
+                                                    data-task="return-item"
+                                                    data-id="{{Id}}"
+                                                    {{#authorize 32768}}{{else}}disabled{{/authorize}}
+                                            >
+                                            <i class="fa fa-reply"></i> بازگشت به بازبینی
+                                            </button>
+                                            {{/ifCond}}
+                                            {{#ifCond State '!=' 2}}
+                                            <div class="pull-right">{{>mediaOptions small='true'}}</div>
+                                            {{/ifCond}}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -123,6 +126,12 @@
                                             </a>
                                             <a href="#" class="btn blue btn-circle btn-sm pull-right" data-task="change-category" data-id="{{MetaCategoryId}}"> <i
                                                     class="fa fa-pencil"></i> تغییر برنامه</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>شماره براورد</td>
+                                        <td>
+                                            {{#if Baravord}}{{Baravord}}{{else}}ثبت نشده{{/if}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -372,6 +381,7 @@
                             </button>
                             {{/authorize}}
                             {{/ifCond}}
+                            {{#ifCond LiveStatus '!=' 1}}
                             {{#authorize 2097152}}
                             <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left download-hq" download><i
                                     class="fa fa-download"></i> دریافت فایل HQ</a>
@@ -382,6 +392,7 @@
                             <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
                                     class="fa fa-download"></i> دریافت فایل LQ</a>
                             {{/authorize}}
+
                             {{#ifCond Type '==' 0}}
                             <div id="player-container"><!-- Player Container --></div>
                             {{/ifCond}}
@@ -391,6 +402,11 @@
                             {{#ifCond Type '==' 1}}
                             <figure>
                                 <img src="{{replace Thumbnail '.jpg' '_hq.jpg'}}" alt="{{Title}}"/>
+                            </figure>
+                            {{/ifCond}}
+                            {{else}}
+                            <figure>
+                                <img src="{{Thumbnail}}" alt="{{Title}}"/>
                             </figure>
                             {{/ifCond}}
 
@@ -535,6 +551,7 @@
             <!--                            </div>-->
             <!--                        </div>-->
             <!--                    </div>-->
+            {{#ifCond LiveStatus '!=' 1}}
             <div class="portlet light note note-warning" id="files">
                 <div class="portlet-title">
                     <div class="caption">
@@ -573,9 +590,7 @@
                             <tbody>
                             {{#each Files}}
                             <tr data-id="Id">
-                                <td class="state">
-                                    <div class="text-center label label-{{#ifCond State '==' 'online'}}success{{else}}warning{{/ifCond}}">{{State}}</div>
-                                </td>
+                                <td class="state"><div class="text-center label label-{{#ifCond State '==' 'online'}}success{{else}}warning{{/ifCond}}">{{State}}</div></td>
                                 <td><div class="ltr text-right">{{Path}}</div></td>
                                 <td class="ext"><div class="ltr text-right">{{Extension}}</div></td>
                                 <td class="size"><div class="ltr">{{SizeReadable}}</div></td>
@@ -606,9 +621,9 @@
                     </div>
                 </div>
             </div>
+            {{/ifCond}}
         </div>
     </div>
-</div>
 </div>
 <div class="modal fade" id="storage-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog container" role="document">
@@ -704,4 +719,3 @@
         </form><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-</div>

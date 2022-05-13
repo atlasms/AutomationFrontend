@@ -472,7 +472,25 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
                     Global.unFlattenTreeData(array, child)
                 });
             }
+
+            Global.findTotalSizeOfEachNode(tree);
+
             return tree;
+        }
+        , findTotalSizeOfEachNode: function(tree) {
+            if (typeof tree !== 'undefined') {
+                for (var i = 0; i < tree.length; i++) {
+                    var node = tree[i];
+                    if (typeof node.children !== 'undefined') {
+                        Global.findTotalSizeOfEachNode(node.children);
+                        // node.CategoryOnlineFilesSizeTotal = 0;
+                        node.CategoryOnlineFilesSizeTotal = node.CategoryOnlineFilesSize;
+                        for (var j = 0; j < node.children.length; j++) {
+                            node.CategoryOnlineFilesSizeTotal += node.children[j].CategoryOnlineFilesSizeTotal;
+                        }
+                    }
+                }
+            }
         }
         // TEMP
         // TODO: Wee need a useful localStorage helper class
