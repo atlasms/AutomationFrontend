@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function ($, _, Backbone, Global, DefinitionsModel) {
     window.Config = {
         title: 'اتوماسیون تولید و پخش اطلس',
-        version: '1.201120.2108',
+        version: '1.210911.1146',
         loginMessage: 'ورود به سامانه اتوماسیون',
         channel: 'صدا و سیمای مرکز چهارمحال و بختیاری',
         channelLabel: 'chb',
@@ -13,12 +13,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         vendorLinkEnabled: false,
         env: 'dev',
         hqVideoFormat: 'mp4',
-        hqFilenameTemplate: '{id}_مدت-{duration}_{title}_کلاکت-{episodeNumber}',
+        hqFilenameTemplate: '{id}__کلاکت{episodeNumber}__{title}__مدت-{duration}',
         showDashboardWorkspaceInbox: false,
         showDashboardTasks: true,
         placeholderImage: '/assets/img/placeholder.png',
         transitionSpedd: 200,
-        notificationsInterval: 60000,
+        notificationsInterval: 300000,
         tickerInterval: 5000,
         tickerUpdateInterval: 60000,
         notificationsCount: 10,
@@ -33,7 +33,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
         groupsFilterId: 166, // 166: iktv or 14: qtv
         HDPlayback: true,
         newsTicker: false,
-        showVideoAspectRatio: false,
+        showVideoAspectRatio: true,
+		samtEnabled: false,
+        samtChannelId: 89,				  
         // 'initialRedirect: '/resources/media2',
         epgMediaPath: 'http://172.16.16.69/archive/list2.m3u8?c={channel}&start={start}&end={end}',
         minimumRequiredPersons: 2,
@@ -115,12 +117,6 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                             counter$: 10
                         }
                     },
-                    {
-                        key: 'alt+4', title: 'اخبار قرآنی 15 دقیقه', value: {
-                            'episode-title': 'اخبار قرآنی',
-                            'duration': '00:15:00'
-                        }
-                    },
                     { key: 'alt+5', title: 'آرم‌استیشن‌های پخش', value: 68 },
                     { key: 'shift+f1', title: 'ادعیه‌ها', value: 133 },
                     { key: 'shift+f2', title: 'نمازها', value: 139 },
@@ -133,7 +129,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
                 togglePlayback: { key: 'space', title: 'پخش / متوقف ویدیو' },
                 stop: { key: 'alt+k', title: 'قطع ویدیو' },
                 speedUp: { key: 'alt+l', title: 'افزایش سرعت' },
-                speedDown: { key: 'alt+k', title: 'کاهش سرعت' },
+                speedDown: { key: 'alt+;', title: 'کاهش سرعت' },
                 showPersons: { key: 'alt+a', title: 'نمایش عوامل' }
             }
         },
@@ -219,6 +215,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , 'broadcast/schedule2': { 'private': true, 'view': 'broadcast.schedule2.view', 'action': 'ScheduleView2', 'file': 'app/broadcast/schedule/schedule2.view' }
             , 'broadcast/prices': { 'private': true, 'view': 'broadcast.prices.view', 'action': 'PricesView', 'file': 'app/broadcast/prices/prices.view' }
             , 'broadcast/scheduleprint': { 'private': false, 'view': 'broadcast.scheduleprint.view', 'skipLayout': true, 'action': 'ScheduleView', 'file': 'app/broadcast/schedule/schedule.view' }
+			, 'broadcast/schedulereport': { 'private': false, 'view': 'broadcast.schedulereport.view', 'action': 'ScheduleReportView', 'file': 'app/broadcast/schedule/schedulereport.view' }																							 
             , 'broadcast/crawl': { 'private': true, 'view': 'broadcast.crawl.view', 'action': 'CrawlView', 'file': 'app/broadcast/crawl/crawl.view' }
             , 'broadcast/photos': { 'private': true, 'view': 'broadcast.photos.view', 'action': 'BroadcastPhotosView', 'file': 'app/broadcast/photos/photos.view' }
             , 'resources/ingest': { 'private': true, 'view': 'resources.ingest.view', 'action': 'IngestView', 'file': 'app/resources/ingest/ingest.view' }
@@ -296,7 +293,7 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             , status: '#status-items'
         },
         api: {
-            url: (location.href.indexOf('localhost') !== -1 || location.href.indexOf('192.168.') !== -1) ? 'http://192.168.10.161/services/api/' : '/services/api/'
+            url: (location.href.indexOf('localhost') !== -1 || location.href.indexOf('192.168.') !== -1) ? 'http://192.168.10.1/services/api/' : '/services/api/'
             , login: 'login'
             , schedule: 'conductor'
             , crawl: 'crawl'
@@ -415,9 +412,9 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             }
         ],
         mediaList: {
-            defaultStateValue: 1,
-            enabledCreatedDateFields: true,
-            showLastTask: false
+            defaultStateValue: "",
+            enabledCreatedDateFields: false,
+            showLastTask: true
         },
         schedule: {
             fixedMediaStateFilter: false,
@@ -425,6 +422,12 @@ define(['jquery', 'underscore', 'backbone', 'global', 'definitions'], function (
             // typeaheadEnabled: false,
             pageLimit: 100,
             pagination: false,
+			showDescInPrint: true,
+            disableExtraBroadcast: false,
+        },
+        ingest: {
+            showFileNameWarning: true,
+            showCategoryMetadata: true,
         },
         temp: {
             titleTypes: {
