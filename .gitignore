@@ -55,6 +55,7 @@ docs
 lib
 test
 tmp
+/Services
 
 gulpfile.js
 gulpfile.js.map
@@ -66,6 +67,7 @@ src/client/app/shared/config/env.config.js.map
 
 assets/js/vendor/tus_1.js
 /*config.*
+/*.config
 
 *.svn
 svn
