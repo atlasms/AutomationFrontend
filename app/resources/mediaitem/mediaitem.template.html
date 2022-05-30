@@ -392,7 +392,10 @@
                             <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
                                     class="fa fa-download"></i> دریافت فایل LQ</a>
                             {{/authorize}}
-
+                            {{#authorize 549755813888}}
+                            <a href="{{getOriginalMedia Files Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
+                                    class="fa fa-download"></i> دریافت فایل راش / اصلی</a>
+                            {{/authorize}}
                             {{#ifCond Type '==' 0}}
                             <div id="player-container"><!-- Player Container --></div>
                             {{/ifCond}}

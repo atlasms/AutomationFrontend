@@ -258,6 +258,15 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 var suffix = hq ? Config.hqVideoFormat : 'mp4'
                 return value.replace('.jpg', '_' + fix + '.' + suffix);
             });
+            Handlebars.registerHelper('getOriginalMedia', function (files, thumbnail, options) {
+                var file = _.filter(files, function (file) {
+                    return file.Path === 'original';
+                })[0];
+                if (file['State'] === 'online') {
+                    return thumbnail.replace('converted', 'original').replace('.jpg', '.' + file.Extension);
+                }
+                return '#';
+            });
             Handlebars.registerHelper('replace', function (haystack, needle, replace, options) {
                 return haystack.replace(needle, replace);
             });
