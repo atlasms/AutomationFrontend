@@ -185,7 +185,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 })(iframe), 2000);
             }
         }
-        , download: function (e) {
+        , download3: function (e) {
             e.preventDefault();
             var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
             var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
@@ -218,6 +218,19 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
 
             // Initiate the first download.
             downloadNextUrl(0);
+        }
+        , download: function(e) {
+            e.preventDefault();
+            var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
+            var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
+            function iframeApproach(url) {
+                document.getElementById('download-iframe').src = url;
+            }
+            _.each(files, function (file) {
+                setTimeout(function () {
+                    iframeApproach(file);
+                }, 100);
+            })
         }
         , changeSendRecipient: function (e) {
             var $this = $(e.target);
