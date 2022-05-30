@@ -61,6 +61,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
             , 'click #chats-history tr[data-id]': 'loadHistoryItem'
             , 'click #filters .label': 'scrollToTabContent'
             , 'click .download-hq': 'checkHQDownload'
+            , 'click .download-original': 'checkOriginalDownload'
 
             , 'click [data-task="open-assign-modal"]': 'openAssignModal'
             , 'click [data-task="assign-item"]': 'assign'
@@ -1418,6 +1419,26 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'mom
 //                    self.loadComments({query: 'externalid=' + data[0].externalid + '&kind=1', overrideUrl: Config.api.comments});
                 }
             });
+        }
+        , checkOriginalDownload: function(e, disableToast) {
+            disableToast = !!(typeof disableToast !== 'undefined' && disableToast);
+            if ($('#files-table').length && $('#files-table tbody tr').length) {
+                var originalFile = { exists: false, size: 0, isOnline: false };
+                $('#files-table tbody tr').each(function () {
+                    if ($.trim($(this).find('td.state').next().text().indexOf('original')) == 0) {
+                        originalFile.exists = true;
+                        originalFile.size = parseInt($(this).find('td.size').text());
+                        originalFile.isOnline = $.trim($(this).find('td.state').text()).toLowerCase().indexOf('online') === 0;
+                    }
+                });
+                if (originalFile.exists && originalFile.size > 0 && originalFile.isOnline) {
+                    return true;
+                }
+            }
+            if (!disableToast) {
+                toastr['error']('فایل مورد نظر آن‌لاین نیست', 'دانلود مدیا', Config.settings.toastr);
+            }
+            return false;
         }
         , checkHQDownload: function (e, disableToast) {
             // if (typeof e === 'object' && e !== null) {

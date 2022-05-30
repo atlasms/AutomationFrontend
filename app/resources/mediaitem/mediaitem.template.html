@@ -382,6 +382,10 @@
                             {{/authorize}}
                             {{/ifCond}}
                             {{#ifCond LiveStatus '!=' 1}}
+                            {{#authorize 549755813888}}
+                            <a style="margin-left: 10px;" href="{{getOriginalMedia Files Thumbnail}}" class="btn btn-success btn-sm pull-left download-original" download><i
+                                    class="fa fa-download"></i> دریافت فایل راش / اصلی</a>
+                            {{/authorize}}
                             {{#authorize 2097152}}
                             <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left download-hq" download><i
                                     class="fa fa-download"></i> دریافت فایل HQ</a>
@@ -391,10 +395,6 @@
                             {{#authorize 262144}}
                             <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
                                     class="fa fa-download"></i> دریافت فایل LQ</a>
-                            {{/authorize}}
-                            {{#authorize 549755813888}}
-                            <a href="{{getOriginalMedia Files Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
-                                    class="fa fa-download"></i> دریافت فایل راش / اصلی</a>
                             {{/authorize}}
                             {{#ifCond Type '==' 0}}
                             <div id="player-container"><!-- Player Container --></div>
