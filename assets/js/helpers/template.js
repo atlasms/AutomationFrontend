@@ -263,7 +263,7 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     return file.Path === 'original';
                 })[0];
                 if (file['State'] === 'online') {
-                    return thumbnail.replace('converted', 'original').replace('.jpg', '.' + file.Extension);
+                    return thumbnail.replace('converted', 'original').replace('.jpg', file.Extension);
                 }
                 return '#';
             });
