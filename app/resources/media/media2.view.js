@@ -153,18 +153,21 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
         }
         , getDownloadList() {
-            var selectedMedia = [];
+            var hq = [];
+            var original = [];
             $('#metadata-page tbody tr').each(function () {
                 if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
                     var $row = $(this);
-                    selectedMedia.push($row.attr('data-url'));
+                    hq.push($row.attr('data-url'));
+                    original.push($row.attr('data-url').split('?')[0].replace('converted', 'original').replace('_hq.mp4', $row.attr('data-original-ext')));
                 }
             });
-            return selectedMedia;
+            return { hq: hq, original: original };
         }
         , showBatchDownloadModal(selectedMedia) {
             var $modal = $('#download-modal');
-            $modal.find('textarea').html(selectedMedia.join('\n'));
+            $modal.find('#download-hq textarea').html(selectedMedia.hq.join('\n'));
+            $modal.find('#download-original textarea').html(selectedMedia.original.join('\n'));
             $modal.modal('show');
         }
         , download2: function (list) {
@@ -181,10 +184,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }
                 })(iframe), 2000);
             }
-        },
-        download: function (e) {
+        }
+        , download: function (e) {
             e.preventDefault();
-            var files = this.getDownloadList();
+            var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
+            var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
 
             function downloadNextUrl(i) {
                 if (i >= files.length) {

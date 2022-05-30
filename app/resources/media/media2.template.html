@@ -576,11 +576,31 @@
         <form class="modal-content" role="form">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">دانلود دسته‌ای</h4>
+                <ul class="nav nav-tabs">
+                    {{#authorize 137438953472}}
+                    <li class="{{#authorize 549755813888}}{{else}}active{{/authorize}}"><a href="#download-hq" data-toggle="tab">دانلود HQ</a></li>
+                    {{/authorize}}
+                    {{#authorize 549755813888}}
+                    <li><a class="{{#authorize 549755813888}}active{{/authorize}}" href="#download-original" data-toggle="tab">دانلود راش / فایل اصلی</a></li>
+                    {{/authorize}}
+                </ul>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <textarea class="form-group" rows="20" style="width: 100%; direction: ltr; text-align: left;" readonly></textarea>
+                <div class="tab-content">
+                    {{#authorize 137438953472}}
+                    <div class="tab-pane fade {{#authorize 549755813888}}{{else}}in active{{/authorize}}" id="download-hq">
+                        <div class="form-group">
+                            <textarea class="form-group" rows="20" style="width: 100%; direction: ltr; text-align: left;" readonly></textarea>
+                        </div>
+                    </div>
+                    {{/authorize}}
+                    {{#authorize 549755813888}}
+                    <div class="tab-pane fade {{#authorize 549755813888}}in active{{/authorize}}" id="download-original">
+                        <div class="form-group">
+                            <textarea class="form-group" rows="20" style="width: 100%; direction: ltr; text-align: left;" readonly></textarea>
+                        </div>
+                    </div>
+                    {{/authorize}}
                 </div>
             </div>
             <div class="modal-footer">
