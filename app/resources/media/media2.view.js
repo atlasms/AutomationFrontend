@@ -146,7 +146,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , downloadBatch: function (e) {
             e.preventDefault();
             var selectedMedia = this.getDownloadList();
-            if (selectedMedia.length) {
+            if (selectedMedia.hq.length) {
                 this.showBatchDownloadModal(selectedMedia);
             } else {
                 toastr.warning('هیچ موردی انتخاب نشده است.', 'خطا', Config.settings.toastr);
