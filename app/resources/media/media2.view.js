@@ -158,8 +158,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $('#metadata-page tbody tr').each(function () {
                 if ($(this).find('.assign-checkbox input[type="checkbox"]').is(':checked')) {
                     var $row = $(this);
-                    hq.push($row.attr('data-url'));
-                    original.push($row.attr('data-url').split('?')[0].replace('converted', 'original').replace('_hq.mp4', $row.attr('data-original-ext')));
+                    hq.push($row.attr('data-url') + '&download=' + Config.hqVideoFormat);
+                    original.push(
+                        $row.attr('data-url')
+                            .replace('converted', 'original')
+                            .replace('_hq.mp4', $row.attr('data-original-ext'))
+                        + '&download=' + $row.attr('data-original-ext')
+                    );
                 }
             });
             return { hq: hq, original: original };
@@ -170,22 +175,27 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             $modal.find('#download-original textarea').html(selectedMedia.original.join('\n'));
             $modal.modal('show');
         }
-        , download2: function (list) {
+        , download2: function (e) {
+            e.preventDefault();
+            var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
+            var list = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
+
             for (var i = 0; i < list.length; i++) {
                 var iframe = $('<iframe style="visibility: collapse;"></iframe>');
                 $('body').append(iframe);
                 var content = iframe[0].contentDocument;
                 var form = '<form action="' + list[i] + '" method="GET"></form>';
+                console.log(list);
                 content.write(form);
                 $('form', content).submit();
                 setTimeout((function (iframe) {
                     return function () {
                         iframe.remove();
                     }
-                })(iframe), 2000);
+                })(iframe), 500);
             }
         }
-        , download3: function (e) {
+        , download: function (e) {
             e.preventDefault();
             var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
             var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
@@ -196,7 +206,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 }
                 var a = document.createElement('a');
                 a.href = files[i];
-                a.target = '_parent';
+                a.target = '_blank';
                 // Use a.download if available, it prevents plugins from opening.
                 if ('download' in a) {
                     a.download = files[i];
@@ -219,13 +229,15 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             // Initiate the first download.
             downloadNextUrl(0);
         }
-        , download: function(e) {
+        , download3: function (e) {
             e.preventDefault();
             var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
             var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
+
             function iframeApproach(url) {
                 document.getElementById('download-iframe').src = url;
             }
+
             _.each(files, function (file) {
                 setTimeout(function () {
                     iframeApproach(file);
