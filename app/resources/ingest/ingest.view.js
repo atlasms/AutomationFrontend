@@ -270,7 +270,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             typeof e !== "undefined" && e.preventDefault();
             var template = Template.template.load('resources/ingest', 'storagefiles.partial');
             var $container = $("#storagefiles-place");
-            var params = { path: '/files' };
+            var params = { path: '/files?live=1' };
             var model = new IngestModel(params);
             var self = this;
             $container.fadeOut();
