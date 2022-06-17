@@ -55,6 +55,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , treeInstance: {}
         , events: {
             'click [data-task=load_metadata]': 'load'
+            , 'keypress [data-type="q"]': 'handleQueryInput'
             , 'click #metadata-page tbody tr td:not(:first-child):not(:last-of-type)': 'selectRow'
             , 'click [data-task=print]': 'print'
             , 'click [data-task=refresh]': 'reLoad'
@@ -699,6 +700,12 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     self.handleRangeSliders();
                 });
             });
+        }
+        , handleQueryInput: function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode === 13 || e.key === "Enter") {
+                this.load();
+            }
         }
 
         , handleRangeSliders: function () {
