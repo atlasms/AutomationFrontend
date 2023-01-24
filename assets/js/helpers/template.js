@@ -315,6 +315,9 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                     case 8:
                         // تایید هماهنگی
                         return ' bg-blue-hoki bg-font-blue-hoki';
+                    case 9:
+                        // استعلام
+                        return 'info';
                     case 10:
                         // ????
                         return 'info';

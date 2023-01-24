@@ -60,12 +60,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , prepareItems: function (items, params) {
             if (typeof items.query !== "undefined")
                 delete items.query;
-            if (typeof params !== "undefined") {
-                for (var prop in params) {
-                    delete items[prop];
-                }
+            var params = { q: "", totalbroadcast: 0, totalrepeats: 0, overrideUrl: '' };
+            for (var prop in params) {
+                delete items[prop];
             }
-            return items;
+            return Object.values(items);
         }
         , prepareContent: function () {
             this.renderToolbar();
@@ -81,30 +80,39 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadItems: function () {
             var self = this;
+            var template = Template.template.load('stats/broadcast', 'items.partial');
+            var $container = $(self.$itemsPlace);
+            var selectedNodes = $_GET['category'].split(',');
             var range = {
                 start: $_GET['startdate']
                 , end: $_GET['enddate']
                 , q: $_GET['q']
             };
-            var params = {
-                overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $_GET['CategoryId'] + '&startdate=' + range.start + '&enddate=' + range.end
-            };
-            if (range.q !== null && range.q !== '') {
-                params.overrideUrl += '&q=' + range.q;
-            }
-            var template = Template.template.load('stats/broadcast', 'items.partial');
-            var $container = $(self.$itemsPlace);
-            var model = new MediaitemModel(params);
-            model.fetch({
-                success: function (data) {
-                    items = self.processSum(self.prepareItems(data.toJSON(), params));
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-                        });
-                    });
+            var params = {};
+            var items = [];
+
+            $.each(selectedNodes, function (i, node) {
+                params = {
+                    // overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + range.start + '&enddate=' + range.end
+                    overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + node + '&startdate=' + range.start + '&enddate=' + range.end
+                };
+                if (range.q !== null && range.q !== '') {
+                    params.overrideUrl += '&q=' + range.q;
                 }
+                var model = new MediaitemModel(params);
+                model.fetch({
+                    success: function (data) {
+                        items = $.merge(items, self.prepareItems(data.toJSON()));
+                        if (i === selectedNodes.length - 1) {
+                            items = self.processSum(items);
+                            template.done(function (data) {
+                                var handlebarsTemplate = Template.handlebars.compile(data);
+                                var output = handlebarsTemplate(items);
+                                $container.html(output);
+                            });
+                        }
+                    }
+                });
             });
         }
         , renderStatusbar: function () {

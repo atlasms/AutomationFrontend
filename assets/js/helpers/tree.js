@@ -14,10 +14,9 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
                 }
                 // so that create works
                 , check_callback: true
+                , worker: false
                 , data: {
-                    url: function (node) {
-                        return $this.api;
-                    }
+                    url: $this.api
                     , data: function (node) {
                         return { pid: node.id.replace('#', 0) };
                     }
@@ -177,7 +176,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jstree', 'bootstrap/modal
             $tree.on('after.jstree', function (e, data) {
             });
             $tree.on('loaded.jstree', function (e, data) {
-//                console.log(e, data);
+               // console.log(e, data);
             });
 //            $($this.$el).on('before.jstree', function (e, data) {
 //                

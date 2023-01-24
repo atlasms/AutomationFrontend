@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper'
-], function ($, _, Backbone, Template, Config, Global, MediaitemModel, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'jstree'
+], function ($, _, Backbone, Template, Config, Global, MediaitemModel, toastr, Toolbar, Statusbar, pDatepicker, Tree, jstree) {
     var StatsScheduleView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $itemsPlace: "#items-place"
@@ -22,73 +22,32 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             }
         ]
         , statusbar: []
-        , flags: {}
+        , flags: {
+            treeRendered: false
+        }
+        , tree: {}
         , events: {
             'click [type=submit]': 'submit'
             , 'click [data-task=refresh-view]': 'reLoad'
-            , 'click [data-task=show]': 'load'
+            , 'click [data-task=show]': 'loadItems'
             , 'click [data-task=refresh]': 'reLoad'
-            , 'change [data-type=state]': 'filterStates'
+            , 'keyup [data-type="tree-search"]': 'searchTree'
         }
-        , filterStates: function (e) {
-            return false;
-            var value = typeof e === "object" ? $(e.target).val() : e;
-            var $printButton = $(".print-btn");
-            var href = '/stats/scheduleprint?CategoryId=' + $('[name=CategoryId]').val();
-            href += '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59' + '&q=' + $("[name=q]").val()
-            $printButton.attr('href', href);
-
-            var $rows = $("#items-table tbody").find("tr");
-            if (value == -1)
-                $rows.show();
-            else {
-                $rows.hide();
-                if (value == 4)
-                    $rows.each(function () {
-                        if ($(this).data('broadcast-count') > 0)
-                            $(this).show();
-                    });
-                else
-                    $rows.each(function () {
-                        if ($(this).data('state') == value)
-                            $(this).show();
-                    });
-            }
-            this.updateStats($rows);
+        , searchTree: function (e) {
+            $('#tree').jstree(true).show_all();
+            $('#tree').jstree('search', $(e.target).val());
         }
         , handleTreeCalls: function (routes, path) {
-            var self = this;
-            var pathId = routes.pop().toString();
-            var params = { overrideUrl: Config.api.media };
-            $("[name=CategoryId]").length && $("[name=CategoryId]").val(pathId.toString());
+            // var self = this;
+            // var pathId = routes.pop().toString();
+            // var params = { overrideUrl: Config.api.media };
+            // $("[name=CategoryId]").length && $("[name=CategoryId]").val(pathId.toString());
             this.loadItems();
-            /*
-            var template = Template.template.load('resources/ingest', 'metadata.partial');
-            var $container = $(self.$metadataPlace);
-            var model = new IngestModel(params);
-            model.fetch({
-                data: $.param({categoryId: pathId})
-                , success: function (data) {
-                    items = self.prepareItems(data.toJSON(), params);
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-//                            self.afterRender();
-                        });
-                    });
-                }
-//                , error: function (e, data) {
-//                    toastr.error(data.responseJSON.Message, 'خطا', Config.settings.toastr);
-//                }
-            });
-            */
         }
         , reLoad: function () {
             this.load();
         }
         , load: function (e, extend) {
-            console.info('Loading items');
             var params = {};
             params = (typeof extend === "object") ? $.extend({}, params, extend) : params;
             this.render(params);
@@ -108,11 +67,41 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , afterRender: function () {
 //            this.loadItems();
             this.attachDatepickers();
-            $("#tree").length && new Tree($("#tree"), Config.api.tree, this).render();
+            if (!this.flags.treeRendered && $("#tree").length) {
+                // new Tree($("#tree"), Config.api.tree, this).render();
+                this.initTree();
+            }
             this.renderStatusbar();
         }
-        , attachDatepickers: function () {
+        , initTree: function () {
             var self = this;
+            if ($("#tree").length) {
+                var $tree = $("#tree");
+                $tree.bind("loaded.jstree", function (e, data) {
+                    var instance = $tree.jstree(true);
+                    self.treeInstance = data.instance;
+                    instance.open_all();
+                });
+                $tree.bind("open_all.jstree", function (e, data) {
+                    $tree.jstree(true).uncheck_all();
+                    $tree.jstree(true).deselect_all();
+                    if (STORAGE.getItem('tree')) {
+                        var storage = JSON.parse(STORAGE.getItem('tree'));
+                        try {
+                            storage.state.checkbox && delete storage.state.checkbox;
+                            storage.state.core.selected && delete storage.state.core.selected;
+                            STORAGE.setItem('tree', JSON.stringify(storage));
+                        } catch (e) {
+                            //
+                        }
+                    }
+                });
+                self.tree = new Tree($("#tree"), Config.api.tree, self, { hasCheckboxes: true });
+                self.tree.render();
+                self.flags.treeRendered = true;
+            }
+        }
+        , attachDatepickers: function () {
             var $datePickers = $(".datepicker");
             $.each($datePickers, function () {
                 var $this = $(this);
@@ -124,9 +113,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     }));
                 }
             });
-            window.setTimeout(function () {
-                self.filterStates($("[name=state]").val());
-            }, 500);
         }
         , renderToolbar: function () {
             var self = this;
@@ -140,15 +126,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             });
             toolbar.render();
         }
-        , prepareItems: function (items, params) {
+        , prepareItems: function (items) {
             if (typeof items.query !== "undefined")
                 delete items.query;
-            if (typeof params !== "undefined") {
-                for (var prop in params) {
-                    delete items[prop];
-                }
+            var params = { q: "", totalbroadcast: 0, totalrepeats: 0, overrideUrl: '' };
+            for (var prop in params) {
+                delete items[prop];
             }
-            return items;
+            return Object.values(items);
         }
         , prepareContent: function () {
             this.renderToolbar();
@@ -202,31 +187,41 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , loadItems: function () {
             var self = this;
+            var template = Template.template.load('stats/broadcast', 'items.partial');
+            var $container = $(self.$itemsPlace);
+            var selectedNodes = $("#tree").jstree(true).get_checked();
             var range = {
                 start: Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 , end: Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
                 , q: $("[name=q]").val()
             };
-            var params = {
-                overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + range.start + '&enddate=' + range.end
-            };
-            if (range.q !== null && range.q !== '') {
-                params.overrideUrl += '&q=' + range.q;
-            }
-            var template = Template.template.load('stats/broadcast', 'items.partial');
-            var $container = $(self.$itemsPlace);
-            var model = new MediaitemModel(params);
-            model.fetch({
-                success: function (data) {
-                    items = self.processSum(self.prepareItems(data.toJSON(), params));
-                    template.done(function (data) {
-                        var handlebarsTemplate = Template.handlebars.compile(data);
-                        var output = handlebarsTemplate(items);
-                        $container.html(output).promise().done(function () {
-                            self.updatePrintButton();
-                        });
-                    });
+            var params = {};
+            var items = [];
+
+            $.each(selectedNodes, function (i, node) {
+                params = {
+                    // overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + $('[name=CategoryId]').val() + '&startdate=' + range.start + '&enddate=' + range.end
+                    overrideUrl: Config.api.schedule + '/categorycountbydate?CategoryId=' + node + '&startdate=' + range.start + '&enddate=' + range.end
+                };
+                if (range.q !== null && range.q !== '') {
+                    params.overrideUrl += '&q=' + range.q;
                 }
+                var model = new MediaitemModel(params);
+                model.fetch({
+                    success: function (data) {
+                        items = $.merge(items, self.prepareItems(data.toJSON()));
+                        if (i === selectedNodes.length - 1) {
+                            items = self.processSum(items);
+                            template.done(function (data) {
+                                var handlebarsTemplate = Template.handlebars.compile(data);
+                                var output = handlebarsTemplate(items);
+                                $container.html(output).promise().done(function () {
+                                    self.updatePrintButton();
+                                });
+                            });
+                        }
+                    }
+                });
             });
         }
         , updatePrintButton: function () {
@@ -235,7 +230,8 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 + '&startdate=' + Global.jalaliToGregorian($("[name=startdate]").val()) + 'T00:00:00'
                 + '&enddate=' + Global.jalaliToGregorian($("[name=enddate]").val()) + 'T23:59:59'
                 + '&q=' + $('[name=q]').val()
-                + '&category=' + $('#' + $('#tree').jstree(true).get_selected()).text();
+                // + '&category=' + $('#' + $('#tree').jstree(true).get_selected()).text();
+                + '&category=' + $('#tree').jstree(true).get_checked().join(',');
             if ($printButton.attr('href').indexOf('startdate') === -1)
                 $printButton.attr('href', $printButton.attr('href') + params);
         }

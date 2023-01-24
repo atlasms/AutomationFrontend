@@ -28,13 +28,13 @@
                     <i class="fa fa-download"></i>
                 </a>
             </td>
-            <td data-prop="Duration" class="duration text-center">{{time Duration}}</td>
-            <td>
+            <td data-searchable="false" data-prop="Duration" class="duration text-center">{{time Duration}}</td>
+            <td data-searchable="false">
                 <div class="ltr">
                     {{Size}}
                 </div>
             </td>
-            <td>
+            <td data-searchable="false">
                 <div class="ltr text-center small">
                     {{Width}} &times; {{Height}}
                 </div>
@@ -44,22 +44,22 @@
                     {{Format}}
                 </div>
             </td>
-            <td>
+            <td data-searchable="false">
                 <div class="ltr text-center small">
                     {{AudioLayers}}
                 </div>
             </td>
-            <td>
+            <td data-searchable="false">
                 <div class="ltr text-center small">
                     {{Bitrate}}
                 </div>
             </td>
-            <td>
+            <td data-searchable="false">
                 <div class="ltr text-center small">
                     {{FrameRate}} fps
                 </div>
             </td>
-            <td>
+            <td data-searchable="false">
                 <div class="text-right">
                     {{extractTime DateTime}} {{extractDate DateTime}}
                 </div>
@@ -69,7 +69,7 @@
                     <span data-prop="FileName">{{FileName}}</span>
                 </div>
             </td>
-            <td class="text-center">
+            <td class="text-center" data-searchable="false">
                 <figure>
                     <img src="{{Thumbnail}}" data-webp="{{Webp}}" data-orig="{{Thumbnail}}" alt="" onerror="this.onerror=null;this.src='{{config "placeholderImage"}}'" />
                 </figure>

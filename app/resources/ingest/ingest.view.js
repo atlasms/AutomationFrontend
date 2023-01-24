@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'resources.check-info.model', 'pdatepicker', 'bootstrap/modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.ingest.model', 'resources.metadata.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'ingestHelper', 'tree.helper', 'bootbox', 'select2', 'shared.model', 'resources.check-info.model', 'pdatepicker', 'bootstrap/modal', 'bootstrap-table'
 ], function ($, _, Backbone, Template, Config, Global, IngestModel, MetadataModel, toastr, Toolbar, Statusbar, pDatepicker, IngestHelper, Tree, bootbox, select2, SharedModel, CheckInfoModel, pDatepicker) {
     bootbox.setLocale('fa');
     var IngestView = Backbone.View.extend({
@@ -286,6 +286,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $container.stop().fadeIn();
+                            $container.find('#storagefiles').bootstrapTable(Config.settings.bootstrapTable);
                             // self.registerWebpUrl();
                         });
                     });
