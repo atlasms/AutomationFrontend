@@ -286,7 +286,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                         var output = handlebarsTemplate(items);
                         $container.html(output).promise().done(function () {
                             $container.stop().fadeIn();
-                            $container.find('#storagefiles').bootstrapTable(Config.settings.bootstrapTable);
+							$container.find('#storagefiles').bootstrapTable(Config.settings.bootstrapTable);
                             // self.registerWebpUrl();
                         });
                     });

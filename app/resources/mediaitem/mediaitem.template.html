@@ -76,7 +76,7 @@
                                                     type="button"
                                                     class="btn btn-default btn-xs pull-right"
                                                     data-task="return-item"
-                                                    data-id="{{Id}}"
+                                                    data-id="{{Id}}" 
                                                     {{#authorize 32768}}{{else}}disabled{{/authorize}}
                                             >
                                             <i class="fa fa-reply"></i> بازگشت به بازبینی
@@ -128,7 +128,7 @@
                                                     class="fa fa-pencil"></i> تغییر برنامه</a>
                                         </td>
                                     </tr>
-                                    <tr>
+									<tr>
                                         <td>شماره براورد</td>
                                         <td>
                                             {{#if Baravord}}{{Baravord}}{{else}}ثبت نشده{{/if}}
@@ -375,38 +375,35 @@
                             <!--                            <h5>&nbsp;</h5>-->
                             <div class="clearfix"></div>
                             {{#ifCond State 'in' '0,2'}}
-                            {{#authorize 1024}}
-                            <button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i
-                                    class="fa fa-refresh"></i> تغییر ویدیو
-                            </button>
-                            {{/authorize}}
+                                {{#authorize 1024}}
+                                <button type="button" data-task="change-video" class="btn btn-default btn-sm pull-right"><i
+                                        class="fa fa-refresh"></i> تغییر ویدیو
+                                </button>
+                                {{/authorize}}
                             {{/ifCond}}
                             {{#ifCond LiveStatus '!=' 1}}
-                            {{#authorize 549755813888}}
-                            <a style="margin-left: 10px;" href="{{getOriginalMedia Files Thumbnail}}" class="btn btn-success btn-sm pull-left download-original" download><i
-                                    class="fa fa-download"></i> دریافت فایل راش / اصلی</a>
-                            {{/authorize}}
-                            {{#authorize 2097152}}
-                            <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left download-hq" download><i
-                                    class="fa fa-download"></i> دریافت فایل HQ</a>
-                            <!--                            <a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i-->
-                            <!--                                    class="fa fa-download"></i> دریافت فایل HQ</a>-->
-                            {{/authorize}}
-                            {{#authorize 262144}}
-                            <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
-                                    class="fa fa-download"></i> دریافت فایل LQ</a>
-                            {{/authorize}}
-                            {{#ifCond Type '==' 0}}
-                            <div id="player-container"><!-- Player Container --></div>
-                            {{/ifCond}}
-                            {{#ifCond Type '==' 3}}
-                            <div id="player-container"><!-- Player Container --></div>
-                            {{/ifCond}}
-                            {{#ifCond Type '==' 1}}
-                            <figure>
-                                <img src="{{replace Thumbnail '.jpg' '_hq.jpg'}}" alt="{{Title}}"/>
-                            </figure>
-                            {{/ifCond}}
+                                {{#authorize 2097152}}
+                                <a style="margin-left: 10px;" href="{{getMedia Thumbnail true}}?filename={{generateSafeFileName Id Title EpisodeNumber Duration}}" class="btn btn-success btn-sm pull-left download-hq" download><i
+                                        class="fa fa-download"></i> دریافت فایل HQ</a>
+                                <!--                            <a href="{{getMedia Thumbnail true}}" class="btn btn-success btn-sm pull-left" download><i-->
+                                <!--                                    class="fa fa-download"></i> دریافت فایل HQ</a>-->
+                                {{/authorize}}
+                                {{#authorize 262144}}
+                                <a href="{{getMedia Thumbnail}}" class="btn btn-success btn-sm pull-left" download><i
+                                        class="fa fa-download"></i> دریافت فایل LQ</a>
+                                {{/authorize}}
+
+                                {{#ifCond Type '==' 0}}
+                                <div id="player-container"><!-- Player Container --></div>
+                                {{/ifCond}}
+                                {{#ifCond Type '==' 3}}
+                                <div id="player-container"><!-- Player Container --></div>
+                                {{/ifCond}}
+                                {{#ifCond Type '==' 1}}
+                                <figure>
+                                    <img src="{{replace Thumbnail '.jpg' '_hq.jpg'}}" alt="{{Title}}"/>
+                                </figure>
+                                {{/ifCond}}
                             {{else}}
                             <figure>
                                 <img src="{{Thumbnail}}" alt="{{Title}}"/>
