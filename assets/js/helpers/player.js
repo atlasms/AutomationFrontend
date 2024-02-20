@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             , aspectratio: '16:9'
             , steps: 5 // Secnods used in forward and backwards seeking
             , autostart: false
+			, preload: 'auto'
 //            , primary: 'flash'
             , analytics: {
                 enabled: false,
@@ -32,7 +33,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             }
             , debug: true
             , crossOrigin: 'anonymous'
-            , preload: 'auto'
         };
         this.$el = (typeof $el !== "undefined") ? $el : null;
         this.options = $.extend(true, {}, this.defaults, options);
@@ -131,8 +131,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             instance = this.getInstance(instance);
 //            instance.seek((position * this.duration) / 100);
             instance.seek(position);
-            // reset speed
-            this.resetSpeed();
         }
         , setVolume: function (value, instance) {
             instance = this.getInstance(instance);
@@ -275,10 +273,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
                     $("#seekbar .seeker .inner:first").slider('option', 'value', 0);
                 }, 50);
             });
-            instance.onSeek(function() {
-                // reset speed
-                $this.resetSpeed();
-            });
         }
         , play: function (instance, $key) {
             var $this = this;
@@ -344,12 +338,6 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jquery-ui', 'global', 'te
             } catch (e) {
                 console.error(e);
             }
-        }
-        , resetSpeed: function () {
-            document.getElementsByTagName('video')[0].playbackRate = 1;
-            var $speedControl = $("ul.speed li");
-            $speedControl.removeClass('active');
-            $speedControl.parent().find('li[data-value="1"]').addClass('active');
         }
     });
 
