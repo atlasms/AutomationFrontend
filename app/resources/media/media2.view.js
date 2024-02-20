@@ -179,7 +179,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , download2: function (e) {
             e.preventDefault();
             var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
-            var list = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
+            var list = activeTab === '#download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
 
             for (var i = 0; i < list.length; i++) {
                 var iframe = $('<iframe style="visibility: collapse;"></iframe>');
@@ -199,8 +199,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         , download: function (e) {
             e.preventDefault();
             var activeTab = $('#download-modal .nav-tabs li.active a').attr('href');
-            var files = activeTab === 'download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
-
+            var files = activeTab === '#download-hq' ? this.getDownloadList().hq : this.getDownloadList().original;
             function downloadNextUrl(i) {
                 if (i >= files.length) {
                     return;
