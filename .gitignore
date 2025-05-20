@@ -52,7 +52,7 @@ prepros.cfg
 dist
 dev
 docs
-lib
+# lib
 test
 tmp
 /Services
