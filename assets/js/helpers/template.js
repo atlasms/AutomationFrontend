@@ -236,13 +236,18 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return source[value];
             });
             Handlebars.registerHelper('formatJalali', function (value, format, options) {
-                var date = (value && value.indexOf("T") !== -1) 
-                        ? Global.gregorianToJalali(value.split('T')[0]).split('-') 
-                        : Global.gregorianToJalali(value).split('-');
-                for (var i = 0; i < date.length; i++)
-                    date[i] = parseInt(date[i]);
-                console.log(date);
-                return momentWithLocales(date.join('-'), 'YYYY-MM-DD').locale('fa').format(format);
+                return Global.gregorianToJalali(value, '-', format);
+                // try {
+                //     jMoment.locale('fa');
+                //     return jMoment(value).locale('fa').format(format);
+                // } catch(e) {
+                //     var date = (value && value.indexOf("T") !== -1) 
+                //         ? Global.gregorianToJalali(value.split('T')[0]).split('-') 
+                //         : Global.gregorianToJalali(value).split('-');
+                //     for (var i = 0; i < date.length; i++)
+                //         date[i] = parseInt(date[i]);
+                //     return momentWithLocales(date.join('-'), 'YYYY-MM-DD').locale('fa').format(format);
+                // }                
             });
             Handlebars.registerHelper('formatGregorian', function (value, format, options) {
                 var date = (value && value.indexOf("T") !== -1) ? value.split('T')[0].split('-') : value.split('-');
