@@ -124,10 +124,11 @@
                 <div class="col-sm-6">
                     <select class="form-control" name="KeepDuration">
                         {{#select KeepDuration}}
-                        {{#authorize 1099511627776}}
+
                         <option value="-1">دائم</option>
-                        {{/authorize}}
+
                         <option value="360">یک سال</option>
+
                         <option value="180">شش ماه</option>
                         <option value="90">سه ماه</option>
                         <option value="60">دو ماه</option>
