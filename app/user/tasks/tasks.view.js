@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'resources.media-options.helper', 'resources.mediaitem.model', 'toastr', 'toolbar', 'select2', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, MediaOptionsHelper, MediaitemModel, toastr, Toolbar, select2) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'resources.media-options.helper', 'resources.mediaitem.model', 'toastr', 'toolbar', 'select2', 'moment-with-locales', 'bootstrap/modal', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, MediaOptionsHelper, MediaitemModel, toastr, Toolbar, select2, moment) {
+    moment.locale('en');
     var TasksView = Backbone.View.extend({
         toolbar: [
             // {'button': {cssClass: 'btn default pull-left', text: 'صندوق دریافتی‌ها', type: 'button', task: 'received', icon: 'fa fa-download'}},
@@ -33,13 +34,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: 'تاریخ پخش تا', type: 'text', name: 'edate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;', text: 'تا'
+                    value: moment(SERVERDATE).format('YYYY-MM-DD'), style: 'max-width: 100px;', text: 'تا'
                 }
             },
             {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: 'تاریخ پخش از', type: 'text', name: 'date', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), style: 'max-width: 100px;', text: 'تاریخ پخش از'
+                    value: moment(SERVERDATE).format('YYYY-MM-DD'), style: 'max-width: 100px;', text: 'تاریخ پخش از'
                 }
             },
             {

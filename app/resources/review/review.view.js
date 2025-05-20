@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab', 'easy-pie-chart'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'toastr', 'toolbar', 'pdatepicker', 'reviewHelper', 'player.helper', 'statusbar', 'bootbox', 'bootstrap/tab', 'easy-pie-chart', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaitemModel, toastr, Toolbar, pDatepicker, ReviewHelper, Player, Statusbar, bootbox, tab) {
+    moment.locale('en');
     var ReviewView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -10,14 +11,14 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , { 'button': { cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 134217728 } } // reject
             , { 'button': { cssClass: 'btn red pull-right hidden submit fade', text: 'رد', type: 'button', task: '2', access: 4 } } // reject
             , { 'button': { cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_review' } }
-            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')), addon: true, icon: 'fa fa-calendar' } }
+            , { 'input': { cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', value: moment(SERVERDATE).format('YYYY-MM-DD'), addon: true, icon: 'fa fa-calendar' } }
             , {
                 'input': {
                     cssClass: 'form-control datepicker',
                     placeholder: '',
                     type: 'text',
                     name: 'startdate',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 7).format('YYYY-MM-DD')),
+                    value: moment(SERVERDATE).subtract(7, 'days').format('YYYY-MM-DD'),
                     addon: true,
                     icon: 'fa fa-calendar'
                 }

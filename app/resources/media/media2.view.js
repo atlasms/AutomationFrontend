@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.mediaitem.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'easy-pie-chart', 'bootstrap-table', 'bootpag', 'rangeslider', 'bootstrap/tab', 'bootstrap/modal'
-], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaitemModel, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.mediaitem.model', 'tasks.model', 'resources.media-options.helper', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'select2', 'shared.model', 'users.manage.model', 'moment-with-locales', 'easy-pie-chart', 'bootstrap-table', 'bootpag', 'rangeslider', 'bootstrap/tab', 'bootstrap/modal', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaitemModel, TasksModel, MediaOptionsHelper, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, select2, SharedModel, UsersManageModel, moment) {
+    moment.locale('en');
     var MediaView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'Media2Model'
@@ -31,7 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , episode: ''
             // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
             , startdate: '1970-01-01T00:00:00'
-            , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+            , enddate: moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
             , subjects: ''
             , tags: ''
             , persons: ''
@@ -42,7 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , recommendedBroadcastStartDate: ''
             , recommendedBroadcastEndDate: ''
             , broadcastStartdate: '1970-01-01T00:00:00'
-            , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+            , broadcastEnddate: moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
             , structure: ''
             , metaSubject: ''
             , classification: ''
@@ -660,22 +661,23 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             };
             $.each($datePickers, function () {
                 if ($(this).attr('name') === 'startdate') {
-                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')));
+                    $(this).val(moment(SERVERDATE).subtract(1, 'month').format('YYYY-MM-DD'));
                 }
                 if ($(this).attr('name') === 'enddate') {
-                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')));
+                    console.log(moment(SERVERDATE).format('YYYY-MM-DD'))
+                    $(this).val(moment(SERVERDATE).format('YYYY-MM-DD'));
                 }
                 if ($(this).attr('name') === 'broadcastStartdate') {
-                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('year', 1).format('YYYY-MM-DD')));
+                    $(this).val(moment(SERVERDATE).subtract(1, 'year').format('YYYY-MM-DD'));
                 }
                 if ($(this).attr('name') === 'broadcastEnddate') {
-                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')));
+                    $(this).val(moment(SERVERDATE).format('YYYY-MM-DD'));
                 }
                 if ($(this).attr('name') === 'recommendedBroadcastStartDate') {
                     $(this).val('1970-01-01');
                 }
                 if ($(this).attr('name') === 'recommendedBroadcastEndDate') {
-                    $(this).val(Global.jalaliToGregorian(persianDate(SERVERDATE).add('day', 10).format('YYYY-MM-DD')));
+                    $(this).val(moment(SERVERDATE).add(10, 'day').format('YYYY-MM-DD'));
                 }
                 $(this).pDatepicker($.extend({}, CONFIG.settings.datepicker, datepickerConf));
             });

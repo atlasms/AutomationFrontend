@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'pr.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'jquery-ui', 'bootbox', 'bootstrap/popover', 'editable.helper', 'bootstrap/modal', 'bootstrap/tooltip'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'moment-with-locales', 'broadcast.crawl.model', 'pr.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'crawlHelper', 'jquery-ui', 'bootbox', 'bootstrap/popover', 'editable.helper', 'bootstrap/modal', 'bootstrap/tooltip', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, moment, CrawlModel, PRModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, CrawlHelper, ui, bootbox, $popover, Editable) {
     bootbox.setLocale('fa');
     var CrawlView = Backbone.View.extend({

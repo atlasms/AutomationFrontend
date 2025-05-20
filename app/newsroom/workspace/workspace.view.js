@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'bootpag', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/tooltip'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'user', 'toolbar', 'statusbar', 'pdatepicker', 'select2', 'newsroom.model', 'users.manage.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'bootpag', 'bootstrap/tab', 'bootstrap/modal', 'bootstrap/tooltip', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, User, Toolbar, Statusbar, pDatepicker, select2, NewsroomModel, UsersManageModel, Hotkeys, toastr, bootbox, Tree) {
     var NewsroomWorkspaceView = Backbone.View.extend({
         data: {}

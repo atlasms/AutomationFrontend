@@ -569,7 +569,6 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             statusbar.render();
         }
         , attachDatepickers: function () {
-            var self = this;
             var $datePickers = $(".datepicker");
             $.each($datePickers, function () {
                 var $this = $(this);
@@ -587,7 +586,13 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
         }
         , detachDatepickers: function () {
             var $datePickers = $(".datepicker");
-            $datePickers.data('datepicker').destroy();
+            $datePickers.each(function () {
+                $datePickers.unbind().removeData();
+                // $(this).data('datepicker').hide();
+                // setTimeout(function () {
+                //     $datePickers.data('datepicker').destroy();
+                // }, 500);
+            });
         }
     });
     return IngestView;

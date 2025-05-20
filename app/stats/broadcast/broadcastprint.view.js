@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'moment-with-locales', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, MediaitemModel, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+    moment.locale('en');
     var StatsBroadcastPrintView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $itemsPlace: "#items-place"
@@ -8,7 +9,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             {'button': {cssClass: 'btn purple-studio pull-right', text: '', type: 'button', task: 'refresh', icon: 'fa fa-refresh'}}
             , {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'show'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar'}} //persianDate().format('YYYY-MM-DD')
-            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar', value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))}}
+            , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar', value: moment(SERVERDATE).format('YYYY-MM-DD')}}
         ]
         , statusbar: []
         , flags: {}

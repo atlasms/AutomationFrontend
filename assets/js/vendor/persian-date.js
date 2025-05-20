@@ -208,7 +208,7 @@ GREGORIAN_EPOCH = 1721425.5,
         return ((year % 4) == 0) && (!(((year % 100) === 0) && ((year % 400) != 0)));
     },
     isLeapPersian = function (year) {
-        return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
+        return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682 || year === 1403;
     },
     //  GREGORIAN_TO_JD  --  Determine Julian day number from Gregorian calendar date
     gregorianToJd = function (year, month, day) {

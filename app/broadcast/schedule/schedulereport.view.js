@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar','moment-with-locales', 'broadcast.schedule.model', 'pdatepicker', 'bootstrap-table'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar','moment-with-locales', 'broadcast.schedule.model', 'pdatepicker', 'bootstrap-table', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, Toolbar, moment, ScheduleModel, pDatepicker) {
     var ScheduleReportView = Backbone.View.extend({
         model: 'ScheduleModel'
@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'too
             , {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar'
-                    , value: Global.getVar("date") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
+                    , value: Global.getVar("date") ? Global.jalaliToGregorian(Global.getVar("date")) : moment(SERVERDATE).format('YYYY-MM-DD')
                 }
             }
         ]

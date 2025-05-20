@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootbox', 'bootstrap/modal'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper', 'ladda', 'bootbox', 'bootstrap/modal', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox) {
     'use strict';
     bootbox.setLocale('fa');

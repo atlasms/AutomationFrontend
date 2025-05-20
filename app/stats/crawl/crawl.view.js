@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.crawl.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table'], function ($, _, Backbone, Template, Config, Global, CrawlModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'broadcast.crawl.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'bootstrap-table', 'pdate'], function ($, _, Backbone, Template, Config, Global, CrawlModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
     var StatsCrawlView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $metadataPlace: "#metadata-place"

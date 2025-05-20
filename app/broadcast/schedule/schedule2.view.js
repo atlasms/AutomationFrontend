@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'prayer-times', 'bootstrap/modal', 'bootstrap/tab', 'bootstrap-table'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree, PrayerTimes) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.media2.model', 'broadcast.schedule.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'scheduleHelper2', 'ladda', 'bootbox', 'tree.helper', 'prayer-times', 'moment-with-locales', 'bootstrap/modal', 'bootstrap/tab', 'bootstrap-table', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Media2Model, ScheduleModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, ScheduleHelper, Ladda, bootbox, Tree, PrayerTimes, moment) {
+    moment.locale('en');
     bootbox.setLocale('fa');
     var ScheduleView2 = Backbone.View.extend({
 //        el: $(Config.positions.wrapper)
@@ -36,7 +37,9 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true
-                    , value: Global.getVar("date") ? Global.jalaliToGregorian(Global.getVar("date")) : Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
+                    , value: Global.getVar("date") 
+                    ? Global.jalaliToGregorian(Global.getVar("date")) 
+                    : Global.jalaliToGregorian(moment(SERVERDATE).format('YYYY-MM-DD'))
                 }
             }
         ]
@@ -393,7 +396,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 , state: Config.mediaList.defaultStateValue
                 , episode: ''
                 , startdate: '1970-01-01T00:00:00'
-                , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                , enddate: Global.jalaliToGregorian(moment(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
                 , subjects: ''
                 , tags: ''
                 , persons: ''
@@ -420,7 +423,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     ? '1970-01-01T00:00:00'
                     : Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
                 enddate: $("[name=media-search-enddate]").is('[disabled]')
-                    ? Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                    ? moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
                     : Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
             };
             return $.extend({}, defaultParams, params);
@@ -890,10 +893,11 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                 ScheduleHelper.init(true, this);
             }
 
-            var dateParts = $("[name=startdate]").val().split('-');
+            var dateParts = $("[name=startdate]").val().toEnglishDigits().split('-');
             for (var i = 0; i < dateParts.length; i++)
                 dateParts[i] = parseInt(dateParts[i]);
-            $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(persianDate(dateParts).format('dddd'));
+            var weekDay = moment(GLOBAL.jalaliToGregorian($("[name=startdate]").val().toEnglishDigits())).locale('fa').format('dddd');
+            $("#toolbar [name=startdate]").parent().find(".input-group-addon").text(weekDay);
 //            ScheduleHelper.generateTimeArray(this);
 
             ScheduleHelper.checkForOverlaps();

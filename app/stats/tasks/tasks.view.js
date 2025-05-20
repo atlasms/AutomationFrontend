@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker'
-], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tasks.model', 'users.manage.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'moment-with-locales', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, TasksModel, UsersManageModel, toastr, Toolbar, Statusbar, pDatepicker, moment) {
+    moment.locale('en');
     var StatsTasksView = Backbone.View.extend({
         toolbar: [
             {'button': {cssClass: 'btn btn-default pull-right', text: 'چاپ', type: 'button', task: 'print', icon: 'fa fa-print', style: 'margin-left: 10px;'}}
@@ -17,7 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'tas
             , {
                 'input': {
                     cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 30).format('YYYY-MM-DD'))
+                    value: moment(SERVERDATE).subtract(30, 'days').format('YYYY-MM-DD')
                 }
             }
             , {

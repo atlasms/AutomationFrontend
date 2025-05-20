@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'toastr', 'statusbar', 'bootstrap/modal', 'pdatepicker', 'bootstrap-table'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'toastr', 'statusbar', 'bootstrap/modal', 'pdatepicker', 'bootstrap-table', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, PRModel, Toolbar, toastr, Statusbar) {
     var PRSMSView = Backbone.View.extend({
         modal_register: '#register-modal'

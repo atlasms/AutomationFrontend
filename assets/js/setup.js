@@ -6,11 +6,14 @@ require.config({
         , "backbone": {deps: ["underscore", "jquery", "handlebars"], exports: "Backbone"}
         , "moment": {deps: ["jquery"], exports: "moment"}
         , "moment-hijri": {deps: ["jquery", "moment", "moment-with-locales"], exports: "moment"}
+        , "moment-jalaali": {deps: ["jquery", "moment", "moment-with-locales"], exports: "moment"}
         , "cookie": {deps: ["jquery"], exports: "Cookies"}
         , "mask": {deps: ["jquery"], exports: "mask"}
         , "toastr": {deps: ["jquery"], exports: "toastr"}
-        , "pdate": {deps: ["jquery"], exports: "pdate"}
-        , "pdatepicker": {deps: ["jquery", "pdate"], exports: "pdatepicker"}
+        , "pdate": {deps: ["jquery"], exports: "persianDate"}
+        // , "persian-date": {deps: ["jquery"], exports: "persianDate"}
+        // , "pdatepicker": {deps: ["jquery", "persian-date"], exports: "datepicker", }
+        // , "pdatepicker": {deps: ["jquery", "pdate"], exports: "pdatepicker"}
         , "bootstrap/affix": {deps: ["jquery"], exports: "$.fn.affix"}
         , "bootstrap/alert": {deps: ["jquery"], exports: "$.fn.alert"}
         , "bootstrap/button": {deps: ["jquery"], exports: "$.fn.button"}
@@ -48,12 +51,15 @@ require.config({
         , "moment": ["vendor/moment.min"]
         , "moment-with-locales": ["vendor/moment-with-locales.min"]
         , "moment-hijri": ["vendor/moment-hijri"]
+        // , "moment-jalaali": ["vendor/moment-jalaali"]
         , "dmath": ["vendor/prayer-times/dmath"]
         , "prayer-times": ["vendor/prayer-times/prayertimes"]
         , "bootstrap": ["vendor/bootstrap"]
         , "toastr": ["vendor/toastr.min"]
+        , "persian-date": ["vendor/persian-date-1.1.0"]
         , "pdate": ["vendor/persian-date"]
-        , "pdatepicker": ["vendor/persian-datepicker-0.4.5.min"]
+        // , "pdatepicker": ["vendor/persian-datepicker-0.4.5.min"]
+        , "pdatepicker": ["vendor/persian-datepicker-1.2.0"]
         , "jdate": ["vendor/jdate.min"]
         , "mousetrap": ["vendor/mousetrap.min"]
         , "hotkeys": ["vendor/jquery.hotkeys"]

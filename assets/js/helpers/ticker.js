@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'newsroom.model'
+define(['jquery', 'underscore', 'backbone', 'config', 'template', 'global', 'newsroom.model', 'pdate'
 ], function ($, _, Backbone, Config, Template, Global, NewsroomModel) {
     var Ticker = Backbone.View.extend({
         interval: {}

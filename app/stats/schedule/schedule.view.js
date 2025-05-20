@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'jstree'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.mediaitem.model', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'jstree', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, MediaitemModel, toastr, Toolbar, Statusbar, pDatepicker, Tree, jstree) {
+    moment.locale('en');
     var StatsScheduleView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
         , $itemsPlace: "#items-place"
@@ -17,7 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     name: 'startdate',
                     addon: true,
                     icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 0).format('YYYY-MM-DD'))
+                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))
                 }
             }
         ]

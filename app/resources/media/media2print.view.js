@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.media-options.helper', 'toolbar', 'pdatepicker', 'select2', 'shared.model', 'users.manage.model', 'resources.categories.model'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media2.model', 'resources.media-options.helper', 'toolbar', 'pdatepicker', 'select2', 'shared.model', 'users.manage.model', 'resources.categories.model', 'moment-with-locales', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, Media2Model, MediaOptionsHelper, Toolbar, pDatepicker, select2, SharedModel, UsersManageModel, CategoriesModel) {
+    moment.locale('en');
     var Media2PrintView = Backbone.View.extend({
 //        el: $(Config.positions.wrapper),
         model: 'Media2Model'
@@ -22,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , episode: ''
             // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
             , startdate: '1970-01-01T00:00:00'
-            , enddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+            , enddate: moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
             , subjects: ''
             , tags: ''
             , persons: ''
@@ -33,7 +34,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , recommendedBroadcastStartDate: ''
             , recommendedBroadcastEndDate: ''
             , broadcastStartdate: '1970-01-01T00:00:00'
-            , broadcastEnddate: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+            , broadcastEnddate: moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
             , structure: ''
             , metaSubject: ''
             , classification: ''

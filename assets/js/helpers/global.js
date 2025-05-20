@@ -256,6 +256,7 @@ define(['jquery', 'underscore', 'backbone', 'config', 'jdate', 'cookie', 'persia
             if (typeof datetime === "undefined" || !datetime)
                 return null;
             splitter = (typeof splitter !== "undefined") ? splitter : (datetime.indexOf('-') !== -1 ? '-' : '/');
+            var datetime = Global.persianToLatinDigits(datetime);
             var dt = (datetime.indexOf(' ') !== -1) ? datetime.split(' ') : [datetime];
             var d = dt[0].split(splitter);
             if (+d[0] === 1900)

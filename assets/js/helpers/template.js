@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri', 'authorization', 'pdatepicker'
-], function ($, _, Backbone, Handlebars, Config, Global, moment, Authorize, pDatepicker) {
+define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'moment-hijri', 'moment-with-locales', 'authorization', 'pdatepicker', 'pdate'
+], function ($, _, Backbone, Handlebars, Config, Global, moment, momentWithLocales, Authorize, pDatepicker) {
+    momentWithLocales.locale('fa');
     var template = {
         handlebarHelpers: function () {
             if (typeof Handlebars === "undefined")
@@ -235,10 +236,13 @@ define(['jquery', 'underscore', 'backbone', 'handlebars', 'config', 'global', 'm
                 return source[value];
             });
             Handlebars.registerHelper('formatJalali', function (value, format, options) {
-                var date = (value && value.indexOf("T") !== -1) ? Global.gregorianToJalali(value.split('T')[0]).split('-') : Global.gregorianToJalali(value).split('-');
+                var date = (value && value.indexOf("T") !== -1) 
+                        ? Global.gregorianToJalali(value.split('T')[0]).split('-') 
+                        : Global.gregorianToJalali(value).split('-');
                 for (var i = 0; i < date.length; i++)
                     date[i] = parseInt(date[i]);
-                return persianDate(date).format(format);
+                console.log(date);
+                return momentWithLocales(date.join('-'), 'YYYY-MM-DD').locale('fa').format(format);
             });
             Handlebars.registerHelper('formatGregorian', function (value, format, options) {
                 var date = (value && value.indexOf("T") !== -1) ? value.split('T')[0].split('-') : value.split('-');

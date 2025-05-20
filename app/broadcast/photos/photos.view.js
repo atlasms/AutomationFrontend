@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'tree.helper', 'jquery-ui', 'bootbox', 'bootpag'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'toastr', 'toolbar', 'statusbar', 'tree.helper', 'jquery-ui', 'bootbox', 'bootpag', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, MediaModel, toastr, Toolbar, Statusbar, Tree, ui, bootbox) {
+    moment.locale('en');
     bootbox.setLocale('fa');
     var BroadcastPhotosView = Backbone.View.extend({
         $modal: "#metadata-form-modal"
@@ -120,9 +121,10 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             var self = this;
             var template = Template.template.load('broadcast/photos', 'photos');
             var $container = $(Config.positions.main);
+            var initialDate = moment(SERVERDATE).subtract(1, 'month').format('YYYY-MM-DD');
             template.done(function (data) {
                 var handlebarsTemplate = Template.handlebars.compile(data);
-                var output = handlebarsTemplate({initialDate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD'))});
+                var output = handlebarsTemplate({initialDate: initialDate});
                 $container.html(output).promise().done(function () {
                     self.afterRender();
                 });

@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'player.helper', 'toastr', 'pdatepicker', 'bootstrap/modal', 'bootstrap-table'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'pr.model', 'toolbar', 'player.helper', 'toastr', 'pdatepicker', 'bootstrap/modal', 'bootstrap-table', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, PRModel, Toolbar, Player, toastr) {
     var PRRecordingsView = Backbone.View.extend({
         playerInstance: null

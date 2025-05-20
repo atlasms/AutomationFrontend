@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'storage.helper', 'jquery-ui', 'bootpag', 'bootstrap/modal', 'bootstrap/tab'
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'toolbar', 'statusbar', 'pdatepicker', 'newsroom.model', 'resources.media.model', 'hotkeys', 'toastr', 'bootbox', 'news-tree.helper', 'tree.helper', 'storage.helper', 'jquery-ui', 'bootpag', 'bootstrap/modal', 'bootstrap/tab', 'pdate'
 ], function ($, _, Backbone, Template, Config, Global, Toolbar, Statusbar, pDatepicker, NewsroomModel, MediaModel, Hotkeys, toastr, bootbox, NewsTree, Tree, Storage, ui) {
     var NewsroomScheduleView = Backbone.View.extend({
         data: {}

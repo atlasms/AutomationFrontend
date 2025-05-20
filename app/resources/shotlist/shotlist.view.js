@@ -1,5 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'jquery-ui', 'pdatepicker', 'tree.helper', 'bootbox', 'flowplayer.helper', 'bootstrap/modal', 'select2'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, ui, pDatepicker, Tree, bootbox, FlowPlayer) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'resources.mediaitem.model', 'shared.model', 'toastr', 'toolbar', 'statusbar', 'jquery-ui', 'pdatepicker', 'tree.helper', 'bootbox', 'flowplayer.helper', 'moment-with-locales', 'bootstrap/modal', 'select2', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, MediaItemModel, SharedModel, toastr, Toolbar, Statusbar, ui, pDatepicker, Tree, bootbox, FlowPlayer, moment) {
+    moment.locale('en');
     var ShotlistView = Backbone.View.extend({
         playerInstance: null
         , player: null
@@ -451,7 +452,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
                     ? '1970-01-01T00:00:00'
                     : Global.jalaliToGregorian($("[name=media-search-startdate]").val()) + 'T00:00:00',
                 enddate: $("[name=media-search-enddate]").is('[disabled]')
-                    ? Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD')) + 'T23:59:59'
+                    ? moment(SERVERDATE).format('YYYY-MM-DD') + 'T23:59:59'
                     : Global.jalaliToGregorian($("[name=media-search-enddate]").val()) + 'T23:59:59'
             };
             return params;

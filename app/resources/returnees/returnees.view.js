@@ -1,14 +1,15 @@
-define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'bootstrap-table', 'bootpag'
-], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree) {
+define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'resources.media.model', 'mask', 'toastr', 'toolbar', 'statusbar', 'pdatepicker', 'tree.helper', 'moment-with-locales', 'bootstrap-table', 'bootpag', 'pdate'
+], function ($, _, Backbone, Template, Config, Global, MediaModel, Mask, toastr, Toolbar, Statusbar, pDatepicker, Tree, moment) {
+    moment.locale('en');
     var ReturneesView = Backbone.View.extend({
         playerInstance: null
         , model: 'MediaModel'
         , toolbar: [
             {'button': {cssClass: 'btn btn-success', text: 'نمایش', type: 'button', task: 'load_returnees'}}
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'enddate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).format('YYYY-MM-DD'))}} //persianDate().format('YYYY-MM-DD')
+                    value: moment(SERVERDATE).format('YYYY-MM-DD')}} //persianDate().format('YYYY-MM-DD')
             , {'input': {cssClass: 'form-control datepicker', placeholder: '', type: 'text', name: 'startdate', addon: true, icon: 'fa fa-calendar',
-                    value: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('days', 7).format('YYYY-MM-DD'))}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
+                    value: moment(SERVERDATE).subtract(7, 'days').format('YYYY-MM-DD')}} // moment().subtract(7, 'day').format('YYYY-MM-DD')
         ]
         , statusbar: []
         , flags: {toolbarRendered: false}
