@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'template', 'config', 'global', 'res
             , offset: 0
             , count: Config.defalutMediaListLimit
             , categoryId: ''
-            , state: 1
+            , state: '' // 1
             , episode: ''
             // , startdate: Global.jalaliToGregorian(persianDate(SERVERDATE).subtract('month', 1).format('YYYY-MM-DD')) + 'T00:00:00'
             , startdate: '1970-01-01T00:00:00'
